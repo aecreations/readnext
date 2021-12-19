@@ -318,7 +318,8 @@ $("#add-link").on("click", async (aEvent) => {
   let tabs = await browser.tabs.query({active: true, currentWindow: true});
   let title = tabs[0].title;
   let url = tabs[0].url;
-  let bkmk = new aeBookmark(url, title);
+  let id = aeReadingList.getIDFromURL(url);
+  let bkmk = new aeBookmark(id, url, title);
   let bkmkID;
   try {
     bkmkID = await aeReadingList.add(bkmk);

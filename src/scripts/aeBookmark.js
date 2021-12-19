@@ -6,8 +6,8 @@
 
 class aeBookmark
 {
-  constructor(aURL, aTitle) {
-    this.id = md5(aURL);
+  constructor(aID, aURL, aTitle) {
+    this.id = aID;
     this.url = aURL;
     this.title = aTitle;
     this.createdAt = new Date().toISOString();
