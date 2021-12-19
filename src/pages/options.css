@@ -1,0 +1,37 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+@import url("../style/laf.css");
+
+
+main {
+  width: 640px;
+  margin: 24px auto 24px auto;
+  padding: 16px;
+  cursor: inherit;
+}
+
+#addon-icon {
+  vertical-align: -14px;
+  margin-right: 8px;
+}
+
+h2 {
+  display: inline-block;
+  margin-top: 0;
+  margin-right: 6px;
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+
+#init-sync-spinner {
+  display: none;
+  width: 16px;
+  height: 16px;
+  margin-left: 4px;
+  vertical-align: -2px;
+}

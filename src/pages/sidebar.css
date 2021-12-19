@@ -1,0 +1,65 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+@import url("../lib/contextMenu/jquery.contextMenu.min.css");
+
+
+#msg-banner {
+  margin-left: 4px;
+}
+
+#welcome, #loading {
+  display: none;
+  text-align: center;
+}
+
+#welcome > p,
+#loading > #loading-msg {
+  font-size: 15px;
+  text-align: center;
+}
+
+#welcome > p:first-of-type,
+#loading > #loading-msg {
+  margin-top: 48px;
+}
+
+#loading > #progress-bar {
+  width: calc(100% - 48px);
+  margin-left: 24px;
+  padding-left: 4px;
+  padding-right: 4px;
+  border-radius: 3px;
+  background-color: #eee;
+}
+
+#welcome > button {
+  font-size: 13px;
+}
+
+#add-link[disabled] {
+  cursor: not-allowed;
+}
+
+.reading-list-item::before {
+  content: url("chrome://global/skin/icons/defaultFavicon.svg");
+  margin-right: 4px;
+  vertical-align: -3px;
+}
+
+.reading-list-item {
+  padding: 4px 8px 4px 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.reading-list-item:hover {
+  background-color: #eee;
+}
+
+.reading-list-item:active {
+  background-color: #ccc;
+}

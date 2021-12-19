@@ -1,0 +1,48 @@
+{
+  "manifest_version": 2,
+  "name": "__MSG_extName__",
+  "description": "__MSG_extDesc__",
+  "version": "0.4a0+",
+  "author": "AE Creations",
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "readnext@aecreations.github.io",
+      "strict_min_version": "91.0"
+    }
+  },
+
+  "icons": {
+    "48": "img/icon.png",
+    "96": "img/icon.png"
+  },
+
+  "permissions": [
+    "identity",
+    "storage",
+    "tabs",
+    "unlimitedStorage"
+  ],
+  
+  "background": {
+    "scripts": [
+      "scripts/aeConst.js",
+      "scripts/aePrefs.js",
+      "background.js"
+    ]
+  },
+
+  "sidebar_action": {
+    "default_title": "__MSG_extName__",
+    "default_panel": "pages/sidebar.html",
+    "default_icon": "img/icon.png"
+  },
+  
+  "options_ui": {
+    "page": "pages/options.html",
+    "open_in_tab": true,
+    "browser_style": true
+},
+
+"default_locale": "en"
+}
