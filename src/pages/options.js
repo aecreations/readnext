@@ -84,13 +84,14 @@ $("#toggle-sync").on("click", async (aEvent) => {
     // Initialize Dropbox backend
     setInitSyncProgressIndicator(true);
     aeOAuth.init(backend);
-    let authzCode, accessToken;
+    let authzCode, tokens;
     try {
       authzCode = await aeOAuth.getAuthorizationCode();
       log("Read Next::options.js: Authorization code: " + authzCode);
 
-      accessToken = await aeOAuth.getAccessToken();
-      log("Read Next::options.js: Received access token from authorization server: " + accessToken);
+      tokens = await aeOAuth.getAccessToken();
+      log("Read Next::options.js: Received access token and refresh token from authorization server: ");
+      log(tokens);
     }
     catch (e) {
       window.alert(e);
@@ -99,14 +100,15 @@ $("#toggle-sync").on("click", async (aEvent) => {
       setInitSyncProgressIndicator(false);
     }
 
-    if (! accessToken) {
+    if (! tokens) {
       return;
     }
 
     syncPrefs = {
       syncEnabled: true,
       syncClient: backend,
-      accessToken,
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
       syncEnabledFromExtPrefs: true
     };
   }

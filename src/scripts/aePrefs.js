@@ -9,6 +9,7 @@ let aePrefs = {
     syncEnabled: false,
     syncClient: null,
     accessToken: null,
+    refreshToken: null,
     syncEnabledFromExtPrefs: false,
     deleteReadLinks: false,
   },

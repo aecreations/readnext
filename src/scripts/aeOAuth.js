@@ -9,10 +9,11 @@ let aeOAuth = function () {
   let _redirectURLFromOAuth;
   let _authzCode;
   let _accessToken;
+  let _refreshToken;
   let _authzSrvKey;
   let _authzSrv = {
     dropbox: {
-      authzURL: `https://www.dropbox.com/oauth2/authorize?client_id=%k&redirect_uri=%r&response_type=code`,
+      authzURL: `https://www.dropbox.com/oauth2/authorize?client_id=%k&redirect_uri=%r&response_type=code&token_access_type=offline`,
     },
     googleDrive: {
       authzURL: `https://accounts.google.com/o/oauth2/v2/auth?client_id=%k&redirect_uri=%r&response_type=code&scope=https%3A//www.googleapis.com/auth/drive.appdata+https%3A//www.googleapis.com/auth/drive.file+https%3A//www.googleapis.com/auth/drive.install`,
@@ -134,7 +135,12 @@ let aeOAuth = function () {
       }
   
       let parsedResp = await resp.json();
-      rv = _accessToken = parsedResp["access_token"];
+      _accessToken = parsedResp["access_token"];
+      _refreshToken = parsedResp["refresh_token"];
+      rv = {
+        accessToken: _accessToken,
+        refreshToken: _refreshToken,
+      };
 
       return rv;
     }
