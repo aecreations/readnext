@@ -28,9 +28,45 @@ async function setDefaultPrefs()
 
 function init()
 {
-  // TO DO: Perform initialization.
+  aeReadingList.init();
 }
 
+
+//
+// Event handlers
+//
+
+browser.runtime.onMessage.addListener(async (aMessage) => {
+  log(`Read Next: Background script received extension message "${aMessage.id}"`);
+
+  switch (aMessage.id) {
+  case "add-bookmark":
+    let bookmarkID;
+    try {
+      bookmarkID = await aeReadingList.add(aMessage.bookmark);
+    }
+    catch (e) {
+      return Promise.reject(e);
+    }
+    return Promise.resolve(bookmarkID);
+
+  case "remove-bookmark":
+    aeReadingList.remove(aMessage.bookmarkID);
+    break;
+
+  case "get-all-bookmarks":
+    let bookmarks = await aeReadingList.getAll();
+    return Promise.resolve(bookmarks);
+
+  default:
+    break;
+  }
+});
+
+
+//
+// Utilities
+//
 
 function log(aMessage)
 {

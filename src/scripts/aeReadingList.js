@@ -6,9 +6,6 @@
 
 let aeReadingList = {
   _db: null,
-  _onAdd(aBookmark) {},
-  _onRemove(aBookmarkID) {},
-  
   
   init()
   {
@@ -21,17 +18,22 @@ let aeReadingList = {
   
   async add(aBookmark)
   {
-    let rv = null;
-    
     if (typeof aBookmark.id == "undefined") {
       throw new Error("Bookmark ID not defined");
     }
+
+    let rv;
+    let db = this._getDB();
     
     // Throws exception if a bookmark with the same ID already exists.
-    rv = await this._db.bookmarks.add(aBookmark, aBookmark.id);
+    rv = await db.bookmarks.add(aBookmark, aBookmark.id);
 
     if (rv) {
-      this._onAdd(aBookmark);
+      let msg = {
+        id: "add-bookmark-event",
+        bookmark: aBookmark,
+      };
+      browser.runtime.sendMessage(msg);
     }
 
     return rv;
@@ -39,21 +41,31 @@ let aeReadingList = {
 
   async remove(aBookmarkID)
   {
-    await this._db.bookmarks.delete(aBookmarkID);
-    this._onRemove(aBookmarkID);
+    let db = this._getDB();
+    await db.bookmarks.delete(aBookmarkID);
+
+    let msg = {
+      id: "remove-bookmark-event",
+      bookmarkID: aBookmarkID,
+    };
+    browser.runtime.sendMessage(msg);
   },
 
   async get(aBookmarkID)
   {
-    let rv = await this._db.bookmarks.get(aBookmarkID);
+    let rv;
+    let db = this._getDB();
+    rv = await db.bookmarks.get(aBookmarkID);
 
     return rv;
   },
 
   async getAll()
   {
-    let rv = await this._db.bookmarks.orderBy("createdAt").toArray();
-
+    let rv;
+    let db = this._getDB();
+    rv = await db.bookmarks.orderBy("createdAt").toArray();
+    
     return rv;
   },
 
@@ -66,28 +78,15 @@ let aeReadingList = {
     return rv;
   },
 
-  getIDFromURL(aURL)
+  // Helper
+  _getDB()
   {
-    return this._urlHash(aURL);
-  },
+    let rv;
+    if (! this._db) {
+      this.init();
+    }
+    rv = this._db;
 
-  set onAdd(aFnAdd)
-  {
-    this._onAdd = aFnAdd;
-  },
-
-  set onRemove(aFnRemove)
-  {
-    this._onRemove = aFnRemove;
-  },
-
-  
-  //
-  // Helper methods
-  //
-  
-  _urlHash(aURL)
-  {
-    return md5(aURL);
+    return rv;
   },
 };

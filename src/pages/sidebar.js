@@ -4,6 +4,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+let gReadingList;
+
 // Context menu commands
 let gCmd = {
   async open(aBookmarkID, aURL)
@@ -43,7 +45,7 @@ let gCmd = {
 
   deleteBookmark(aBookmarkID)
   {
-    aeReadingList.remove(aBookmarkID);
+    gReadingList.remove(aBookmarkID);
   },
 
   // Helper
@@ -53,7 +55,7 @@ let gCmd = {
     if (deleteReadLinks) {
       // TEMPORARY
       // TO DO: Delete the bookmark after the page has finished loading.
-      window.setTimeout(() => { this.deleteBookmark(aBookmarkID) }, 3000);
+      setTimeout(() => { this.deleteBookmark(aBookmarkID) }, 3000);
       // END TEMPORARY
     }
     else {
@@ -65,10 +67,12 @@ let gCmd = {
 
 // Sidebar initializion
 $(async () => {
+  // TO DO: Is this still needed? Should this be done in the background script?
   let syncEnabledFromExtPrefs = await aePrefs.getPref("syncEnabledFromExtPrefs");
   if (syncEnabledFromExtPrefs) {
     await aePrefs.setPrefs({syncEnabledFromExtPrefs: false});
   }
+  // END TO DO
 
   await initReadingList();
 
@@ -79,16 +83,11 @@ $(async () => {
 
 async function initReadingList()
 {
-  log("Read Next: initReadingList(): Initializing sidebar.");
+  log("Read Next::sidebar.js: initReadingList(): Initializing sidebar.");
 
-  aeReadingList.init();
-  aeReadingList.onAdd = addReadingListItem;
-  aeReadingList.onRemove = removeReadingListItem;
-  
-  initSync();
- 
-  let bkmks = await aeReadingList.getAll();
+  gReadingList = new aeReadingListSidebar();
 
+  let bkmks = await gReadingList.getAll();
   if (bkmks.length == 0) {
     showWelcome();
   }
@@ -99,6 +98,7 @@ async function initReadingList()
 }
 
 
+// DEPRECATED - Should be moved to background script
 async function initSync()
 {
   let prefs = await aePrefs.getAllPrefs();
@@ -108,7 +108,7 @@ async function initSync()
     return;
   }
   
-  log("Read Next: initSync(): Sync enabled.");
+  log("Read Next::sidebar.js initSync(): Sync enabled.");
 
   aeOAuth.init(prefs.syncClient);
   let apiKey;
@@ -147,6 +147,7 @@ async function initSync()
     // TO DO: Support Microsoft OneDrive backend.
   }
 }
+// END DEPRECATED
 
 
 function populateReadingList(aBookmarks)
@@ -293,18 +294,33 @@ function disableAddLinkBtn()
 // Event handlers
 //
 
-browser.runtime.onMessage.addListener(async (aMessage) => {
+browser.runtime.onMessage.addListener(aMessage => {
   log(`Read Next::sidebar.js: Received extension message "${aMessage.id}"`);
-  if (aMessage.id == "sync-setting-changed") {
+
+  switch (aMessage.id) {
+  case "add-bookmark-event":
+    addReadingListItem(aMessage.bookmark);
+    break;
+
+  case "remove-bookmark-event":
+    removeReadingListItem(aMessage.bookmarkID);
+    break;
+
+  case "sync-setting-changed":
     if (aMessage.syncEnabled) {
-      warn("Sync was turned ON from extension preferences.");
+      warn("Read Next: Sync was turned ON from extension preferences.");
     }
     else {
       warn("Read Next: Sync was turned OFF from extension preferences.");
     }
-  }
-  else if (aMessage.id == "sync-disconnected-from-ext-prefs") {
-    warn("Disconnected while sync in progress.");
+    break;
+    
+  case "sync-disconnected-from-ext-prefs":
+    warn("Read Next: Disconnected while sync in progress.");
+    break;
+
+  default:
+    break;
   }
 });
 
@@ -318,11 +334,11 @@ $("#add-link").on("click", async (aEvent) => {
   let tabs = await browser.tabs.query({active: true, currentWindow: true});
   let title = tabs[0].title;
   let url = tabs[0].url;
-  let id = aeReadingList.getIDFromURL(url);
+  let id = gReadingList.getIDFromURL(url);
   let bkmk = new aeBookmark(id, url, title);
   let bkmkID;
   try {
-    bkmkID = await aeReadingList.add(bkmk);
+    bkmkID = await gReadingList.add(bkmk);
   }
   catch (e) {
     console.error("Read Next: Error adding bookmark: " + e);
@@ -350,6 +366,10 @@ $(document).on("contextmenu", aEvent => {
   aEvent.preventDefault();
 });
 
+
+//
+// Utilities
+//
 
 function log(aMessage)
 {
