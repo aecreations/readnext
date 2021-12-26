@@ -12,6 +12,7 @@ let aePrefs = {
     refreshToken: null,
     syncEnabledFromExtPrefs: false,
     deleteReadLinks: false,
+    localLastModifiedTime: null,
   },
 
   

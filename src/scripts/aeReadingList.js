@@ -34,6 +34,8 @@ let aeReadingList = {
         bookmark: aBookmark,
       };
       browser.runtime.sendMessage(msg);
+
+      this._updateLocalLastModifiedTime();
     }
 
     return rv;
@@ -49,6 +51,8 @@ let aeReadingList = {
       bookmarkID: aBookmarkID,
     };
     browser.runtime.sendMessage(msg);
+
+    this._updateLocalLastModifiedTime();
   },
 
   async get(aBookmarkID)
@@ -78,7 +82,7 @@ let aeReadingList = {
     return rv;
   },
 
-  // Helper
+  // Helpers
   _getDB()
   {
     let rv;
@@ -88,5 +92,11 @@ let aeReadingList = {
     rv = this._db;
 
     return rv;
+  },
+
+  async _updateLocalLastModifiedTime()
+  {
+    let now = new Date();
+    await aePrefs.setPrefs({localLastModifiedTime: now.toUTCString()});
   },
 };
