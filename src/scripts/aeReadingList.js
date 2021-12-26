@@ -18,8 +18,8 @@ let aeReadingList = {
   
   async add(aBookmark)
   {
-    if (typeof aBookmark.id == "undefined") {
-      throw new Error("Bookmark ID not defined");
+    if (! aBookmark.id) {
+      throw new Error("Bookmark ID is invalid or undefined");
     }
 
     let rv;
