@@ -53,7 +53,7 @@ function setInitSyncProgressIndicator(aInProgress)
 $("#toggle-sync").on("click", async (aEvent) => {
   let syncPrefs = {
     syncEnabled: false,
-    syncClient: null,
+    syncBackend: null,
     accessToken: null,
   };
   let syncEnabled = await aePrefs.getPref("syncEnabled");
@@ -106,7 +106,7 @@ $("#toggle-sync").on("click", async (aEvent) => {
 
     syncPrefs = {
       syncEnabled: true,
-      syncClient: backend,
+      syncBackend: backend,
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
       syncEnabledFromExtPrefs: true

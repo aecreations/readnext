@@ -7,7 +7,7 @@
 let aePrefs = {
   _defaultPrefs: {
     syncEnabled: false,
-    syncClient: null,
+    syncBackend: null,
     accessToken: null,
     refreshToken: null,
     syncEnabledFromExtPrefs: false,

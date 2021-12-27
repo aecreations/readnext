@@ -110,7 +110,7 @@ async function initSync()
   
   log("Read Next::sidebar.js initSync(): Sync enabled.");
 
-  aeOAuth.init(prefs.syncClient);
+  aeOAuth.init(prefs.syncBackend);
   let apiKey;
   try {
     apiKey = aeOAuth.getAPIKey();
@@ -120,7 +120,7 @@ async function initSync()
     return;
   }
 
-  if (prefs.syncClient == aeConst.RS_BACKEND_DROPBOX) {
+  if (prefs.syncBackend == aeConst.RS_BACKEND_DROPBOX) {
     /***
         let result = gRemoteStorage.setApiKeys({
         dropbox: apiKey,
@@ -140,7 +140,7 @@ async function initSync()
         log(userInfo);
     ***/
   }
-  else if (prefs.syncClient == aeConst.RS_BACKEND_GOOGLE_DRIVE) {
+  else if (prefs.syncBackend == aeConst.RS_BACKEND_GOOGLE_DRIVE) {
     // TO DO: Initialize syncing with Google Drive.
   }
   else {
