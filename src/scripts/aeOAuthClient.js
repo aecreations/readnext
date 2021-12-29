@@ -4,12 +4,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-let aeConst = {
-  DEBUG: true,
-  EXTENSION_ID: "readnext@aecreations.github.io",
-
-  FILEHOST_DROPBOX: 1,
-  FILEHOST_GOOGLE_DRIVE: 2,
-
-  MAX_LOAD_BKMK_ATTEMPTS: 30,
-};
+class aeOAuthClient
+{
+  constructor(aAccessToken, aRefreshToken)
+  {
+    this.accessToken = aAccessToken;
+    this.refreshToken = aRefreshToken;
+  }
+}

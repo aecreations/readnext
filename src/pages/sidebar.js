@@ -93,7 +93,7 @@ async function initReadingList()
   }
   else {
     hideWelcome();
-    populateReadingList(bkmks);
+    buildReadingList(bkmks);
   }
 }
 
@@ -150,7 +150,7 @@ async function initSync()
 // END DEPRECATED
 
 
-function populateReadingList(aBookmarks)
+function buildReadingList(aBookmarks)
 {
   log(`Read Next: ${aBookmarks.length} items.`);
   log(aBookmarks);
@@ -178,6 +178,15 @@ function removeReadingListItem(aBookmarkID)
 {
   let bkmkElt = $(`.reading-list-item[data-id="${aBookmarkID}"]`);
   bkmkElt.fadeOut(800);
+}
+
+
+async function rebuildReadingList()
+{
+  $("#reading-list").empty();
+  
+  let bkmks = await gReadingList.getAll();
+  buildReadingList(bkmks);
 }
 
 
@@ -305,14 +314,9 @@ browser.runtime.onMessage.addListener(aMessage => {
   case "remove-bookmark-event":
     removeReadingListItem(aMessage.bookmarkID);
     break;
-
-  case "sync-setting-changed":
-    if (aMessage.syncEnabled) {
-      warn("Read Next: Sync was turned ON from extension preferences.");
-    }
-    else {
-      warn("Read Next: Sync was turned OFF from extension preferences.");
-    }
+    
+  case "reload-bookmarks-event":
+    rebuildReadingList();
     break;
     
   case "sync-disconnected-from-ext-prefs":

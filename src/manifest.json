@@ -30,6 +30,10 @@
       "scripts/aeConst.js",
       "scripts/aePrefs.js",
       "scripts/aeReadingList.js",
+      "scripts/aeSyncReadingList.js",
+      "scripts/aeOAuthClient.js",
+      "scripts/aeAbstractFileHost.js",
+      "scripts/aeDropbox.js",
       "background.js"
     ]
   },

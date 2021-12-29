@@ -71,13 +71,13 @@ $("#toggle-sync").on("click", async (aEvent) => {
     catch {}
   }
   else {
-    let backend = window.prompt("backend to use (1=remoteStorage, 2=Dropbox):", "2");
+    let backend = window.prompt("backend to use (1=Dropbox, 2=Google Drive):", "1");
     if (! backend) {
       return;
     }
 
-    if (backend == aeConst.RS_BACKEND_REMOTESTORAGE) {
-      window.alert("remoteStorage not supported");
+    if (backend == aeConst.FILEHOST_GOOGLE_DRIVE) {
+      window.alert("Google Drive is not supported.");
       return;
     }
 
@@ -132,6 +132,10 @@ $(document).on("contextmenu", aEvent => {
   }
 });
 
+
+//
+// Utilities
+//
 
 function log(aMessage)
 {

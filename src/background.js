@@ -26,10 +26,29 @@ async function setDefaultPrefs()
 }
 
 
-function init()
+async function init()
 {
   aeReadingList.init();
+
+  let syncEnabled = await aePrefs.getPref("syncEnabled");
+  if (syncEnabled) {
+    // TO DO: Sync local reading list data with remote sync data.
+  }
 }
+
+
+async function firstInitSync()
+{
+  let prefs = await aePrefs.getAllPrefs();
+  let oauthClient = new aeOAuthClient(prefs.accessToken, prefs.refreshToken);
+  let syncBacknd = Number(prefs.syncBackend);
+  
+  aeSyncReadingList.init(syncBacknd, oauthClient);
+  await aeSyncReadingList.firstSync();
+
+  browser.runtime.sendMessage({id: "reload-bookmarks-event"});
+}
+
 
 
 //
@@ -58,6 +77,16 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
     let bookmarks = await aeReadingList.getAll();
     return Promise.resolve(bookmarks);
 
+  case "sync-setting-changed":
+    if (aMessage.syncEnabled) {
+      warn("Read Next: Sync was turned ON from extension preferences.");
+      firstInitSync();
+    }
+    else {
+      warn("Read Next: Sync was turned OFF from extension preferences.");
+    }
+    break;
+    
   default:
     break;
   }
@@ -71,4 +100,10 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
 function log(aMessage)
 {
   if (aeConst.DEBUG) { console.log(aMessage) }
+}
+
+
+function warn(aMessage)
+{
+  if (aeConst.DEBUG) { console.warn(aMessage) }
 }

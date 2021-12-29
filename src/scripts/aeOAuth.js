@@ -28,10 +28,10 @@ let aeOAuth = function () {
   return {
     init(aAuthzSrv)
     {
-      if (aAuthzSrv == aeConst.RS_BACKEND_DROPBOX) {
+      if (aAuthzSrv == aeConst.FILEHOST_DROPBOX) {
         _authzSrvKey = "dropbox";
       }
-      else if (aAuthzSrv == aeConst.RS_BACKEND_GOOGLE_DRIVE) {
+      else if (aAuthzSrv == aeConst.FILEHOST_GOOGLE_DRIVE) {
         _authzSrvKey = "googleDrive";
       }
 
