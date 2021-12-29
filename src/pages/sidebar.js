@@ -181,12 +181,10 @@ function removeReadingListItem(aBookmarkID)
 }
 
 
-async function rebuildReadingList()
+async function rebuildReadingList(aBookmarks)
 {
   $("#reading-list").empty();
-  
-  let bkmks = await gReadingList.getAll();
-  buildReadingList(bkmks);
+  buildReadingList(aBookmarks);
 }
 
 
@@ -316,7 +314,7 @@ browser.runtime.onMessage.addListener(aMessage => {
     break;
     
   case "reload-bookmarks-event":
-    rebuildReadingList();
+    rebuildReadingList(aMessage.bookmarks);
     break;
     
   case "sync-disconnected-from-ext-prefs":

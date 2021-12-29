@@ -46,7 +46,12 @@ async function firstInitSync()
   aeSyncReadingList.init(syncBacknd, oauthClient);
   await aeSyncReadingList.firstSync();
 
-  browser.runtime.sendMessage({id: "reload-bookmarks-event"});
+  let bookmarks = await aeReadingList.getAll();
+  let msg = {
+    id: "reload-bookmarks-event",
+    bookmarks,
+  };
+  browser.runtime.sendMessage(msg);
 }
 
 
