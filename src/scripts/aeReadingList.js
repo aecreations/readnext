@@ -41,6 +41,22 @@ let aeReadingList = {
     return rv;
   },
 
+  async bulkAdd(aBookmarks)
+  {
+    let db = this._getDB();
+
+    try {
+      await db.bookmarks.bulkAdd(aBookmarks);
+    }
+    catch (e) {
+      // Exception thrown if attempting to add a bookmark with the same ID as
+      // an existing bookmark.
+      console.warn("aeReadingList.bulkAdd(): " + e);
+    }
+
+    this._updateLocalLastModifiedTime();
+  },
+
   async remove(aBookmarkID)
   {
     let db = this._getDB();
