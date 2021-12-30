@@ -98,58 +98,6 @@ async function initReadingList()
 }
 
 
-// DEPRECATED - Should be moved to background script
-async function initSync()
-{
-  let prefs = await aePrefs.getAllPrefs();
-
-  if (! prefs.syncEnabled) {
-    log("Read Next: initSync(): Sync turned off.");
-    return;
-  }
-  
-  log("Read Next::sidebar.js initSync(): Sync enabled.");
-
-  aeOAuth.init(prefs.syncBackend);
-  let apiKey;
-  try {
-    apiKey = aeOAuth.getAPIKey();
-  }
-  catch (e) {
-    console.error(e);
-    return;
-  }
-
-  if (prefs.syncBackend == aeConst.RS_BACKEND_DROPBOX) {
-    /***
-        let result = gRemoteStorage.setApiKeys({
-        dropbox: apiKey,
-        });
-        log(`Read Next: initRemoteStorage(): Result from setting Dropbox app key: ${result}`);
-
-        gRemoteStorage.access.claim("files.content.write", "rw");
-        gRemoteStorage.access.claim("files.content.read", "r");
-        gRemoteStorage.caching.enable("/bookmarks/");
-        gRemoteStorage.dropbox.configure({token: prefs.accessToken});
-        log("Read Next: Connected to Dropbox backend.  Access token: " + prefs.accessToken);
-
-        gRemoteStorage.dropbox.connect();
-
-        let userInfo = await gRemoteStorage.dropbox.info();
-        log("Dropbox user info: ");
-        log(userInfo);
-    ***/
-  }
-  else if (prefs.syncBackend == aeConst.RS_BACKEND_GOOGLE_DRIVE) {
-    // TO DO: Initialize syncing with Google Drive.
-  }
-  else {
-    // TO DO: Support Microsoft OneDrive backend.
-  }
-}
-// END DEPRECATED
-
-
 function buildReadingList(aBookmarks)
 {
   log(`Read Next: ${aBookmarks.length} items.`);
@@ -163,6 +111,8 @@ function buildReadingList(aBookmarks)
 
 function addReadingListItem(aBookmark)
 {
+  hideWelcome();
+  
   let tooltipText = `${aBookmark.title}\n${aBookmark.url}`;
   let listItem = $("<div>").addClass("reading-list-item").attr("title", tooltipText)[0];
   listItem.dataset.id = aBookmark.id;
@@ -183,6 +133,7 @@ function removeReadingListItem(aBookmarkID)
 
 async function rebuildReadingList(aBookmarks)
 {
+  hideWelcome();
   $("#reading-list").empty();
   buildReadingList(aBookmarks);
 }
