@@ -25,4 +25,8 @@ class aeAbstractFileHost
   async syncFileExists() { throw new Error("Abstract method") }
 
   async getSyncData() { throw new Error("Abstract method") }
+
+  async setSyncData(aLocalData) { throw new Error("Abstract method") }
+
+  async getLastModifiedTime() { throw new Error("Abstract method") }
 }

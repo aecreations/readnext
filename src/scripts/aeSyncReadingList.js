@@ -43,6 +43,11 @@ let aeSyncReadingList = {
 
     return rv;
   },
+
+  reset()
+  {
+    this._fileHost = null;
+  },
   
   async firstSync()
   {
@@ -51,9 +56,21 @@ let aeSyncReadingList = {
 
     if (syncFileExists) {
       this._log("aeSyncReadingList.firstSync(): Confirmed that the sync file exists.");
+
+      if (this.DEBUG) {
+        let syncLastModT;
+        try {
+          syncLastModT = await this._fileHost.getLastModifiedTime();
+        }
+        catch (e) {
+          console.error("aeSyncReadingList.sync(): " + e);
+        }
+        this._log(`Sync file timestamp (UTC): ${syncLastModT.toISOString()}`);
+      }
+
       let syncData = await this._fileHost.getSyncData();
 
-      this._log("aeSyncReadingList.firstSync(): Sync data:");
+      this._log(`aeSyncReadingList.firstSync(): Sync data (${syncData.length} items):`);
       this._log(syncData);
       
       // Combine sync data with local bookmarks.
@@ -63,11 +80,76 @@ let aeSyncReadingList = {
       this._log("aeSyncReadingList.firstSync(): Sync file not found; creating.");
       await this._fileHost.createSyncFile(localBkmks);
     }
+  },
 
+  async sync()
+  {
+    let rv;
+    let syncLastModT;
+    try {
+      syncLastModT = await this._fileHost.getLastModifiedTime();
+    }
+    catch (e) {
+      // TO DO: Handle missing or deleted sync file on the cloud file host.
+      console.error("aeSyncReadingList.sync(): " + e);
+    }
+    
+    let localLastModT = await this._getLocalLastModifiedTime();
+
+    this._log(`aeSyncReadingList.sync(): Local last modified: ${localLastModT}\nSync last modified: ${syncLastModT}`);
+
+    if (localLastModT < syncLastModT) {
+      this._log("aeSyncReadingList.sync(): Replacing local reading list data with sync data.");
+
+      let syncData = await this._fileHost.getSyncData();
+      this._log(`aeSyncReadingList.sync(): Sync data (${syncData.length} items):`);
+      this._log(syncData);
+
+      await aeReadingList.removeAll();
+      await aeReadingList.bulkAdd(syncData);
+      await this._setLocalLastModifiedTime(syncLastModT);
+      rv = true;
+    }
+    else if (localLastModT > syncLastModT) {
+      this._log("aeSyncReadingList.sync(): Replacing sync data with local reading list data.");
+
+      let localData = await aeReadingList.getAll();
+      let syncModT = await this._fileHost.setSyncData(localData);
+      await this._setLocalLastModifiedTime(syncModT);
+      rv = false;
+    }
+    else {
+      this._log("aeSyncReadingList.sync(): The local data and sync data are the same.");
+      rv = false;
+    }
+
+    return rv;
   },
   
 
+  //
   // Helpers
+  //
+
+  async _getLocalLastModifiedTime()
+  {
+    let rv;
+    let localLastMod = await aePrefs.getPref("localLastModifiedTime");
+    rv = new Date(localLastMod);
+
+    return rv;
+  },
+
+  async _setLocalLastModifiedTime(aLastModifiedTime)
+  {
+    if (! (aLastModifiedTime instanceof Date)) {
+      throw new TypeError("aLastModifiedTime not a Date");
+    }
+
+    let localLastModifiedTime = aLastModifiedTime.toISOString();
+    await aePrefs.setPrefs({localLastModifiedTime});
+  },
+  
   _log(aMessage) {
     if (this.DEBUG) {
       console.log(aMessage);

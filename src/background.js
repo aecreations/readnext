@@ -32,19 +32,26 @@ async function init()
 
   let syncEnabled = await aePrefs.getPref("syncEnabled");
   if (syncEnabled) {
-    // TO DO: Sync local reading list data with remote sync data.
+    info("Read Next: Synced reading list is enabled.");
+    
+    await syncReadingList();
+
+    // TO DO: Set up sync interval.
   }
 }
 
 
-async function firstInitSync()
+async function firstSyncReadingList()
 {
   let prefs = await aePrefs.getAllPrefs();
   let oauthClient = new aeOAuthClient(prefs.accessToken, prefs.refreshToken);
   let syncBacknd = Number(prefs.syncBackend);
   
   aeSyncReadingList.init(syncBacknd, oauthClient);
+
+  log("Read Next: Starting reading list sync...");
   await aeSyncReadingList.firstSync();
+  log("Read Next: Finished first sync!");
 
   let bookmarks = await aeReadingList.getAll();
   let msg = {
@@ -52,6 +59,39 @@ async function firstInitSync()
     bookmarks,
   };
   browser.runtime.sendMessage(msg);
+
+  // TO DO: Set up sync interval.
+}
+
+
+async function syncReadingList()
+{
+  let prefs = await aePrefs.getAllPrefs();
+  let oauthClient = new aeOAuthClient(prefs.accessToken, prefs.refreshToken);
+  let syncBacknd = Number(prefs.syncBackend);
+  
+  aeSyncReadingList.init(syncBacknd, oauthClient);
+
+  log("Read Next: Starting reading list sync...");
+  let localDataChanged = await aeSyncReadingList.sync();
+  log("Read Next: Finished sync!");
+
+  if (localDataChanged) {
+    let bookmarks = await aeReadingList.getAll();
+    let msg = {
+      id: "reload-bookmarks-event",
+      bookmarks,
+    }; 
+    browser.runtime.sendMessage(msg);
+  }
+}
+
+
+function stopSync()
+{
+  // TO DO: Stop sync interval.
+
+  aeSyncReadingList.reset();
 }
 
 
@@ -85,10 +125,11 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
   case "sync-setting-changed":
     if (aMessage.syncEnabled) {
       warn("Read Next: Sync was turned ON from extension preferences.");
-      firstInitSync();
+      firstSyncReadingList();
     }
     else {
       warn("Read Next: Sync was turned OFF from extension preferences.");
+      stopSync();
     }
     break;
     
@@ -105,6 +146,12 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
 function log(aMessage)
 {
   if (aeConst.DEBUG) { console.log(aMessage) }
+}
+
+
+function info(aMessage)
+{
+  if (aeConst.DEBUG) { console.info(aMessage) }
 }
 
 

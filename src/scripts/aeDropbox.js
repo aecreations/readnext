@@ -17,7 +17,6 @@ class aeDropbox extends aeAbstractFileHost
   async syncFileExists()
   {
     let rv;
-
     let query = this._getURLParams();
     let headers = this._getReqHdrs();
     let params = {
@@ -50,39 +49,16 @@ class aeDropbox extends aeAbstractFileHost
     return rv;
   }
 
-  async createSyncFile(aData)
+  async createSyncFile(aLocalData)
   {
-    let rv;
+    let rv = await this._setSyncData(aLocalData, false);
     
-    let query = this._getURLParams();
-    let headers = this._getReqHdrs();
-    let params = {
-      path: `/${this.SYNC_FILENAME}`,
-      mode: "add",
-      mute: true,
-    };
-    query += "&arg=" + encodeURIComponent(JSON.stringify(params));
-    
-    let reqOpts = {
-      method: "POST",
-      headers,
-      body: JSON.stringify(aData),
-    };
-    let resp = await this._fetch(`https://content.dropboxapi.com/2/files/upload?${query}`, reqOpts);
-
-    if (! resp.ok) {
-      throw new Error(`Dropbox /files/upload: status: ${resp.status} - ${resp.statusText}`);
-    }
-
-    rv = await resp.json();
-
     return rv;
   }
 
   async getSyncData()
   {
     let rv;
-    
     let query = this._getURLParams();
     let params = {path: `/${this.SYNC_FILENAME}`};
     query += "&arg=" + encodeURIComponent(JSON.stringify(params));
@@ -99,10 +75,74 @@ class aeDropbox extends aeAbstractFileHost
     return rv;
   }
 
+  async setSyncData(aLocalData)
+  {
+    let rv = await this._setSyncData(aLocalData, true);
+
+    return rv;
+  }
+
+  async getLastModifiedTime()
+  {
+    let rv;
+
+    // The /files/get_metadata endpoint doesn't seem to allow suppression of
+    // the CORS pre-flight check.
+    let headers = new Headers();
+    headers.append("Authorization", `Bearer ${this._oauthClient.accessToken}`);
+    headers.append("Content-Type", "application/json");
+    
+    let params = {path: `/${this.SYNC_FILENAME}`};
+    let reqOpts = {
+      method: "POST",
+      headers,
+      body: JSON.stringify(params),
+    };
+    let resp = await this._fetch(`https://api.dropboxapi.com/2/files/get_metadata`, reqOpts);
+
+    if (! resp.ok) {
+      throw new Error(`Dropbox /files/get_metadata: status: ${resp.status} - ${resp.statusText}`);
+    }
+
+    let parsedResp = await resp.json();   
+    rv = new Date(parsedResp.server_modified);
+
+    return rv;
+  }
+
 
   //
   // Helper methods
   //
+  
+  async _setSyncData(aLocalData, aOverwrite)
+  {
+    let rv;
+    let query = this._getURLParams();
+    let headers = this._getReqHdrs();
+    let params = {
+      path: `/${this.SYNC_FILENAME}`,
+      mode: aOverwrite ? "overwrite" : "add",
+      mute: true,
+    };
+    query += "&arg=" + encodeURIComponent(JSON.stringify(params));
+    
+    let reqOpts = {
+      method: "POST",
+      headers,
+      body: JSON.stringify(aLocalData),
+    };
+    let resp = await this._fetch(`https://content.dropboxapi.com/2/files/upload?${query}`, reqOpts);
+
+    if (! resp.ok) {
+      throw new Error(`Dropbox /files/upload: status: ${resp.status} - ${resp.statusText}`);
+    }
+
+    let parsedResp = await resp.json();
+    rv = new Date(parsedResp.server_modified);
+
+    return rv;
+  }
   
   _getURLParams()
   {

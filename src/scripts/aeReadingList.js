@@ -71,6 +71,12 @@ let aeReadingList = {
     this._updateLocalLastModifiedTime();
   },
 
+  async removeAll()
+  {
+    let db = this._getDB();
+    await db.bookmarks.clear();
+  },
+
   async get(aBookmarkID)
   {
     let rv;
@@ -113,6 +119,6 @@ let aeReadingList = {
   async _updateLocalLastModifiedTime()
   {
     let now = new Date();
-    await aePrefs.setPrefs({localLastModifiedTime: now.toUTCString()});
+    await aePrefs.setPrefs({localLastModifiedTime: now.toISOString()});
   },
 };
