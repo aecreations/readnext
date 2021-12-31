@@ -35,8 +35,7 @@ async function init()
     info("Read Next: Synced reading list is enabled.");
     
     await syncReadingList();
-
-    // TO DO: Set up sync interval.
+    initSyncInterval();
   }
 }
 
@@ -49,7 +48,7 @@ async function firstSyncReadingList()
   
   aeSyncReadingList.init(syncBacknd, oauthClient);
 
-  log("Read Next: Starting reading list sync...");
+  log("Read Next: Starting first reading list sync...");
   await aeSyncReadingList.firstSync();
   log("Read Next: Finished first sync!");
 
@@ -60,7 +59,7 @@ async function firstSyncReadingList()
   };
   browser.runtime.sendMessage(msg);
 
-  // TO DO: Set up sync interval.
+  initSyncInterval();
 }
 
 
@@ -87,10 +86,17 @@ async function syncReadingList()
 }
 
 
+async function initSyncInterval()
+{
+  let periodInMinutes = await aePrefs.getPref("syncInterval");
+  browser.alarms.create("sync-reading-list", {periodInMinutes});
+  info(`Read Next: Reading list will be synced every ${periodInMinutes} mins.`);
+}
+
+
 function stopSync()
 {
-  // TO DO: Stop sync interval.
-
+  browser.alarms.clear("sync-reading-list");
   aeSyncReadingList.reset();
 }
 
@@ -135,6 +141,13 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
     
   default:
     break;
+  }
+});
+
+
+browser.alarms.onAlarm.addListener(aAlarm => {
+  if (aAlarm.name == "sync-reading-list") {
+    syncReadingList();
   }
 });
 

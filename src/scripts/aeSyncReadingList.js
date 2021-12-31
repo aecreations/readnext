@@ -57,15 +57,15 @@ let aeSyncReadingList = {
     if (syncFileExists) {
       this._log("aeSyncReadingList.firstSync(): Confirmed that the sync file exists.");
 
+      let syncLastModT;
       if (this.DEBUG) {
-        let syncLastModT;
         try {
           syncLastModT = await this._fileHost.getLastModifiedTime();
         }
         catch (e) {
           console.error("aeSyncReadingList.sync(): " + e);
         }
-        this._log(`Sync file timestamp (UTC): ${syncLastModT.toISOString()}`);
+        this._log(`Sync file timestamp: ${syncLastModT}`);
       }
 
       let syncData = await this._fileHost.getSyncData();
@@ -75,6 +75,11 @@ let aeSyncReadingList = {
       
       // Combine sync data with local bookmarks.
       await aeReadingList.bulkAdd(syncData);
+      if (localBkmks.length > 0) {
+        let updLocalBkmks = await aeReadingList.getAll();
+        syncLastModT = await this._fileHost.setSyncData(updLocalBkmks);
+        this._setLocalLastModifiedTime(syncLastModT);
+      }
     }
     else {
       this._log("aeSyncReadingList.firstSync(): Sync file not found; creating.");
