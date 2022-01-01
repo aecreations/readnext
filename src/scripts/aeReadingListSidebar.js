@@ -24,7 +24,7 @@ class aeReadingListSidebar
       rv = await browser.runtime.sendMessage(msg);
     }
     catch (e) {
-      console.error("aeReadingListeSidebar.add(): " + e);
+      console.error("aeReadingListSidebar.add(): " + e);
       throw e;
     }
 
