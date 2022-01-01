@@ -94,12 +94,31 @@ async function initSyncInterval()
 }
 
 
-function stopSync()
+async function stopSync()
 {
-  browser.alarms.clear("sync-reading-list");
+  await browser.alarms.clear("sync-reading-list");
   aeSyncReadingList.reset();
+  log("Read Next: Sync stopped.");
 }
 
+
+async function restartSyncInterval()
+{
+  log("Read Next: Restarting sync interval...");
+  await browser.alarms.clear("sync-reading-list");
+  await initSyncInterval();
+}
+
+
+async function pushLocalChanges()
+{
+  let syncEnabled = await aePrefs.getPref("syncEnabled");
+  if (syncEnabled) {
+    log("Read Next: Pushing local changes...");
+    await aeSyncReadingList.push();
+    await restartSyncInterval();
+  }
+}
 
 
 //
@@ -118,10 +137,12 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
     catch (e) {
       return Promise.reject(e);
     }
+    await pushLocalChanges();
     return Promise.resolve(bookmarkID);
 
   case "remove-bookmark":
     aeReadingList.remove(aMessage.bookmarkID);
+    pushLocalChanges();
     break;
 
   case "get-all-bookmarks":
