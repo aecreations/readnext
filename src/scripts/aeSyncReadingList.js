@@ -104,23 +104,11 @@ let aeSyncReadingList = {
     this._log(`aeSyncReadingList.sync(): Local last modified: ${localLastModT}\nSync last modified: ${syncLastModT}`);
 
     if (localLastModT < syncLastModT) {
-      this._log("aeSyncReadingList.sync(): Replacing local reading list data with sync data.");
-
-      let syncData = await this._fileHost.getSyncData();
-      this._log(`aeSyncReadingList.sync(): Sync data (${syncData.length} items):`);
-      this._log(syncData);
-
-      await aeReadingList.removeAll();
-      await aeReadingList.bulkAdd(syncData);
-      await this._setLocalLastModifiedTime(syncLastModT);
+      await this.pull(syncLastModT);
       rv = true;
     }
     else if (localLastModT > syncLastModT) {
-      this._log("aeSyncReadingList.sync(): Replacing sync data with local reading list data.");
-
-      let localData = await aeReadingList.getAll();
-      let syncModT = await this._fileHost.setSyncData(localData);
-      await this._setLocalLastModifiedTime(syncModT);
+      await this.push();
       rv = false;
     }
     else {
@@ -129,6 +117,34 @@ let aeSyncReadingList = {
     }
 
     return rv;
+  },
+
+
+  async push()
+  {
+    this._log("aeSyncReadingList.push(): Replacing sync data with local reading list data.");
+
+    let localData = await aeReadingList.getAll();
+    let syncModT = await this._fileHost.setSyncData(localData);
+    await this._setLocalLastModifiedTime(syncModT);
+  },
+
+
+  async pull(aSyncModifiedTime)
+  {
+    if (! aSyncModifiedTime) {
+      aSyncModifiedTime = await this._fileHost.getLastModifiedTime();
+    }
+
+    this._log("aeSyncReadingList.pull(): Replacing local reading list data with sync data.");
+
+    let syncData = await this._fileHost.getSyncData();
+    this._log(`aeSyncReadingList.pull(): Sync data (${syncData.length} items):`);
+    this._log(syncData);
+
+    await aeReadingList.removeAll();
+    await aeReadingList.bulkAdd(syncData);
+    await this._setLocalLastModifiedTime(aSyncModifiedTime);
   },
   
 
