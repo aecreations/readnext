@@ -57,6 +57,11 @@ class aeReadingListSidebar
     return this._urlHash(aURL);
   }
 
+  sync()
+  {
+    browser.runtime.sendMessage({id: "sync-reading-list"});
+  }
+
   // Helper method
   _urlHash(aURL)
   {

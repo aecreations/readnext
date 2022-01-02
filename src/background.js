@@ -75,14 +75,12 @@ async function syncReadingList()
   let localDataChanged = await aeSyncReadingList.sync();
   log("Read Next: Finished sync!");
 
-  if (localDataChanged) {
-    let bookmarks = await aeReadingList.getAll();
-    let msg = {
-      id: "reload-bookmarks-event",
-      bookmarks,
-    }; 
-    browser.runtime.sendMessage(msg);
-  }
+  let bookmarks = await aeReadingList.getAll();
+  let msg = {
+    id: "reload-bookmarks-event",
+    bookmarks,
+  }; 
+  browser.runtime.sendMessage(msg);
 }
 
 
@@ -148,6 +146,11 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
   case "get-all-bookmarks":
     let bookmarks = await aeReadingList.getAll();
     return Promise.resolve(bookmarks);
+
+  case "sync-reading-list":
+    await syncReadingList();
+    await restartSyncInterval();
+    break;
 
   case "sync-setting-changed":
     if (aMessage.syncEnabled) {

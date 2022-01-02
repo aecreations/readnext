@@ -87,13 +87,20 @@ async function initReadingList()
 
   gReadingList = new aeReadingListSidebar();
 
-  let bkmks = await gReadingList.getAll();
-  if (bkmks.length == 0) {
-    showWelcome();
+  let syncEnabled = await aePrefs.getPref("syncEnabled");
+  if (syncEnabled) {
+    log("Read Next::sidebar.js: initReadingList(): Sync enabled.  Syncing reading list.");
+    gReadingList.sync();
   }
   else {
-    hideWelcome();
-    buildReadingList(bkmks);
+    let bkmks = await gReadingList.getAll();
+    if (bkmks.length == 0) {
+      showWelcome();
+    }
+    else {
+      hideWelcome();
+      buildReadingList(bkmks);
+    }
   }
 }
 
@@ -252,8 +259,11 @@ function disableAddLinkBtn()
 // Event handlers
 //
 
-browser.runtime.onMessage.addListener(aMessage => {
-  log(`Read Next::sidebar.js: Received extension message "${aMessage.id}"`);
+browser.runtime.onMessage.addListener(async (aMessage) => {
+  if (aeConst.DEBUG) {
+    let wnd = await browser.windows.getCurrent();
+    log(`Read Next::sidebar.js: [Window ID: ${wnd.id}] Received extension message "${aMessage.id}"`);
+  }
 
   switch (aMessage.id) {
   case "add-bookmark-event":
@@ -269,7 +279,7 @@ browser.runtime.onMessage.addListener(aMessage => {
     break;
     
   case "sync-disconnected-from-ext-prefs":
-    warn("Read Next: Disconnected while sync in progress.");
+    warn("Read Next: Sync turned off from extension preferences page.");
     break;
 
   default:
@@ -278,8 +288,15 @@ browser.runtime.onMessage.addListener(aMessage => {
 });
 
 
-$("#setup").on("click", aEvent => {
-  browser.runtime.openOptionsPage();
+browser.windows.onFocusChanged.addListener(async (aWndID) => {
+  let wnd = await browser.windows.getCurrent();
+  if (wnd.id == aWndID) {
+    let syncEnabled = await aePrefs.getPref("syncEnabled");
+    if (syncEnabled) {
+      log(`Read Next::sidebar.js: [Window ID: ${wnd.id}] Handling window focus changed event - syncing reading list.`);
+      gReadingList.sync();
+    }
+  }
 });
 
 
@@ -299,6 +316,11 @@ $("#add-link").on("click", async (aEvent) => {
   }
  
   hideWelcome();  
+});
+
+
+$("#setup").on("click", aEvent => {
+  browser.runtime.openOptionsPage();
 });
 
 
