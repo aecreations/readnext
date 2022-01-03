@@ -4,9 +4,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-let gReadingList;
 
-// Context menu commands
+// Sidebar actions
 let gCmd = {
   async open(aBookmarkID, aURL)
   {
@@ -43,10 +42,53 @@ let gCmd = {
     this._afterBookmarkOpened(aBookmarkID);
   },
 
+  async addBookmark(aBookmark)
+  {
+    if (! aBookmark.id) {
+      throw new Error("Bookmark ID is invalid or undefined");
+    }
+
+    let msg = {
+      id: "add-bookmark",
+      bookmark: aBookmark,
+    };
+
+    let bkmkID;
+    try {
+      bkmkID = await browser.runtime.sendMessage(msg);
+    }
+    catch (e) {
+      console.error("gCmd.addBookmark(): " + e);
+      throw e;
+    }
+  },
+
   deleteBookmark(aBookmarkID)
   {
-    gReadingList.remove(aBookmarkID);
+    let msg = {
+      id: "remove-bookmark",
+      bookmarkID: aBookmarkID,
+    };
+    
+    browser.runtime.sendMessage(msg);
   },
+
+  async getBookmarks()
+  {
+    let rv;
+    let msg = {
+      id: "get-all-bookmarks"
+    };
+
+    rv = await browser.runtime.sendMessage(msg);    
+    return rv;
+  },
+
+  syncBookmarks()
+  {
+    browser.runtime.sendMessage({id: "sync-reading-list"});
+  },
+
 
   // Helper
   async _afterBookmarkOpened(aBookmarkID)
@@ -59,7 +101,8 @@ let gCmd = {
       // END TEMPORARY
     }
     else {
-      // TO DO: Set the bookmark status to "Read" in the reading list
+      // TO DO: Set the bookmark status to "Read" in the reading list.
+      // Again, do this after the page has finished loading.
     }
   },
 };
@@ -85,15 +128,13 @@ async function initReadingList()
 {
   log("Read Next::sidebar.js: initReadingList(): Initializing sidebar.");
 
-  gReadingList = new aeReadingListSidebar();
-
   let syncEnabled = await aePrefs.getPref("syncEnabled");
   if (syncEnabled) {
     log("Read Next::sidebar.js: initReadingList(): Sync enabled.  Syncing reading list.");
-    gReadingList.sync();
+    gCmd.syncBookmarks();
   }
   else {
-    let bkmks = await gReadingList.getAll();
+    let bkmks = await gCmd.getBookmarks();
     if (bkmks.length == 0) {
       showWelcome();
     }
@@ -294,7 +335,7 @@ browser.windows.onFocusChanged.addListener(async (aWndID) => {
     let syncEnabled = await aePrefs.getPref("syncEnabled");
     if (syncEnabled) {
       log(`Read Next::sidebar.js: [Window ID: ${wnd.id}] Handling window focus changed event - syncing reading list.`);
-      gReadingList.sync();
+      gCmd.syncBookmarks();
     }
   }
 });
@@ -304,11 +345,11 @@ $("#add-link").on("click", async (aEvent) => {
   let tabs = await browser.tabs.query({active: true, currentWindow: true});
   let title = tabs[0].title;
   let url = tabs[0].url;
-  let id = gReadingList.getIDFromURL(url);
+  let id = getBookmarkIDFromURL(url);
   let bkmk = new aeBookmark(id, url, title);
-  let bkmkID;
+
   try {
-    bkmkID = await gReadingList.add(bkmk);
+    await gCmd.addBookmark(bkmk);
   }
   catch (e) {
     console.error("Read Next: Error adding bookmark: " + e);
@@ -345,6 +386,12 @@ $(document).on("contextmenu", aEvent => {
 //
 // Utilities
 //
+
+function getBookmarkIDFromURL(aURL)
+{
+  return md5(aURL);
+}
+
 
 function log(aMessage)
 {
