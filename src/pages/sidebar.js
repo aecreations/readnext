@@ -119,7 +119,7 @@ $(async () => {
 
   await initReadingList();
 
-  initContextMenu.showOpenInPrivBrwsOpt = await browser.extension.isAllowedIncognitoAccess();
+  initContextMenu.showOpenInPrivBrws = await browser.extension.isAllowedIncognitoAccess();
   initContextMenu();
 });
 
@@ -214,10 +214,10 @@ function initContextMenu()
           gCmd.openInNewPrivateWnd(bkmkElt.dataset.id, bkmkElt.dataset.url);
         },
         visible(aKey, aOpt) {
-          return initContextMenu.showOpenInPrivBrwsOpt;
+          return initContextMenu.showOpenInPrivBrws;
         }
       },
-      separator: "---",
+      deleteBkmkSep: "---",
       deleteBookmark: {
         name: "delete",
         callback(aKey, aOpt) {
@@ -227,11 +227,27 @@ function initContextMenu()
 
           gCmd.deleteBookmark(bkmkID);
         }
+      },
+      syncSep: {
+        type: "cm_separator",
+        visible(aKey, aOpt) {
+          return initContextMenu.showManualSync;
+        }
+      },
+      syncBkmksNow: {
+        name: "sync now",
+        callback(aKey, aOpt) {
+          gCmd.syncBookmarks();
+        },
+        visible(aKey, aOpt) {
+          return initContextMenu.showManualSync;
+        }
       }
     }
   });
 }
-initContextMenu.showOpenInPrivBrwsOpt = false;
+initContextMenu.showManualSync = false;
+initContextMenu.showOpenInPrivBrws = false;
 
 
 function showWelcome()
@@ -319,8 +335,8 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
     rebuildReadingList(aMessage.bookmarks);
     break;
     
-  case "sync-disconnected-from-ext-prefs":
-    warn("Read Next: Sync turned off from extension preferences page.");
+  case "sync-setting-changed":
+    initContextMenu.showManualSync = aMessage.syncEnabled;
     break;
 
   default:
