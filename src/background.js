@@ -176,6 +176,18 @@ browser.alarms.onAlarm.addListener(aAlarm => {
 });
 
 
+browser.windows.onFocusChanged.addListener(async (aWndID) => {
+  let wnd = await browser.windows.getCurrent();
+  if (wnd.id == aWndID) {
+    let syncEnabled = await aePrefs.getPref("syncEnabled");
+    if (syncEnabled) {
+      log(`Read Next: Handling window focus changed event for window ${wnd.id} - syncing reading list.`);
+      syncReadingList();
+    }
+  }
+});
+
+
 //
 // Utilities
 //

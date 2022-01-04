@@ -345,18 +345,6 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
 });
 
 
-browser.windows.onFocusChanged.addListener(async (aWndID) => {
-  let wnd = await browser.windows.getCurrent();
-  if (wnd.id == aWndID) {
-    let syncEnabled = await aePrefs.getPref("syncEnabled");
-    if (syncEnabled) {
-      log(`Read Next::sidebar.js: [Window ID: ${wnd.id}] Handling window focus changed event - syncing reading list.`);
-      gCmd.syncBookmarks();
-    }
-  }
-});
-
-
 $("#add-link").on("click", async (aEvent) => {
   let tabs = await browser.tabs.query({active: true, currentWindow: true});
   let title = tabs[0].title;
