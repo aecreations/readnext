@@ -33,8 +33,6 @@ async function init()
   let syncEnabled = await aePrefs.getPref("syncEnabled");
   if (syncEnabled) {
     info("Read Next: Synced reading list is enabled.");
-    
-    await syncReadingList();
     initSyncInterval();
   }
 }
