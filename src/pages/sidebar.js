@@ -119,6 +119,8 @@ $(async () => {
 
   await initReadingList();
 
+  let syncEnabled = await aePrefs.getPref("syncEnabled");
+  initContextMenu.showManualSync = syncEnabled;
   initContextMenu.showOpenInPrivBrws = await browser.extension.isAllowedIncognitoAccess();
   initContextMenu();
 });
