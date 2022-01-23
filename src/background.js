@@ -55,7 +55,10 @@ async function firstSyncReadingList()
     id: "reload-bookmarks-event",
     bookmarks,
   };
-  browser.runtime.sendMessage(msg);
+  try {
+    await browser.runtime.sendMessage(msg);
+  }
+  catch {}
 
   initSyncInterval();
 }
