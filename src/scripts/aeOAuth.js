@@ -113,6 +113,7 @@ let aeOAuth = function () {
 
       let requestParams = new URLSearchParams({
         stgsvc: _authzSrvKey,
+        grant_type: "authorization_code",
         code: _authzCode,
         redirect_uri: _redirectURL,
       });
