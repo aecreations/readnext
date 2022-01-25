@@ -113,7 +113,6 @@ let aeOAuth = function () {
 
       let requestParams = new URLSearchParams({
         stgsvc: _authzSrvKey,
-        grant_type: "authorization_code",
         code: _authzCode,
         redirect_uri: _redirectURL,
       });
@@ -124,7 +123,7 @@ let aeOAuth = function () {
 
       let resp;  
       try {
-        resp = await fetch(`https://aeoaps.herokuapp.com/readnext/authtoken`, requestOpts);
+        resp = await fetch("https://aeoaps.herokuapp.com/readnext/authtoken", requestOpts);
       }
       catch (e) {
         console.error("aeOAuth.getAccessToken(): Error getting access token from Dropbox: " + e);
