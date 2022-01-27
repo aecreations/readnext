@@ -29,4 +29,17 @@ class aeAbstractFileHost
   async setSyncData(aLocalData) { throw new Error("Abstract method") }
 
   async getLastModifiedTime() { throw new Error("Abstract method") }
+
+
+  //
+  // Utilities
+  //
+  
+  _warn(aMessage) {
+    if (aeConst.DEBUG) { console.warn(aMessage) }
+  }
+
+  _log(aMessage) {
+    if (aeConst.DEBUG) { console.log(aMessage) }
+  }
 }
