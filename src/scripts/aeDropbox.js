@@ -6,9 +6,11 @@
 
 class aeDropbox extends aeAbstractFileHost
 {
+  AUTHZ_SRV_KEY = "dropbox";
   ROOT_APP_FOLDER = "";
-
+  HTTP_STATUS_UNAUTHORIZED = 401;
   
+
   constructor(aOAuthClient)
   {
     super(aOAuthClient);
@@ -165,20 +167,111 @@ class aeDropbox extends aeAbstractFileHost
     return rv;
   }
 
-  async _fetch(aResource, aInit)
+  async _fetch(aResource, aInit, aIsRetry)
   {
-    let rv;
+    let rv, resp;
     
     try {
-      rv = await fetch(aResource, aInit);
+      resp = await fetch(aResource, aInit);
     }
     catch (e) {
       console.error("aeDropbox._fetch(): " + e);
       throw e;
     }
 
-    // TO DO: Check for failure due to expired access token.
-    // If access token is expired, obtain a refresh token and retry.
+    if (resp.ok) {
+      rv = resp;
+    }
+    else {
+      this._warn(`aeDropbox._fetch(): ${resp.status} ${resp.statusText}`);
+
+      if (resp.status == this.HTTP_STATUS_UNAUTHORIZED) {
+        if (aIsRetry) {
+          // Prevent infinite recursion and just return the error response.
+          rv = resp;
+        }
+        else {
+          this._log("Access token may have expired.  Refreshing access token...");
+          
+          // Update parameters to fetch call with new access token.
+          let newAccessToken = await this._refreshAccessToken();
+          let {resource, init} = this._updateFetchArgs(aResource, aInit, newAccessToken);
+
+          this._log("aeDropbox._fetch(): Retrying fetch with URL: " + resource);
+          this._log(init);
+
+          rv = await this._fetch(resource, init, true);
+        }
+      }
+    }
+
+    return rv;
+  }
+
+  async _refreshAccessToken()
+  {
+    let rv;
+    let params = new URLSearchParams({
+      stgsvc: this.AUTHZ_SRV_KEY,
+      grant_type: "refresh_token",
+      refresh_token: this._oauthClient.refreshToken,
+    });
+    let reqOpts = {
+      method: "POST",
+      body: params,
+    };
+    
+    let resp;
+    try {
+      resp = await fetch("https://aeoaps.herokuapp.com/readnext/authtoken", reqOpts);
+    }
+    catch (e) {
+      console.error("aeDropbox._refreshAccessToken(): Error getting new access token: " + e);
+      throw e;
+    }
+    
+    if (! resp.ok) {
+      throw new Error(`Dropbox /oauth2/token: status: ${resp.status} - ${resp.statusText}`);
+    }
+    
+    let parsedResp = await resp.json();
+    let newAccessToken = parsedResp["access_token"];
+    this._oauthClient.accessToken = newAccessToken;
+    await aePrefs.setPrefs({accessToken: newAccessToken});
+    rv = newAccessToken;
+
+    this._log("aeDropbox._refreshAccessToken(): " + newAccessToken);
+
+    return rv;
+  }
+
+  _updateFetchArgs(aResource, aInit, aAccessToken)
+  {
+    let rv = {
+      resource: aResource,
+      init: aInit,
+    };
+    
+    let url = new URL(aResource);
+    let srchParams = url.searchParams;
+
+    // Update query string with new access token.
+    if (srchParams.has("reject_cors_preflight")) {
+      let query = `?authorization=Bearer ${aAccessToken}&reject_cors_preflight=true`;
+      if (srchParams.has("arg")) {
+        query += "&arg=" + srchParams.get("arg");
+      }
+      rv.resource = url.origin + url.pathname + query;
+    }
+    else {
+      // If suppression of CORS pre-flight check is not supported, then update
+      // the 'Authorization' header in the request.
+      let headers = new Headers(aInit.headers);
+      if (headers.has("Authorization")) {
+        headers.set("Authorization", `Bearer ${aAccessToken}`);
+        rv.init.headers = headers;
+      }
+    }
 
     return rv;
   }
