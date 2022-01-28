@@ -15,8 +15,8 @@ let aeOAuth = function () {
     dropbox: {
       authzURL: `https://www.dropbox.com/oauth2/authorize?client_id=%k&redirect_uri=%r&response_type=code&token_access_type=offline`,
     },
-    googleDrive: {
-      authzURL: `https://accounts.google.com/o/oauth2/v2/auth?client_id=%k&redirect_uri=%r&response_type=code&scope=https%3A//www.googleapis.com/auth/drive.appdata+https%3A//www.googleapis.com/auth/drive.file+https%3A//www.googleapis.com/auth/drive.install`,
+    googledrive: {
+      authzURL: `https://accounts.google.com/o/oauth2/v2/auth?client_id=%k&redirect_uri=%r&response_type=code&scope=https%3A//www.googleapis.com/auth/drive.appdata`,
     },
   };
 
@@ -32,7 +32,7 @@ let aeOAuth = function () {
         _authzSrvKey = "dropbox";
       }
       else if (aAuthzSrv == aeConst.FILEHOST_GOOGLE_DRIVE) {
-        _authzSrvKey = "googleDrive";
+        _authzSrvKey = "googledrive";
       }
 
       let redirURL = browser.identity.getRedirectURL(); 
@@ -126,7 +126,7 @@ let aeOAuth = function () {
         resp = await fetch("https://aeoaps.herokuapp.com/readnext/authtoken", requestOpts);
       }
       catch (e) {
-        console.error("aeOAuth.getAccessToken(): Error getting access token from Dropbox: " + e);
+        console.error("aeOAuth.getAccessToken(): Error getting access token: " + e);
         throw e;
       }
   

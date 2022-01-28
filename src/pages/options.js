@@ -55,6 +55,7 @@ $("#toggle-sync").on("click", async (aEvent) => {
     syncEnabled: false,
     syncBackend: null,
     accessToken: null,
+    refreshToken: null,
   };
   let syncEnabled = await aePrefs.getPref("syncEnabled");
 
@@ -76,12 +77,7 @@ $("#toggle-sync").on("click", async (aEvent) => {
       return;
     }
 
-    if (backend == aeConst.FILEHOST_GOOGLE_DRIVE) {
-      window.alert("Google Drive is not supported.");
-      return;
-    }
-
-    // Initialize Dropbox backend
+    // Initialize cloud file host backend
     setInitSyncProgressIndicator(true);
     aeOAuth.init(backend);
     let authzCode, tokens;
@@ -101,6 +97,11 @@ $("#toggle-sync").on("click", async (aEvent) => {
     }
 
     if (! tokens) {
+      return;
+    }
+
+    if (backend == aeConst.FILEHOST_GOOGLE_DRIVE) {
+      window.alert("Google Drive is not supported.");
       return;
     }
 
