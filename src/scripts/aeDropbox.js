@@ -231,7 +231,7 @@ class aeDropbox extends aeAbstractFileHost
     }
     
     if (! resp.ok) {
-      throw new Error(`Dropbox /oauth2/token: status: ${resp.status} - ${resp.statusText}`);
+      throw new Error(`Error from aeOAPS /authtoken: status: ${resp.status} - ${resp.statusText}`);
     }
     
     let parsedResp = await resp.json();
