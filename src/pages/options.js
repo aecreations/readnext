@@ -100,10 +100,12 @@ $("#toggle-sync").on("click", async (aEvent) => {
       return;
     }
 
+    // TEMPORARY
     if (backend == aeConst.FILEHOST_GOOGLE_DRIVE) {
       window.alert("Google Drive is not supported.");
       return;
     }
+    // END TEMPORARY
 
     syncPrefs = {
       syncEnabled: true,
