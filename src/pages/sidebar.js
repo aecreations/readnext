@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+let gPrefs;
 
 // Sidebar actions
 let gCmd = {
@@ -93,8 +94,7 @@ let gCmd = {
   // Helper
   async _afterBookmarkOpened(aBookmarkID)
   {
-    let deleteReadLinks = await aePrefs.getPref("deleteReadLinks");
-    if (deleteReadLinks) {
+    if (gPrefs.deleteReadLinks) {
       // TEMPORARY
       // TO DO: Delete the bookmark after the page has finished loading.
       setTimeout(() => { this.deleteBookmark(aBookmarkID) }, 3000);
@@ -108,19 +108,78 @@ let gCmd = {
 };
 
 
-// Sidebar initializion
+// Search box
+let gSearchBox = {
+  _isInitialized: false,
+  _isActive: false,
+  _numMatches: null,
+
+  init()
+  {
+    if (this._isInitialized) {
+      return;
+    }
+    
+    // TO DO: Localize search box.
+    /***
+    $("#search-box").prop("placeholder", browser.i18n.getMessage("srchBoxHint"));
+    ***/
+
+    this._isInitialized = true;
+  },
+
+  isActivated()
+  {
+    return this._isActive;
+  },
+
+  async updateSearch()
+  {
+    let msg = {
+      id: "search-bookmarks",
+      searchTerms: $("#search-box").val(),
+    };
+    let srchResults = await browser.runtime.sendMessage(msg);
+
+    this._numMatches = srchResults.length;
+    await rebuildReadingList(srchResults);
+  },
+
+  getCountMatches()
+  {
+    return this._numMatches;
+  },
+
+  activate()
+  {
+    this._isActive = true;
+  },
+
+  async reset()
+  {
+    $("#search-box").val("").focus();
+    this._isActive = false;
+    this._numMatches = null;
+
+    let bkmks = await gCmd.getBookmarks();
+    rebuildReadingList(bkmks);
+  }
+};
+
+
+// Sidebar initialization
 $(async () => {
+  gPrefs = await aePrefs.getAllPrefs();
+  
   // TO DO: Is this still needed? Should this be done in the background script?
-  let syncEnabledFromExtPrefs = await aePrefs.getPref("syncEnabledFromExtPrefs");
-  if (syncEnabledFromExtPrefs) {
+  if (gPrefs.syncEnabledFromExtPrefs) {
     await aePrefs.setPrefs({syncEnabledFromExtPrefs: false});
   }
   // END TO DO
 
   await initReadingList();
 
-  let syncEnabled = await aePrefs.getPref("syncEnabled");
-  initContextMenu.showManualSync = syncEnabled;
+  initContextMenu.showManualSync = gPrefs.syncEnabled;
   initContextMenu.showOpenInPrivBrws = await browser.extension.isAllowedIncognitoAccess();
   initContextMenu();
 });
@@ -130,8 +189,7 @@ async function initReadingList()
 {
   log("Read Next::sidebar.js: initReadingList(): Initializing sidebar.");
 
-  let syncEnabled = await aePrefs.getPref("syncEnabled");
-  if (syncEnabled) {
+  if (gPrefs.syncEnabled) {
     log("Read Next::sidebar.js: initReadingList(): Sync enabled.  Syncing reading list.");
     gCmd.syncBookmarks();
   }
@@ -381,6 +439,24 @@ $("#reading-list").on("click", async (aEvent) => {
   }
 
   gCmd.open(readingListItem.dataset.id, readingListItem.dataset.url);
+});
+
+
+$("#search-box").focus(aEvent => {
+  gSearchBox.activate();
+});
+
+
+$("#search-box").on("keyup", aEvent => {
+  if (aEvent.key == "Escape" && gSearchBox.isActivated()) {
+    gSearchBox.reset();
+  }
+  else {
+    if (! gSearchBox.isActivated()) {
+      gSearchBox.activate();
+    }
+    gSearchBox.updateSearch();
+  }
 });
 
 

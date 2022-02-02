@@ -81,7 +81,10 @@ async function syncReadingList()
     id: "reload-bookmarks-event",
     bookmarks,
   }; 
-  browser.runtime.sendMessage(msg);
+  try {
+    browser.runtime.sendMessage(msg);
+  }
+  catch {}
 }
 
 
@@ -145,8 +148,12 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
     break;
 
   case "get-all-bookmarks":
-    let bookmarks = await aeReadingList.getAll();
-    return Promise.resolve(bookmarks);
+    let allBkmks = await aeReadingList.getAll();
+    return Promise.resolve(allBkmks);
+
+  case "search-bookmarks":
+    let foundBkmks = await aeReadingList.findByName(aMessage.searchTerms);
+    return Promise.resolve(foundBkmks);
 
   case "sync-reading-list":
     await syncReadingList();

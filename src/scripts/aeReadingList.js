@@ -104,6 +104,15 @@ let aeReadingList = {
     return rv;
   },
 
+  async findByName(aSearchTerm)
+  {
+    let rv;
+    let db = this._getDB();
+    rv = await db.bookmarks.where("title").startsWithIgnoreCase(aSearchTerm).toArray();
+
+    return rv;
+  },
+
   // Helpers
   _getDB()
   {
