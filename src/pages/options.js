@@ -72,7 +72,7 @@ $("#toggle-sync").on("click", async (aEvent) => {
     catch {}
   }
   else {
-    let backend = window.prompt("backend to use (1=Dropbox, 2=Google Drive):", "1");
+    let backend = window.prompt("backend to use (1=Dropbox, 2=Google Drive, 3=OneDrive):", "1");
     if (! backend) {
       return;
     }
@@ -101,8 +101,8 @@ $("#toggle-sync").on("click", async (aEvent) => {
     }
 
     // TEMPORARY
-    if (backend == aeConst.FILEHOST_GOOGLE_DRIVE) {
-      window.alert("Google Drive is not supported.");
+    if (backend == aeConst.FILEHOST_GOOGLE_DRIVE || backend == aeConst.FILEHOST_ONEDRIVE) {
+      window.alert("selected file host not supported.");
       return;
     }
     // END TEMPORARY

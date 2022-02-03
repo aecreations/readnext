@@ -18,6 +18,9 @@ let aeOAuth = function () {
     googledrive: {
       authzURL: `https://accounts.google.com/o/oauth2/v2/auth?client_id=%k&redirect_uri=%r&response_type=code&scope=https%3A//www.googleapis.com/auth/drive.appdata`,
     },
+    onedrive: {
+      authzURL: `https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=%k&redirect_uri=%r&response_type=code&scope=Files.ReadWrite+offline_access&response_mode=query`,
+    }
   };
 
 
@@ -33,6 +36,9 @@ let aeOAuth = function () {
       }
       else if (aAuthzSrv == aeConst.FILEHOST_GOOGLE_DRIVE) {
         _authzSrvKey = "googledrive";
+      }
+      else if (aAuthzSrv == aeConst.FILEHOST_ONEDRIVE) {
+        _authzSrvKey = "onedrive";
       }
 
       let redirURL = browser.identity.getRedirectURL(); 
