@@ -152,7 +152,7 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
     return Promise.resolve(allBkmks);
 
   case "search-bookmarks":
-    let foundBkmks = await aeReadingList.findByName(aMessage.searchTerms);
+    let foundBkmks = await aeReadingList.findByTitle(aMessage.searchTerms);
     return Promise.resolve(foundBkmks);
 
   case "sync-reading-list":

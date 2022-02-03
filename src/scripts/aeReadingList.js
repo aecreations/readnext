@@ -104,11 +104,14 @@ let aeReadingList = {
     return rv;
   },
 
-  async findByName(aSearchTerm)
+  async findByTitle(aSearchTerm)
   {
     let rv;
     let db = this._getDB();
-    rv = await db.bookmarks.where("title").startsWithIgnoreCase(aSearchTerm).toArray();
+    let bkmks = await this.getAll();
+    let regex = new RegExp(aSearchTerm, "iu");
+
+    rv = bkmks.filter(aBkmk => regex.test(aBkmk.title));
 
     return rv;
   },
