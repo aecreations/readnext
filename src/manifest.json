@@ -35,6 +35,7 @@
       "scripts/aeOAuthClient.js",
       "scripts/aeAbstractFileHost.js",
       "scripts/aeDropbox.js",
+      "scripts/aeOneDrive.js",
       "background.js"
     ]
   },

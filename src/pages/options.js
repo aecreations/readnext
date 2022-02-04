@@ -101,7 +101,7 @@ $("#toggle-sync").on("click", async (aEvent) => {
     }
 
     // TEMPORARY
-    if (backend == aeConst.FILEHOST_GOOGLE_DRIVE || backend == aeConst.FILEHOST_ONEDRIVE) {
+    if (backend == aeConst.FILEHOST_GOOGLE_DRIVE) {
       window.alert("selected file host not supported.");
       return;
     }

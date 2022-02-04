@@ -35,6 +35,10 @@ let aeSyncReadingList = {
       rv = new aeDropbox(aOAuthClient);
       break;
 
+    case aeConst.FILEHOST_ONEDRIVE:
+      rv = new aeOneDrive(aOAuthClient);
+      break;
+
     case aeConst.FILEHOST_GOOGLE_DRIVE:
       // TO DO: Support Google Drive.
     default:

@@ -7,6 +7,7 @@
 class aeAbstractFileHost
 {
   SYNC_FILENAME = "readnext.json";
+  SYNC_FILE_MIME_TYPE = "application/json";
   
   _oauthClient = null;
   
@@ -35,6 +36,16 @@ class aeAbstractFileHost
   // Utilities
   //
   
+  _getLengthInBytes(aString)
+  {
+    let rv;
+    let textEncoder = new TextEncoder();
+
+    rv = textEncoder.encode(aString).length;
+
+    return rv;
+  }
+
   _warn(aMessage) {
     if (aeConst.DEBUG) { console.warn(aMessage) }
   }
