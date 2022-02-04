@@ -153,9 +153,24 @@ class aeOneDrive extends aeAbstractFileHost
     else {
       this._warn(`aeOneDrive._fetch(): ${resp.status} ${resp.statusText}`);
 
-      // TO DO: Handle expired access token.
-      // Get new access token from refresh token and then retry fetch call.
-      rv = resp;
+      if (resp.status == aeConst.HTTP_STATUS_UNAUTHORIZED) {
+        if (aIsRetry) {
+          // Prevent infinite recursion and just return the error response.
+          rv = resp;
+        }
+        else {
+          this._log("Access token may have expired.  Refreshing access token...");
+          
+          // Update parameters to fetch call with new access token.
+          let newAccessToken = await this._refreshAccessToken();
+          let init = this._updateFetchArgs(aInit, newAccessToken);
+
+          this._log("aeDropbox._fetch(): Retrying fetch: " + aResource);
+          this._log(init);
+
+          rv = await this._fetch(aResource, init, true);
+        }
+      }
     }
 
     return rv;
@@ -195,6 +210,18 @@ class aeOneDrive extends aeAbstractFileHost
     rv = newAccessToken;
 
     this._log("aeOneDrive._refreshAccessToken(): " + newAccessToken);
+
+    return rv;
+  }
+
+  _updateFetchArgs(aInit, aAccessToken)
+  {
+    let rv = aInit;
+    let headers = new Headers(aInit.headers);
+    if (headers.has("Authorization")) {
+      headers.set("Authorization", `Bearer ${aAccessToken}`);
+      rv.headers = headers;
+    }
 
     return rv;
   }
