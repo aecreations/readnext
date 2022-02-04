@@ -8,7 +8,6 @@ class aeDropbox extends aeAbstractFileHost
 {
   AUTHZ_SRV_KEY = "dropbox";
   ROOT_APP_FOLDER = "";
-  HTTP_STATUS_UNAUTHORIZED = 401;
   
 
   constructor(aOAuthClient)
@@ -185,7 +184,7 @@ class aeDropbox extends aeAbstractFileHost
     else {
       this._warn(`aeDropbox._fetch(): ${resp.status} ${resp.statusText}`);
 
-      if (resp.status == this.HTTP_STATUS_UNAUTHORIZED) {
+      if (resp.status == aeConst.HTTP_STATUS_UNAUTHORIZED) {
         if (aIsRetry) {
           // Prevent infinite recursion and just return the error response.
           rv = resp;

@@ -6,8 +6,7 @@
 
 class aeOneDrive extends aeAbstractFileHost
 {
-  AUTHZ_SRV_KEY = "onedrive";
-  HTTP_STATUS_NOT_FOUND = 404;
+  AUTHZ_SRV_KEY = "onedrive";  
   
 
   constructor(aOAuthClient)
@@ -25,7 +24,7 @@ class aeOneDrive extends aeAbstractFileHost
       rv = (parsedResp.name == this.SYNC_FILENAME
             && parsedResp.file.mimeType == this.SYNC_FILE_MIME_TYPE);
     }
-    else if (resp.status == this.HTTP_STATUS_NOT_FOUND) {
+    else if (resp.status == aeConst.HTTP_STATUS_NOT_FOUND) {
       rv = false;
     }
     else {
