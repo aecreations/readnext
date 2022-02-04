@@ -53,7 +53,7 @@ let aeOAuth = function () {
       
       let resp;
       try {
-        resp = await fetch(`https://aeoaps.herokuapp.com/readnext/apikey?stgsvc=${_authzSrvKey}`);
+        resp = await fetch(`https://aeoaps.herokuapp.com/readnext/apikey?svc=${_authzSrvKey}`);
       }
       catch (e) {
         console.error("aeOAuth.getAPIKey(): Error calling OAPS /readnext/apikey: " + e);
@@ -64,8 +64,8 @@ let aeOAuth = function () {
         throw Error(`failed to get client ID from aeoaps\n\nstatus: ${resp.status} - ${resp.statusText}`);
       }
 
-      let parsedResp = await resp.json();
-      rv = parsedResp["api_key"];
+      let respBody = await resp.json();
+      rv = respBody["api_key"];
 
       return rv;
     },
@@ -118,7 +118,8 @@ let aeOAuth = function () {
       }
 
       let requestParams = new URLSearchParams({
-        stgsvc: _authzSrvKey,
+        svc: _authzSrvKey,
+        grant_type: "authorization_code",
         code: _authzCode,
         redirect_uri: _redirectURL,
       });
@@ -140,9 +141,9 @@ let aeOAuth = function () {
         throw Error(`failed to get access token from ${_authzSrvKey}\n\nstatus: ${resp.status} - ${resp.statusText}`);
       }
   
-      let parsedResp = await resp.json();
-      _accessToken = parsedResp["access_token"];
-      _refreshToken = parsedResp["refresh_token"];
+      let respBody = await resp.json();
+      _accessToken = respBody["access_token"];
+      _refreshToken = respBody["refresh_token"];
       rv = {
         accessToken: _accessToken,
         refreshToken: _refreshToken,
