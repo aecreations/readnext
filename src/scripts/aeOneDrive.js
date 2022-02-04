@@ -205,8 +205,19 @@ class aeOneDrive extends aeAbstractFileHost
     
     let parsedResp = await resp.json();
     let newAccessToken = parsedResp["access_token"];
+    let updatedPrefs = {
+      accessToken: newAccessToken,
+    };
     this._oauthClient.accessToken = newAccessToken;
-    await aePrefs.setPrefs({accessToken: newAccessToken});
+
+    // A new refresh token may be issued by authz server.
+    if ("refresh_token" in parsedResp) {
+      let newRefreshToken = parsedResp["refresh_token"];
+      this._oauthClient.refreshToken = newRefreshToken;
+      updatedPrefs.refreshToken = newRefreshToken;
+    }
+    
+    await aePrefs.setPrefs(updatedPrefs);
     rv = newAccessToken;
 
     this._log("aeOneDrive._refreshAccessToken(): " + newAccessToken);
