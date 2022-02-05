@@ -130,7 +130,7 @@ let aeOAuth = function () {
 
       let resp;  
       try {
-        resp = await fetch("https://aeoaps.herokuapp.com/readnext/authtoken", requestOpts);
+        resp = await fetch("https://aeoaps.herokuapp.com/readnext/token", requestOpts);
       }
       catch (e) {
         console.error("aeOAuth.getAccessToken(): Error getting access token: " + e);

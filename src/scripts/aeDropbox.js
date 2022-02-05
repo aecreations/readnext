@@ -222,7 +222,7 @@ class aeDropbox extends aeAbstractFileHost
     
     let resp;
     try {
-      resp = await fetch("https://aeoaps.herokuapp.com/readnext/authtoken", reqOpts);
+      resp = await fetch("https://aeoaps.herokuapp.com/readnext/token", reqOpts);
     }
     catch (e) {
       console.error("aeDropbox._refreshAccessToken(): Error getting new access token: " + e);
@@ -230,7 +230,7 @@ class aeDropbox extends aeAbstractFileHost
     }
     
     if (! resp.ok) {
-      throw new Error(`Error from aeOAPS /authtoken: status: ${resp.status} - ${resp.statusText}`);
+      throw new Error(`Error from aeOAPS /token: status: ${resp.status} - ${resp.statusText}`);
     }
     
     let parsedResp = await resp.json();
