@@ -82,7 +82,7 @@ async function syncReadingList()
     bookmarks,
   }; 
   try {
-    browser.runtime.sendMessage(msg);
+    await browser.runtime.sendMessage(msg);
   }
   catch {}
 }
