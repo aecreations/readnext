@@ -35,12 +35,12 @@ class aeDropbox extends aeAbstractFileHost
       throw new Error(`Dropbox /files/list_folder: status: ${resp.status} - ${resp.statusText}`);
     }
 
-    let parsedResp = await resp.json();
-    if (parsedResp.entries.length == 0) {
+    let respBody = await resp.json();
+    if (respBody.entries.length == 0) {
       rv = false;
     }
     else {
-      let idx = parsedResp.entries.findIndex(aItem => {
+      let idx = respBody.entries.findIndex(aItem => {
         return (aItem.name == this.SYNC_FILENAME && aItem[".tag"] == "file");
       });
 
@@ -105,8 +105,8 @@ class aeDropbox extends aeAbstractFileHost
       throw new Error(`Dropbox /files/get_metadata: status: ${resp.status} - ${resp.statusText}`);
     }
 
-    let parsedResp = await resp.json();   
-    rv = new Date(parsedResp.server_modified);
+    let respBody = await resp.json();   
+    rv = new Date(respBody.server_modified);
 
     return rv;
   }
@@ -139,8 +139,8 @@ class aeDropbox extends aeAbstractFileHost
       throw new Error(`Dropbox /files/upload: status: ${resp.status} - ${resp.statusText}`);
     }
 
-    let parsedResp = await resp.json();
-    rv = new Date(parsedResp.server_modified);
+    let respBody = await resp.json();
+    rv = new Date(respBody.server_modified);
 
     return rv;
   }
@@ -233,8 +233,8 @@ class aeDropbox extends aeAbstractFileHost
       throw new Error(`Error from aeOAPS /token: status: ${resp.status} - ${resp.statusText}`);
     }
     
-    let parsedResp = await resp.json();
-    let newAccessToken = parsedResp["access_token"];
+    let respBody = await resp.json();
+    let newAccessToken = respBody["access_token"];
     this._oauthClient.accessToken = newAccessToken;
     await aePrefs.setPrefs({accessToken: newAccessToken});
     rv = newAccessToken;

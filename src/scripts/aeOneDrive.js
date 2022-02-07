@@ -20,9 +20,9 @@ class aeOneDrive extends aeAbstractFileHost
     let resp = await this._getSyncFile();
     
     if (resp.ok) {
-      let parsedResp = await resp.json();
-      rv = (parsedResp.name == this.SYNC_FILENAME
-            && parsedResp.file.mimeType == this.SYNC_FILE_MIME_TYPE);
+      let respBody = await resp.json();
+      rv = (respBody.name == this.SYNC_FILENAME
+            && respBody.file.mimeType == this.SYNC_FILE_MIME_TYPE);
     }
     else if (resp.status == aeConst.HTTP_STATUS_NOT_FOUND) {
       rv = false;
@@ -73,8 +73,8 @@ class aeOneDrive extends aeAbstractFileHost
     let resp = await this._getSyncFile();
 
     if (resp.ok) {
-      let parsedResp = await resp.json();
-      rv = new Date(parsedResp.lastModifiedDateTime);
+      let respBody = await resp.json();
+      rv = new Date(respBody.lastModifiedDateTime);
     }
     else {
       throw new Error(`OneDrive::getItem: ${resp.status} - ${resp.statusText}`);
@@ -119,8 +119,8 @@ class aeOneDrive extends aeAbstractFileHost
       throw new Error(`OneDrive::upload: status: ${resp.status} - ${resp.statusText}`);
     }
 
-    let parsedResp = await resp.json();
-    rv = new Date(parsedResp.lastModifiedDateTime);
+    let respBody = await resp.json();
+    rv = new Date(respBody.lastModifiedDateTime);
 
     return rv;  
   }
@@ -203,16 +203,16 @@ class aeOneDrive extends aeAbstractFileHost
       throw new Error(`Error from aeOAPS /token: status: ${resp.status} - ${resp.statusText}`);
     }
     
-    let parsedResp = await resp.json();
-    let newAccessToken = parsedResp["access_token"];
+    let respBody = await resp.json();
+    let newAccessToken = respBody["access_token"];
     let updatedPrefs = {
       accessToken: newAccessToken,
     };
     this._oauthClient.accessToken = newAccessToken;
 
     // A new refresh token may be issued by authz server.
-    if ("refresh_token" in parsedResp) {
-      let newRefreshToken = parsedResp["refresh_token"];
+    if ("refresh_token" in respBody) {
+      let newRefreshToken = respBody["refresh_token"];
       this._oauthClient.refreshToken = newRefreshToken;
       updatedPrefs.refreshToken = newRefreshToken;
     }
