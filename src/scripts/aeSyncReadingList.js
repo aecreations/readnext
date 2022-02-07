@@ -5,8 +5,6 @@
  */
 
 let aeSyncReadingList = {
-  DEBUG: true,
-
   _fileHost: null,
 
   
@@ -62,7 +60,7 @@ let aeSyncReadingList = {
       this._log("aeSyncReadingList.firstSync(): Confirmed that the sync file exists.");
 
       let syncLastModT;
-      if (this.DEBUG) {
+      if (aeConst.DEBUG) {
         try {
           syncLastModT = await this._fileHost.getLastModifiedTime();
         }
@@ -175,9 +173,8 @@ let aeSyncReadingList = {
     await aePrefs.setPrefs({localLastModifiedTime});
   },
   
-  _log(aMessage) {
-    if (this.DEBUG) {
-      console.log(aMessage);
-    }
+  _log(aMessage)
+  {
+    if (aeConst.DEBUG) { console.log(aMessage) }
   },
 };
