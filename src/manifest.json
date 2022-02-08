@@ -28,8 +28,10 @@
   "background": {
     "scripts": [
       "lib/dexie.min.js",
+      "lib/md5.js",
       "scripts/aeConst.js",
       "scripts/aePrefs.js",
+      "scripts/aeBookmark.js",
       "scripts/aeReadingList.js",
       "scripts/aeSyncReadingList.js",
       "scripts/aeOAuthClient.js",
@@ -38,6 +40,14 @@
       "scripts/aeOneDrive.js",
       "background.js"
     ]
+  },
+
+  "page_action": {
+    "default_icon": {
+      "16": "img/bookmark.svg",
+      "32": "img/bookmark.svg"
+    },
+    "default_title": "add to readnext"
   },
 
   "sidebar_action": {
