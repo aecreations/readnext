@@ -84,7 +84,19 @@ $("#toggle-sync").on("click", async (aEvent) => {
     try {
       authzCode = await aeOAuth.getAuthorizationCode();
       log("Read Next::options.js: Authorization code: " + authzCode);
+    }
+    catch (e) { alert(e) }
 
+    if (aeConst.DEBUG) {
+      let url = new URL(window.location.href);
+      let isAuthzCodeOnly = url.searchParams.get("authcodeonly");
+      if (isAuthzCodeOnly) {
+        alert("authorization code:\n" + authzCode);
+        return;
+      }
+    }
+
+    try {
       tokens = await aeOAuth.getAccessToken();
       log("Read Next::options.js: Received access token and refresh token from authorization server: ");
       log(tokens);
