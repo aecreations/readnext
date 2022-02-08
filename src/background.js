@@ -4,6 +4,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
+let gPrefs;
+
+
 browser.runtime.onInstalled.addListener(async (aInstall) => {
   if (aInstall.reason == "install") {
     log("Read Next: Extension installed.");
@@ -13,8 +16,10 @@ browser.runtime.onInstalled.addListener(async (aInstall) => {
   }
 });
 
-browser.runtime.onStartup.addListener(() => {
+browser.runtime.onStartup.addListener(async () => {
   log("Read Next: Initializing extension during browser startup.");
+
+  gPrefs = await aePrefs.getAllPrefs();
   init();
 });
 
@@ -23,15 +28,16 @@ async function setDefaultPrefs()
 {
   let defaultPrefs = aePrefs.getDefaultPrefs();
   await aePrefs.setPrefs(defaultPrefs);
+
+  gPrefs = defaultPrefs;
 }
 
 
 async function init()
 {
   aeReadingList.init();
-
-  let syncEnabled = await aePrefs.getPref("syncEnabled");
-  if (syncEnabled) {
+  
+  if (gPrefs.syncEnabled) {
     info("Read Next: Synced reading list is enabled.");
     initSyncInterval();
   }
@@ -40,9 +46,8 @@ async function init()
 
 async function firstSyncReadingList()
 {
-  let prefs = await aePrefs.getAllPrefs();
-  let oauthClient = new aeOAuthClient(prefs.accessToken, prefs.refreshToken);
-  let syncBacknd = Number(prefs.syncBackend);
+  let oauthClient = new aeOAuthClient(gPrefs.accessToken, gPrefs.refreshToken);
+  let syncBacknd = Number(gPrefs.syncBackend);
   
   aeSyncReadingList.init(syncBacknd, oauthClient);
 
@@ -66,9 +71,8 @@ async function firstSyncReadingList()
 
 async function syncReadingList()
 {
-  let prefs = await aePrefs.getAllPrefs();
-  let oauthClient = new aeOAuthClient(prefs.accessToken, prefs.refreshToken);
-  let syncBacknd = Number(prefs.syncBackend);
+  let oauthClient = new aeOAuthClient(gPrefs.accessToken, gPrefs.refreshToken);
+  let syncBacknd = Number(gPrefs.syncBackend);
   
   aeSyncReadingList.init(syncBacknd, oauthClient);
 
@@ -90,7 +94,7 @@ async function syncReadingList()
 
 async function initSyncInterval()
 {
-  let periodInMinutes = await aePrefs.getPref("syncInterval");
+  let periodInMinutes = gPrefs.syncInterval;
   browser.alarms.create("sync-reading-list", {periodInMinutes});
   info(`Read Next: Reading list will be synced every ${periodInMinutes} mins.`);
 }
@@ -114,11 +118,32 @@ async function restartSyncInterval()
 
 async function pushLocalChanges()
 {
-  let syncEnabled = await aePrefs.getPref("syncEnabled");
-  if (syncEnabled) {
+  if (gPrefs.syncEnabled) {
     log("Read Next: Pushing local changes...");
     await aeSyncReadingList.push();
     await restartSyncInterval();
+  }
+}
+
+
+async function addBookmark(aBookmark)
+{
+  let rv;
+  try {
+    rv = await aeReadingList.add(aBookmark);
+  }
+  catch (e) {
+    return Promise.reject(e);
+  }
+
+  return rv;
+}
+
+
+function showPageAction(aTab)
+{
+  if (gPrefs.showPageAction && aTab.url.startsWith("http")) {
+    browser.pageAction.show(aTab.id);
   }
 }
 
@@ -132,13 +157,7 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
 
   switch (aMessage.id) {
   case "add-bookmark":
-    let bookmarkID;
-    try {
-      bookmarkID = await aeReadingList.add(aMessage.bookmark);
-    }
-    catch (e) {
-      return Promise.reject(e);
-    }
+    let bookmarkID = await addBookmark(aMessage.bookmark);
     await pushLocalChanges();
     return Promise.resolve(bookmarkID);
 
@@ -184,11 +203,19 @@ browser.alarms.onAlarm.addListener(aAlarm => {
 });
 
 
+browser.storage.onChanged.addListener((aChanges, aAreaName) => {
+  let changedPrefs = Object.keys(aChanges);
+  
+  for (let pref of changedPrefs) {
+    gPrefs[pref] = aChanges[pref].newValue;
+  }
+});
+
+
 browser.windows.onFocusChanged.addListener(async (aWndID) => {
   let wnd = await browser.windows.getCurrent();
   if (wnd.id == aWndID) {
-    let syncEnabled = await aePrefs.getPref("syncEnabled");
-    if (syncEnabled) {
+    if (gPrefs.syncEnabled) {
       log(`Read Next: Handling window focus changed event for window ${wnd.id} - syncing reading list.`);
       syncReadingList();
     }
@@ -196,9 +223,43 @@ browser.windows.onFocusChanged.addListener(async (aWndID) => {
 });
 
 
+browser.tabs.onUpdated.addListener((aTabID, aChangeInfo, aTab) => {
+  if (aChangeInfo.status == "complete") {
+    showPageAction(aTab);
+  }
+}, {properties: ["status"]});
+
+
+browser.tabs.onActivated.addListener(async (aActiveTab) => {
+  let tab = await browser.tabs.get(aActiveTab.tabId);
+
+  // The tab URL may not be available if the tab is loading or asleep.
+  if (tab.url) {
+    showPageAction(tab);
+  }
+});
+
+
+browser.pageAction.onClicked.addListener(async () => {
+  let tabs = await browser.tabs.query({active: true, currentWindow: true});
+  let title = tabs[0].title;
+  let url = tabs[0].url;
+  let id = getBookmarkIDFromURL(url);
+  let bkmk = new aeBookmark(id, url, title);
+
+  await addBookmark(bkmk);
+});
+
+
 //
 // Utilities
 //
+
+function getBookmarkIDFromURL(aURL)
+{
+  return md5(aURL);
+}
+
 
 function log(aMessage)
 {
