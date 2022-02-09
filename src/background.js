@@ -140,11 +140,52 @@ async function addBookmark(aBookmark)
 }
 
 
-function showPageAction(aTab)
+async function showPageAction(aTab, aBookmarkExists=null)
 {
   if (gPrefs.showPageAction && aTab.url.startsWith("http")) {
     browser.pageAction.show(aTab.id);
+
+    if (aBookmarkExists === null) {
+      let bkmk = await aeReadingList.getByURL(aTab.url);
+      aBookmarkExists = !!bkmk;
+    }
+
+    togglePageActionIcon(aBookmarkExists, aTab);
   }
+  else {
+    browser.pageAction.hide(aTab.id);
+  }
+}
+
+
+async function togglePageActionIcon(aIsBookmarked, aTab=null)
+{
+  if (! aTab) {
+    let tabs = await browser.tabs.query({active: true, currentWindow: true});
+    aTab = tabs[0];
+  }
+  
+  let title = {
+    tabId: aTab.id,
+    title: null,
+  };
+  let icon = {tabId: aTab.id};
+
+  if (aIsBookmarked) {
+    icon.path = {
+      16: "img/bookmarked.svg",
+      32: "img/bookmarked.svg",
+    };
+    title.title = "remove from readnext";    
+  }
+  else {
+    icon.path = {
+      16: "img/bookmark.svg",
+      32: "img/bookmark.svg",
+    };
+  }
+  browser.pageAction.setIcon(icon);
+  browser.pageAction.setTitle(title);
 }
 
 
@@ -158,11 +199,13 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
   switch (aMessage.id) {
   case "add-bookmark":
     let bookmarkID = await addBookmark(aMessage.bookmark);
+    togglePageActionIcon(true);
     await pushLocalChanges();
     return Promise.resolve(bookmarkID);
 
   case "remove-bookmark":
-    aeReadingList.remove(aMessage.bookmarkID);
+    await aeReadingList.remove(aMessage.bookmarkID);
+    togglePageActionIcon(false);
     pushLocalChanges();
     break;
 
@@ -245,9 +288,18 @@ browser.pageAction.onClicked.addListener(async () => {
   let title = tabs[0].title;
   let url = tabs[0].url;
   let id = getBookmarkIDFromURL(url);
-  let bkmk = new aeBookmark(id, url, title);
+  let bkmk = await aeReadingList.get(id);
+  let bkmkExists = !!bkmk;
+  
+  if (bkmkExists) {
+    await aeReadingList.remove(id);
+  }
+  else {
+    bkmk = new aeBookmark(id, url, title);
+    await addBookmark(bkmk);
+  }
 
-  await addBookmark(bkmk);
+  showPageAction(tabs[0], !bkmkExists);
 });
 
 
