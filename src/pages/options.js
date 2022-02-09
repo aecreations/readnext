@@ -14,6 +14,10 @@ $(async () => {
   $("#auto-delete-when-read").prop("checked", prefs.deleteReadLinks).on("click", aEvent => {
     aePrefs.setPrefs({deleteReadLinks: aEvent.target.checked});
   });
+
+  $("#add-awesome-bar").prop("checked", prefs.showPageAction).on("click", aEvent => {
+    aePrefs.setPrefs({showPageAction: aEvent.target.checked});
+  });
 });
 
 
