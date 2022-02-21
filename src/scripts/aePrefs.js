@@ -14,6 +14,7 @@ let aePrefs = {
     deleteReadLinks: false,
     localLastModifiedTime: null,
     syncInterval: aeConst.SYNC_INTERVAL_MINS,
+    syncFileID: null,
     showPageAction: true,
   },
 

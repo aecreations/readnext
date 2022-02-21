@@ -116,13 +116,6 @@ $("#toggle-sync").on("click", async (aEvent) => {
       return;
     }
 
-    // TEMPORARY
-    if (backend == aeConst.FILEHOST_GOOGLE_DRIVE) {
-      window.alert("selected file host not supported.");
-      return;
-    }
-    // END TEMPORARY
-
     syncPrefs = {
       syncEnabled: true,
       syncBackend: backend,

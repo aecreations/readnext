@@ -16,4 +16,7 @@ let aeConst = {
 
   HTTP_STATUS_UNAUTHORIZED: 401,
   HTTP_STATUS_NOT_FOUND: 404,
+
+  // Native messaging helper app
+  DRIVE_CONNECTOR_SVC_APP_NAME: "driveConnectorSvc",
 };

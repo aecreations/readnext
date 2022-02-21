@@ -20,6 +20,7 @@
   "permissions": [
     "alarms",
     "identity",
+    "nativeMessaging",
     "storage",
     "tabs",
     "unlimitedStorage"
@@ -38,6 +39,7 @@
       "scripts/aeAbstractFileHost.js",
       "scripts/aeDropbox.js",
       "scripts/aeOneDrive.js",
+      "scripts/aeGoogleDrive.js",
       "background.js"
     ]
   },

@@ -8,7 +8,7 @@ let aeSyncReadingList = {
   _fileHost: null,
 
   
-  init(aFileHostID, aOAuthClient)
+  async init(aFileHostID, aOAuthClient)
   {
     if (!aFileHostID || typeof aFileHostID != "number") {
       throw new Error("Invalid file host ID");
@@ -17,10 +17,10 @@ let aeSyncReadingList = {
       throw new TypeError("aOAuthClient not an aeOAuthClient");
     }
 
-    this._fileHost = this.getFileHost(aFileHostID, aOAuthClient);
+    this._fileHost = await this.getFileHost(aFileHostID, aOAuthClient);
   },
 
-  getFileHost(aFileHostID, aOAuthClient)
+  async getFileHost(aFileHostID, aOAuthClient)
   {
     if (!aFileHostID || typeof aFileHostID != "number") {
       throw new Error("Invalid file host ID");
@@ -38,7 +38,12 @@ let aeSyncReadingList = {
       break;
 
     case aeConst.FILEHOST_GOOGLE_DRIVE:
-      // TO DO: Support Google Drive.
+      let googleDrive = new aeGoogleDrive(aOAuthClient);
+      let syncFileID = await aePrefs.getPref("syncFileID");
+      await googleDrive.setSyncFileID(syncFileID);
+      rv = googleDrive;
+      break;
+
     default:
       break;
     }

@@ -49,7 +49,7 @@ async function firstSyncReadingList()
   let oauthClient = new aeOAuthClient(gPrefs.accessToken, gPrefs.refreshToken);
   let syncBacknd = Number(gPrefs.syncBackend);
   
-  aeSyncReadingList.init(syncBacknd, oauthClient);
+  await aeSyncReadingList.init(syncBacknd, oauthClient);
 
   log("Read Next: Starting first reading list sync...");
   await aeSyncReadingList.firstSync();
@@ -74,7 +74,7 @@ async function syncReadingList()
   let oauthClient = new aeOAuthClient(gPrefs.accessToken, gPrefs.refreshToken);
   let syncBacknd = Number(gPrefs.syncBackend);
   
-  aeSyncReadingList.init(syncBacknd, oauthClient);
+  await aeSyncReadingList.init(syncBacknd, oauthClient);
 
   log("Read Next: Starting reading list sync...");
   let localDataChanged = await aeSyncReadingList.sync();
