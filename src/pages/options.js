@@ -116,6 +116,19 @@ $("#toggle-sync").on("click", async (aEvent) => {
       return;
     }
 
+    if (backend == aeConst.FILEHOST_GOOGLE_DRIVE) {
+      let msg = {id: "get-app-version"};
+      let resp;
+      try {
+        resp = await browser.runtime.sendNativeMessage(aeConst.DRIVE_CONNECTOR_SVC_APP_NAME, msg);
+        console.info(`${resp.appName} version ${resp.appVersion}`);
+      }
+      catch (e) {
+        console.error("Error connecting to Drive Connector Service: " + e);
+        alert("driveConnectorSvc not installed");
+      }
+    }
+
     syncPrefs = {
       syncEnabled: true,
       syncBackend: backend,
