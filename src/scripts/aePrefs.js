@@ -14,8 +14,11 @@ let aePrefs = {
     deleteReadLinks: false,
     localLastModifiedTime: null,
     syncInterval: aeConst.SYNC_INTERVAL_MINS,
-    syncFileID: null,
     showPageAction: true,
+
+    // Applicable to Google Drive file host.
+    syncFileID: null,
+    readingListSliceLength: aeConst.DCS_READING_LIST_SLICE_LENGTH,
   },
 
   

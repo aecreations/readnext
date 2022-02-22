@@ -7,11 +7,13 @@
 class aeGoogleDrive extends aeAbstractFileHost
 {
   _syncFileID = null;
+  _sliceLen = aeConst.DCS_READING_LIST_SLICE_LENGTH;
 
 
-  constructor(aOAuthClient)
+  constructor(aOAuthClient, aSliceLength)
   {
     super(aOAuthClient);
+    this._sliceLen = aSliceLength;
   }
 
   setSyncFileID(aSyncFileID)
@@ -63,15 +65,25 @@ class aeGoogleDrive extends aeAbstractFileHost
     }
 
     let rv;
+    let startIdx = 0;
     let msg = this._getNativeMsgReq();
     msg.id = "get-sync-data";
+    msg.startIdx = startIdx;
+    msg.sliceLen = this._sliceLen;
 
     let resp = await browser.runtime.sendNativeMessage(aeConst.DRIVE_CONNECTOR_SVC_APP_NAME, msg);
-
-    // TO DO: Break up data into chunks, 25 bookmarks at a time.
-    rv = resp.syncData;
+    let rdgList = resp.syncData;
     this._refreshAccessToken(resp);
 
+    while (resp.hasMoreItems) {
+      startIdx = startIdx + this._sliceLen;
+      msg.startIdx = startIdx;
+      resp = await browser.runtime.sendNativeMessage(aeConst.DRIVE_CONNECTOR_SVC_APP_NAME, msg);
+      rdgList = rdgList.concat(resp.syncData);
+      this._refreshAccessToken(resp);
+    }
+
+    rv = rdgList;
     return rv;
   }
 
