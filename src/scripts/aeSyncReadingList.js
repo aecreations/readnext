@@ -6,6 +6,7 @@
 
 let aeSyncReadingList = {
   _fileHost: null,
+  _prefs: null,
 
   
   async init(aFileHostID, aOAuthClient)
@@ -17,6 +18,7 @@ let aeSyncReadingList = {
       throw new TypeError("aOAuthClient not an aeOAuthClient");
     }
 
+    this._prefs = await aePrefs.getAllPrefs();
     this._fileHost = await this.getFileHost(aFileHostID, aOAuthClient);
   },
 
@@ -38,8 +40,8 @@ let aeSyncReadingList = {
       break;
 
     case aeConst.FILEHOST_GOOGLE_DRIVE:
-      let googleDrive = new aeGoogleDrive(aOAuthClient);
-      let syncFileID = await aePrefs.getPref("syncFileID");
+      let googleDrive = new aeGoogleDrive(aOAuthClient, this._prefs.readingListSliceLength);
+      let syncFileID = this._prefs.syncFileID;
       await googleDrive.setSyncFileID(syncFileID);
       rv = googleDrive;
       break;
@@ -106,7 +108,7 @@ let aeSyncReadingList = {
       console.error("aeSyncReadingList.sync(): " + e);
     }
     
-    let localLastModT = await this._getLocalLastModifiedTime();
+    let localLastModT = this._getLocalLastModifiedTime();
 
     this._log(`aeSyncReadingList.sync(): Local last modified: ${localLastModT}\nSync last modified: ${syncLastModT}`);
 
@@ -159,10 +161,10 @@ let aeSyncReadingList = {
   // Helpers
   //
 
-  async _getLocalLastModifiedTime()
+  _getLocalLastModifiedTime()
   {
     let rv;
-    let localLastMod = await aePrefs.getPref("localLastModifiedTime");
+    let localLastMod = this._prefs.localLastModifiedTime;
     rv = new Date(localLastMod);
 
     return rv;
