@@ -72,18 +72,18 @@ class aeGoogleDrive extends aeAbstractFileHost
     msg.sliceLen = this._sliceLen;
 
     let resp = await browser.runtime.sendNativeMessage(aeConst.DRIVE_CONNECTOR_SVC_APP_NAME, msg);
-    let rdgList = resp.syncData;
+    let syncData = resp.syncData;
     this._refreshAccessToken(resp);
 
     while (resp.hasMoreItems) {
       startIdx = startIdx + this._sliceLen;
       msg.startIdx = startIdx;
       resp = await browser.runtime.sendNativeMessage(aeConst.DRIVE_CONNECTOR_SVC_APP_NAME, msg);
-      rdgList = rdgList.concat(resp.syncData);
+      syncData = syncData.concat(resp.syncData);
       this._refreshAccessToken(resp);
     }
 
-    rv = rdgList;
+    rv = syncData;
     return rv;
   }
 
