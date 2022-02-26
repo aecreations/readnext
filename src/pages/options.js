@@ -18,6 +18,10 @@ $(async () => {
   $("#add-awesome-bar").prop("checked", prefs.showPageAction).on("click", aEvent => {
     aePrefs.setPrefs({showPageAction: aEvent.target.checked});
   });
+
+  $("#add-cxt-menu").prop("checked", prefs.showCxtMenu).on("click", aEvent => {
+    aePrefs.setPrefs({showCxtMenu: aEvent.target.checked});
+  });
 });
 
 

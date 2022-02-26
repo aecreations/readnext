@@ -20,6 +20,7 @@
   "permissions": [
     "alarms",
     "identity",
+    "menus",
     "nativeMessaging",
     "storage",
     "tabs",
@@ -42,6 +43,14 @@
       "scripts/aeGoogleDrive.js",
       "background.js"
     ]
+  },
+
+  "browser_action": {
+    "default_icon": {
+      "16": "img/icon32.png",
+      "32": "img/icon32.png"
+    },
+    "default_title": "__MSG_extName__"
   },
 
   "page_action": {

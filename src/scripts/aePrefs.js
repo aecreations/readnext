@@ -15,6 +15,7 @@ let aePrefs = {
     localLastModifiedTime: null,
     syncInterval: aeConst.SYNC_INTERVAL_MINS,
     showPageAction: true,
+    showCxtMenu: true,
 
     // Applicable to Google Drive file host.
     syncFileID: null,
