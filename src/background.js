@@ -52,12 +52,25 @@ async function setUICustomizations()
     browser.menus.create({
       id: "ae-readnext-add-bkmk",
       title: "add to readnext",
-      contexts: ["page"]
-    })
+      contexts: ["page"],
+      visible: false,
+    });
+    browser.menus.create({
+      id: "ae-readnext-submnu",
+      title: browser.i18n.getMessage("extName"),
+      contexts: ["page"],
+      visible: false,
+    });
+    browser.menus.create({
+      id: "ae-readnext-remove-bkmk",
+      parentId: "ae-readnext-submnu",
+      title: "delete",
+      visible: false,
+    });
   }
   else {
     try {
-      await browser.menus.remove("ae-readnext-add-bkmk");
+      await browser.menus.removeAll();
     }
     catch {}
   }
@@ -209,6 +222,29 @@ async function togglePageActionIcon(aIsBookmarked, aTab=null)
 }
 
 
+async function updateMenus(aTab=null)
+{
+  if (! aTab) {
+    let tabs = await browser.tabs.query({active: true, currentWindow: true});
+    aTab = tabs[0];
+  }
+
+  let bkmk = await getBookmarkFromTab(aTab);
+  let bkmkExists = !!bkmk;
+  
+  if (bkmkExists) {
+    await browser.menus.update("ae-readnext-add-bkmk", {visible: false});
+    await browser.menus.update("ae-readnext-submnu", {visible: true});
+    await browser.menus.update("ae-readnext-remove-bkmk", {visible: true});
+  }
+  else {
+    await browser.menus.update("ae-readnext-add-bkmk", {visible: true});
+    await browser.menus.update("ae-readnext-submnu", {visible: false});
+    await browser.menus.update("ae-readnext-remove-bkmk", {visible: false});      
+  }
+}
+
+
 async function getBookmarkFromTab(aTab)
 {
   let rv;
@@ -232,12 +268,14 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
   case "add-bookmark":
     let bookmarkID = await addBookmark(aMessage.bookmark);
     togglePageActionIcon(true);
+    updateMenus();
     await pushLocalChanges();
     return Promise.resolve(bookmarkID);
 
   case "remove-bookmark":
     await aeReadingList.remove(aMessage.bookmarkID);
     togglePageActionIcon(false);
+    updateMenus();
     pushLocalChanges();
     break;
 
@@ -303,6 +341,7 @@ browser.windows.onFocusChanged.addListener(async (aWndID) => {
 browser.tabs.onUpdated.addListener((aTabID, aChangeInfo, aTab) => {
   if (aChangeInfo.status == "complete") {
     showPageAction(aTab);
+    updateMenus(aTab);
   }
 }, {properties: ["status"]});
 
@@ -313,6 +352,7 @@ browser.tabs.onActivated.addListener(async (aActiveTab) => {
   // The tab URL may not be available if the tab is loading or asleep.
   if (tab.url) {
     showPageAction(tab);
+    updateMenus(tab);
   }
 });
 
@@ -340,25 +380,24 @@ browser.pageAction.onClicked.addListener(async () => {
 });
 
 
-browser.menus.onShown.addListener(async (aInfo, aTab) => {
-  if (aInfo.menuItemId == "ae-readnext-add-bkmk") {
-    let bkmk = await getBookmarkFromTab(aTab);
-    let bkmkExists = !!bkmk;
-  
-    if (bkmkExists) {
-      // TO DO: Show submenu with option to delete from reading list,
-      // like the In My Pocket add-on.
-    }
-  }
-});
-
-
 browser.menus.onClicked.addListener(async (aInfo, aTab) => {
-  if (aInfo.menuItemId == "ae-readnext-add-bkmk") {
-    let id = getBookmarkIDFromURL(aTab.url);
+  let id = getBookmarkIDFromURL(aTab.url);
+
+  switch (aInfo.menuItemId) {
+  case "ae-readnext-add-bkmk":
     bkmk = new aeBookmark(id, aTab.url, aTab.title);
     await addBookmark(bkmk);
+    break;
+
+  case "ae-readnext-remove-bkmk":
+    await aeReadingList.remove(id);
+    break;
+
+  default:
+    break;
   }
+
+  updateMenus(aTab);
 });
 
 
