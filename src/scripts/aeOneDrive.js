@@ -171,6 +171,9 @@ class aeOneDrive extends aeAbstractFileHost
           rv = await this._fetch(aResource, init, true);
         }
       }
+      else {
+        rv = resp;
+      }
     }
 
     return rv;
