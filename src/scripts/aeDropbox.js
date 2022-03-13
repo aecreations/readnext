@@ -18,18 +18,19 @@ class aeDropbox extends aeAbstractFileHost
   async syncFileExists()
   {
     let rv;
-    let query = this._getURLParams();
-    let headers = this._getReqHdrs();
     let params = {
       path: this.ROOT_APP_FOLDER,
       recursive: false,
     };
+    let headers = this._getReqHdrs();
+    headers.append("Content-Type", "application/json");
+
     let reqOpts = {
       method: "POST",
       headers,
       body: JSON.stringify(params),
     };   
-    let resp = await this._fetch(`https://api.dropboxapi.com/2/files/list_folder?${query}`, reqOpts);
+    let resp = await this._fetch(`https://api.dropboxapi.com/2/files/list_folder`, reqOpts);
 
     if (! resp.ok) {
       throw new Error(`Dropbox /files/list_folder: status: ${resp.status} - ${resp.statusText}`);
@@ -60,12 +61,15 @@ class aeDropbox extends aeAbstractFileHost
   async getSyncData()
   {
     let rv;
-    let query = this._getURLParams();
     let params = {path: `/${this.SYNC_FILENAME}`};
-    query += "&arg=" + encodeURIComponent(JSON.stringify(params));
+    let headers = this._getReqHdrs();
+    headers.append("Dropbox-API-Arg", this._encodeJSON(JSON.stringify(params)));
 
-    let reqOpts = {method: "POST"};
-    let resp = await this._fetch(`https://content.dropboxapi.com/2/files/download?${query}`, reqOpts);
+    let reqOpts = {
+      method: "POST",
+      headers,
+    };
+    let resp = await this._fetch(`https://content.dropboxapi.com/2/files/download`, reqOpts);
 
     if (! resp.ok) {
       throw new Error(`Dropbox /files/download: status: ${resp.status} - ${resp.statusText}`);
@@ -86,13 +90,9 @@ class aeDropbox extends aeAbstractFileHost
   async getLastModifiedTime()
   {
     let rv;
-
-    // The /files/get_metadata endpoint doesn't seem to allow suppression of
-    // the CORS pre-flight check.
-    let headers = new Headers();
-    headers.append("Authorization", `Bearer ${this._oauthClient.accessToken}`);
+    let headers = this._getReqHdrs();
     headers.append("Content-Type", "application/json");
-    
+
     let params = {path: `/${this.SYNC_FILENAME}`};
     let reqOpts = {
       method: "POST",
@@ -119,21 +119,21 @@ class aeDropbox extends aeAbstractFileHost
   async _setSyncData(aLocalData, aOverwrite)
   {
     let rv;
-    let query = this._getURLParams();
-    let headers = this._getReqHdrs();
     let params = {
       path: `/${this.SYNC_FILENAME}`,
       mode: aOverwrite ? "overwrite" : "add",
       mute: true,
     };
-    query += "&arg=" + encodeURIComponent(JSON.stringify(params));
+    let headers = this._getReqHdrs();
+    headers.append("Content-Type", "application/octet-stream");
+    headers.append("Dropbox-API-Arg", this._encodeJSON(JSON.stringify(params)));
     
     let reqOpts = {
       method: "POST",
       headers,
       body: JSON.stringify(aLocalData),
     };
-    let resp = await this._fetch(`https://content.dropboxapi.com/2/files/upload?${query}`, reqOpts);
+    let resp = await this._fetch(`https://content.dropboxapi.com/2/files/upload`, reqOpts);
 
     if (! resp.ok) {
       throw new Error(`Dropbox /files/upload: status: ${resp.status} - ${resp.statusText}`);
@@ -145,23 +145,23 @@ class aeDropbox extends aeAbstractFileHost
     return rv;
   }
   
-  _getURLParams()
-  {
-    // Requests to Dropbox should be simple cross-site request to suppress
-    // pre-flight checks.
-    let rv = `authorization=Bearer ${this._oauthClient.accessToken}&reject_cors_preflight=true`;
-    return rv;
-  }
-
   _getReqHdrs()
   {
     let rv;
-
-    // Requests to Dropbox should be simple cross-site requests to suppress
-    // pre-flight checks.
     let headers = new Headers();
-    headers.append("Content-Type", "text/plain; charset=dropbox-cors-hack");
+    headers.append("Authorization", `Bearer ${this._oauthClient.accessToken}`);
     rv = headers;
+
+    return rv;
+  }
+
+  _encodeJSON(aJSONStr)
+  {
+    let rv;
+    let charsToEncode = /[\u007f-\uffff]/g;
+    rv = aJSONStr.replace(charsToEncode, function (c) {
+      return '\\u'+('000'+c.charCodeAt(0).toString(16)).slice(-4);
+    });
 
     return rv;
   }
@@ -194,12 +194,12 @@ class aeDropbox extends aeAbstractFileHost
           
           // Update parameters to fetch call with new access token.
           let newAccessToken = await this._refreshAccessToken();
-          let {resource, init} = this._updateFetchArgs(aResource, aInit, newAccessToken);
+          let init = this._updateFetchArgs(aInit, newAccessToken);
 
-          this._log("aeDropbox._fetch(): Retrying fetch with URL: " + resource);
+          this._log("aeDropbox._fetch(): Retrying fetch with URL: " + aResource);
           this._log(init);
 
-          rv = await this._fetch(resource, init, true);
+          rv = await this._fetch(aResource, init, true);
         }
       }
     }
@@ -211,7 +211,7 @@ class aeDropbox extends aeAbstractFileHost
   {
     let rv;
     let params = new URLSearchParams({
-      stgsvc: this.AUTHZ_SRV_KEY,
+      svc: this.AUTHZ_SRV_KEY,
       grant_type: "refresh_token",
       refresh_token: this._oauthClient.refreshToken,
     });
@@ -244,32 +244,13 @@ class aeDropbox extends aeAbstractFileHost
     return rv;
   }
 
-  _updateFetchArgs(aResource, aInit, aAccessToken)
+  _updateFetchArgs(aInit, aAccessToken)
   {
-    let rv = {
-      resource: aResource,
-      init: aInit,
-    };
-    
-    let url = new URL(aResource);
-    let srchParams = url.searchParams;
-
-    // Update query string with new access token.
-    if (srchParams.has("reject_cors_preflight")) {
-      let query = `?authorization=Bearer ${aAccessToken}&reject_cors_preflight=true`;
-      if (srchParams.has("arg")) {
-        query += "&arg=" + srchParams.get("arg");
-      }
-      rv.resource = url.origin + url.pathname + query;
-    }
-    else {
-      // If suppression of CORS pre-flight check is not supported, then update
-      // the 'Authorization' header in the request.
-      let headers = new Headers(aInit.headers);
-      if (headers.has("Authorization")) {
-        headers.set("Authorization", `Bearer ${aAccessToken}`);
-        rv.init.headers = headers;
-      }
+    let rv = aInit;
+    let headers = new Headers(aInit.headers);
+    if (headers.has("Authorization")) {
+      headers.set("Authorization", `Bearer ${aAccessToken}`);
+      rv.headers = headers;
     }
 
     return rv;
