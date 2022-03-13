@@ -346,7 +346,7 @@ browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
     updateMenus(aTab);
 
     if (bkmkExists && bkmk.unread) {
-      await aeReadingList.markAsRead(bkmk);
+      await aeReadingList.markAsRead(bkmk.id);
       pushLocalChanges();
     }
   }

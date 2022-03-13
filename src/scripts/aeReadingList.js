@@ -116,14 +116,14 @@ let aeReadingList = {
     return rv;
   },
 
-  async markAsRead(aBookmark)
+  async markAsRead(aBookmarkID)
   {
     let db = this._getDB();
     let changes = {
       unread: false,
       updatedAt: new Date().toISOString(),
     };
-    await db.bookmarks.update(aBookmark.id, changes);
+    await db.bookmarks.update(aBookmarkID, changes);
   },
   
 
