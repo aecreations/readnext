@@ -30,7 +30,7 @@
   "background": {
     "scripts": [
       "lib/dexie.min.js",
-      "lib/md5.js",
+      "lib/md5.min.js",
       "scripts/aeConst.js",
       "scripts/aePrefs.js",
       "scripts/aeBookmark.js",
