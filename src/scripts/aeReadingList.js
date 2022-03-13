@@ -116,6 +116,17 @@ let aeReadingList = {
     return rv;
   },
 
+  async markAsRead(aBookmark)
+  {
+    let db = this._getDB();
+    let changes = {
+      unread: false,
+      updatedAt: new Date().toISOString(),
+    };
+    await db.bookmarks.update(aBookmark.id, changes);
+  },
+  
+
   // Helpers
   _getDB()
   {

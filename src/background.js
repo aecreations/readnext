@@ -248,7 +248,6 @@ async function updateMenus(aTab=null)
 async function getBookmarkFromTab(aTab)
 {
   let rv;
-  let title = aTab.title;
   let url = aTab.url;
   let id = getBookmarkIDFromURL(url);
 
@@ -338,10 +337,18 @@ browser.windows.onFocusChanged.addListener(async (aWndID) => {
 });
 
 
-browser.tabs.onUpdated.addListener((aTabID, aChangeInfo, aTab) => {
+browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
   if (aChangeInfo.status == "complete") {
-    showPageAction(aTab);
+    let bkmk = await getBookmarkFromTab(aTab);
+    let bkmkExists = !!bkmk;
+
+    showPageAction(aTab, bkmkExists);
     updateMenus(aTab);
+
+    if (bkmkExists && bkmk.unread) {
+      await aeReadingList.markAsRead(bkmk);
+      pushLocalChanges();
+    }
   }
 }, {properties: ["status"]});
 
