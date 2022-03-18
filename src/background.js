@@ -49,6 +49,9 @@ async function init()
 async function setUICustomizations()
 {
   if (gPrefs.showCxtMenu) {
+    // TO DO: These WebExtension API calls will throw an exception if the menus
+    // were already created. Fix by enclosing in try...catch block, or checking
+    // if the menus already exists.
     browser.menus.create({
       id: "ae-readnext-add-bkmk",
       title: "add to readnext",
@@ -110,7 +113,22 @@ async function syncReadingList()
   await aeSyncReadingList.init(syncBacknd, oauthClient);
 
   log("Read Next: Starting reading list sync...");
-  let localDataChanged = await aeSyncReadingList.sync();
+  let localDataChanged;
+  try {
+    localDataChanged = await aeSyncReadingList.sync();
+  }
+  catch (e) {
+    if (e instanceof aeAuthorizationError) {
+      warn("Read Next: syncReadingList(): Error: " + e);
+      // TO DO: Handle aeAuthorizationError exception.
+      return;
+    }
+    else {
+      console.error("Read Next: syncReadingList(): Error: " + e);
+      throw e;
+    }
+  }
+  
   log("Read Next: Finished sync!");
 
   let bookmarks = await aeReadingList.getAll();

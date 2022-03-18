@@ -104,8 +104,15 @@ let aeSyncReadingList = {
       syncLastModT = await this._fileHost.getLastModifiedTime();
     }
     catch (e) {
-      // TO DO: Handle missing or deleted sync file on the cloud file host.
-      console.error("aeSyncReadingList.sync(): " + e);
+      if (e instanceof aeAuthorizationError) {
+        this._log("aeSyncReadingList.sync(): Error: " + e);
+        throw e;
+      }
+      else {
+        // TO DO: Handle missing or deleted sync file on the cloud file host.
+        // Should this error handling be done in the cloud file host class?
+        console.error("aeSyncReadingList.sync(): " + e);
+      }
     }
     
     let localLastModT = this._getLocalLastModifiedTime();

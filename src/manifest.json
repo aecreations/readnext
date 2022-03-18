@@ -41,6 +41,7 @@
       "scripts/aeDropbox.js",
       "scripts/aeOneDrive.js",
       "scripts/aeGoogleDrive.js",
+      "scripts/aeAuthorizationError.js",
       "background.js"
     ]
   },

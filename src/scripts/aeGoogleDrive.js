@@ -28,6 +28,9 @@ class aeGoogleDrive extends aeAbstractFileHost
     msg.id = "sync-file-exists";
     
     let resp = await browser.runtime.sendNativeMessage(aeConst.DRIVE_CONNECTOR_SVC_APP_NAME, msg);
+    if ("error" in resp && resp.error.name == "AuthorizationError") {
+      throw new aeAuthorizationError(resp.error.message);
+    }
 
     if (resp.syncFileExists && !this._syncFileID) {
       this._syncFileID = resp.syncFileID;
@@ -48,6 +51,9 @@ class aeGoogleDrive extends aeAbstractFileHost
     msg.syncData = aLocalData;
     
     let resp = await browser.runtime.sendNativeMessage(aeConst.DRIVE_CONNECTOR_SVC_APP_NAME, msg);
+    if ("error" in resp && resp.error.name == "AuthorizationError") {
+      throw new aeAuthorizationError(resp.error.message);
+    }
 
     this._syncFileID = resp.syncFileID;
     await aePrefs.setPrefs({syncFileID: resp.syncFileID});
@@ -72,6 +78,13 @@ class aeGoogleDrive extends aeAbstractFileHost
     msg.sliceLen = this._sliceLen;
 
     let resp = await browser.runtime.sendNativeMessage(aeConst.DRIVE_CONNECTOR_SVC_APP_NAME, msg);
+    if ("error" in resp) {
+      if (resp.error.name == "AuthorizationError") {
+        throw new aeAuthorizationError(resp.error.message);
+      }
+      // TO DO: Handle missing or deleted sync file
+    }
+
     let syncData = resp.syncData;
     this._refreshAccessToken(resp);
 
@@ -95,6 +108,9 @@ class aeGoogleDrive extends aeAbstractFileHost
     msg.syncData = aLocalData;
 
     let resp = await browser.runtime.sendNativeMessage(aeConst.DRIVE_CONNECTOR_SVC_APP_NAME, msg);
+    if ("error" in resp && resp.error.name == "AuthorizationError") {
+      throw new aeAuthorizationError(resp.error.message);
+    }
 
     rv = new Date(resp.fileModifiedTime);
     this._refreshAccessToken(resp);
@@ -113,6 +129,12 @@ class aeGoogleDrive extends aeAbstractFileHost
     msg.id = "get-last-modified-time";
 
     let resp = await browser.runtime.sendNativeMessage(aeConst.DRIVE_CONNECTOR_SVC_APP_NAME, msg);
+    if ("error" in resp) {
+      if (resp.error.name == "AuthorizationError") {
+        throw new aeAuthorizationError(resp.error.message);
+      }
+      // TO DO: Handle missing or deleted sync file
+    }
     
     rv = new Date(resp.lastModifiedTime);
     this._refreshAccessToken(resp);
