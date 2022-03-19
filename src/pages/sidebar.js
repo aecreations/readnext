@@ -185,11 +185,11 @@ $(async () => {
 });
 
 
-async function initReadingList()
+async function initReadingList(aLocalDataOnly=false)
 {
   log("Read Next::sidebar.js: initReadingList(): Initializing sidebar.");
 
-  if (gPrefs.syncEnabled) {
+  if (gPrefs.syncEnabled && !aLocalDataOnly) {
     log("Read Next::sidebar.js: initReadingList(): Sync enabled.  Syncing reading list.");
     gCmd.syncBookmarks();
   }
@@ -244,6 +244,12 @@ async function rebuildReadingList(aBookmarks)
   hideWelcome();
   $("#reading-list").empty();
   buildReadingList(aBookmarks);
+}
+
+
+function isReadingListEmpty()
+{
+  return ($("#reading-list").children().length == 0);
 }
 
 
@@ -397,6 +403,16 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
     
   case "sync-setting-changed":
     initContextMenu.showManualSync = aMessage.syncEnabled;
+    break;
+
+  case "sync-failed":
+    if (isReadingListEmpty()) {
+      initReadingList(true);
+    }
+    break;
+
+  case "reauthorize-prompt":
+    $("#reauthz-msgbar").show();
     break;
 
   default:

@@ -10,6 +10,16 @@
   margin-left: 4px;
 }
 
+#reauthz-msgbar {
+  display: none;
+  margin: 2px;
+  padding: 4px;
+  border-radius: 4px;
+  background-color: #ffe900;
+  color: #3e2800;
+  font-size: 13px;
+}
+
 #welcome, #loading {
   display: none;
   text-align: center;

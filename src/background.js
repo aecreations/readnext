@@ -6,6 +6,32 @@
 
 let gPrefs;
 
+let gReauthorizeFileHost = {
+  _msgSent: false,
+  _notifcnShown: false,
+  
+  async showReauthzPrompts()
+  {
+    if (! this._msgSent) {
+      try {
+        await browser.runtime.sendMessage({id: "reauthorize-prompt"});
+        this._msgSent = true;
+      }
+      catch {}
+    }
+    
+    if (! this._notifcnShown) {
+      browser.notifications.create("reauthorize", {
+        type: "basic",
+        title: browser.i18n.getMessage("extName"),
+        message: "readnext needs to reauthorize your Google Drive account, click here to reauthorize",
+        iconUrl: "img/icon.png"
+      });
+      this._notifcnShown = true;
+    }
+  },
+};
+
 
 browser.runtime.onInstalled.addListener(async (aInstall) => {
   if (aInstall.reason == "install") {
@@ -119,8 +145,19 @@ async function syncReadingList()
   }
   catch (e) {
     if (e instanceof aeAuthorizationError) {
-      warn("Read Next: syncReadingList(): Error: " + e);
-      // TO DO: Handle aeAuthorizationError exception.
+      warn("Read Next: syncReadingList(): Caught aeAuthorizationError exception.  Details:\n" + e);
+
+      gReauthorizeFileHost.showReauthzPrompts();
+      try {
+        await browser.runtime.sendMessage({id: "sync-failed"});
+      }
+      catch {}
+
+      let syncAlarm = await browser.alarms.get("sync-reading-list");
+      if (syncAlarm) {
+        log("Read Next: syncReadingList(): Suspending auto sync interval.");
+        await browser.alarms.clear("sync-reading-list");
+      }
       return;
     }
     else {
@@ -423,6 +460,15 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
   }
 
   updateMenus(aTab);
+});
+
+
+browser.notifications.onClicked.addListener(aNotificationID => {
+  if (aNotificationID == "reauthorize") {
+    log("Read Next: The Google Drive reauthorization notification was clicked.");
+
+    // TO DO: Finish implementation.
+  }
 });
 
 

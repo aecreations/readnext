@@ -22,6 +22,7 @@
     "identity",
     "menus",
     "nativeMessaging",
+    "notifications",
     "storage",
     "tabs",
     "unlimitedStorage"
