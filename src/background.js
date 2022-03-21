@@ -31,71 +31,7 @@ let gFileHostReauthorizer = {
   {
     let backnd = gPrefs.syncBackend;
     let url = browser.runtime.getURL("pages/reauthorize.html?bknd=" + backnd);
-
-    // TO DO: Put this in a pref.
-    let autoAdjustWndPos = true;
-
-    // Center the popup window within originating browser window,
-    // both horizontally and vertically.
-    let wndGeom = null;
-    let width = 520;
-    let height = 170;
-
-    // Default popup window coords.  Unless replaced by window geometry calcs,
-    // these coords will be ignored - popup window will always be centered
-    // on screen due to a WebExtension API bug; see next comment.
-    let left = 256;
-    let top = 64;
-
-    if (autoAdjustWndPos) {
-      wndGeom = await this._getWndGeomFromBrwsTab();
-
-      if (wndGeom) {
-        if (wndGeom.w < width) {
-          left = null;
-        }
-        else {
-          left = Math.ceil((wndGeom.w - width) / 2) + wndGeom.x;
-        }
-
-        if ((wndGeom.h) < height) {
-          top = null;
-        }
-        else {
-          top = Math.ceil((wndGeom.h - height) / 2) + wndGeom.y;
-        }
-      }
-    }
-
-    let wnd = await browser.windows.create({
-      url,
-      type: "popup",
-      width, height,
-      left, top,
-    });
-
-    // Workaround to bug where window position isn't correctly set when calling
-    // `browser.windows.create()`. If unable to get window geometry, then
-    // default to centering on screen.
-    if (wndGeom) {
-      browser.windows.update(wnd.id, { left, top });
-    }
-  },
-
-  async _getWndGeomFromBrwsTab()
-  {
-    let rv = null;
-    let wnd = await browser.windows.getCurrent();
-    let wndGeom = {
-      x: wnd.left,
-      y: wnd.top,
-    };
-    let tabs = await browser.tabs.query({currentWindow: true, discarded: false});
-    wndGeom.w = tabs[0].width;
-    wndGeom.h = tabs[0].height;
-    rv = wndGeom;
-
-    return rv;
+    await browser.tabs.create({url});
   },
 
   reset()

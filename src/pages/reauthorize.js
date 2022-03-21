@@ -16,15 +16,6 @@ async function init()
   }
   backnd = Number(backnd);
 
-  // Fix for Fx57 bug where bundled page loaded using
-  // browser.windows.create won't show contents unless resized.
-  // See <https://bugzilla.mozilla.org/show_bug.cgi?id=1402110>
-  let wnd = await browser.windows.getCurrent();
-  await browser.windows.update(wnd.id, {
-    width: wnd.width + 1,
-    focused: true,
-  });
-
   aeOAuth.init(backnd);
   let authzCode, tokens;
   try {
@@ -58,23 +49,23 @@ async function init()
     isReauthorized: true,
   };
   await browser.runtime.sendMessage(msg);
-  dismiss();
+  closePage();
 }
 
 
-function showErrorMsgDeck(aError)
+function showErrorMsgDeck(aErrorMsg)
 {
   $("#reauthz-progress").hide();
 
-  $("#reauthz-error > #msgbox-content > p").text(aError);
+  $("#reauthz-error > #msgbox-content > p").text(aErrorMsg);
   $("#reauthz-error").show();
-  $("#msgbox-buttons").show();
 }
 
 
-function dismiss()
+async function closePage()
 {
-  browser.windows.remove(browser.windows.WINDOW_ID_CURRENT);
+  let tab = await browser.tabs.getCurrent();
+  browser.tabs.remove(tab.id);
 }
 
 
@@ -97,20 +88,7 @@ document.addEventListener("contextmenu", aEvent => {
 });
 
 
-window.addEventListener("keydown", aEvent => {
-  if (aEvent.key == "Enter" || aEvent.key == "Escape") {
-    dismiss();
-  }
-  else if (aEvent.key == "/" || aEvent.key == "'") {
-    aEvent.preventDefault();  // Suppress quick find in page.
-  }
-  else if (aEvent.key == "F5") {
-    aEvent.preventDefault();  // Suppress browser reload.
-  }
-});
-
-
-$("#btn-accept").on("click", aEvent => { dismiss() });
+$("#btn-accept").on("click", aEvent => { closePage() });
 
 
 //

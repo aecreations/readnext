@@ -6,33 +6,42 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title data-i18n="extName"></title>
 
     <link rel="stylesheet" type="text/css" href="reauthorize.css"/>
   </head>
 
   <body>
-    <div class="deck">
-      <div id="reauthz-progress" class="deck-content">
-        <div class="row"><label for="reauthz-progress-bar">reauthorizing...</label></div>
-        <div class="row"><progress id="reauthz-progress-bar"/></div>
-      </div> <!-- /reauthz-progress -->
+    <main>
+      <div id="dlg-hdr">
+        <img id="prmpt-icon" src="../img/icon.png"/>
+        <h1 data-i18n="extName"></h1>
+      </div>
 
-      <div id="reauthz-error" class="deck-content">
-	<div id="icon">
-	  <div id="msgbox-icon"></div>
+      <div id="dlg-content" class="deck">
+	<div id="reauthz-progress" class="deck-content">
+	  <div class="row">
+            <img id="spinner" src="chrome://global/skin/icons/loading@2x.png"/>
+	    <span>reauthorizing...</span>
+	  </div>
 	</div>
-	<div id="msgbox-content">
-	  <p></p>
-	</div>
-      </div> <!-- /reauthz-error -->
-    </div>
 
-    <div id="msgbox-buttons">
-      <button id="btn-accept" class="default">ok</button>
-    </div>
+	<div id="reauthz-error" class="deck-content">
+	  <div id="icon">
+	    <div id="msgbox-icon"></div>
+	  </div>
+	  <div id="msgbox-content">
+	    <p></p>
+	  </div>
+	  <div id="msgbox-buttons">
+	    <button id="btn-accept" class="default">ok</button>
+	  </div>
+	</div>
+      </div>
+    </main>
 
     <script src="../lib/jquery.js"></script>
+    <script src="../scripts/aeI18n.js"></script>
     <script src="../scripts/aeConst.js"></script>
     <script src="../scripts/aePrefs.js"></script>
     <script src="../scripts/aeOAuth.js"></script>
