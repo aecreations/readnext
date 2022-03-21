@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+
+    <link rel="stylesheet" type="text/css" href="reauthorize.css"/>
+  </head>
+
+  <body>
+    <div class="deck">
+      <div id="reauthz-progress" class="deck-content">
+        <div class="row"><label for="reauthz-progress-bar">reauthorizing...</label></div>
+        <div class="row"><progress id="reauthz-progress-bar"/></div>
+      </div> <!-- /reauthz-progress -->
+
+      <div id="reauthz-error" class="deck-content">
+	<div id="icon">
+	  <div id="msgbox-icon"></div>
+	</div>
+	<div id="msgbox-content">
+	  <p></p>
+	</div>
+      </div> <!-- /reauthz-error -->
+    </div>
+
+    <div id="msgbox-buttons">
+      <button id="btn-accept" class="default">ok</button>
+    </div>
+
+    <script src="../lib/jquery.js"></script>
+    <script src="../scripts/aeConst.js"></script>
+    <script src="../scripts/aePrefs.js"></script>
+    <script src="../scripts/aeOAuth.js"></script>
+    <script src="../scripts/aeInterxn.js"></script>
+    <script src="reauthorize.js"></script>
+  </body>
+</html>

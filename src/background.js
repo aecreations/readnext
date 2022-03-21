@@ -6,19 +6,15 @@
 
 let gPrefs;
 
-let gReauthorizeFileHost = {
-  _msgSent: false,
+let gFileHostReauthorizer = {
   _notifcnShown: false,
   
-  async showReauthzPrompts()
+  async showPrompts()
   {
-    if (! this._msgSent) {
-      try {
-        await browser.runtime.sendMessage({id: "reauthorize-prompt"});
-        this._msgSent = true;
-      }
-      catch {}
+    try {
+      await browser.runtime.sendMessage({id: "reauthorize-prompt"});
     }
+    catch {}
     
     if (! this._notifcnShown) {
       browser.notifications.create("reauthorize", {
@@ -30,6 +26,82 @@ let gReauthorizeFileHost = {
       this._notifcnShown = true;
     }
   },
+
+  async openReauthorizeDlg()
+  {
+    let backnd = gPrefs.syncBackend;
+    let url = browser.runtime.getURL("pages/reauthorize.html?bknd=" + backnd);
+
+    // TO DO: Put this in a pref.
+    let autoAdjustWndPos = true;
+
+    // Center the popup window within originating browser window,
+    // both horizontally and vertically.
+    let wndGeom = null;
+    let width = 520;
+    let height = 170;
+
+    // Default popup window coords.  Unless replaced by window geometry calcs,
+    // these coords will be ignored - popup window will always be centered
+    // on screen due to a WebExtension API bug; see next comment.
+    let left = 256;
+    let top = 64;
+
+    if (autoAdjustWndPos) {
+      wndGeom = await this._getWndGeomFromBrwsTab();
+
+      if (wndGeom) {
+        if (wndGeom.w < width) {
+          left = null;
+        }
+        else {
+          left = Math.ceil((wndGeom.w - width) / 2) + wndGeom.x;
+        }
+
+        if ((wndGeom.h) < height) {
+          top = null;
+        }
+        else {
+          top = Math.ceil((wndGeom.h - height) / 2) + wndGeom.y;
+        }
+      }
+    }
+
+    let wnd = await browser.windows.create({
+      url,
+      type: "popup",
+      width, height,
+      left, top,
+    });
+
+    // Workaround to bug where window position isn't correctly set when calling
+    // `browser.windows.create()`. If unable to get window geometry, then
+    // default to centering on screen.
+    if (wndGeom) {
+      browser.windows.update(wnd.id, { left, top });
+    }
+  },
+
+  async _getWndGeomFromBrwsTab()
+  {
+    let rv = null;
+    let wnd = await browser.windows.getCurrent();
+    let wndGeom = {
+      x: wnd.left,
+      y: wnd.top,
+    };
+    let tabs = await browser.tabs.query({currentWindow: true, discarded: false});
+    wndGeom.w = tabs[0].width;
+    wndGeom.h = tabs[0].height;
+    rv = wndGeom;
+
+    return rv;
+  },
+
+  reset()
+  {
+    this._notificnShown = false;
+  }
 };
 
 
@@ -133,23 +205,28 @@ async function firstSyncReadingList()
 
 async function syncReadingList()
 {
-  let oauthClient = new aeOAuthClient(gPrefs.accessToken, gPrefs.refreshToken);
-  let syncBacknd = Number(gPrefs.syncBackend);
+  // Don't assume that the saved access token is the most up to date.
+  // This function may be called immediately after the user has reauthorized
+  // their file host account, and before the changed storage event handler has
+  // executed, so always load prefs from storage.
+  let {syncBackend, accessToken, refreshToken} = await aePrefs.getAllPrefs();
+  let oauthClient = new aeOAuthClient(accessToken, refreshToken);
+  let syncBacknd = Number(syncBackend);
   
   await aeSyncReadingList.init(syncBacknd, oauthClient);
 
   log("Read Next: Starting reading list sync...");
-  let localDataChanged;
+  let isLocalDataChanged;
   try {
-    localDataChanged = await aeSyncReadingList.sync();
+    isLocalDataChanged = await aeSyncReadingList.sync();
   }
   catch (e) {
     if (e instanceof aeAuthorizationError) {
       warn("Read Next: syncReadingList(): Caught aeAuthorizationError exception.  Details:\n" + e);
 
-      gReauthorizeFileHost.showReauthzPrompts();
+      gFileHostReauthorizer.showPrompts();
       try {
-        await browser.runtime.sendMessage({id: "sync-failed"});
+        await browser.runtime.sendMessage({id: "sync-failed-authz-error"});
       }
       catch {}
 
@@ -158,12 +235,11 @@ async function syncReadingList()
         log("Read Next: syncReadingList(): Suspending auto sync interval.");
         await browser.alarms.clear("sync-reading-list");
       }
-      return;
     }
     else {
       console.error("Read Next: syncReadingList(): Error: " + e);
-      throw e;
     }
+    throw e;
   }
   
   log("Read Next: Finished sync!");
@@ -342,8 +418,16 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
     return Promise.resolve(foundBkmks);
 
   case "sync-reading-list":
-    await syncReadingList();
+    try {
+      await syncReadingList();
+    }
+    catch {
+      break;
+    }
     await restartSyncInterval();
+    if (aMessage.isReauthorized) {
+      gFileHostReauthorizer.reset();
+    }
     break;
 
   case "sync-setting-changed":
@@ -357,15 +441,22 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
     }
     break;
     
+  case "reauthorize":
+    gFileHostReauthorizer.openReauthorizeDlg();
+    break;
+    
   default:
     break;
   }
 });
 
 
-browser.alarms.onAlarm.addListener(aAlarm => {
+browser.alarms.onAlarm.addListener(async (aAlarm) => {
   if (aAlarm.name == "sync-reading-list") {
-    syncReadingList();
+    try {
+      await syncReadingList();
+    }
+    catch {}
   }
 });
 
@@ -385,8 +476,17 @@ browser.windows.onFocusChanged.addListener(async (aWndID) => {
   let wnd = await browser.windows.getCurrent();
   if (wnd.id == aWndID) {
     if (gPrefs.syncEnabled) {
+      // Don't trigger sync if syncing is suspended.
+      let syncAlarm = await browser.alarms.get("sync-reading-list");
+      if (! syncAlarm) {
+        return;
+      }
+
       log(`Read Next: Handling window focus changed event for window ${wnd.id} - syncing reading list.`);
-      syncReadingList();
+      try {
+        await syncReadingList();
+      }
+      catch {}
     }
   }
 });
@@ -465,9 +565,7 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
 
 browser.notifications.onClicked.addListener(aNotificationID => {
   if (aNotificationID == "reauthorize") {
-    log("Read Next: The Google Drive reauthorization notification was clicked.");
-
-    // TO DO: Finish implementation.
+    gFileHostReauthorizer.openReauthorizeDlg();
   }
 });
 

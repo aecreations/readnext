@@ -1,0 +1,81 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+@import url("../style/laf.css");
+
+
+body {
+    margin: 16px;
+    background-color: var(--color-bkgd);
+    color: var(--color-default-text);
+}
+
+button {
+    min-width: 96px;
+    min-height: 32px;
+    border-radius: 4px;
+    font-size: 15px !important;
+    text-align: center !important;
+}
+
+button.default {
+    border: 1px solid #005bab;
+}
+
+button.default:focus {
+    border: 1px solid #003eaa;
+}
+
+button.default:hover {
+    border-color: #002275;
+}
+
+#reauthz-error {
+    display: none;
+}
+
+#reauthz-progress-bar {
+    width: 100%;
+    margin-top: 24px;
+}
+
+#icon {
+    float: left;
+}
+
+#msgbox-icon {
+    width: 36px;
+    height: 36px;
+    background-image: url("../img/warning-64.png");
+    background-size: contain;
+}
+
+body[data-os="mac"] #msgbox-icon {
+    background-image: url("../img/warning-64-mac.png");
+}
+
+#msgbox-content {
+    margin-left: 48px;
+}
+
+#msgbox-content > p {
+    margin-top: 2px;
+    font-size: 15px;
+}
+
+#msgbox-buttons {
+    display: none;
+    clear: both;
+    width: 100%;
+    text-align: right;
+    position: absolute;
+    bottom: 12px;
+    left: 0;
+    padding-right: 12px;
+}
+
+#btn-accept {
+    margin-right: 8px;
+    margin-bottom: 8px;    
+}

@@ -11,7 +11,6 @@ let gCmd = {
   async open(aBookmarkID, aURL)
   {
     let tabs = await browser.tabs.query({active: true, currentWindow: true});
-    log(`Read Next: Navigating to url: ${aURL}`);
     await browser.tabs.update(tabs[0].id, {
       active: true,
       url: aURL,
@@ -87,7 +86,11 @@ let gCmd = {
 
   syncBookmarks()
   {
-    browser.runtime.sendMessage({id: "sync-reading-list"});
+    let msg = {
+      id: "sync-reading-list",
+      isReauthorized: false,
+    };
+    browser.runtime.sendMessage(msg);
   },
 
 
@@ -187,7 +190,7 @@ $(async () => {
 
 async function initReadingList(aLocalDataOnly=false)
 {
-  log("Read Next::sidebar.js: initReadingList(): Initializing sidebar.");
+  log("Read Next::sidebar.js: initReadingList(): Initializing sidebar" + (aLocalDataOnly ? " (local data only).":"."));
 
   if (gPrefs.syncEnabled && !aLocalDataOnly) {
     log("Read Next::sidebar.js: initReadingList(): Sync enabled.  Syncing reading list.");
@@ -398,14 +401,17 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
     break;
     
   case "reload-bookmarks-event":
-    rebuildReadingList(aMessage.bookmarks);
+    if ($("#reauthz-msgbar").is(":visible")) {
+      $("#reauthz-msgbar").hide();
+    }
+    rebuildReadingList(aMessage.bookmarks);    
     break;
     
   case "sync-setting-changed":
     initContextMenu.showManualSync = aMessage.syncEnabled;
     break;
 
-  case "sync-failed":
+  case "sync-failed-authz-error":
     if (isReadingListEmpty()) {
       initReadingList(true);
     }
@@ -473,6 +479,11 @@ $("#search-box").on("keyup", aEvent => {
     }
     gSearchBox.updateSearch();
   }
+});
+
+
+$("#reauthorize").on("click", aEvent => {
+  browser.runtime.sendMessage({id: "reauthorize"});
 });
 
 
