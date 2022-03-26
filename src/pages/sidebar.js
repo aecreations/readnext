@@ -58,19 +58,25 @@ let gCmd = {
       bkmkID = await browser.runtime.sendMessage(msg);
     }
     catch (e) {
-      console.error("gCmd.addBookmark(): " + e);
+      log(`gCmd.addBookmark(): Error response to WebExtension message "add-bookmark" was received. Details:\n` + e);
       throw e;
     }
   },
 
-  deleteBookmark(aBookmarkID)
+  async deleteBookmark(aBookmarkID)
   {
     let msg = {
       id: "remove-bookmark",
       bookmarkID: aBookmarkID,
     };
     
-    browser.runtime.sendMessage(msg);
+    try {
+      await browser.runtime.sendMessage(msg);
+    }
+    catch (e) {
+      log(`gCmd.deleteBookmark(): Error response to WebExtension message "remove-bookmark" was received. Details:\n` + e);
+      throw e;
+    }
   },
 
   async getBookmarks()
@@ -102,10 +108,6 @@ let gCmd = {
       // TO DO: Delete the bookmark after the page has finished loading.
       setTimeout(() => { this.deleteBookmark(aBookmarkID) }, 3000);
       // END TEMPORARY
-    }
-    else {
-      // TO DO: Set the bookmark status to "Read" in the reading list.
-      // Again, do this after the page has finished loading.
     }
   },
 };
@@ -289,12 +291,16 @@ function initContextMenu()
       deleteBkmkSep: "---",
       deleteBookmark: {
         name: "delete",
-        callback(aKey, aOpt) {
+        async callback(aKey, aOpt) {
           let bkmkElt = aOpt.$trigger[0];
           let bkmkID = bkmkElt.dataset.id;
           log(`Read Next::sidebar.js: Removing bookmark ID: ${bkmkID}`);
-
-          gCmd.deleteBookmark(bkmkID);
+          try {
+            await gCmd.deleteBookmark(bkmkID);
+          }
+          catch (e) {
+            warn("Read Next: Error removing bookmark: " + e);
+          }
         }
       },
       syncSep: {
@@ -438,7 +444,7 @@ $("#add-link").on("click", async (aEvent) => {
     await gCmd.addBookmark(bkmk);
   }
   catch (e) {
-    console.error("Read Next: Error adding bookmark: " + e);
+    warn("Read Next: Error adding bookmark: " + e);
     return;
   }
  

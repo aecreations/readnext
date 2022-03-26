@@ -159,21 +159,10 @@ async function syncReadingList()
   catch (e) {
     if (e instanceof aeAuthorizationError) {
       warn("Read Next: syncReadingList(): Caught aeAuthorizationError exception.  Details:\n" + e);
-
-      gFileHostReauthorizer.showPrompts();
-      try {
-        await browser.runtime.sendMessage({id: "sync-failed-authz-error"});
-      }
-      catch {}
-
-      let syncAlarm = await browser.alarms.get("sync-reading-list");
-      if (syncAlarm) {
-        log("Read Next: syncReadingList(): Suspending auto sync interval.");
-        await browser.alarms.clear("sync-reading-list");
-      }
+      await handleAuthorizationError();
     }
     else {
-      console.error("Read Next: syncReadingList(): Error: " + e);
+      console.error("Read Next: syncReadingList(): An unexpected error has occurred.  Details:\n" + e);
     }
     throw e;
   }
@@ -189,6 +178,22 @@ async function syncReadingList()
     await browser.runtime.sendMessage(msg);
   }
   catch {}
+}
+
+
+async function handleAuthorizationError()
+{
+  gFileHostReauthorizer.showPrompts();
+  try {
+    await browser.runtime.sendMessage({id: "sync-failed-authz-error"});
+  }
+  catch {}
+
+  let syncAlarm = await browser.alarms.get("sync-reading-list");
+  if (syncAlarm) {
+    log("Read Next: handleAuthorizationError(): Suspending auto sync interval.");
+    await browser.alarms.clear("sync-reading-list");
+  }
 }
 
 
@@ -220,7 +225,19 @@ async function pushLocalChanges()
 {
   if (gPrefs.syncEnabled) {
     log("Read Next: Pushing local changes...");
-    await aeSyncReadingList.push();
+    try {
+      await aeSyncReadingList.push();
+    }
+    catch (e) {
+      if (e instanceof aeAuthorizationError) {
+        warn("Read Next: pushLocalChanges(): Caught aeAuthorizationError exception.  Details:\n" + e);
+        await handleAuthorizationError();
+      }
+      else {
+        console.error("Read Next: pushLocalChanges(): An unexpected error has occurred.  Details:\n" + e);
+      }
+      throw e;
+    }
     await restartSyncInterval();
   }
 }
@@ -335,15 +352,25 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
     let bookmarkID = await addBookmark(aMessage.bookmark);
     togglePageActionIcon(true);
     updateMenus();
-    await pushLocalChanges();
+    try {
+      await pushLocalChanges();
+    }
+    catch (e) {
+      return Promise.reject(e);
+    }
     return Promise.resolve(bookmarkID);
 
   case "remove-bookmark":
     await aeReadingList.remove(aMessage.bookmarkID);
     togglePageActionIcon(false);
     updateMenus();
-    pushLocalChanges();
-    break;
+    try {
+      await pushLocalChanges();
+    }
+    catch (e) {
+      return Promise.reject(e);
+    }
+    return Promise.resolve();
 
   case "get-all-bookmarks":
     let allBkmks = await aeReadingList.getAll();
@@ -438,7 +465,9 @@ browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
 
     if (bkmkExists && bkmk.unread) {
       await aeReadingList.markAsRead(bkmk.id);
-      pushLocalChanges();
+      try {
+        await pushLocalChanges();
+      } catch {}
     }
   }
 }, {properties: ["status"]});

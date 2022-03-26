@@ -104,15 +104,8 @@ let aeSyncReadingList = {
       syncLastModT = await this._fileHost.getLastModifiedTime();
     }
     catch (e) {
-      if (e instanceof aeAuthorizationError) {
-        this._log("aeSyncReadingList.sync(): Error: " + e);
-        throw e;
-      }
-      else {
-        // TO DO: Handle missing or deleted sync file on the cloud file host.
-        // Should this error handling be done in the cloud file host class?
-        console.error("aeSyncReadingList.sync(): " + e);
-      }
+      this._log("aeSyncReadingList.sync(): Error: " + e);
+      throw e;
     }
     
     let localLastModT = this._getLocalLastModifiedTime();
@@ -141,7 +134,14 @@ let aeSyncReadingList = {
     this._log("aeSyncReadingList.push(): Replacing sync data with local reading list data.");
 
     let localData = await aeReadingList.getAll();
-    let syncModT = await this._fileHost.setSyncData(localData);
+    let syncModT;
+    try {
+      syncModT = await this._fileHost.setSyncData(localData);
+    }
+    catch (e) {
+      this._log("aeSyncReadingList.push(): Error: " + e);
+      throw e;
+    }
     await this._setLocalLastModifiedTime(syncModT);
   },
 
@@ -154,7 +154,14 @@ let aeSyncReadingList = {
 
     this._log("aeSyncReadingList.pull(): Replacing local reading list data with sync data.");
 
-    let syncData = await this._fileHost.getSyncData();
+    let syncData;
+    try {
+      syncData = await this._fileHost.getSyncData();
+    }
+    catch (e) {
+      this._log("aeSyncReadingList.pull(): Error: " + e);
+      throw e;
+    }
     this._log(`aeSyncReadingList.pull(): Sync data (${syncData.length} items):`);
     this._log(syncData);
 
