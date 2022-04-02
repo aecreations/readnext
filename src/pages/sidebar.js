@@ -113,6 +113,63 @@ let gCmd = {
 };
 
 
+let gFavIconMap = {
+  _favIconMap: null,
+
+  async init()
+  {    
+    if (! this._favIconMap) {
+      this._favIconMap = await browser.runtime.sendMessage({id: "get-favicon-map"});
+    }
+  },
+
+  set(aBookmarkID, aFavIconURL)
+  {
+    if (! (this._favIconMap instanceof Map)) {
+      throw new Error("gFavIconMap not initialized");
+    }
+
+    this._favIconMap.set(aBookmarkID, aFavIconURL);
+  },
+
+  add(aBookmarkID, aFavIconURL)
+  {
+    this.set(aBookmarkID, aFavIconURL);
+    
+    let msg = {
+      id: "add-favicon",
+      bookmarkID: aBookmarkID,
+      favIconURL: aFavIconURL,
+    };
+
+    browser.runtime.sendMessage(msg);
+  },
+
+  get(aBookmarkID)
+  {
+    if (! (this._favIconMap instanceof Map)) {
+      throw new Error("gFavIconMap not initialized");
+    }
+
+    return this._favIconMap.get(aBookmarkID);
+  },
+
+  has(aBookmarkID)
+  {
+    if (! (this._favIconMap instanceof Map)) {
+      throw new Error("gFavIconMap not initialized");
+    }
+
+    return this._favIconMap.has(aBookmarkID);
+  },
+
+  clear()
+  {
+    this._favIconMap = null;
+  }
+};
+
+
 // Search box
 let gSearchBox = {
   _isInitialized: false,
@@ -194,6 +251,8 @@ async function initReadingList(aLocalDataOnly=false)
 {
   log("Read Next::sidebar.js: initReadingList(): Initializing sidebar" + (aLocalDataOnly ? " (local data only).":"."));
 
+  await gFavIconMap.init();
+
   if (gPrefs.syncEnabled && !aLocalDataOnly) {
     log("Read Next::sidebar.js: initReadingList(): Sync enabled.  Syncing reading list.");
     gCmd.syncBookmarks();
@@ -227,13 +286,32 @@ function addReadingListItem(aBookmark)
   hideWelcome();
   
   let tooltipText = `${aBookmark.title}\n${aBookmark.url}`;
-  let listItem = $("<div>").addClass("reading-list-item").attr("title", tooltipText)[0];
-  listItem.dataset.id = aBookmark.id;
-  listItem.dataset.title = aBookmark.title;
-  listItem.dataset.url = aBookmark.url;
+  let listItemDiv = $("<div>").addClass("reading-list-item").attr("title", tooltipText)[0];
+  listItemDiv.dataset.id = aBookmark.id;
+  listItemDiv.dataset.title = aBookmark.title;
+  listItemDiv.dataset.url = aBookmark.url;
+
+  let favIconCanvas = $('<canvas class="favicon" width="16" height="16"></canvas>');
+  let canvasCtx = favIconCanvas[0].getContext("2d");
+  let img = new Image();
+  img.onload = function () {
+    canvasCtx.clearRect(0, 0, 16, 16);
+    canvasCtx.drawImage(this, 0, 0, 16, 16);
+  };
+  
+  if (gFavIconMap.has(aBookmark.id)) {
+    let favIconDataURL = gFavIconMap.get(aBookmark.id);
+    img.src = favIconDataURL;
+  }
+  else {
+    img.src = aeConst.DEFAULT_FAVICON;
+  }
 
   let listItemTitle = $("<span>").addClass("reading-list-item-title").text(aBookmark.title);
-  $("#reading-list").append($(listItem).append(listItemTitle));
+  let listItem = $(listItemDiv);
+  listItem.append(favIconCanvas);
+  listItem.append(listItemTitle);
+  $("#reading-list").append(listItem);
 }
 
 
@@ -244,10 +322,16 @@ function removeReadingListItem(aBookmarkID)
 }
 
 
-async function rebuildReadingList(aBookmarks)
+async function rebuildReadingList(aBookmarks, aReloadFavIcons=false)
 {
   hideWelcome();
   $("#reading-list").empty();
+
+  if (aReloadFavIcons) {
+    gFavIconMap.clear();
+    await gFavIconMap.init();
+  }
+  
   buildReadingList(aBookmarks);
 }
 
@@ -405,14 +489,18 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
   case "remove-bookmark-event":
     removeReadingListItem(aMessage.bookmarkID);
     break;
-    
+
   case "reload-bookmarks-event":
     if ($("#reauthz-msgbar").is(":visible")) {
       $("#reauthz-msgbar").hide();
     }
     rebuildReadingList(aMessage.bookmarks);    
     break;
-    
+
+  case "add-favicon-event":
+    gFavIconMap.set(aMessage.bookmarkID, aMessage.iconData);
+    break;
+
   case "sync-setting-changed":
     initContextMenu.showManualSync = aMessage.syncEnabled;
     break;
@@ -434,11 +522,16 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
 
 
 $("#add-link").on("click", async (aEvent) => {
-  let tabs = await browser.tabs.query({active: true, currentWindow: true});
-  let title = tabs[0].title;
-  let url = tabs[0].url;
+  let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
+  let title = actvTab.title;
+  let url = actvTab.url;
   let id = getBookmarkIDFromURL(url);
   let bkmk = new aeBookmark(id, url, title);
+
+  let iconURL = actvTab.favIconUrl;
+  if (iconURL) {
+    gFavIconMap.add(id, iconURL);
+  }
 
   try {
     await gCmd.addBookmark(bkmk);
@@ -459,7 +552,8 @@ $("#setup").on("click", aEvent => {
 
 $("#reading-list").on("click", async (aEvent) => {
   let readingListItem;
-  if (aEvent.target.className == "reading-list-item-title") {
+  if (aEvent.target.className == "reading-list-item-title"
+      || aEvent.target.className == "favicon") {
     readingListItem = aEvent.target.parentNode;
   }
   else if (aEvent.target.className == "reading-list-item") {

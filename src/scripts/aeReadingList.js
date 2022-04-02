@@ -14,6 +14,9 @@ let aeReadingList = {
     this._db.version(1).stores({
       bookmarks: "id, title, createdAt, unread"
     });
+    this._db.version(2).stores({
+      favicons: "id"
+    });
   },
   
   async add(aBookmark)
@@ -55,6 +58,39 @@ let aeReadingList = {
     }
 
     this._updateLocalLastModifiedTime();
+  },
+
+  async setFavIcon(aBookmarkID, aIconData)
+  {
+    let db = this._getDB();
+
+    await db.favicons.put({
+      id: aBookmarkID,
+      iconData: aIconData,
+    });
+
+    let msg = {
+      id: "add-favicon-event",
+      bookmarkID: aBookmarkID,
+      iconData: aIconData,
+    };
+    try {
+      browser.runtime.sendMessage(msg);
+    }
+    catch {}
+  },
+
+  async getFavIconMap()
+  {
+    let rv;
+    let favIconMap = new Map();
+    let db = this._getDB();
+    let favicons = await db.favicons.toArray();
+
+    favicons.forEach(aItem => { favIconMap.set(aItem.id, aItem.iconData) });
+    rv = favIconMap;
+
+    return rv;
   },
 
   async remove(aBookmarkID)

@@ -20,4 +20,6 @@ let aeConst = {
 
   // Native messaging helper app
   DRIVE_CONNECTOR_SVC_APP_NAME: "driveConnectorSvc",
+
+  DEFAULT_FAVICON: "chrome://global/skin/icons/defaultFavicon.svg",
 };

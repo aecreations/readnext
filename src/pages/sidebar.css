@@ -53,8 +53,7 @@
   cursor: not-allowed;
 }
 
-.reading-list-item::before {
-  content: url("chrome://global/skin/icons/defaultFavicon.svg");
+.favicon {
   margin-right: 4px;
   vertical-align: -3px;
 }

@@ -257,6 +257,16 @@ async function addBookmark(aBookmark)
 }
 
 
+async function addBookmarkFavIcon(aBookmarkID, aFavIconDataURL)
+{
+  if (!aFavIconDataURL || !aFavIconDataURL.startsWith("data:")) {
+    return;
+  }
+
+  await aeReadingList.setFavIcon(aBookmarkID, aFavIconDataURL);
+}
+
+
 async function showPageAction(aTab, aBookmarkExists=null)
 {
   if (gPrefs.showPageAction && aTab.url.startsWith("http")) {
@@ -380,6 +390,14 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
     let foundBkmks = await aeReadingList.findByTitle(aMessage.searchTerms);
     return Promise.resolve(foundBkmks);
 
+  case "add-favicon":
+    await addBookmarkFavIcon(aMessage.bookmarkID, aMessage.favIconURL);
+    break;
+
+  case "get-favicon-map":
+    let favIconMap = await aeReadingList.getFavIconMap();
+    return Promise.resolve(favIconMap);
+
   case "sync-reading-list":
     try {
       await syncReadingList();
@@ -490,20 +508,21 @@ browser.browserAction.onClicked.addListener(aTab => {
 
 
 browser.pageAction.onClicked.addListener(async () => {
-  let tabs = await browser.tabs.query({active: true, currentWindow: true});
-  let bkmk = await getBookmarkFromTab(tabs[0]);
+  let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
+  let bkmk = await getBookmarkFromTab(actvTab);
   let bkmkExists = !!bkmk;
-  let id = getBookmarkIDFromURL(tabs[0].url);
+  let id = getBookmarkIDFromURL(actvTab.url);
   
   if (bkmkExists) {
     await aeReadingList.remove(id);
   }
   else {
-    bkmk = new aeBookmark(id, tabs[0].url, tabs[0].title);
+    bkmk = new aeBookmark(id, actvTab.url, actvTab.title);
+    await addBookmarkFavIcon(id, actvTab.favIconUrl);
     await addBookmark(bkmk);
   }
 
-  showPageAction(tabs[0], !bkmkExists);
+  showPageAction(actvTab, !bkmkExists);
 });
 
 
@@ -513,6 +532,7 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
   switch (aInfo.menuItemId) {
   case "ae-readnext-add-bkmk":
     bkmk = new aeBookmark(id, aTab.url, aTab.title);
+    await addBookmarkFavIcon(id, aTab.favIconUrl);
     await addBookmark(bkmk);
     break;
 
