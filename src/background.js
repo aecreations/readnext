@@ -257,7 +257,7 @@ async function addBookmark(aBookmark)
 }
 
 
-async function addBookmarkFavIcon(aBookmarkID, aFavIconDataURL)
+async function setBookmarkFavIcon(aBookmarkID, aFavIconDataURL)
 {
   if (!aFavIconDataURL || !aFavIconDataURL.startsWith("data:")) {
     return;
@@ -391,7 +391,7 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
     return Promise.resolve(foundBkmks);
 
   case "add-favicon":
-    await addBookmarkFavIcon(aMessage.bookmarkID, aMessage.favIconURL);
+    await setBookmarkFavIcon(aMessage.bookmarkID, aMessage.favIconURL);
     break;
 
   case "get-favicon-map":
@@ -481,12 +481,19 @@ browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
     showPageAction(aTab, bkmkExists);
     updateMenus(aTab);
 
-    if (bkmkExists && bkmk.unread) {
+    if (! bkmkExists) {
+      return;
+    }
+
+    if (bkmk.unread) {
       await aeReadingList.markAsRead(bkmk.id);
       try {
         await pushLocalChanges();
       } catch {}
     }
+
+    // Update favicon in case the website favicon changed since last visit.
+    setBookmarkFavIcon(bkmk.id, aTab.favIconUrl);
   }
 }, {properties: ["status"]});
 
@@ -518,7 +525,7 @@ browser.pageAction.onClicked.addListener(async () => {
   }
   else {
     bkmk = new aeBookmark(id, actvTab.url, actvTab.title);
-    await addBookmarkFavIcon(id, actvTab.favIconUrl);
+    await setBookmarkFavIcon(id, actvTab.favIconUrl);
     await addBookmark(bkmk);
   }
 
@@ -532,7 +539,7 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
   switch (aInfo.menuItemId) {
   case "ae-readnext-add-bkmk":
     bkmk = new aeBookmark(id, aTab.url, aTab.title);
-    await addBookmarkFavIcon(id, aTab.favIconUrl);
+    await setBookmarkFavIcon(id, aTab.favIconUrl);
     await addBookmark(bkmk);
     break;
 

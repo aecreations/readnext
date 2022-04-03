@@ -70,7 +70,7 @@ let aeReadingList = {
     });
 
     let msg = {
-      id: "add-favicon-event",
+      id: "set-favicon-event",
       bookmarkID: aBookmarkID,
       iconData: aIconData,
     };
@@ -97,6 +97,7 @@ let aeReadingList = {
   {
     let db = this._getDB();
     await db.bookmarks.delete(aBookmarkID);
+    await db.favicons.delete(aBookmarkID);
 
     let msg = {
       id: "remove-bookmark-event",
@@ -111,6 +112,7 @@ let aeReadingList = {
   {
     let db = this._getDB();
     await db.bookmarks.clear();
+    await db.favicons.clear();
   },
 
   async get(aBookmarkID)

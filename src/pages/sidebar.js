@@ -291,8 +291,8 @@ function addReadingListItem(aBookmark)
   listItemDiv.dataset.title = aBookmark.title;
   listItemDiv.dataset.url = aBookmark.url;
 
-  let favIconCanvas = $('<canvas class="favicon" width="16" height="16"></canvas>');
-  let canvasCtx = favIconCanvas[0].getContext("2d");
+  let favIconCanvas = $("<canvas>").addClass("favicon").attr("width", "16").attr("height", "16")[0];
+  let canvasCtx = favIconCanvas.getContext("2d");
   let img = new Image();
   img.onload = function () {
     canvasCtx.clearRect(0, 0, 16, 16);
@@ -497,7 +497,7 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
     rebuildReadingList(aMessage.bookmarks);    
     break;
 
-  case "add-favicon-event":
+  case "set-favicon-event":
     gFavIconMap.set(aMessage.bookmarkID, aMessage.iconData);
     break;
 
