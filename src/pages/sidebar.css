@@ -72,3 +72,8 @@
 .reading-list-item:active {
   background-color: #ccc;
 }
+
+.error {
+  margin-left: 4px;
+  color: red;
+}
