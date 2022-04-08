@@ -354,61 +354,59 @@ async function getBookmarkFromTab(aTab)
 // Event handlers
 //
 
-browser.runtime.onMessage.addListener(async (aMessage) => {
+browser.runtime.onMessage.addListener(aMessage => {
   log(`Read Next: Background script received extension message "${aMessage.id}"`);
 
   switch (aMessage.id) {
   case "add-bookmark":
-    let bookmarkID = await addBookmark(aMessage.bookmark);
-    togglePageActionIcon(true);
-    updateMenus();
-    try {
-      await pushLocalChanges();
-    }
-    catch (e) {
-      return Promise.reject(e);
-    }
-    return Promise.resolve(bookmarkID);
+    let newBkmkID;
+    addBookmark(aMessage.bookmark).then(aBkmkID => {
+      newBkmkID = aBkmkID;
+      togglePageActionIcon(true);
+      updateMenus();
+      return pushLocalChanges();
+    }).then(() => {
+      return Promise.resolve(newBkmkID);
+    }).catch(aErr => {
+      return Promise.reject(aErr);
+    });
+    break;
 
   case "remove-bookmark":
-    await aeReadingList.remove(aMessage.bookmarkID);
-    togglePageActionIcon(false);
-    updateMenus();
-    try {
-      await pushLocalChanges();
-    }
-    catch (e) {
-      return Promise.reject(e);
-    }
-    return Promise.resolve();
+    aeReadingList.remove(aMessage.bookmarkID).then(() => {
+      togglePageActionIcon(false);
+      updateMenus();
+      return pushLocalChanges();
+    }).then(() => {
+      return Promise.resolve();
+    }).catch(aErr => {
+      return Promise.reject(aErr);
+    });
+    break;
 
   case "get-all-bookmarks":
-    let allBkmks = await aeReadingList.getAll();
-    return Promise.resolve(allBkmks);
+    return aeReadingList.getAll();
 
   case "search-bookmarks":
-    let foundBkmks = await aeReadingList.findByTitle(aMessage.searchTerms);
-    return Promise.resolve(foundBkmks);
+    return aeReadingList.findByTitle(aMessage.searchTerms);
 
   case "add-favicon":
-    await setBookmarkFavIcon(aMessage.bookmarkID, aMessage.favIconURL);
+    setBookmarkFavIcon(aMessage.bookmarkID, aMessage.favIconURL);
     break;
 
   case "get-favicon-map":
-    let favIconMap = await aeReadingList.getFavIconMap();
-    return Promise.resolve(favIconMap);
+    return aeReadingList.getFavIconMap();
 
   case "sync-reading-list":
-    try {
-      await syncReadingList();
-    }
-    catch {
-      break;
-    }
-    await restartSyncInterval();
-    if (aMessage.isReauthorized) {
-      gFileHostReauthorizer.reset();
-    }
+    syncReadingList().then(() => {
+      return restartSyncInterval();
+    }).catch(aErr => {
+      return true;
+    }).then(aIsError => {
+      if (!aIsError && aMessage.isReauthorized) {
+        gFileHostReauthorizer.reset();
+      }
+    });
     break;
 
   case "sync-setting-changed":

@@ -86,7 +86,7 @@ let gCmd = {
       id: "get-all-bookmarks"
     };
 
-    rv = await browser.runtime.sendMessage(msg);    
+    rv = await browser.runtime.sendMessage(msg);
     return rv;
   },
 
@@ -486,12 +486,21 @@ function disableAddLinkBtn()
 // Event handlers
 //
 
-browser.runtime.onMessage.addListener(async (aMessage) => {
+browser.runtime.onMessage.addListener(aMessage => {
   if (aeConst.DEBUG) {
-    let wnd = await browser.windows.getCurrent();
-    log(`Read Next::sidebar.js: [Window ID: ${wnd.id}] Received extension message "${aMessage.id}"`);
+    browser.windows.getCurrent().then(aWnd => {
+      log(`Read Next::sidebar.js: [Window ID: ${aWnd.id}] Received extension message "${aMessage.id}"`);
+      handleExtMessage(aMessage);
+    });
   }
+  else {
+    handleExtMessage(aMessage);
+  }
+});
 
+
+function handleExtMessage(aMessage)
+{
   switch (aMessage.id) {
   case "add-bookmark-event":
     addReadingListItem(aMessage.bookmark);
@@ -529,7 +538,7 @@ browser.runtime.onMessage.addListener(async (aMessage) => {
   default:
     break;
   }
-});
+}
 
 
 $("#add-link").on("click", async (aEvent) => {
