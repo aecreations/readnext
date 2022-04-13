@@ -433,11 +433,13 @@ browser.runtime.onMessage.addListener(aMessage => {
     syncReadingList().then(() => {
       return restartSyncInterval();
     }).catch(aErr => {
-      return true;
-    }).then(aIsError => {
-      if (!aIsError && aMessage.isReauthorized) {
+      // Exceptions already handled, no further action needed.
+      return Promise.resolve();
+    }).then(() => {
+      if (aMessage.isReauthorized) {
         gFileHostReauthorizer.reset();
       }
+      return Promise.resolve();
     });
     break;
 

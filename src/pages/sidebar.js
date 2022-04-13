@@ -90,13 +90,13 @@ let gCmd = {
     return rv;
   },
 
-  syncBookmarks()
+  async syncBookmarks()
   {
     let msg = {
       id: "sync-reading-list",
       isReauthorized: false,
     };
-    browser.runtime.sendMessage(msg);
+    await browser.runtime.sendMessage(msg);
   },
 
 
@@ -262,7 +262,7 @@ async function initReadingList(aLocalDataOnly=false)
 
   if (gPrefs.syncEnabled && !aLocalDataOnly) {
     log("Read Next::sidebar.js: initReadingList(): Sync enabled.  Syncing reading list.");
-    gCmd.syncBookmarks();
+    await gCmd.syncBookmarks();
   }
   else {
     let bkmks = await gCmd.getBookmarks();
