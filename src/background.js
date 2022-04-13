@@ -11,8 +11,14 @@ let gFileHostReauthorizer = {
   
   async showPrompts()
   {
+    let fileHostName = await getFileHostUIString();
+    let msg = {
+      id: "reauthorize-prompt",
+      fileHostName,
+    };
+    
     try {
-      await browser.runtime.sendMessage({id: "reauthorize-prompt"});
+      await browser.runtime.sendMessage(msg);
     }
     catch {}
     
@@ -20,7 +26,7 @@ let gFileHostReauthorizer = {
       browser.notifications.create("reauthorize", {
         type: "basic",
         title: browser.i18n.getMessage("extName"),
-        message: "readnext needs to reauthorize your Google Drive account, click here to reauthorize",
+        message: `readnext needs to reauthorize your ${fileHostName} account, click here to reauthorize`,
         iconUrl: "img/icon.png"
       });
       this._notifcnShown = true;
@@ -346,6 +352,32 @@ async function getBookmarkFromTab(aTab)
   let id = getBookmarkIDFromURL(url);
 
   rv = await aeReadingList.get(id);
+  return rv;
+}
+
+
+async function getFileHostUIString()
+{
+  let rv;
+  let backnd = Number(gPrefs.syncBackend);
+
+  switch (backnd) {
+  case aeConst.FILEHOST_DROPBOX:
+    rv = "dropbox";
+    break;
+
+  case aeConst.FILEHOST_GOOGLE_DRIVE:
+    rv = "googledrive";
+    break;
+
+  case aeConst.FILEHOST_ONEDRIVE:
+    rv = "onedrive";
+    break;
+
+  default:
+    break;
+  }
+
   return rv;
 }
 

@@ -532,6 +532,7 @@ function handleExtMessage(aMessage)
     break;
 
   case "reauthorize-prompt":
+    $("#reauthz-msgbar-content").text(`readnext needs to reauthorize your ${aMessage.fileHostName} account`);
     $("#reauthz-msgbar").show();
     break;
 
