@@ -182,7 +182,15 @@ $(async () => {
   }
   // END TO DO
 
-  await initReadingList();
+  try {
+    await initReadingList();
+  }
+  catch (e) {
+    console.error("Read Next::sidebar.js: " + e);
+    let errMsg = $("<p>").addClass("error").text("sorry, can't load reading list");
+    $("#sidebar-content").append(errMsg);
+    return;
+  }
 
   initContextMenu.showManualSync = gPrefs.syncEnabled;
   initContextMenu.showOpenInPrivBrws = await browser.extension.isAllowedIncognitoAccess();
@@ -200,6 +208,10 @@ async function initReadingList(aLocalDataOnly=false)
   }
   else {
     let bkmks = await gCmd.getBookmarks();
+    if (! bkmks) {
+      throw new Error("Failed to load reading list");
+    }
+
     if (bkmks.length == 0) {
       showWelcome();
     }
