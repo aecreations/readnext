@@ -294,8 +294,7 @@ async function showPageAction(aTab, aBookmarkExists=null)
 async function togglePageActionIcon(aIsBookmarked, aTab=null)
 {
   if (! aTab) {
-    let tabs = await browser.tabs.query({active: true, currentWindow: true});
-    aTab = tabs[0];
+    [aTab] = await browser.tabs.query({active: true, currentWindow: true});
   }
   
   let title = {
@@ -562,6 +561,7 @@ browser.pageAction.onClicked.addListener(async () => {
   }
 
   showPageAction(actvTab, !bkmkExists);
+  updateMenus();
 });
 
 
@@ -573,10 +573,12 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
     bkmk = new aeBookmark(id, aTab.url, aTab.title);
     await setBookmarkFavIcon(id, aTab.favIconUrl);
     await addBookmark(bkmk);
+    togglePageActionIcon(true, aTab);
     break;
 
   case "ae-readnext-remove-bkmk":
     await aeReadingList.remove(id);
+    togglePageActionIcon(false, aTab);
     break;
 
   default:
