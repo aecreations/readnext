@@ -100,13 +100,21 @@ class aeDropbox extends aeAbstractFileHost
       body: JSON.stringify(params),
     };
     let resp = await this._fetch(`https://api.dropboxapi.com/2/files/get_metadata`, reqOpts);
-
-    if (! resp.ok) {
-      throw new Error(`Dropbox /files/get_metadata: status: ${resp.status} - ${resp.statusText}`);
-    }
-
     let respBody = await resp.json();   
-    rv = new Date(respBody.server_modified);
+
+    if (resp.ok) {
+      rv = new Date(respBody.server_modified);
+    }
+    else {
+      if (resp.status == aeConst.HTTP_STATUS_CONFLICT
+          && respBody.error_summary.includes("not_found")) {
+        this._warn(`Dropbox /files/get_metadata: status: ${resp.status} - ${resp.statusText}.  Dropbox API error summary: "${respBody.error_summary}"`);
+        throw new aeNotFoundError(respBody.error_summary);
+      }
+      else {
+        throw new Error(`Dropbox /files/get_metadata: status: ${resp.status} - ${resp.statusText}`);
+      }
+    }
 
     return rv;
   }

@@ -18,6 +18,7 @@ let aeConst = {
   HTTP_STATUS_BAD_REQUEST: 400,
   HTTP_STATUS_UNAUTHORIZED: 401,
   HTTP_STATUS_NOT_FOUND: 404,
+  HTTP_STATUS_CONFLICT: 409,
 
   // Native messaging helper app
   DRIVE_CONNECTOR_SVC_APP_NAME: "driveConnectorSvc",

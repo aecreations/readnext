@@ -71,13 +71,19 @@ class aeOneDrive extends aeAbstractFileHost
   {
     let rv;
     let resp = await this._getSyncFile();
+    let respBody = await resp.json();
 
     if (resp.ok) {
-      let respBody = await resp.json();
       rv = new Date(respBody.lastModifiedDateTime);
     }
     else {
-      throw new Error(`OneDrive::getItem: ${resp.status} - ${resp.statusText}`);
+      if (resp.status == aeConst.HTTP_STATUS_NOT_FOUND) {
+        this._warn(`OneDrive::getItem: status: ${resp.status} - ${resp.statusText}`);
+        throw new aeNotFoundError(`${respBody.error.code}: ${respBody.error.message}`); 
+      }
+      else {
+        throw new Error(`OneDrive::getItem: ${resp.status} - ${resp.statusText}`);
+      }
     }
 
     return rv;

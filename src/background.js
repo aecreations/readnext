@@ -166,11 +166,17 @@ async function syncReadingList()
     if (e instanceof aeAuthorizationError) {
       warn("Read Next: syncReadingList(): Caught aeAuthorizationError exception.  Details:\n" + e);
       await handleAuthorizationError();
+      throw e;
+    }
+    else if (e instanceof aeNotFoundError) {
+      warn("Read Next: syncReadingList(): Caught aeNotFoundError exception.  Details:\n" + e);
+      log("Regenerating sync file...");
+      await aeSyncReadingList.push();
     }
     else {
       console.error("Read Next: syncReadingList(): An unexpected error has occurred.  Details:\n" + e);
+      throw e;
     }
-    throw e;
   }
   
   log("Read Next: Finished sync!");
