@@ -195,6 +195,14 @@ let aeSyncReadingList = {
     await aeReadingList.bulkAdd(syncData);
     await this._setLocalLastModifiedTime(aSyncModifiedTime);
   },
+
+
+  async getFileHostUsername()
+  {
+    let rv = await this._fileHost.getUsername();
+
+    return rv;
+  },
   
 
   //

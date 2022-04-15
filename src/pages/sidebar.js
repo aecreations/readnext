@@ -497,6 +497,9 @@ function handleExtMessage(aMessage)
 
   case "sync-setting-changed":
     initContextMenu.showManualSync = aMessage.syncEnabled;
+    // The message listener in the background script for the same message
+    // returns a promise, so do the same here.
+    return Promise.resolve();
     break;
 
   case "sync-failed-authz-error":

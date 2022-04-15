@@ -15,6 +15,26 @@ class aeDropbox extends aeAbstractFileHost
     super(aOAuthClient);
   }
 
+  async getUsername()
+  {
+    let rv;
+    let headers = this._getReqHdrs();   
+    let reqOpts = {
+      method: "POST",
+      headers,
+    };
+    let resp = await this._fetch("https://api.dropboxapi.com/2/users/get_current_account", reqOpts);
+
+    if (! resp.ok) {
+      throw new Error(`Dropbox /users/get_current_account: status: ${resp.status} - ${resp.statusText}`);
+    }
+
+    let respBody = await resp.json();
+    rv = respBody.email;
+
+    return rv;
+  }
+
   async syncFileExists()
   {
     let rv;

@@ -21,6 +21,8 @@ class aeAbstractFileHost
     this._oauthClient = aOAuthClient;
   }
 
+  async getUsername() { throw new Error("Abstract method") }
+
   async createSyncFile(aLocalData) { throw new Error("Abstract method") }
 
   async syncFileExists() { throw new Error("Abstract method") }

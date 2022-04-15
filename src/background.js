@@ -451,12 +451,16 @@ browser.runtime.onMessage.addListener(aMessage => {
   case "sync-setting-changed":
     if (aMessage.syncEnabled) {
       warn("Read Next: Sync was turned ON from extension preferences.");
-      firstSyncReadingList();
+      return firstSyncReadingList();
     }
     else {
       warn("Read Next: Sync was turned OFF from extension preferences.");
-      stopSync();
+      return stopSync();
     }
+    break;
+
+  case "get-username":
+    return aeSyncReadingList.getFileHostUsername();
     break;
     
   case "reauthorize":

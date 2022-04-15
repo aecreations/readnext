@@ -22,6 +22,10 @@ $(async () => {
   $("#add-cxt-menu").prop("checked", prefs.showCxtMenu).on("click", aEvent => {
     aePrefs.setPrefs({showCxtMenu: aEvent.target.checked});
   });
+
+  if (prefs.syncEnabled) {
+    showFileHostInfo(prefs);
+  }
 });
 
 
@@ -52,6 +56,41 @@ function setInitSyncProgressIndicator(aInProgress)
   }
 }
 
+
+async function showFileHostInfo(aPrefs)
+{
+  let fileHost = getFileHostName(aPrefs.syncBackend);
+  let fileHostUser = await browser.runtime.sendMessage({id: "get-username"});
+
+  // TEMPORARY
+  console.info(`Read Next::options.js: Connected to file host ${fileHost} as user ${fileHostUser}`)
+}
+
+
+function getFileHostName(aFileHostID)
+{
+  let rv;
+  let backnd = Number(aFileHostID);
+  
+  switch (backnd) {
+  case aeConst.FILEHOST_DROPBOX:
+    rv = "dropbox";
+    break;
+
+  case aeConst.FILEHOST_GOOGLE_DRIVE:
+    rv = "googledrive";
+    break;
+
+  case aeConst.FILEHOST_ONEDRIVE:
+    rv = "onedrive";
+    break;
+
+  default:
+    break;
+  }
+
+  return rv;
+}
 
 
 //
@@ -152,6 +191,10 @@ $("#toggle-sync").on("click", async (aEvent) => {
   catch {}
   
   setSyncStatus(syncPrefs.syncEnabled);
+
+  if (syncPrefs.syncEnabled) {
+    showFileHostInfo(syncPrefs);
+  }
 });
 
 

@@ -14,6 +14,22 @@ class aeOneDrive extends aeAbstractFileHost
     super(aOAuthClient);
   }
 
+  async getUsername()
+  {
+    let rv;
+    let headers = this._getReqHdrs();
+    let reqOpts = {
+      method: "GET",
+      headers,
+    };
+    let resp = await this._fetch("https://graph.microsoft.com/v1.0/me", reqOpts);
+    let respBody = await resp.json();
+
+    rv = respBody.userPrincipalName;
+
+    return rv;
+  }
+
   async syncFileExists()
   {
     let rv;
@@ -48,7 +64,7 @@ class aeOneDrive extends aeAbstractFileHost
     let reqOpts = {
       method: "GET",
       headers,
-    };   
+    };
     let resp = await this._fetch(`https://graph.microsoft.com/v1.0/me/drive/root:/${this.SYNC_FILENAME}:/content`, reqOpts);
 
     if (resp.status >= 400) {
