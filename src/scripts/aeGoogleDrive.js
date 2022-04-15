@@ -82,7 +82,6 @@ class aeGoogleDrive extends aeAbstractFileHost
       if (resp.error.name == "AuthorizationError") {
         throw new aeAuthorizationError(resp.error.message);
       }
-      // TO DO: Handle missing or deleted sync file
     }
 
     let syncData = resp.syncData;
@@ -108,8 +107,13 @@ class aeGoogleDrive extends aeAbstractFileHost
     msg.syncData = aLocalData;
 
     let resp = await browser.runtime.sendNativeMessage(aeConst.DRIVE_CONNECTOR_SVC_APP_NAME, msg);
-    if ("error" in resp && resp.error.name == "AuthorizationError") {
-      throw new aeAuthorizationError(resp.error.message);
+    if ("error" in resp) {
+      if (resp.error.name == "AuthorizationError") {
+        throw new aeAuthorizationError(resp.error.message);
+      }
+      else if (resp.error.name == "NotFoundError") {
+        throw new aeNotFoundError(resp.error.message);
+      }
     }
 
     rv = new Date(resp.fileModifiedTime);
@@ -133,7 +137,9 @@ class aeGoogleDrive extends aeAbstractFileHost
       if (resp.error.name == "AuthorizationError") {
         throw new aeAuthorizationError(resp.error.message);
       }
-      // TO DO: Handle missing or deleted sync file
+      else if (resp.error.name == "NotFoundError") {
+        throw new aeNotFoundError(resp.error.message);
+      }
     }
     
     rv = new Date(resp.lastModifiedTime);

@@ -171,7 +171,7 @@ async function syncReadingList()
     else if (e instanceof aeNotFoundError) {
       warn("Read Next: syncReadingList(): Caught aeNotFoundError exception.  Details:\n" + e);
       log("Regenerating sync file...");
-      await aeSyncReadingList.push();
+      await aeSyncReadingList.push(true);
     }
     else {
       console.error("Read Next: syncReadingList(): An unexpected error has occurred.  Details:\n" + e);

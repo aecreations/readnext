@@ -129,18 +129,44 @@ let aeSyncReadingList = {
   },
 
 
-  async push()
+  async push(aForceCreateSyncFile=false)
   {
     this._log("aeSyncReadingList.push(): Replacing sync data with local reading list data.");
 
     let localData = await aeReadingList.getAll();
-    let syncModT;
+    let syncModT, retry = false;
+    
     try {
       syncModT = await this._fileHost.setSyncData(localData);
     }
     catch (e) {
-      this._log("aeSyncReadingList.push(): Error: " + e);
-      throw e;
+      if (e instanceof aeAuthorizationError) {
+        this._log("aeSyncReadingList.push(): Error: " + e);
+        throw e;
+      }
+      else if (e instanceof aeNotFoundError) {
+        if (aForceCreateSyncFile) {
+          retry = true;
+        }
+        else {
+          this._log("aeSyncReadingList.push(): Error: " + e);
+          throw e;
+        }
+      }
+      else {
+        this._log("aeSyncReadingList.push(): Error: " + e);
+        throw e;
+      }
+    }
+
+    if (retry) {
+      try {
+        syncModT = await this._fileHost.createSyncFile(localData);
+      }
+      catch (e) {
+        this._log("aeSyncReadingList.push(): Failed to force sync file creation: " + e);
+        throw e;
+      }
     }
     await this._setLocalLastModifiedTime(syncModT);
   },
