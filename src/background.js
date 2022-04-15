@@ -11,7 +11,7 @@ let gFileHostReauthorizer = {
   
   async showPrompts()
   {
-    let fileHostName = await getFileHostUIString();
+    let fileHostName = getFileHostUIString();
     let msg = {
       id: "reauthorize-prompt",
       fileHostName,
@@ -355,7 +355,7 @@ async function getBookmarkFromTab(aTab)
 }
 
 
-async function getFileHostUIString()
+function getFileHostUIString()
 {
   let rv;
   let backnd = Number(gPrefs.syncBackend);
