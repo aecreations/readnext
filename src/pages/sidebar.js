@@ -432,32 +432,6 @@ function hideWelcome()
 }
 
 
-function showError(aMessage)
-{
-  $("#error-msg").text(aMessage);
-  $("#error").show();
-}
-
-
-function updateLoadingStatus()
-{
-  let loadingStatus = $("#loading");
-  let isHidden = window.getComputedStyle(loadingStatus[0]).getPropertyValue("display") == "none";
-  if (isHidden) {
-    loadingStatus.css({display: "block"});
-  }
-  let currentProgress = $("#progress-bar").text();
-  $("#progress-bar").text(currentProgress.concat("\u2219"));
-}
-
-
-function hideLoadingStatus()
-{
-  $("#loading").css({display: "none"});
-  $("#progress-bar").text("");
-}
-
-
 function showToolbar()
 {
   $("#toolbar").show();
