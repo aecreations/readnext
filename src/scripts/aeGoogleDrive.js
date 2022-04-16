@@ -16,6 +16,19 @@ class aeGoogleDrive extends aeAbstractFileHost
     this._sliceLen = aSliceLength;
   }
 
+  async getUsername()
+  {
+    let rv;
+    let msg = this._getNativeMsgReq();
+    msg.id = "get-username";
+
+    let resp = await browser.runtime.sendNativeMessage(aeConst.DRIVE_CONNECTOR_SVC_APP_NAME, msg);
+    rv = resp.username;
+    this._refreshAccessToken(resp);
+    
+    return rv;
+  }
+
   setSyncFileID(aSyncFileID)
   {
     this._syncFileID = aSyncFileID;
