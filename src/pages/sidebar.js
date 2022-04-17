@@ -353,6 +353,30 @@ function isReadingListEmpty()
 }
 
 
+function readingListItemExists(aBookmarkID)
+{
+  let rv;
+  let listItem = $(`#reading-list > .reading-list-item[data-id="${aBookmarkID}"]`);
+  rv = listItem.length > 0;
+
+  return rv;
+}
+
+
+function updateFavIcon(aBookmarkID, aFavIconData)
+{
+  let favIconCanvas = $(`#reading-list > .reading-list-item[data-id="${aBookmarkID}"] > .favicon`)[0];
+  let canvasCtx = favIconCanvas.getContext("2d");
+  let img = new Image();
+  img.onload = function () {
+    canvasCtx.clearRect(0, 0, 16, 16);
+    canvasCtx.drawImage(this, 0, 0, 16, 16);
+  };
+  
+  img.src = aFavIconData ? aFavIconData : aeConst.DEFAULT_FAVICON;
+}
+
+
 function initContextMenu()
 {
   $.contextMenu({
@@ -493,6 +517,11 @@ function handleExtMessage(aMessage)
 
   case "set-favicon-event":
     gFavIconMap.set(aMessage.bookmarkID, aMessage.iconData);
+    // The favicon map is populated before a new bookmark is added, so check
+    // that the bookmark exists.
+    if (readingListItemExists(aMessage.bookmarkID)) {
+      updateFavIcon(aMessage.bookmarkID, aMessage.iconData);
+    }
     break;
 
   case "sync-setting-changed":
@@ -500,7 +529,6 @@ function handleExtMessage(aMessage)
     // The message listener in the background script for the same message
     // returns a promise, so do the same here.
     return Promise.resolve();
-    break;
 
   case "sync-failed-authz-error":
     if (isReadingListEmpty()) {

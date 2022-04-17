@@ -272,6 +272,7 @@ async function addBookmark(aBookmark)
 async function setBookmarkFavIcon(aBookmarkID, aFavIconDataURL)
 {
   if (!aFavIconDataURL || !aFavIconDataURL.startsWith("data:")) {
+    log("Read Next: setBookmarkFavIcon(): No favicon data found for bookmark " + aBookmarkID);
     return;
   }
 
@@ -534,7 +535,9 @@ browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
     }
 
     // Update favicon in case the website favicon changed since last visit.
-    setBookmarkFavIcon(bkmk.id, aTab.favIconUrl);
+    if (aTab.favIconUrl) {
+      setBookmarkFavIcon(bkmk.id, aTab.favIconUrl);
+    }
   }
 }, {properties: ["status"]});
 
