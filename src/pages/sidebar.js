@@ -301,6 +301,12 @@ function addReadingListItem(aBookmark)
   listItemDiv.dataset.id = aBookmark.id;
   listItemDiv.dataset.title = aBookmark.title;
   listItemDiv.dataset.url = aBookmark.url;
+  listItemDiv.dataset.unread = aBookmark.unread;
+
+  if (aBookmark.unread) {
+    let cls = gPrefs.boldUnreadBkmks ? "unread" : "unread-no-fmt"
+    listItemDiv.classList.add(cls);
+  }
 
   let favIconCanvas = $("<canvas>").addClass("favicon").attr("width", "16").attr("height", "16")[0];
   let canvasCtx = favIconCanvas.getContext("2d");
@@ -360,6 +366,15 @@ function readingListItemExists(aBookmarkID)
   rv = listItem.length > 0;
 
   return rv;
+}
+
+
+function markAsRead(aBookmarkID)
+{
+  let listItem = $(`#reading-list > .reading-list-item[data-id="${aBookmarkID}"]`);
+  let cls = gPrefs.boldUnreadBkmks ? "unread" : "unread-no-fmt"
+  
+  listItem.removeClass(cls);
 }
 
 
@@ -541,6 +556,10 @@ function handleExtMessage(aMessage)
     }
     break;
 
+  case "mark-read-event":
+    markAsRead(aMessage.bookmarkID);
+    break;
+
   case "sync-setting-changed":
     initContextMenu.showManualSync = aMessage.syncEnabled;
     // The message listener in the background script for the same message
@@ -562,6 +581,26 @@ function handleExtMessage(aMessage)
     break;
   }
 }
+
+
+browser.storage.onChanged.addListener((aChanges, aAreaName) => {
+  let changedPrefs = Object.keys(aChanges);
+  
+  for (let pref of changedPrefs) {
+    gPrefs[pref] = aChanges[pref].newValue;
+  }
+
+  if (changedPrefs.includes("boldUnreadBkmks")) {
+    let isSet = Boolean(aChanges["boldUnreadBkmks"].newValue);
+    let oldCls = isSet ? "unread-no-fmt" : "unread";
+    let newCls = isSet ? "unread" : "unread-no-fmt";
+    let unreadBkmks = $(`.reading-list-item[data-unread="true"]`).get();
+    
+    for (let bkmk of unreadBkmks) {
+      bkmk.classList.replace(oldCls, newCls);
+    }
+  }
+});
 
 
 $("#add-link").on("click", async (aEvent) => {

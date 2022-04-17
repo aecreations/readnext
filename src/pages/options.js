@@ -23,6 +23,10 @@ $(async () => {
     aePrefs.setPrefs({showCxtMenu: aEvent.target.checked});
   });
 
+  $("#unread-links-bold").prop("checked", prefs.boldUnreadBkmks).on("click", aEvent => {
+    aePrefs.setPrefs({boldUnreadBkmks: aEvent.target.checked});
+  });
+
   if (prefs.syncEnabled) {
     showFileHostInfo(prefs);
   }

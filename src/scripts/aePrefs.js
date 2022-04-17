@@ -16,6 +16,7 @@ let aePrefs = {
     syncInterval: aeConst.SYNC_INTERVAL_MINS,
     showPageAction: true,
     showCxtMenu: true,
+    boldUnreadBkmks: true,
 
     // Applicable to Google Drive file host.
     syncFileID: null,

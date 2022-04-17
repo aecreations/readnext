@@ -162,6 +162,15 @@ let aeReadingList = {
       updatedAt: new Date().toISOString(),
     };
     await db.bookmarks.update(aBookmarkID, changes);
+
+    let msg = {
+      id: "mark-read-event",
+      bookmarkID: aBookmarkID,
+    };
+    try {
+      browser.runtime.sendMessage(msg);
+    }
+    catch {}
   },
   
 

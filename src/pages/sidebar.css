@@ -95,6 +95,10 @@ body {
   text-overflow: ellipsis;
 }
 
+.reading-list-item.unread {
+  font-weight: 600;
+}
+
 .reading-list-item:hover {
   background-color: rgba(12, 12, 13, 0.2);
   color: #0c0c0d;
