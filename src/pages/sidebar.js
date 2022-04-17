@@ -384,6 +384,7 @@ function initContextMenu()
     items: {
       openInNewTab: {
         name: "open in new tab",
+        className: "ae-menuitem",
         callback(aKey, aOpt) {
           let bkmkElt = aOpt.$trigger[0];
           gCmd.openInNewTab(bkmkElt.dataset.id, bkmkElt.dataset.url);
@@ -391,6 +392,7 @@ function initContextMenu()
       },
       openInNewWnd: {
         name: "open in new window",
+        className: "ae-menuitem",
         callback(aKey, aOpt) {
           let bkmkElt = aOpt.$trigger[0];
           gCmd.openInNewWnd(bkmkElt.dataset.id, bkmkElt.dataset.url);
@@ -398,6 +400,7 @@ function initContextMenu()
       },
       openInNewPrivateWnd: {
         name: "open in new private window",
+        className: "ae-menuitem",
         async callback(aKey, aOpt) {
           let bkmkElt = aOpt.$trigger[0];
           let url = bkmkElt.dataset.url;
@@ -410,6 +413,7 @@ function initContextMenu()
       deleteBkmkSep: "---",
       deleteBookmark: {
         name: "delete",
+        className: "ae-menuitem",
         async callback(aKey, aOpt) {
           let bkmkElt = aOpt.$trigger[0];
           let bkmkID = bkmkElt.dataset.id;
@@ -430,6 +434,7 @@ function initContextMenu()
       },
       syncBkmksNow: {
         name: "sync now",
+        className: "ae-menuitem",
         callback(aKey, aOpt) {
           gCmd.syncBookmarks();
         },
@@ -480,6 +485,18 @@ function disableAddLinkBtn()
 }
 
 
+function showMessageBar(aMsgBarStor)
+{
+  $(`#msgbars, #msgbars > ${aMsgBarStor}`).show();
+}
+
+
+function hideMessageBar()
+{
+  $("#msgbars, #msgbars > .msgbar").hide();
+}
+
+
 //
 // Event handlers
 //
@@ -510,7 +527,7 @@ function handleExtMessage(aMessage)
 
   case "reload-bookmarks-event":
     if ($("#reauthz-msgbar").is(":visible")) {
-      $("#reauthz-msgbar").hide();
+      hideMessageBar();
     }
     rebuildReadingList(aMessage.bookmarks);    
     break;
@@ -538,7 +555,7 @@ function handleExtMessage(aMessage)
 
   case "reauthorize-prompt":
     $("#reauthz-msgbar-content").text(`readnext needs to reauthorize your ${aMessage.fileHostName} account`);
-    $("#reauthz-msgbar").show();
+    showMessageBar("#reauthz-msgbar");
     break;
 
   default:
