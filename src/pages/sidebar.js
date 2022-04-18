@@ -99,6 +99,16 @@ let gCmd = {
     await browser.runtime.sendMessage(msg);
   },
 
+  async markAsRead(aBookmarkID, aIsRead)
+  {
+    let msg = {
+      id: "mark-as-read",
+      bookmarkID: aBookmarkID,
+      isRead: aIsRead,
+    };
+    await browser.runtime.sendMessage(msg);
+  },
+
 
   // Helper
   async _afterBookmarkOpened(aBookmarkID)
@@ -369,12 +379,19 @@ function readingListItemExists(aBookmarkID)
 }
 
 
-function markAsRead(aBookmarkID)
+function markAsRead(aBookmarkID, aIsRead)
 {
   let listItem = $(`#reading-list > .reading-list-item[data-id="${aBookmarkID}"]`);
   let cls = gPrefs.boldUnreadBkmks ? "unread" : "unread-no-fmt"
-  
-  listItem.removeClass(cls);
+
+  if (aIsRead) {
+    listItem.removeClass(cls);
+    listItem.attr("data-unread", false);
+  }
+  else {
+    listItem.addClass(cls);
+    listItem.attr("data-unread", true);
+  }
 }
 
 
@@ -425,7 +442,33 @@ function initContextMenu()
           return initContextMenu.showOpenInPrivBrws;
         }
       },
-      deleteBkmkSep: "---",
+      bkmkActionsSep: "---",
+      markAsRead: {
+        name: "mark as read",
+        className: "ae-menuitem",
+        async callback(aKey, aOpt) {
+          let bkmkElt = aOpt.$trigger[0];
+          let bkmkID = bkmkElt.dataset.id;
+          await gCmd.markAsRead(bkmkID, true);
+        },
+        visible(aKey, aOpt) {
+          let bkmkElt = aOpt.$trigger[0];
+          return bkmkElt.dataset.unread === "true";
+        }
+      },
+      markAsUnread: {
+        name: "mark as unread",
+        className: "ae-menuitem",
+        async callback(aKey, aOpt) {
+          let bkmkElt = aOpt.$trigger[0];
+          let bkmkID = bkmkElt.dataset.id;
+          await gCmd.markAsRead(bkmkID, false);
+        },
+        visible(aKey, aOpt) {
+          let bkmkElt = aOpt.$trigger[0];
+          return bkmkElt.dataset.unread === "false";
+        }
+      },
       deleteBookmark: {
         name: "delete",
         className: "ae-menuitem",
@@ -557,7 +600,7 @@ function handleExtMessage(aMessage)
     break;
 
   case "mark-read-event":
-    markAsRead(aMessage.bookmarkID);
+    markAsRead(aMessage.bookmarkID, aMessage.isRead);
     break;
 
   case "sync-setting-changed":

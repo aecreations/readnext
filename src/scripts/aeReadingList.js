@@ -154,11 +154,12 @@ let aeReadingList = {
     return rv;
   },
 
-  async markAsRead(aBookmarkID)
+  async markAsRead(aBookmarkID, aIsRead)
   {
+    log("Read Next: aeReadingList.markAsRead(): aIsRead = " + aIsRead);
     let db = this._getDB();
     let changes = {
-      unread: false,
+      unread: !aIsRead,
       updatedAt: new Date().toISOString(),
     };
     await db.bookmarks.update(aBookmarkID, changes);
@@ -166,6 +167,7 @@ let aeReadingList = {
     let msg = {
       id: "mark-read-event",
       bookmarkID: aBookmarkID,
+      isRead: aIsRead,
     };
     try {
       browser.runtime.sendMessage(msg);

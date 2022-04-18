@@ -435,6 +435,9 @@ browser.runtime.onMessage.addListener(aMessage => {
   case "get-favicon-map":
     return aeReadingList.getFavIconMap();
 
+  case "mark-as-read":
+    return aeReadingList.markAsRead(aMessage.bookmarkID, aMessage.isRead);
+
   case "sync-reading-list":
     syncReadingList().then(() => {
       return restartSyncInterval();
@@ -528,7 +531,7 @@ browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
     }
 
     if (bkmk.unread) {
-      await aeReadingList.markAsRead(bkmk.id);
+      await aeReadingList.markAsRead(bkmk.id, true);
       try {
         await pushLocalChanges();
       } catch {}
