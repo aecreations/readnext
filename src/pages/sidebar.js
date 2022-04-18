@@ -681,7 +681,7 @@ $("#reading-list").on("click", async (aEvent) => {
       || aEvent.target.className == "favicon") {
     readingListItem = aEvent.target.parentNode;
   }
-  else if (aEvent.target.className == "reading-list-item") {
+  else if (aEvent.target.classList.contains("reading-list-item")) {
     readingListItem = aEvent.target;
   }
 
