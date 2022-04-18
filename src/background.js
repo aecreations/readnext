@@ -436,7 +436,14 @@ browser.runtime.onMessage.addListener(aMessage => {
     return aeReadingList.getFavIconMap();
 
   case "mark-as-read":
-    return aeReadingList.markAsRead(aMessage.bookmarkID, aMessage.isRead);
+    aeReadingList.markAsRead(aMessage.bookmarkID, aMessage.isRead).then(() => {
+      return pushLocalChanges();
+    }).then(() => {
+      return Promise.resolve();
+    }).catch(aErr => {
+      return Promise.reject(aErr);
+    });
+    break;
 
   case "sync-reading-list":
     syncReadingList().then(() => {
