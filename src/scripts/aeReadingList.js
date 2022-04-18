@@ -156,7 +156,6 @@ let aeReadingList = {
 
   async markAsRead(aBookmarkID, aIsRead)
   {
-    log("Read Next: aeReadingList.markAsRead(): aIsRead = " + aIsRead);
     let db = this._getDB();
     let changes = {
       unread: !aIsRead,
