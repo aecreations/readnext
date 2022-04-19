@@ -209,7 +209,7 @@ async function handleAuthorizationError()
 }
 
 
-async function initSyncInterval()
+function initSyncInterval()
 {
   let periodInMinutes = gPrefs.syncInterval;
   browser.alarms.create("sync-reading-list", {periodInMinutes});
@@ -229,7 +229,7 @@ async function restartSyncInterval()
 {
   log("Read Next: Restarting sync interval...");
   await browser.alarms.clear("sync-reading-list");
-  await initSyncInterval();
+  initSyncInterval();
 }
 
 
@@ -403,11 +403,8 @@ browser.runtime.onMessage.addListener(aMessage => {
       togglePageActionIcon(true);
       updateMenus();
       return pushLocalChanges();
-    }).then(() => {
-      return Promise.resolve(newBkmkID);
-    }).catch(aErr => {
-      return Promise.reject(aErr);
-    });
+    }).then(() => Promise.resolve(newBkmkID))
+      .catch(aErr => Promise.reject(aErr));
     break;
 
   case "remove-bookmark":
@@ -415,11 +412,8 @@ browser.runtime.onMessage.addListener(aMessage => {
       togglePageActionIcon(false);
       updateMenus();
       return pushLocalChanges();
-    }).then(() => {
-      return Promise.resolve();
-    }).catch(aErr => {
-      return Promise.reject(aErr);
-    });
+    }).then(() => Promise.resolve())
+      .catch(aErr => Promise.reject(aErr));
     break;
 
   case "get-all-bookmarks":
@@ -436,13 +430,10 @@ browser.runtime.onMessage.addListener(aMessage => {
     return aeReadingList.getFavIconMap();
 
   case "mark-as-read":
-    aeReadingList.markAsRead(aMessage.bookmarkID, aMessage.isRead).then(() => {
-      return pushLocalChanges();
-    }).then(() => {
-      return Promise.resolve();
-    }).catch(aErr => {
-      return Promise.reject(aErr);
-    });
+    aeReadingList.markAsRead(aMessage.bookmarkID, aMessage.isRead)
+      .then(() => pushLocalChanges())
+      .then(() => Promise.resolve())
+      .catch(aErr => Promise.reject(aErr));
     break;
 
   case "sync-reading-list":
@@ -541,7 +532,8 @@ browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
       await aeReadingList.markAsRead(bkmk.id, true);
       try {
         await pushLocalChanges();
-      } catch {}
+      }
+      catch {}
     }
 
     // Update favicon in case the website favicon changed since last visit.
@@ -585,6 +577,10 @@ browser.pageAction.onClicked.addListener(async () => {
 
   showPageAction(actvTab, !bkmkExists);
   updateMenus();
+  try {
+    await pushLocalChanges();
+  }
+  catch {}
 });
 
 
@@ -609,6 +605,10 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
   }
 
   updateMenus(aTab);
+  try {
+    await pushLocalChanges();
+  }
+  catch {}
 });
 
 
