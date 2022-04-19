@@ -36,7 +36,10 @@ let aeReadingList = {
         id: "add-bookmark-event",
         bookmark: aBookmark,
       };
-      browser.runtime.sendMessage(msg);
+      try {
+        await browser.runtime.sendMessage(msg);
+      }
+      catch {}
 
       this._updateLocalLastModifiedTime();
     }
@@ -75,7 +78,7 @@ let aeReadingList = {
       iconData: aIconData,
     };
     try {
-      browser.runtime.sendMessage(msg);
+      await browser.runtime.sendMessage(msg);
     }
     catch {}
   },
@@ -103,7 +106,10 @@ let aeReadingList = {
       id: "remove-bookmark-event",
       bookmarkID: aBookmarkID,
     };
-    browser.runtime.sendMessage(msg);
+    try {
+      await browser.runtime.sendMessage(msg);
+    }
+    catch {}
 
     this._updateLocalLastModifiedTime();
   },
@@ -169,7 +175,7 @@ let aeReadingList = {
       isRead: aIsRead,
     };
     try {
-      browser.runtime.sendMessage(msg);
+      await browser.runtime.sendMessage(msg);
     }
     catch {}
   },
