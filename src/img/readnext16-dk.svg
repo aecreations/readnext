@@ -67,15 +67,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="31.466252"
-     inkscape:cx="8"
+     inkscape:zoom="44.5"
+     inkscape:cx="8.1123595"
      inkscape:cy="8.4767012"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
      showgrid="true"
      inkscape:window-width="2048"
-     inkscape:window-height="1033"
+     inkscape:window-height="1031"
      inkscape:window-x="0"
      inkscape:window-y="23"
      inkscape:window-maximized="1"
@@ -92,7 +92,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -105,21 +105,52 @@
        d="M 0.50000051,0.50000052 V 14.31203 l 2.49999999,-3.482723 2.5,3.482723 V 0.50000052 Z"
        id="path2674"
        sodipodi:nodetypes="cccccc" />
-    <path
-       style="fill:none;stroke:#eeeeee;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 8.0019873,2.5317761 7.9958507,-0.03178"
-       id="path2706" />
-    <path
-       style="fill:none;stroke:#eeeeee;stroke-width:0.99999899999999997px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 8.0019874,5.5317755 7.9954576,-0.03178"
-       id="path2708" />
-    <path
-       style="fill:none;stroke:#eeeeee;stroke-width:0.99999700000000002px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 8.0019875,8.5317715 7.9947005,-0.03178"
-       id="path2712" />
-    <path
-       style="fill:none;stroke:#eeeeee;stroke-width:0.99999899999999997px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 8.0019874,11.531776 7.9954576,-0.03178"
-       id="path2714" />
+    <g
+       id="g1456">
+      <path
+         style="fill:none;stroke:#eeeeee;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 9.0026509,2.5317761 6.9946981,-0.03178"
+         id="path2706" />
+      <path
+         style="fill:none;stroke:#eeeeee;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 7.0159453,2.5315257 0.9960253,-0.03178"
+         id="path2708" />
+    </g>
+    <g
+       id="g1462"
+       transform="translate(0,3)">
+      <path
+         style="fill:none;stroke:#eeeeee;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 9.0026509,2.5317761 6.9946981,-0.03178"
+         id="path1458" />
+      <path
+         style="fill:none;stroke:#eeeeee;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 7.0159453,2.5315257 0.9960253,-0.03178"
+         id="path1460" />
+    </g>
+    <g
+       id="g1468"
+       transform="translate(0,6)">
+      <path
+         style="fill:none;stroke:#eeeeee;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 9.0026509,2.5317761 6.9946981,-0.03178"
+         id="path1464" />
+      <path
+         style="fill:none;stroke:#eeeeee;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 7.0159453,2.5315257 0.9960253,-0.03178"
+         id="path1466" />
+    </g>
+    <g
+       id="g1474"
+       transform="translate(0,9)">
+      <path
+         style="fill:none;stroke:#eeeeee;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 9.0026509,2.5317761 6.9946981,-0.03178"
+         id="path1470" />
+      <path
+         style="fill:none;stroke:#eeeeee;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 7.0159453,2.5315257 0.9960253,-0.03178"
+         id="path1472" />
+    </g>
   </g>
 </svg>
