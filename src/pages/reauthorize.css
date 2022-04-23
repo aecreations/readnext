@@ -11,6 +11,7 @@
     --color-main-border: #ddd;
     --color-main-bkgd: #fefefe;
     --color-main-border-shadow: #e0e0e0;
+    --url-prmpt-icon: url("../img/readnext128.svg");
 }
 
 @media (prefers-color-scheme: dark) {
@@ -20,6 +21,7 @@
 	--color-main-border: #0c0c0d;
 	--color-main-bkgd: #2a2a2e;
 	--color-main-border-shadow: #0c0c0d;
+	--url-prmpt-icon: url("../img/readnext128-dk.svg");
     }
 }
 
@@ -42,6 +44,10 @@ h1 {
 }
 
 #prmpt-icon {
+    display: inline-block;
+    background-image: var(--url-prmpt-icon);
+    background-repeat: no-repeat;
+    background-size: contain;
     vertical-align: -14px;
     margin-right: 18px;
     width: 96px;

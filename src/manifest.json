@@ -13,8 +13,8 @@
   },
 
   "icons": {
-    "48": "img/icon.png",
-    "96": "img/icon.png"
+    "48": "img/icon.svg",
+    "96": "img/icon.svg"
   },
 
   "permissions": [
@@ -49,11 +49,20 @@
   },
 
   "browser_action": {
-    "default_icon": {
-      "16": "img/icon32.png",
-      "32": "img/icon32.png"
-    },
-    "default_title": "__MSG_extName__"
+    "default_icon": "img/readnext16.svg",
+    "default_title": "__MSG_extName__",
+    "theme_icons": [
+      {
+	"light": "img/readnext16-dk.svg",
+	"dark": "img/readnext16.svg",
+	"size": 16
+      },
+      {
+	"light": "img/readnext16-dk.svg",
+	"dark": "img/readnext16.svg",
+	"size": 32
+      }
+    ]
   },
 
   "page_action": {
@@ -67,7 +76,7 @@
   "sidebar_action": {
     "default_title": "__MSG_extName__",
     "default_panel": "pages/sidebar.html",
-    "default_icon": "img/icon.png"
+    "default_icon": "img/readnext16.svg"
   },
   
   "options_ui": {
