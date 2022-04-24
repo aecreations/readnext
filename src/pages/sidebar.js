@@ -123,6 +123,30 @@ let gCmd = {
 };
 
 
+let gReadingListFilter = {
+  ALL: 0,
+  UNREAD: 1,
+  
+  _filter: 0,
+
+  getSelectedFilter()
+  {
+    return this._filter;
+  },
+
+  async setFilter(aFilter)
+  {
+    if (this._filter == aFilter) {
+      return;
+    }
+
+    this._filter = aFilter;
+    let bkmks = await gCmd.getBookmarks();
+    await rebuildReadingList(bkmks, this._filter == this.UNREAD);
+  },
+};
+
+
 let gFavIconMap = {
   _favIconMap: null,
 
@@ -214,7 +238,8 @@ let gSearchBox = {
     let srchResults = await browser.runtime.sendMessage(msg);
 
     this._numMatches = srchResults.length;
-    await rebuildReadingList(srchResults);
+    let unreadOnly = gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD;
+    await rebuildReadingList(srchResults, unreadOnly);
   },
 
   getCountMatches()
@@ -234,7 +259,8 @@ let gSearchBox = {
     this._numMatches = null;
 
     let bkmks = await gCmd.getBookmarks();
-    rebuildReadingList(bkmks);
+    let unreadOnly = gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD;
+    rebuildReadingList(bkmks, unreadOnly);
   }
 };
 
@@ -285,18 +311,21 @@ async function initReadingList(aLocalDataOnly=false)
     }
     else {
       hideWelcome();
-      buildReadingList(bkmks);
+      buildReadingList(bkmks, false);
     }
   }
 }
 
 
-function buildReadingList(aBookmarks)
+function buildReadingList(aBookmarks, aUnreadOnly)
 {
   log(`Read Next: ${aBookmarks.length} items.`);
   log(aBookmarks);
 
   for (let bkmk of aBookmarks) {
+    if (aUnreadOnly && !bkmk.unread) {
+      continue;
+    }
     addReadingListItem(bkmk);
   }
 }
@@ -349,7 +378,7 @@ function removeReadingListItem(aBookmarkID)
 }
 
 
-async function rebuildReadingList(aBookmarks, aReloadFavIcons=false)
+async function rebuildReadingList(aBookmarks, aUnreadOnly, aReloadFavIcons=false)
 {
   hideWelcome();
   $("#reading-list").empty();
@@ -359,7 +388,7 @@ async function rebuildReadingList(aBookmarks, aReloadFavIcons=false)
     await gFavIconMap.init();
   }
   
-  buildReadingList(aBookmarks);
+  buildReadingList(aBookmarks, aUnreadOnly);
 }
 
 
@@ -555,6 +584,12 @@ function hideMessageBar()
 }
 
 
+function handleFilterSelection(aEvent)
+{
+  gReadingListFilter.setFilter(aEvent.target.value);
+}
+
+
 //
 // Event handlers
 //
@@ -587,7 +622,8 @@ function handleExtMessage(aMessage)
     if ($("#reauthz-msgbar").is(":visible")) {
       hideMessageBar();
     }
-    rebuildReadingList(aMessage.bookmarks);    
+    let unreadOnly = gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD;
+    rebuildReadingList(aMessage.bookmarks, unreadOnly);
     break;
 
   case "set-favicon-event":
@@ -688,6 +724,10 @@ $("#reading-list").on("click", async (aEvent) => {
   gCmd.open(readingListItem.dataset.id, readingListItem.dataset.url);
 });
 
+
+$("#filter-all").click(handleFilterSelection);
+
+$("#filter-unread").click(handleFilterSelection);
 
 $("#search-box").focus(aEvent => {
   gSearchBox.activate();

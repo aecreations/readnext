@@ -30,6 +30,11 @@ body {
     background-color: var(--color-bkgd);
 }
 
+button, label {
+    font: caption;
+    font-size: 11px;
+}
+
 #toolbar, #search-bar {
     width: 100%;
     padding: 2px 4px 2px 4px;
