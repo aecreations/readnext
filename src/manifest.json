@@ -76,7 +76,7 @@
   "sidebar_action": {
     "default_title": "__MSG_extName__",
     "default_panel": "pages/sidebar.html",
-    "default_icon": "img/readnext16.svg"
+    "default_icon": "img/readnext-sb.svg"
   },
   
   "options_ui": {
