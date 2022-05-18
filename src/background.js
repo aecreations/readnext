@@ -56,12 +56,16 @@ browser.runtime.onInstalled.addListener(async (aInstall) => {
   }
 });
 
-browser.runtime.onStartup.addListener(async () => {
-  log("Read Next: Initializing extension during browser startup.");
 
-  gPrefs = await aePrefs.getAllPrefs();
-  init();
-});
+// WebExtension initialization
+void function () {
+  log("Read Next: Initializing WebExtension from IIFE.");
+
+  aePrefs.getAllPrefs().then(aPrefs => {
+    gPrefs = aPrefs;
+    init();
+  });
+}();
 
 
 async function setDefaultPrefs()
