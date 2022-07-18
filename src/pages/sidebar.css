@@ -95,7 +95,7 @@ button, label {
 .reading-list-item {
   padding: 4px 8px 4px 8px;
   min-height: 1em;
-  max-height: 3.1em;
+  max-height: 3.15em;
   overflow: hidden;
 
   font-size: 12px;
