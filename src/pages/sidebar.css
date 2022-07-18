@@ -89,15 +89,17 @@ button, label {
 }
 
 .favicon {
-  margin-right: 4px;
-  vertical-align: -3px;
+    float: left;
 }
 
 .reading-list-item {
   padding: 4px 8px 4px 8px;
+  min-height: 1em;
+  max-height: 3.1em;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+
+  font-size: 12px;
+  font-weight: normal;
 }
 
 .reading-list-item.unread {
@@ -111,6 +113,10 @@ button, label {
 
 .reading-list-item:active {
   background-color: rgba(12, 12, 13, 0.3);
+}
+
+.reading-list-item-title {
+    margin-left: 20px;
 }
 
 .error {

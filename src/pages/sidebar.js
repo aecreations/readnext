@@ -363,7 +363,7 @@ function addReadingListItem(aBookmark)
     img.src = aeConst.DEFAULT_FAVICON;
   }
 
-  let listItemTitle = $("<span>").addClass("reading-list-item-title").text(aBookmark.title);
+  let listItemTitle = $("<div>").addClass("reading-list-item-title").text(aBookmark.title);
   let listItem = $(listItemDiv);
   listItem.append(favIconCanvas);
   listItem.append(listItemTitle);
