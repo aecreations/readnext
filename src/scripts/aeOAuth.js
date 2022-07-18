@@ -19,7 +19,7 @@ let aeOAuth = function () {
       authzURL: `https://accounts.google.com/o/oauth2/v2/auth?client_id=%k&redirect_uri=%r&response_type=code&scope=https%3A//www.googleapis.com/auth/drive.file`,
     },
     onedrive: {
-      authzURL: `https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=%k&redirect_uri=%r&response_type=code&scope=Files.ReadWrite+offline_access&response_mode=query`,
+      authzURL: `https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=%k&redirect_uri=%r&response_type=code&scope=User.Read+Files.ReadWrite+offline_access&response_mode=query`,
     }
   };
 
