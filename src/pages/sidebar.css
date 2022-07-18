@@ -66,6 +66,11 @@ button, label {
   font-size: 13px;
 }
 
+#msgbar-actions {
+    margin-top: 4px;
+    text-align: right;
+}
+
 #welcome {
   display: none;
   text-align: center;
