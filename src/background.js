@@ -284,6 +284,16 @@ async function setBookmarkFavIcon(aBookmarkID, aFavIconDataURL)
 }
 
 
+async function updateBookmarkFavIcon(aBookmarkID, aTabID)
+{
+  let tab = await browser.tabs.get(aTabID);
+
+  if (tab.favIconUrl) {
+    setBookmarkFavIcon(aBookmarkID, tab.favIconUrl);
+  }
+}
+
+
 async function showPageAction(aTab, aBookmarkExists=null)
 {
   if (gPrefs.showPageAction && aTab.url.startsWith("http")) {
@@ -543,6 +553,12 @@ browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
     // Update favicon in case the website favicon changed since last visit.
     if (aTab.favIconUrl) {
       setBookmarkFavIcon(bkmk.id, aTab.favIconUrl);
+    }
+    else {
+      // Loading the favicon is sometimes delayed.
+      window.setTimeout(() => {
+        updateBookmarkFavIcon(bkmk.id, aTabID);
+      }, aeConst.FAVICON_LOAD_RETRY_DELAY_MS);
     }
   }
 }, {properties: ["status"]});

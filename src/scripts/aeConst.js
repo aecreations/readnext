@@ -24,4 +24,5 @@ let aeConst = {
   DRIVE_CONNECTOR_SVC_APP_NAME: "driveConnectorSvc",
 
   DEFAULT_FAVICON: "chrome://global/skin/icons/defaultFavicon.svg",
+  FAVICON_LOAD_RETRY_DELAY_MS: 1000,
 };
