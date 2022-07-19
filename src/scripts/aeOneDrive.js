@@ -203,7 +203,6 @@ class aeOneDrive extends aeAbstractFileHost
 
   async _refreshAccessToken()
   {
-    // TO DO: Consider putting this helper method in the superclass.
     let rv;
     let params = new URLSearchParams({
       stgsvc: this.AUTHZ_SRV_KEY,
@@ -225,7 +224,14 @@ class aeOneDrive extends aeAbstractFileHost
     }
     
     if (! resp.ok) {
-      throw new Error(`Error from aeOAPS /token: status: ${resp.status} - ${resp.statusText}`);
+      let errRespBody = await resp.json();
+      if (resp.status == aeConst.HTTP_STATUS_BAD_REQUEST && "error" in errRespBody
+          && errRespBody.error.name == "AuthorizationError") {
+        throw new aeAuthorizationError(errRespBody.error.message);
+      }
+      else {
+        throw new Error(`Error from aeOAPS /token: status: ${resp.status} - ${resp.statusText}`);
+      }
     }
     
     let respBody = await resp.json();
