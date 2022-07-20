@@ -5,6 +5,8 @@
 
 
 let gPrefs;
+let gFirstRun = false;
+let gIsMajorVerUpdate = false;
 
 let gFileHostReauthorizer = {
   _notifcnShown: false,
@@ -50,31 +52,26 @@ let gFileHostReauthorizer = {
 browser.runtime.onInstalled.addListener(async (aInstall) => {
   if (aInstall.reason == "install") {
     log("Read Next: Extension installed.");
-
-    await setDefaultPrefs();
-    init();
   }
 });
 
 
 // WebExtension initialization
-void function () {
-  log("Read Next: Initializing WebExtension from IIFE.");
+void async function () {
+  log("Read Next: WebExtension startup initiated.");
 
-  aePrefs.getAllPrefs().then(aPrefs => {
-    gPrefs = aPrefs;
-    init();
-  });
+  gPrefs = await aePrefs.getAllPrefs();
+  log("Read Next: Successfully retrieved user preferences:");
+  log(gPrefs);
+
+  if (! aePrefs.hasUserPrefs(gPrefs)) {
+    log("Initializing Read Next user preferences.");
+    gIsFirstRun = true;
+    await aePrefs.setUserPrefs(gPrefs);
+  }
+
+  init();
 }();
-
-
-async function setDefaultPrefs()
-{
-  let defaultPrefs = aePrefs.getDefaultPrefs();
-  await aePrefs.setPrefs(defaultPrefs);
-
-  gPrefs = defaultPrefs;
-}
 
 
 async function init()

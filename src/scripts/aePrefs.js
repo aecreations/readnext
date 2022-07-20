@@ -24,11 +24,6 @@ let aePrefs = {
   },
 
   
-  getDefaultPrefs()
-  {
-    return this._defaultPrefs;
-  },
-  
   getPrefKeys()
   {
     return Object.keys(this._defaultPrefs);
@@ -53,4 +48,47 @@ let aePrefs = {
     await browser.storage.local.set(aPrefMap);
   },
 
+
+  //
+  // Version upgrade handling
+  //
+
+  hasUserPrefs(aPrefs)
+  {
+    return aPrefs.hasOwnProperty("syncEnabled");
+  },
+
+  async setUserPrefs(aPrefs) {
+    let prefs = {
+      syncEnabled: false,
+      syncBackend: null,
+      accessToken: null,
+      refreshToken: null,
+      syncEnabledFromExtPrefs: false,
+      deleteReadLinks: false,
+      localLastModifiedTime: null,
+      syncInterval: aeConst.SYNC_INTERVAL_MINS,
+      showPageAction: true,
+      showCxtMenu: true,
+      boldUnreadBkmks: true,
+      syncFileID: null,
+      readingListSliceLength: aeConst.DCS_READING_LIST_SLICE_LENGTH,      
+    };
+    
+    await this._addPrefs(aPrefs, prefs);
+  },
+
+
+  //
+  // Helper methods
+  //
+
+  async _addPrefs(aCurrPrefs, aNewPrefs)
+  {
+    for (let pref in aNewPrefs) {
+      aCurrPrefs[pref] = aNewPrefs[pref];
+    }
+
+    await this.setPrefs(aNewPrefs);
+  },
 };
