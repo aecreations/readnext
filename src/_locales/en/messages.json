@@ -5,5 +5,130 @@
 
   "extDesc": {
     "message": "The reading list that syncs to the cloud."
+  },
+
+  "btnOK": {
+    "message": "OK"
+  },
+
+  "btnCancel": {
+    "message": "Cancel"
+  },
+
+  "btnClose": {
+    "message": "Close"
+  },
+
+  "btnYes": {
+    "message": "Yes"
+  },
+
+  "btnNo": {
+    "message": "No"
+  },
+
+  "msgUnavail": {
+    "message": "The selected action is not available right now."
+  },
+
+  "fhDropbox": {
+    "message": "Dropbox"
+  },
+
+  "fhGoogleDrive": {
+    "message": "Google Drive"
+  },
+
+  "fhOneDrive": {
+    "message": "OneDrive"
+  },
+
+  "addBkmk": {
+    "message": "Add to Read Next"
+  },
+
+  "deleteBkmk": {
+    "message": "Delete from Read Next",
+    "description": "Address bar button caption for deleting reading list item"
+  },
+
+  "deleteBkmkCxt": {
+    "message": "Delete",
+    "description": "Context menu item for deleting reading list item"
+  },
+
+  "addLink": {
+    "message": "Add Current Tab"
+  },
+
+  "filterAll": {
+    "message": "All",
+    "description": "Reading list filter option"
+  },
+
+  "filterUnread": {
+    "message": "Unread",
+    "description": "Reading list filter option"
+  },
+
+  "srchBoxHint": {
+    "message": "Search",
+    "description": "Hint text appearing on empty search box in reading list sidebar"
+  },
+
+  "welcTitle": {
+    "message": "Welcome to Read Next!",
+    "description": "Sidebar welcome title"
+  },
+
+  "welcInstr": {
+    "message": "Click \u201cAdd Current Tab\u201d to add to the reading list",
+    "description": "Sidebar first-use instructions"
+  },
+
+  "setupSync": {
+    "message": "Setup Sync"
+  },
+
+  "mnuOpenNewTab": {
+    "message": "Open In New Tab"
+  },
+
+  "mnuOpenNewWnd": {
+    "message": "Open In New Window"
+  },
+
+  "mnuOpenNewPrvWnd": {
+    "message": "Open In New Private Window"
+  },
+
+  "mnuMrkRead": {
+    "message": "Mark As Read"
+  },
+
+  "mnuMrkUnread": {
+    "message": "Mark As Unread"
+  },
+
+  "mnuSyncNow": {
+    "message": "Sync Now"
+  },
+
+  "reauthzNotifcn": {
+    "message": "Read Next needs to reauthorize your $1 account. Click here to reauthorize.",
+    "description": "Reauthorization notification - appears when user needs to reauthorize their cloud file host account"
+  },
+
+  "reauthzMsgBar": {
+    "message": "Read Next needs to reauthorize your $1 account",
+    "description": "Reauthorization message bar - appears in the reading list sidebar when user needs to reauthorize their cloud file host account"
+  },
+
+  "btnReauthz": {
+    "message": "Reauthorize"
+  },
+
+  "prefsTitle": {
+    "message": "Read Next Preferences"
   }
 }

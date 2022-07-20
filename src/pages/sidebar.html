@@ -15,24 +15,26 @@
         <div id="reauthz-msgbar" class="msgbar msgbar-warning">
           <label id="reauthz-msgbar-content"></label>
           <div id="msgbar-actions" class="row">
-            <button id="reauthorize">reauthorize</button>
+            <button id="reauthorize" data-i18n="btnReauthz"></button>
           </div>
         </div>
       </div>
       <div id="toolbar">
-        <button id="add-link">+ add current tab</button>
+        <button id="add-link" data-i18n="addLink"></button>
 	<span id="bookmark-filter">
-          <input type="radio" id="filter-all" name="bookmark-filter" value="0" checked/><label for="filter-all">all</label>
-          <input type="radio" id="filter-unread" name="bookmark-filter" value="1"/><label for="filter-unread">unread</label>
+          <input type="radio" id="filter-all" name="bookmark-filter" value="0" checked/><label for="filter-all" data-i18n="filterAll"></label>
+          <input type="radio" id="filter-unread" name="bookmark-filter" value="1"/><label for="filter-unread" data-i18n="filterUnread"></label>
         </span>
       </div>
       <div id="search-bar">
-        <input type="search" id="search-box" placeholder="search"/>
+        <input type="search" id="search-box"/>
       </div>
       <div id="welcome">
-        <p>welcome</p>
-	<p>click "Add Current Tab" to add to the reading list</p>
-        <button id="setup">setup sync</button>
+	<!-- TO DO: Extension icon -->
+        <p data-i18n="welcTitle"></p>
+	<p data-i18n="welcInstr"></p>
+
+        <button id="setup" data-i18n="setupSync"></button>
       </div>
 
       <div id="reading-list"></div>
@@ -44,6 +46,7 @@
     <script src="../lib/contextMenu/jquery.ui.position.min.js"></script>
     <script src="../scripts/aeConst.js"></script>
     <script src="../scripts/aePrefs.js"></script>
+    <script src="../scripts/aeI18n.js"></script>
     <script src="../scripts/aeBookmark.js"></script>
     <script src="sidebar.js"></script>
   </body>

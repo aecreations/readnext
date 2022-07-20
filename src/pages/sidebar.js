@@ -216,10 +216,7 @@ let gSearchBox = {
       return;
     }
     
-    // TO DO: Localize search box.
-    /***
-    $("#search-box").prop("placeholder", browser.i18n.getMessage("srchBoxHint"));
-    ***/
+    $("#search-box").attr("placeholder", browser.i18n.getMessage("srchBoxHint"));
 
     this._isInitialized = true;
   },
@@ -274,6 +271,8 @@ $(async () => {
     await aePrefs.setPrefs({syncEnabledFromExtPrefs: false});
   }
   // END TO DO
+
+  gSearchBox.init();
 
   try {
     await initReadingList();
@@ -444,7 +443,7 @@ function initContextMenu()
     selector: ".reading-list-item",
     items: {
       openInNewTab: {
-        name: "open in new tab",
+        name: browser.i18n.getMessage("mnuOpenNewTab"),
         className: "ae-menuitem",
         callback(aKey, aOpt) {
           let bkmkElt = aOpt.$trigger[0];
@@ -452,7 +451,7 @@ function initContextMenu()
         }
       },
       openInNewWnd: {
-        name: "open in new window",
+        name: browser.i18n.getMessage("mnuOpenNewWnd"),
         className: "ae-menuitem",
         callback(aKey, aOpt) {
           let bkmkElt = aOpt.$trigger[0];
@@ -460,7 +459,7 @@ function initContextMenu()
         }
       },
       openInNewPrivateWnd: {
-        name: "open in new private window",
+        name: browser.i18n.getMessage("mnuOpenNewPrvWnd"),
         className: "ae-menuitem",
         async callback(aKey, aOpt) {
           let bkmkElt = aOpt.$trigger[0];
@@ -473,7 +472,7 @@ function initContextMenu()
       },
       bkmkActionsSep: "---",
       markAsRead: {
-        name: "mark as read",
+        name: browser.i18n.getMessage("mnuMrkRead"),
         className: "ae-menuitem",
         async callback(aKey, aOpt) {
           let bkmkElt = aOpt.$trigger[0];
@@ -486,7 +485,7 @@ function initContextMenu()
         }
       },
       markAsUnread: {
-        name: "mark as unread",
+        name: browser.i18n.getMessage("mnuMrkUnread"),
         className: "ae-menuitem",
         async callback(aKey, aOpt) {
           let bkmkElt = aOpt.$trigger[0];
@@ -499,7 +498,7 @@ function initContextMenu()
         }
       },
       deleteBookmark: {
-        name: "delete",
+        name: browser.i18n.getMessage("deleteBkmkCxt"),
         className: "ae-menuitem",
         async callback(aKey, aOpt) {
           let bkmkElt = aOpt.$trigger[0];
@@ -520,7 +519,7 @@ function initContextMenu()
         }
       },
       syncBkmksNow: {
-        name: "sync now",
+        name: browser.i18n.getMessage("mnuSyncNow"),
         className: "ae-menuitem",
         callback(aKey, aOpt) {
           gCmd.syncBookmarks();
@@ -652,7 +651,7 @@ function handleExtMessage(aMessage)
     break;
 
   case "reauthorize-prompt":
-    $("#reauthz-msgbar-content").text(`readnext needs to reauthorize your ${aMessage.fileHostName} account`);
+    $("#reauthz-msgbar-content").text(browser.i18n.getMessage("reauthzMsgBar", aMessage.fileHostName));
     showMessageBar("#reauthz-msgbar");
     break;
 

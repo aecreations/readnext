@@ -70,7 +70,7 @@
       "16": "img/bookmark.svg",
       "32": "img/bookmark.svg"
     },
-    "default_title": "add to readnext"
+    "default_title": "__MSG_addBkmk__"
   },
 
   "sidebar_action": {

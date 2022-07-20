@@ -28,7 +28,7 @@ let gFileHostReauthorizer = {
       browser.notifications.create("reauthorize", {
         type: "basic",
         title: browser.i18n.getMessage("extName"),
-        message: `readnext needs to reauthorize your ${fileHostName} account, click here to reauthorize`,
+        message: browser.i18n.getMessage("reauthzNotifcn", fileHostName),
         iconUrl: "img/icon.png"
       });
       this._notifcnShown = true;
@@ -95,7 +95,7 @@ async function setUICustomizations()
     // if the menus already exists.
     browser.menus.create({
       id: "ae-readnext-add-bkmk",
-      title: "add to readnext",
+      title: browser.i18n.getMessage("addBkmk"),
       contexts: ["page"],
       visible: false,
     });
@@ -108,7 +108,7 @@ async function setUICustomizations()
     browser.menus.create({
       id: "ae-readnext-remove-bkmk",
       parentId: "ae-readnext-submnu",
-      title: "delete",
+      title: browser.i18n.getMessage("deleteBkmkCxt"),
       visible: false,
     });
   }
@@ -326,7 +326,7 @@ async function togglePageActionIcon(aIsBookmarked, aTab=null)
       16: "img/bookmarked.svg",
       32: "img/bookmarked.svg",
     };
-    title.title = "remove from readnext";    
+    title.title = browser.i18n.getMessage("deleteBkmk");
   }
   else {
     icon.path = {
@@ -380,15 +380,15 @@ function getFileHostUIString()
 
   switch (backnd) {
   case aeConst.FILEHOST_DROPBOX:
-    rv = "dropbox";
+    rv = browser.i18n.getMessage("fhDropbox");
     break;
 
   case aeConst.FILEHOST_GOOGLE_DRIVE:
-    rv = "googledrive";
+    rv = browser.i18n.getMessage("fhGoogleDrive");
     break;
 
   case aeConst.FILEHOST_ONEDRIVE:
-    rv = "onedrive";
+    rv = browser.i18n.getMessage("fhOneDrive");
     break;
 
   default:
