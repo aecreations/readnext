@@ -130,5 +130,25 @@
 
   "prefsTitle": {
     "message": "Read Next Preferences"
+  },
+
+  "prefsHdgSync": {
+    "message": "Sync Reading List"
+  },
+
+  "btnConnect": {
+    "message": "Connect…"
+  },
+
+  "btnDisconnect": {
+    "message": "Disconnect…"
+  },
+
+  "noSync": {
+    "message": "Sync your reading list to the cloud using Dropbox, Google Drive or Microsoft OneDrive."
+  },
+
+  "connectedTo": {
+    "message": "Connected to $1 ($2)"
   }
 }

@@ -36,12 +36,13 @@ $(async () => {
 function setSyncStatus(aIsSyncEnabled)
 {
   if (aIsSyncEnabled) {
-    $("#sync-status").text("status: Connected 🟢");
-    $("#toggle-sync").text("disconnect");
+    $("#sync-status").text("");
+    $("#toggle-sync").text(browser.i18n.getMessage("btnDisconnect"));
   }
   else {
-    $("#sync-status").text("status: Disconnected ⚪️");
-    $("#toggle-sync").text("connect");
+    $("#sync-icon").css({backgroundImage: `url("../img/syncReadingList.svg")`});
+    $("#sync-status").text(browser.i18n.getMessage("noSync"));
+    $("#toggle-sync").text(browser.i18n.getMessage("btnConnect"));
   }
 }
 
@@ -61,32 +62,43 @@ function setInitSyncProgressIndicator(aInProgress)
 }
 
 
+// TO DO: Merge this into setSyncStatus()
 async function showFileHostInfo(aPrefs)
 {
-  let fileHost = getFileHostName(aPrefs.syncBackend);
-  let fileHostUser = await browser.runtime.sendMessage({id: "get-username"});
+  let fileHost = getFileHostUI(aPrefs.syncBackend);
+  let fileHostUsr = await browser.runtime.sendMessage({id: "get-username"});
 
-  // TEMPORARY
-  console.info(`Read Next::options.js: Connected to file host ${fileHost} as user ${fileHostUser}`)
+  $("#sync-icon").css({backgroundImage: `url("${fileHost.iconPath}")`});
+  $("#sync-status").text(browser.i18n.getMessage("connectedTo", [fileHost.name, fileHostUsr]));
 }
+// END TO DO
 
 
-function getFileHostName(aFileHostID)
+function getFileHostUI(aFileHostID)
 {
   let rv;
   let backnd = Number(aFileHostID);
   
   switch (backnd) {
   case aeConst.FILEHOST_DROPBOX:
-    rv = "dropbox";
+    rv = {
+      name: browser.i18n.getMessage("fhDropbox"),
+      iconPath: "../img/dropbox.svg",
+    };
     break;
 
   case aeConst.FILEHOST_GOOGLE_DRIVE:
-    rv = "googledrive";
+    rv = {
+      name: browser.i18n.getMessage("fhGoogleDrive"),
+      iconPath: "../img/googledrive.svg",
+    };
     break;
 
   case aeConst.FILEHOST_ONEDRIVE:
-    rv = "onedrive";
+    rv = {
+      name: browser.i18n.getMessage("fhOneDrive"),
+      iconPath: "../img/onedrive.svg",
+    };
     break;
 
   default:
@@ -94,6 +106,7 @@ function getFileHostName(aFileHostID)
   }
 
   return rv;
+  
 }
 
 

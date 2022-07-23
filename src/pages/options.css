@@ -35,3 +35,18 @@ h2 {
   margin-left: 4px;
   vertical-align: -2px;
 }
+
+#sync-icon {
+    float: left;
+    width: 48px;
+    height: 48px;
+    margin-right: 18px;
+    margin-left: 8px;
+    background-image: url("../img/syncReadingList.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+#reauthz {
+    display: none;
+}

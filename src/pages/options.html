@@ -16,10 +16,27 @@
       <h2 data-i18n="prefsTitle"></h2>
 
       <fieldset id="sync-options">
-        <legend>sync reading list</legend>
+        <legend data-i18n="prefsHdgSync"></legend>
+        <div id="sync-status-ctr">
+          <div id="sync-icon"></div>
+          <div id="sync-status-info">
+            <p id="sync-status"></div>
+
+            <!-- TO DO: Reauthz banner here -->
+
+            <div id="sync-actions" class="row">
+              <button id="reauthz" data-i18n="btnReauthz"></button>
+              <button id="toggle-sync"></button>
+              <img id="init-sync-spinner" src="chrome://global/skin/icons/loading@2x.png"/>
+              <!-- TO DO: Drive Connector Service status button -->
+            </div>
+          </div>
+        </div>
+
+<!--
         <p id="sync-status"></p>
         <button id="toggle-sync"></button>
-        <img id="init-sync-spinner" src="chrome://global/skin/icons/loading@2x.png"/>
+-->
       </fieldset>
 
       <fieldset id="general-options">
