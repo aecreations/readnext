@@ -137,6 +137,42 @@ function initDialogs()
       .text(browser.i18n.getMessage("btnNext"));
     $("#connect-dlg > .dlg-btns > .dlg-cancel").removeAttr("disabled").show();
   };
+
+  gDialogs.disconnectConfirm = new aeDialog("#disconnect-dlg");
+  gDialogs.disconnectConfirm.onInit = async function ()
+  {
+    let syncBackend = await aePrefs.getPref("syncBackend");
+    let fileHost = getFileHostUI(syncBackend);
+
+    $("#disconnect-dlg > .dlg-content > .msgbox-content > #disconnect-confirm").text(browser.i18n.getMessage("disconnTitle", fileHost.name));
+  };
+
+  gDialogs.disconnectConfirm.onAccept = async function ()
+  {
+    let syncPrefs = {
+      syncEnabled: false,
+      syncBackend: null,
+      accessToken: null,
+      refreshToken: null,
+    };
+
+    try {
+      await browser.runtime.sendMessage({id: "sync-disconnected-from-ext-prefs"});
+    }
+    catch {}
+
+    await aePrefs.setPrefs(syncPrefs);
+    try {
+      await browser.runtime.sendMessage({
+        id: "sync-setting-changed",
+        syncEnabled: syncPrefs.syncEnabled,
+      });
+    }
+    catch {}
+
+    this.close();
+    setSyncStatus(syncPrefs.syncEnabled);
+  };
 }
 
 
@@ -222,40 +258,10 @@ function getFileHostUI(aFileHostID)
 //
 
 $("#toggle-sync").on("click", async (aEvent) => {
-  let syncPrefs = {
-    syncEnabled: false,
-    syncBackend: null,
-    accessToken: null,
-    refreshToken: null,
-  };
   let syncEnabled = await aePrefs.getPref("syncEnabled");
 
   if (syncEnabled) {
-    let confirmTurnOff = window.confirm("disconnect from remote storage?");
-
-    if (! confirmTurnOff) {
-      return;
-    }
-
-    try {
-      await browser.runtime.sendMessage({id: "sync-disconnected-from-ext-prefs"});
-    }
-    catch {}
-
-    await aePrefs.setPrefs(syncPrefs);
-    try {
-      await browser.runtime.sendMessage({
-        id: "sync-setting-changed",
-        syncEnabled: syncPrefs.syncEnabled,
-      });
-    }
-    catch {}
-
-    setSyncStatus(syncPrefs.syncEnabled);
-
-    if (syncPrefs.syncEnabled) {
-      showFileHostInfo(syncPrefs);
-    }
+    gDialogs.disconnectConfirm.showModal();
   }
   else {
     gDialogs.connectWiz.showModal(false);

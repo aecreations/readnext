@@ -190,7 +190,20 @@
   },
 
   "wizAuthzSuccs": {
-    "message": "Syncing your reading list to $1 has started, and may take a moment to finish.",
-    "description": "Syncing your reading list to <name of cloud file service, e.g. Dropbox> has started, and may take a moment to finish."
+    "message": "Read Next has started syncing your reading list to $1.  It may take a moment to finish.",
+    "description": "Read Next has started syncing your reading list to <name of cloud file service, e.g. Dropbox>.  It may take a moment to finish."
+  },
+
+  "disconnTitle": {
+    "message": "Are you sure you want to disconnect Read Next from $1?",
+    "description": "Are you sure you want to disconnect Read Next from <name of cloud file service, e.g. Dropbox>?"
+  },
+
+  "disconnConf": {
+    "message": "Your reading list items will still be saved to your device, but it will no longer sync to the cloud."
+  },
+
+  "btnDisconn": {
+    "message": "Disconnect"
   }
 }

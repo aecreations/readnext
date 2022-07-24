@@ -164,3 +164,41 @@ h2 {
     font: caption;
     font-size: 13px;
 }
+
+#disconnect-dlg {
+    top: 160px;
+    --width: 486px;
+    --height: 216px;
+}
+
+#disconnect-dlg > .dlg-content {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+}
+
+#disconnect-dlg > .dlg-content > .msgbox-icon {
+    order: 1;
+    flex: 0 1 auto;
+
+    width: 90px;
+    margin-top: 4px;
+    margin-right: 12px;
+    background-image: url("../img/question-64.png");
+    background-size: 52px 52px;
+    background-repeat: no-repeat;
+}
+
+#disconnect-dlg > .dlg-content > .msgbox-content {
+    order: 2;
+    flex: 1 1 auto;
+}
+
+#disconnect-dlg > .dlg-content > .msgbox-content > .title {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+#disconnect-dlg > .dlg-content > .msgbox-content > .description {
+    font-size: 13px;
+}
