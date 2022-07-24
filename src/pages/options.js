@@ -75,6 +75,11 @@ function initDialogs()
       btnAccept.text(browser.i18n.getMessage("btnRetry"));
       break;
 
+    case "authz-network-error":
+      $("#connect-dlg > .dlg-btns > button").removeAttr("disabled");
+      btnAccept.text(browser.i18n.getMessage("btnRetry"));
+      break;
+
     default:
       break;
     }
@@ -116,6 +121,7 @@ function initDialogs()
 
     case "authz-prologue":
     case "authz-retry":
+    case "authz-network-error":
       this.goToPage("authz-progress");
       connectCloudFileSvc(this.backnd);
       break;
@@ -281,8 +287,15 @@ async function connectCloudFileSvc(aBackend)
   }
   catch (e) {
     warn(e);
+
+    if (e instanceof TypeError) {
+      // TypeError: NetworkError when attempting to fetch resource.
+      gDialogs.connectWiz.goToPage("authz-network-error");
+    }
+    else {
+      gDialogs.connectWiz.goToPage("authz-retry");
+    }
     setInitSyncProgressIndicator(false);
-    gDialogs.connectWiz.goToPage("authz-retry");
     return;
   }
 
@@ -293,8 +306,14 @@ async function connectCloudFileSvc(aBackend)
   }
   catch (e) {
     warn(e);
-    setInitSyncProgressIndicator(false);
-    gDialogs.connectWiz.goToPage("authz-retry");
+
+    if (e instanceof TypeError) {
+      // TypeError: NetworkError when attempting to fetch resource.
+      gDialogs.connectWiz.goToPage("authz-network-error");
+    }
+    else {
+      gDialogs.connectWiz.goToPage("authz-retry");
+    }
   }
   finally {
     setInitSyncProgressIndicator(false);

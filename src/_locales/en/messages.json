@@ -171,6 +171,14 @@
     "description": "Cloud file service connection wizard in extension preferences page"
   },
 
+  "connWizTitle4": {
+    "message": "Unable to Connect"
+  },
+
+  "wizAuthzNetErr": {
+    "message": "Read Next needs to connect to the network. Check your network connection, or try again later."
+  },
+
   "wizSelSvc": {
     "message": "Select a cloud file service:"
   },
@@ -200,7 +208,7 @@
   },
 
   "disconnConf": {
-    "message": "Your reading list items will still be saved to your device, but it will no longer sync to the cloud."
+    "message": "Your reading list will still be saved to your device, but it will no longer sync to the cloud."
   },
 
   "btnDisconn": {
