@@ -19,12 +19,16 @@
     "message": "Close"
   },
 
-  "btnYes": {
-    "message": "Yes"
+  "btnNext": {
+    "message": "Next"
   },
 
-  "btnNo": {
-    "message": "No"
+  "btnFinish": {
+    "message": "Finish"
+  },
+
+  "btnRetry": {
+    "message": "Try Again"
   },
 
   "msgUnavail": {
@@ -40,7 +44,7 @@
   },
 
   "fhOneDrive": {
-    "message": "OneDrive"
+    "message": "Microsoft OneDrive"
   },
 
   "addBkmk": {
@@ -150,5 +154,43 @@
 
   "connectedTo": {
     "message": "Connected to $1 ($2)"
+  },
+
+  "connWizTitle1": {
+    "message": "Connect to Cloud Drive",
+    "description": "Cloud file service connection wizard in extension preferences page"
+  },
+
+  "connWizTitle2": {
+    "message": "Authorizing",
+    "description": "Cloud file service connection wizard in extension preferences page"
+  },
+
+  "connWizTitle3": {
+    "message": "You're Connected!",
+    "description": "Cloud file service connection wizard in extension preferences page"
+  },
+
+  "wizSelSvc": {
+    "message": "Select a cloud file service:"
+  },
+
+  "wizAuthzInstr1": {
+    "message": "You'll be taken to $1 where you can log in and confirm permissions for Read Next.",
+    "description": "You'll be taken to <name of cloud file service, e.g. Dropbox> where you can log in and confirm permissions for Read Next."
+  },
+
+  "wizAuthzInstr2": {
+    "message": "Make sure to select the option to grant access to your cloud drive.  This will allow Read Next to sync your reading list."
+  },
+
+  "wizAuthzInterrupt": {
+    "message": "Authorization to $1 didn't finish successfully.  Do you want to try again?",
+    "description": "Authorization to <name of cloud file service, e.g. Dropbox> didn't finish successfully.  Do you want to try again?"
+  },
+
+  "wizAuthzSuccs": {
+    "message": "Syncing your reading list to $1 has started, and may take a moment to finish.",
+    "description": "Syncing your reading list to <name of cloud file service, e.g. Dropbox> has started, and may take a moment to finish."
   }
 }

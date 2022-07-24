@@ -4,6 +4,45 @@
  */
 
 @import url("../style/laf.css");
+@import url("../style/lightbox.css");
+
+
+:root {
+    --url-bkgd-img: url("../img/bkgrd.png");
+
+    --color-main-border: #ddd;
+    --color-main-bkgd: #fefefe;
+    --color-main-border-shadow: #e0e0e0;
+    --color-fieldset-border: #d7d7db;
+    --color-dlg-fieldset-border: #d7d7db;
+    --color-text-sync-status-on: #003706;
+    --color-about-btn-bkgd: #f9f9fa;
+    --color-about-btn-bkgd-hover: #ededf0;
+    --color-about-btn-bkgd-active: #d7d7db;
+    --color-about-btn-border: #ededf0;
+    --color-about-btn-border-hover: #ededf0;
+    --color-about-btn: black;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+	--url-bkgd-img: none;
+	--color-bkgd: #1a1a1e;
+
+	--color-main-border: #0c0c0d;
+	--color-main-bkgd: #2a2a2e;
+	--color-main-border-shadow: #0c0c0d;
+	--color-fieldset-border: #4a4a4f;
+	--color-dlg-fieldset-border: #585858;
+	--color-text-sync-status-on: #30e60b;
+	--color-about-btn-bkgd: #2a2a2e;
+	--color-about-btn-bkgd-hover: #38383d;
+	--color-about-btn-bkgd-active: #4a4a4f;
+	--color-about-btn-border: #4a4a4f;
+	--color-about-btn-border-hover: #b1b1b3;
+	--color-about-btn: #f9f9fa;
+    }
+}
 
 
 main {
@@ -49,4 +88,79 @@ h2 {
 
 #reauthz {
     display: none;
+}
+
+
+
+.lightbox {
+    top: 64px;
+    padding-left: 22px;
+    padding-right: 22px;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.lightbox fieldset {
+    border-top-color: var(--color-dlg-fieldset-border);
+}
+
+.lightbox .label {
+    font-size: 15px;
+}
+
+.lightbox input[type="text"] {
+    font: caption;
+}
+
+.lightbox > .dlg-btns {
+    bottom: 24px;
+    right: 14px;
+}
+
+.lightbox > .dlg-btns > button {
+    min-width: 96px;
+    height: 32px;
+    padding: 0 24px 0;
+    border-radius: 4px;
+    font-size: 15px !important;
+}
+
+.lightbox input[type="text"] {
+    height: 28px;
+    font-size: 15px;
+}
+
+.lightbox .row {
+    margin-left: unset;
+}
+
+.lightbox .border-bottom {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 18px;
+}
+
+.lightbox .title {
+    margin-top: 8px;
+    margin-bottom: 24px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+#connect-dlg {
+    --width: 450px;
+    --height: 300px;
+}
+
+#connect-dlg > .dlg-content {
+    font-size: 13px;
+}
+
+#connect-dlg > .dlg-content > #select-file-host {
+    font-size: 13px;
+}
+
+#connect-dlg #file-hosts {
+    width: 100%;
+    font: caption;
+    font-size: 13px;
 }

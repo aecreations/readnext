@@ -27,7 +27,6 @@
             <div id="sync-actions" class="row">
               <button id="reauthz" data-i18n="btnReauthz"></button>
               <button id="toggle-sync"></button>
-              <img id="init-sync-spinner" src="chrome://global/skin/icons/loading@2x.png"/>
               <!-- TO DO: Drive Connector Service status button -->
             </div>
           </div>
@@ -59,10 +58,54 @@
       </fieldset>
     </main>
 
+    <!-- Dialog boxes -->
+    <div id="connect-dlg" class="lightbox">
+      <div class="dlg-content">
+        <div id="select-file-host" class="wiz-page">
+          <p class="title" data-i18n="connWizTitle1"></p>
+          <div class="row">
+	    <label for="file-hosts" data-i18n="wizSelSvc"></label>
+          </div>
+          <div class="row">
+	    <select id="file-hosts" size="4">
+	      <option id="fh-dropbox" value="1" data-i18n="fhDropbox"></option>
+	      <option id="fh-googledrive" value="2" data-i18n="fhGoogleDrive"></option>
+	      <option id="fh-onedrive" value="3" data-i18n="fhOneDrive"></option>
+	    </select>
+          </div>
+	</div>
+	<div id="authz-prologue" class="wiz-page">
+	  <p class="title" data-i18n="connWizTitle1"></p>
+	  <p id="authz-instr" data-i18n="wizAuthzInstr1"></p>
+	  <p data-i18n="wizAuthzInstr2"></p>
+	</div>
+	<div id="authz-progress" class="wiz-page">
+          <p class="title" data-i18n="connWizTitle2"></p>
+	  <img id="init-sync-spinner" src="chrome://global/skin/icons/loading@2x.png"/>       
+	</div>
+	<div id="authz-success" class="wiz-page">
+	  <p class="title" data-i18n="connWizTitle3"></p>
+	  <p id="authz-succs-msg"></p>
+	</div>
+	<div id="authz-retry" class="wiz-page">
+          <p class="title" data-i18n="connWizTitle2"></p>
+	  <!-- TO DO: Alert icon. -->
+	  <p id="authz-interrupt"></p>
+	</div>
+      </div>
+      <div class="dlg-btns">
+	<button class="dlg-accept default" data-i18n="btnNext" disabled></button>
+	<button class="dlg-cancel" data-i18n="btnCancel"></button>
+      </div>
+    </div>
+
+    <div id="lightbox-bkgrd-ovl" class="lightbox-bkgrd"></div>
+
     <script src="../lib/jquery.js"></script>
     <script src="../scripts/aeConst.js"></script>
     <script src="../scripts/aePrefs.js"></script>
     <script src="../scripts/aeI18n.js"></script>
+    <script src="../scripts/aeDialog.js"></script>
     <script src="../scripts/aeOAuth.js"></script>
     <script src="options.js"></script>
   </body>

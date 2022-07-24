@@ -5,6 +5,9 @@
  */
 
 
+let gDialogs = {};
+
+
 // Page initialization
 $(async () => {
   let prefs = await aePrefs.getAllPrefs();
@@ -30,7 +33,111 @@ $(async () => {
   if (prefs.syncEnabled) {
     showFileHostInfo(prefs);
   }
+
+  initDialogs();
 });
+
+
+function initDialogs()
+{
+  gDialogs.connectWiz = new aeDialog("#connect-dlg");
+  gDialogs.connectWiz.setProps({
+    backnd: null,
+  });
+  
+  gDialogs.connectWiz.goToPage = function (aPageID)
+  {
+    $("#connect-dlg > .dlg-content > .wiz-page").hide();
+    $(`#connect-dlg > .dlg-content > #${aPageID}`).show();
+
+    let btnAccept = $("#connect-dlg > .dlg-btns > .dlg-accept");
+    let btnCancel = $("#connect-dlg > .dlg-btns > .dlg-cancel");
+    let fileHost = getFileHostUI(this.backnd);
+
+    switch (aPageID) {
+    case "authz-prologue":
+      $("#connect-dlg #authz-instr").text(browser.i18n.getMessage("wizAuthzInstr1", fileHost.name));
+      break;
+
+    case "authz-progress":
+      $("#connect-dlg > .dlg-btns > button").attr("disabled", "true");
+      break;
+
+    case "authz-success":
+      $("#connect-dlg #authz-succs-msg").text(browser.i18n.getMessage("wizAuthzSuccs", fileHost.name));
+      btnAccept.removeAttr("disabled").text(browser.i18n.getMessage("btnClose"));
+      btnCancel.hide();
+      break;
+
+    case "authz-retry":
+      $("#connect-dlg #authz-interrupt").text(browser.i18n.getMessage("wizAuthzInterrupt", fileHost.name));
+      $("#connect-dlg > .dlg-btns > button").removeAttr("disabled");
+      btnAccept.text(browser.i18n.getMessage("btnRetry"));
+      break;
+
+    default:
+      break;
+    }
+  };
+
+  gDialogs.connectWiz.getPageID = function ()
+  {
+    let rv;
+    let pages = $("#connect-dlg > .dlg-content > .wiz-page").toArray();
+    let page = pages.filter(aPage => $(aPage).css("display") == "block");
+
+    if (page.length == 1) {
+      rv = page[0].id;
+    }
+    return rv;
+  };
+
+  gDialogs.connectWiz.onFirstInit = function ()
+  {
+    $("#connect-dlg #select-file-host #file-hosts").on("click", aEvent => {
+      $("#connect-dlg > .dlg-btns > .dlg-accept").removeAttr("disabled");
+    });
+  };
+
+  gDialogs.connectWiz.onInit = function ()
+  {
+    this.goToPage("select-file-host");
+  };
+
+  gDialogs.connectWiz.onAccept = function ()
+  {
+    let currPg = this.getPageID();
+
+    switch (currPg) {
+    case "select-file-host":
+      this.backnd = $("#connect-dlg #select-file-host #file-hosts")[0].selectedOptions[0].value;
+      this.goToPage("authz-prologue");
+      break;
+
+    case "authz-prologue":
+    case "authz-retry":
+      this.goToPage("authz-progress");
+      connectCloudFileSvc(this.backnd);
+      break;
+
+    case "authz-success":
+      this.close();
+      break;
+
+    default:
+      break;
+    }    
+  };
+
+  gDialogs.connectWiz.onUnload = function ()
+  {
+    this.goToPage("select-file-host");
+    $("#connect-dlg #select-file-host #file-hosts")[0].selectedIndex = -1;
+    $("#connect-dlg > .dlg-btns > .dlg-accept").attr("disabled", "true")
+      .text(browser.i18n.getMessage("btnNext"));
+    $("#connect-dlg > .dlg-btns > .dlg-cancel").removeAttr("disabled").show();
+  };
+}
 
 
 function setSyncStatus(aIsSyncEnabled)
@@ -134,69 +241,94 @@ $("#toggle-sync").on("click", async (aEvent) => {
       await browser.runtime.sendMessage({id: "sync-disconnected-from-ext-prefs"});
     }
     catch {}
+
+    await aePrefs.setPrefs(syncPrefs);
+    try {
+      await browser.runtime.sendMessage({
+        id: "sync-setting-changed",
+        syncEnabled: syncPrefs.syncEnabled,
+      });
+    }
+    catch {}
+
+    setSyncStatus(syncPrefs.syncEnabled);
+
+    if (syncPrefs.syncEnabled) {
+      showFileHostInfo(syncPrefs);
+    }
   }
   else {
-    let backend = window.prompt("backend to use (1=Dropbox, 2=Google Drive, 3=OneDrive):", "1");
-    if (! backend) {
+    gDialogs.connectWiz.showModal(false);
+  }
+});
+
+
+async function connectCloudFileSvc(aBackend)
+{
+  // Initialize cloud file host backend
+  setInitSyncProgressIndicator(true);
+  aeOAuth.init(aBackend);
+  let authzCode, tokens;
+  try {
+    authzCode = await aeOAuth.getAuthorizationCode();
+    log("Read Next::options.js: Authorization code: " + authzCode);
+  }
+  catch (e) {
+    warn(e);
+    setInitSyncProgressIndicator(false);
+    gDialogs.connectWiz.goToPage("authz-retry");
+    return;
+  }
+
+  if (aeConst.DEBUG) {
+    let url = new URL(window.location.href);
+    let isAuthzCodeOnly = url.searchParams.get("authcodeonly");
+    if (isAuthzCodeOnly) {
+      alert("authorization code:\n" + authzCode);
       return;
     }
+  }
 
-    // Initialize cloud file host backend
-    setInitSyncProgressIndicator(true);
-    aeOAuth.init(backend);
-    let authzCode, tokens;
+  try {
+    tokens = await aeOAuth.getAccessToken();
+    log("Read Next::options.js: Received access token and refresh token from authorization server: ");
+    log(tokens);
+  }
+  catch (e) {
+    warn(e);
+    setInitSyncProgressIndicator(false);
+    gDialogs.connectWiz.goToPage("authz-retry");
+  }
+  finally {
+    setInitSyncProgressIndicator(false);
+  }
+
+  if (! tokens) {
+    return;
+  }
+
+  if (aBackend == aeConst.FILEHOST_GOOGLE_DRIVE) {
+    let msg = {id: "get-app-version"};
+    let resp;
     try {
-      authzCode = await aeOAuth.getAuthorizationCode();
-      log("Read Next::options.js: Authorization code: " + authzCode);
-    }
-    catch (e) { alert(e) }
-
-    if (aeConst.DEBUG) {
-      let url = new URL(window.location.href);
-      let isAuthzCodeOnly = url.searchParams.get("authcodeonly");
-      if (isAuthzCodeOnly) {
-        alert("authorization code:\n" + authzCode);
-        return;
-      }
-    }
-
-    try {
-      tokens = await aeOAuth.getAccessToken();
-      log("Read Next::options.js: Received access token and refresh token from authorization server: ");
-      log(tokens);
+      resp = await browser.runtime.sendNativeMessage(aeConst.DRIVE_CONNECTOR_SVC_APP_NAME, msg);
+      console.info(`${resp.appName} version ${resp.appVersion}`);
     }
     catch (e) {
-      window.alert(e);
+      console.error("Error connecting to Drive Connector Service: " + e);
+      alert("driveConnectorSvc not installed");
     }
-    finally {
-      setInitSyncProgressIndicator(false);
-    }
-
-    if (! tokens) {
-      return;
-    }
-
-    if (backend == aeConst.FILEHOST_GOOGLE_DRIVE) {
-      let msg = {id: "get-app-version"};
-      let resp;
-      try {
-        resp = await browser.runtime.sendNativeMessage(aeConst.DRIVE_CONNECTOR_SVC_APP_NAME, msg);
-        console.info(`${resp.appName} version ${resp.appVersion}`);
-      }
-      catch (e) {
-        console.error("Error connecting to Drive Connector Service: " + e);
-        alert("driveConnectorSvc not installed");
-      }
-    }
-
-    syncPrefs = {
-      syncEnabled: true,
-      syncBackend: backend,
-      accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
-      syncEnabledFromExtPrefs: true
-    };
   }
+
+  gDialogs.connectWiz.goToPage("authz-success");
+
+  let syncPrefs = {
+    syncEnabled: true,
+    syncBackend: aBackend,
+    accessToken: tokens.accessToken,
+    refreshToken: tokens.refreshToken,
+    syncEnabledFromExtPrefs: true
+  };
 
   await aePrefs.setPrefs(syncPrefs);
   try {
@@ -206,13 +338,13 @@ $("#toggle-sync").on("click", async (aEvent) => {
     });
   }
   catch {}
-  
+
   setSyncStatus(syncPrefs.syncEnabled);
 
   if (syncPrefs.syncEnabled) {
     showFileHostInfo(syncPrefs);
   }
-});
+}
 
 
 $(document).on("contextmenu", aEvent => {
@@ -229,4 +361,9 @@ $(document).on("contextmenu", aEvent => {
 function log(aMessage)
 {
   if (aeConst.DEBUG) { console.log(aMessage) }
+}
+
+function warn(aMessage)
+{
+  if (aeConst.DEBUG) { console.warn(aMessage) }
 }
