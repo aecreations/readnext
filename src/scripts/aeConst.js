@@ -25,4 +25,6 @@ let aeConst = {
 
   DEFAULT_FAVICON: "chrome://global/skin/icons/defaultFavicon.svg",
   FAVICON_LOAD_RETRY_DELAY_MS: 1000,
+
+  DRIVE_CONN_SVC_DOWNLOAD_URL: "https://aecreations.io/readnext/drive-connector-service.php",
 };

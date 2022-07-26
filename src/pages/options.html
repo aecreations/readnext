@@ -74,6 +74,13 @@
 	    </select>
           </div>
 	</div>
+        <div id="drive-conn-svc" class="wiz-page">
+          <p class="title" data-i18n="connWizTitDCS"></p>
+          <p data-i18n="dcsInstr"></p>
+	  <div id="dwnld-dcs-ctr"><button id="dwnld-dcs" class="default" data-i18n="dcsDwnldCTA"></button></div>
+	  <p id="dcs-dwnld-info" data-i18n="dcsDwnldInfo"></p>
+          <p data-i18n="dcsAfterInst"></p>
+        </div>
 	<div id="authz-prologue" class="wiz-page">
 	  <p class="title" data-i18n="connWizTitle1"></p>
 	  <p id="authz-instr" data-i18n="wizAuthzInstr1"></p>
@@ -81,7 +88,7 @@
 	</div>
 	<div id="authz-progress" class="wiz-page">
           <p class="title" data-i18n="connWizTitle2"></p>
-	  <img id="init-sync-spinner" src="chrome://global/skin/icons/loading@2x.png"/>       
+	  <img id="init-sync-spinner" class="spinner" src="chrome://global/skin/icons/loading@2x.png"/>       
 	</div>
 	<div id="authz-success" class="wiz-page">
 	  <p class="title" data-i18n="connWizTitle3"></p>
@@ -93,7 +100,7 @@
 	  <p id="authz-interrupt"></p>
 	</div>
         <div id="authz-network-error" class="wiz-page">
-	  <p class="title" data-i18n="connWizTitle4"></p>
+	  <p class="title" data-i18n="connWizTitNetErr"></p>
 	  <p data-i18n="wizAuthzNetErr"></p>
         </div>
       </div>
