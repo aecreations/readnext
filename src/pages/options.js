@@ -192,6 +192,7 @@ function initDialogs()
       syncBackend: null,
       accessToken: null,
       refreshToken: null,
+      fileHostUsr: null,
     };
 
     try {
@@ -247,7 +248,12 @@ function setInitSyncProgressIndicator(aInProgress)
 async function showFileHostInfo(aPrefs)
 {
   let fileHost = getFileHostUI(aPrefs.syncBackend);
-  let fileHostUsr = await browser.runtime.sendMessage({id: "get-username"});
+  let fileHostUsr = aPrefs.fileHostUsr;
+
+  if (! fileHostUsr) {
+    fileHostUsr = await browser.runtime.sendMessage({id: "get-username"});
+    aePrefs.setPrefs({fileHostUsr});
+  }
 
   $("#sync-icon").css({backgroundImage: `url("${fileHost.iconPath}")`});
   $("#sync-status").text(browser.i18n.getMessage("connectedTo", [fileHost.name, fileHostUsr]));
