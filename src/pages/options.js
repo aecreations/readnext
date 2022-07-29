@@ -12,7 +12,7 @@ let gDialogs = {};
 $(async () => {
   let prefs = await aePrefs.getAllPrefs();
 
-  setSyncStatus(prefs.syncEnabled);
+  showSyncStatus(prefs);
 
   $("#auto-delete-when-read").prop("checked", prefs.deleteReadLinks).on("click", aEvent => {
     aePrefs.setPrefs({deleteReadLinks: aEvent.target.checked});
@@ -29,10 +29,6 @@ $(async () => {
   $("#unread-links-bold").prop("checked", prefs.boldUnreadBkmks).on("click", aEvent => {
     aePrefs.setPrefs({boldUnreadBkmks: aEvent.target.checked});
   });
-
-  if (prefs.syncEnabled) {
-    showFileHostInfo(prefs);
-  }
 
   initDialogs();
 });
@@ -215,16 +211,25 @@ function initDialogs()
 }
 
 
-function setSyncStatus(aIsSyncEnabled)
+async function showSyncStatus(aPrefs)
 {
-  if (aIsSyncEnabled) {
-    $("#sync-status").text("");
+  if (aPrefs.syncEnabled) {
+    let fileHost = getFileHostUI(aPrefs.syncBackend);
+    let fileHostUsr = aPrefs.fileHostUsr;
+
+    if (! fileHostUsr) {
+      fileHostUsr = await browser.runtime.sendMessage({id: "get-username"});
+      aePrefs.setPrefs({fileHostUsr});
+    }
+
+    $("#sync-icon").css({backgroundImage: `url("${fileHost.iconPath}")`});
+    $("#sync-status").text(browser.i18n.getMessage("connectedTo", [fileHost.name, fileHostUsr]));
     $("#toggle-sync").text(browser.i18n.getMessage("btnDisconnect"));
   }
   else {
     $("#sync-icon").css({backgroundImage: `url("../img/syncReadingList.svg")`});
     $("#sync-status").text(browser.i18n.getMessage("noSync"));
-    $("#toggle-sync").text(browser.i18n.getMessage("btnConnect"));
+    $("#toggle-sync").text(browser.i18n.getMessage("btnConnect"));   
   }
 }
 
@@ -242,23 +247,6 @@ function setInitSyncProgressIndicator(aInProgress)
     $("#init-sync-spinner").hide();
   }
 }
-
-
-// TO DO: Merge this into setSyncStatus()
-async function showFileHostInfo(aPrefs)
-{
-  let fileHost = getFileHostUI(aPrefs.syncBackend);
-  let fileHostUsr = aPrefs.fileHostUsr;
-
-  if (! fileHostUsr) {
-    fileHostUsr = await browser.runtime.sendMessage({id: "get-username"});
-    aePrefs.setPrefs({fileHostUsr});
-  }
-
-  $("#sync-icon").css({backgroundImage: `url("${fileHost.iconPath}")`});
-  $("#sync-status").text(browser.i18n.getMessage("connectedTo", [fileHost.name, fileHostUsr]));
-}
-// END TO DO
 
 
 function getFileHostUI(aFileHostID)
@@ -295,22 +283,6 @@ function getFileHostUI(aFileHostID)
   return rv;
   
 }
-
-
-//
-// Event handlers
-//
-
-$("#toggle-sync").on("click", async (aEvent) => {
-  let syncEnabled = await aePrefs.getPref("syncEnabled");
-
-  if (syncEnabled) {
-    gDialogs.disconnectConfirm.showModal();
-  }
-  else {
-    gDialogs.connectWiz.showModal(false);
-  }
-});
 
 
 async function connectCloudFileSvc(aBackend)
@@ -380,11 +352,7 @@ async function connectCloudFileSvc(aBackend)
   }
   catch {}
 
-  setSyncStatus(syncPrefs.syncEnabled);
-
-  if (syncPrefs.syncEnabled) {
-    showFileHostInfo(syncPrefs);
-  }
+  showSyncStatus(syncPrefs);
 }
 
 
@@ -407,6 +375,18 @@ async function getDriveConnectorInfo()
 //
 // Event handlers
 //
+
+$("#toggle-sync").on("click", async (aEvent) => {
+  let syncEnabled = await aePrefs.getPref("syncEnabled");
+
+  if (syncEnabled) {
+    gDialogs.disconnectConfirm.showModal();
+  }
+  else {
+    gDialogs.connectWiz.showModal(false);
+  }
+});
+
 
 $(document).on("contextmenu", aEvent => {
   if (aEvent.target.tagName != "INPUT" && aEvent.target.getAttribute("type") != "text") {
