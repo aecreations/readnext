@@ -487,11 +487,11 @@ browser.runtime.onMessage.addListener(aMessage => {
 
   case "sync-setting-changed":
     if (aMessage.syncEnabled) {
-      warn("Read Next: Sync was turned ON from extension preferences.");
+      warn("Read Next: Sync turned ON from extension preferences.");
       return firstSyncReadingList();
     }
     else {
-      warn("Read Next: Sync was turned OFF from extension preferences.");
+      warn("Read Next: Sync turned OFF.");
       return stopSync();
     }
     break;
@@ -656,6 +656,35 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
 browser.notifications.onClicked.addListener(aNotificationID => {
   if (aNotificationID == "reauthorize") {
     gFileHostReauthorizer.openReauthorizeDlg();
+  }
+});
+
+
+browser.permissions.onRemoved.addListener(async (aPermissions) => {
+  if (aPermissions.permissions.includes("nativeMessaging")) {
+    // Cannot sync to Google Drive if the optional WebExtension permission was
+    // revoked. If this happens, turn off sync.
+    await aePrefs.setPrefs({
+      syncEnabled: false,
+      syncBackend: null,
+      accessToken: null,
+      refreshToken: null,
+      fileHostUsr: null,
+    });
+    try {
+      await browser.runtime.sendMessage({
+        id: "sync-setting-changed",
+        syncEnabled: false,
+      });
+    }
+    catch {}
+
+    browser.notifications.create("removed-natv-msg-perm", {
+      type: "basic",
+      title: browser.i18n.getMessage("extName"),
+      message: browser.i18n.getMessage("googDrvSyncOff"),
+      iconUrl: "img/icon.png"
+    });
   }
 });
 

@@ -123,6 +123,15 @@ function initDialogs()
       this.backnd = $("#connect-dlg #select-file-host #file-hosts")[0].selectedOptions[0].value;
 
       if (this.backnd == aeConst.FILEHOST_GOOGLE_DRIVE) {
+        let isPermGranted = await browser.permissions.request({
+          permissions: ["nativeMessaging"]
+        });
+
+        if (! isPermGranted) {
+          console.warn("Read Next was not granted the optional WebExtension permission 'nativeMessaging' to connect to Drive Connector Service.");
+          return;
+        }
+
         let dcsAppInfo = await getDriveConnectorInfo();
         if (dcsAppInfo) {
           console.info(`${dcsAppInfo.appName} version ${dcsAppInfo.appVersion}`);
@@ -399,17 +408,29 @@ async function getDriveConnectorInfo()
 //
 
 browser.runtime.onMessage.addListener(aMessage => {
-  if (aMessage.id == "sync-reading-list") {
+  switch (aMessage.id) {
+  case "sync-reading-list":
     if (aMessage.isReauthorized) {
       $("#reauthz-msgbar").css({display: "none"});
     }
-  }
-  else if (aMessage.id == "sync-failed-authz-error") {
+    break;
+
+  case "sync-failed-authz-error":
     aePrefs.getPref("syncBackend").then(aSyncBacknd => {
       let fileHost = getFileHostUI(aSyncBacknd);
       $("#reauthz-msgbar-content").text(browser.i18n.getMessage("reauthzMsgBar", fileHost.name));
       $("#reauthz-msgbar").css({display: "flow-root"});
     });
+    break;
+
+  case "sync-setting-changed":
+    // Reached here if reading list sync turned off by user revoking the
+    // optional WebExtension permission "nativeMessaging".
+    showSyncStatus(aMessage.syncEnabled);
+    break;
+
+  default:
+    break;
   }
 });
 

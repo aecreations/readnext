@@ -21,13 +21,16 @@
     "alarms",
     "identity",
     "menus",
-    "nativeMessaging",
     "notifications",
     "storage",
     "tabs",
     "unlimitedStorage"
   ],
   
+  "optional_permissions": [    
+    "nativeMessaging"
+  ],
+
   "background": {
     "scripts": [
       "lib/dexie.min.js",
