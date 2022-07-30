@@ -199,7 +199,14 @@ let aeSyncReadingList = {
 
   async getFileHostUsername()
   {
-    let rv = await this._fileHost.getUsername();
+    let rv;
+    try {
+      rv = await this._fileHost.getUsername();
+    }
+    catch (e) {
+      this._log("aeSyncReadingList.getFileHostUsername(): Error: " + e);
+      throw e;
+    }
 
     return rv;
   },

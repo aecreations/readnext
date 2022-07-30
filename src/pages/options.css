@@ -89,11 +89,25 @@ h2 {
     background-repeat: no-repeat;
 }
 
-#reauthz {
-    display: none;
+#reauthz-msgbar {
+  display: none;
+  margin-bottom: 12px;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: #ffe900;
+  color: #3e2800;
+  font-size: 13px;
+}
+
+#msgbar-actions {
+    margin-top: 4px;
+    text-align: right;
 }
 
 
+/*
+ * Lightbox dialogs
+ */
 
 .lightbox {
     top: 64px;
@@ -197,7 +211,7 @@ h2 {
     order: 1;
     flex: 0 1 auto;
 
-    width: 80px;
+    width: 72px;
     margin-top: 4px;
     margin-right: 12px;
     background-image: url("../img/question-64.png");

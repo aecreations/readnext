@@ -256,6 +256,30 @@ async function pushLocalChanges()
 }
 
 
+async function getFileHostUserInfo()
+{
+  let rv;
+  
+  if (gPrefs.syncEnabled) {
+    try {
+      rv = await aeSyncReadingList.getFileHostUsername();
+    }
+    catch (e) {
+      if (e instanceof aeAuthorizationError) {
+        warn("Read Next: getFileHostUserInfo(): Caught aeAuthorizationError exception.  Details:\n" + e);
+        await handleAuthorizationError();
+      }
+      else {
+        console.error("Read Next: getFileHostUserInfo(): An unexpected error has occurred.  Details:\n" + e);
+      }
+      throw e;
+    }
+  }
+
+  return rv;
+}
+
+
 async function addBookmark(aBookmark)
 {
   let rv;
@@ -473,7 +497,7 @@ browser.runtime.onMessage.addListener(aMessage => {
     break;
 
   case "get-username":
-    return aeSyncReadingList.getFileHostUsername();
+    return getFileHostUserInfo();
     break;
     
   case "reauthorize":

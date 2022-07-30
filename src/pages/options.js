@@ -12,7 +12,7 @@ let gDialogs = {};
 $(async () => {
   let prefs = await aePrefs.getAllPrefs();
 
-  showSyncStatus(prefs);
+  showSyncStatus(prefs, true);
 
   $("#auto-delete-when-read").prop("checked", prefs.deleteReadLinks).on("click", aEvent => {
     aePrefs.setPrefs({deleteReadLinks: aEvent.target.checked});
@@ -206,25 +206,47 @@ function initDialogs()
     catch {}
 
     this.close();
-    setSyncStatus(syncPrefs.syncEnabled);
+    showSyncStatus(syncPrefs.syncEnabled);
   };
 }
 
 
-async function showSyncStatus(aPrefs)
+async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
 {
+  async function getFileHostUsr()
+  {
+    let rv;
+    try {
+      rv = await browser.runtime.sendMessage({id: "get-username"});
+    }
+    catch {} 
+    return rv;
+  }
+  // END nested function
+
   if (aPrefs.syncEnabled) {
     let fileHost = getFileHostUI(aPrefs.syncBackend);
     let fileHostUsr = aPrefs.fileHostUsr;
 
     if (! fileHostUsr) {
-      fileHostUsr = await browser.runtime.sendMessage({id: "get-username"});
-      aePrefs.setPrefs({fileHostUsr});
+      fileHostUsr = await getFileHostUsr();
+
+      if (fileHostUsr) {
+        aePrefs.setPrefs({fileHostUsr});
+      }
+      else {
+        fileHostUsr = "";
+      }
     }
 
     $("#sync-icon").css({backgroundImage: `url("${fileHost.iconPath}")`});
     $("#sync-status").text(browser.i18n.getMessage("connectedTo", [fileHost.name, fileHostUsr]));
     $("#toggle-sync").text(browser.i18n.getMessage("btnDisconnect"));
+
+    if (aRefetchUserInfo) {
+      // Refetch cloud file service user info to check if reauthz is required.
+      await getFileHostUsr();
+    }
   }
   else {
     $("#sync-icon").css({backgroundImage: `url("../img/syncReadingList.svg")`});
@@ -376,6 +398,22 @@ async function getDriveConnectorInfo()
 // Event handlers
 //
 
+browser.runtime.onMessage.addListener(aMessage => {
+  if (aMessage.id == "sync-reading-list") {
+    if (aMessage.isReauthorized) {
+      $("#reauthz-msgbar").css({display: "none"});
+    }
+  }
+  else if (aMessage.id == "sync-failed-authz-error") {
+    aePrefs.getPref("syncBackend").then(aSyncBacknd => {
+      let fileHost = getFileHostUI(aSyncBacknd);
+      $("#reauthz-msgbar-content").text(browser.i18n.getMessage("reauthzMsgBar", fileHost.name));
+      $("#reauthz-msgbar").css({display: "flow-root"});
+    });
+  }
+});
+
+
 $("#toggle-sync").on("click", async (aEvent) => {
   let syncEnabled = await aePrefs.getPref("syncEnabled");
 
@@ -385,6 +423,11 @@ $("#toggle-sync").on("click", async (aEvent) => {
   else {
     gDialogs.connectWiz.showModal(false);
   }
+});
+
+
+$("#reauthorize").on("click", aEvent => {
+  browser.runtime.sendMessage({id: "reauthorize"});
 });
 
 
