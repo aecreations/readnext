@@ -644,10 +644,12 @@ function handleExtMessage(aMessage)
   switch (aMessage.id) {
   case "add-bookmark-event":
     addReadingListItem(aMessage.bookmark);
+    $("#add-link").prop("disabled", true);
     break;
 
   case "remove-bookmark-event":
     removeReadingListItem(aMessage.bookmarkID);
+    $("#add-link").prop("disabled", false);
     break;
 
   case "reload-bookmarks-event":
@@ -669,6 +671,10 @@ function handleExtMessage(aMessage)
 
   case "mark-read-event":
     markAsRead(aMessage.bookmarkID, aMessage.isRead);
+    break;
+
+  case "tab-loading-finish-event":
+    $("#add-link").prop("disabled", aMessage.bkmkExists);
     break;
 
   case "sync-setting-changed":

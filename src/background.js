@@ -558,6 +558,13 @@ browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
 
     showPageAction(aTab, bkmkExists);
     updateMenus(aTab);
+    try {
+      await browser.runtime.sendMessage({
+        id: "tab-loading-finish-event",
+        bkmkExists,
+      });
+    }
+    catch {}
 
     if (! bkmkExists) {
       return;
