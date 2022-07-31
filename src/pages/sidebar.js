@@ -216,7 +216,23 @@ let gSearchBox = {
       return;
     }
     
-    $("#search-box").attr("placeholder", browser.i18n.getMessage("srchBoxHint"));
+    $("#search-box").prop("placeholder", browser.i18n.getMessage("srchBoxHint"))
+      .focus(aEvent => {
+        gSearchBox.activate();
+        $("#search-box-ctr").addClass("focus");
+      })
+      .blur(aEvent => {
+        gSearchBox.deactivate();
+        $("#search-box-ctr").removeClass("focus");
+      })
+      .keyup(aEvent => {
+        this.updateSearch();
+        $("#clear-search").css({
+          visibility: (aEvent.target.value ? "visible" : "hidden")
+        });
+      });
+
+    $("#clear-search").click(aEvent => { this.reset() });
 
     this._isInitialized = true;
   },
@@ -224,6 +240,17 @@ let gSearchBox = {
   isActivated()
   {
     return this._isActive;
+  },
+
+  show()
+  {
+    $("#search-bar").show();
+  },
+
+  hide()
+  {
+    this.deactivate();
+    $("#search-bar").hide();
   },
 
   async updateSearch()
@@ -249,9 +276,15 @@ let gSearchBox = {
     this._isActive = true;
   },
 
+  deactivate()
+  {
+    this._isActive = false;
+  },
+
   async reset()
   {
     $("#search-box").val("").focus();
+    $("#clear-search").css({visibility: "hidden"});
     this._isActive = false;
     this._numMatches = null;
 
