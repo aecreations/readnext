@@ -137,7 +137,8 @@
   },
 
   "prefsHdgSync": {
-    "message": "Sync Reading List"
+    "message": "Sync Reading List",
+    "description": "Section heading in extension preferences page"
   },
 
   "btnConnect": {
@@ -246,5 +247,31 @@
 
   "prefSrchBar": {
     "message": "Show search bar"
+  },
+
+  "prefsHdgInteg": {
+    "message": "Integration",
+    "description": "Section heading in extension preferences page"
+  },
+
+  "prefAddrBarBtn": {
+    "message": "Show button in address bar"
+  },
+
+  "prefCxtMenuBtn": {
+    "message": "Show menu item in context menu"
+  },
+
+  "prefHdgSidebar": {
+    "message": "Sidebar",
+    "description": "Section heading in extension preferences page"
+  },
+
+  "prefAutoDel": {
+    "message": "Delete link when read"
+  },
+
+  "prefUnreadBold": {
+    "message": "Show unread links in <b>bold</b>"
   }
 }

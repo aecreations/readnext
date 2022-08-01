@@ -10,8 +10,9 @@ let gDialogs = {};
 
 // Page initialization
 $(async () => {
-  let prefs = await aePrefs.getAllPrefs();
+  $("#unread-links-bold-label").html(browser.i18n.getMessage("prefUnreadBold"));
 
+  let prefs = await aePrefs.getAllPrefs();
   showSyncStatus(prefs, true);
 
   $("#auto-delete-when-read").prop("checked", prefs.deleteReadLinks).on("click", aEvent => {
