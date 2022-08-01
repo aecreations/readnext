@@ -238,5 +238,13 @@
   "googDrvSyncOff": {
     "message": "Reading list sync to Google Drive has been turned off.",
     "description": "Notification that appears after user revokes optional WebExtension permission 'nativeMessaging', which is required for syncing reading list to Google Drive."
+  },
+
+  "prefToolbar": {
+    "message": "Show toolbar"
+  },
+
+  "prefSrchBar": {
+    "message": "Show search bar"
   }
 }

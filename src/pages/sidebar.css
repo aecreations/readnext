@@ -37,6 +37,10 @@ button, label {
     font-size: 11px;
 }
 
+#toolbars {
+    border-bottom: 1px solid var(--color-main-toolbar-border);
+}
+
 #toolbar, #search-bar {
     width: 100%;
     padding: 2px 4px 2px 4px;
@@ -106,9 +110,8 @@ button, label {
 }
 
 #search-bar {
-    margin-top: 1px;
-    margin-bottom: 1px;
-    border-bottom: 1px solid var(--color-main-toolbar-border);
+    padding-top: 3px;
+    padding-bottom: 3px;
 }
 
 #search-box-ctr {

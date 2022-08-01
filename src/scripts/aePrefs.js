@@ -18,6 +18,8 @@ let aePrefs = {
     showPageAction: true,
     showCxtMenu: true,
     boldUnreadBkmks: true,
+    toolbar: true,
+    searchBar: true,
 
     // Applicable to Google Drive file host.
     syncFileID: null,
@@ -73,6 +75,8 @@ let aePrefs = {
       showPageAction: true,
       showCxtMenu: true,
       boldUnreadBkmks: true,
+      toolbar: true,
+      searchBar: true,
       syncFileID: null,
       readingListSliceLength: aeConst.DCS_READING_LIST_SLICE_LENGTH,      
     };

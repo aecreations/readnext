@@ -305,6 +305,7 @@ $(async () => {
   }
   // END TO DO
 
+  setCustomizations();
   gSearchBox.init();
 
   try {
@@ -568,6 +569,23 @@ initContextMenu.showManualSync = false;
 initContextMenu.showOpenInPrivBrws = false;
 
 
+function setCustomizations()
+{
+  if (gPrefs.toolbar) {
+    $("#toolbar").show();
+  }
+  else {
+    $("#toolbar").hide();
+  }
+  if (gPrefs.searchBar) {
+    $("#search-bar").show();
+  }
+  else {
+    $("#search-bar").hide();
+  }
+}
+
+
 function showWelcome()
 {
   $("#welcome").show();
@@ -577,18 +595,6 @@ function showWelcome()
 function hideWelcome()
 {
   $("#welcome").hide();
-}
-
-
-function showToolbar()
-{
-  $("#toolbar").show();
-}
-
-
-function hideToolbar()
-{
-  $("#toolbar").hide();
 }
 
 
@@ -706,6 +712,8 @@ browser.storage.onChanged.addListener((aChanges, aAreaName) => {
   for (let pref of changedPrefs) {
     gPrefs[pref] = aChanges[pref].newValue;
   }
+
+  setCustomizations();
 
   if (changedPrefs.includes("boldUnreadBkmks")) {
     let isSet = Boolean(aChanges["boldUnreadBkmks"].newValue);

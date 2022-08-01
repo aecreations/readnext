@@ -30,6 +30,14 @@ $(async () => {
     aePrefs.setPrefs({boldUnreadBkmks: aEvent.target.checked});
   });
 
+  $("#show-toolbar").prop("checked", prefs.toolbar).on("click", aEvent => {
+    aePrefs.setPrefs({toolbar: aEvent.target.checked});
+  });
+
+  $("#show-search-bar").prop("checked", prefs.searchBar).on("click", aEvent => {
+    aePrefs.setPrefs({searchBar: aEvent.target.checked});
+  });
+
   initDialogs();
 });
 
