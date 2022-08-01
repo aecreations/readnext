@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="SVGRoot" width="16px" height="16px" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <g fill="none" stroke="#5858ff" stroke-width="1px">
+   <path d="m7.9821 3.5h5"/>
+   <path d="m6 3.5h1"/>
+  </g>
+  <path d="m10 13h6" fill="none" stroke="#3434fd" stroke-width="2"/>
+  <path d="m13 10v6" fill="none" stroke="#3434fd" stroke-width="2"/>
+  <g stroke="#5858ff">
+   <path d="m0.5 1.5v11.056l2-2.7878 2 2.7878v-11.056z" fill="#f0f0ff"/>
+   <path d="m7.9821 9.5h3" fill="none" stroke-width="1px"/>
+   <path d="m6 9.5h1" fill="none" stroke-width="1px"/>
+  </g>
+  <g transform="translate(0,2)" fill="none" stroke="#5858ff" stroke-width="1px">
+   <path d="m7.9821 3.5h5"/>
+   <path d="m6 3.5h1"/>
+  </g>
+  <g transform="translate(0,4)" fill="none" stroke="#5858ff" stroke-width="1px">
+   <path d="m7.9821 3.5h5"/>
+   <path d="m6 3.5h1"/>
+  </g>
+ </g>
+</svg>

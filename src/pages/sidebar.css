@@ -51,8 +51,16 @@ button, label {
 #add-link {
     height: 24px;
     margin-right: 4px;
+    padding-left: 24px;
     border-radius: 3.5px;
     background-color: var(--color-main-toolbar-bkgd);
+    background-image: url("../img/add-link.svg");
+    background-position: 4px 2px;
+    background-repeat: no-repeat;
+}
+
+#add-link:hover {
+    background-image: url("../img/add-link-hover.svg");
 }
 
 #bookmark-filter > input[type="radio"] {
@@ -67,6 +75,7 @@ button, label {
     background-color: var(--color-main-toolbar-bkgd);
 }
 
+#add-link:hover,
 #bookmark-filter > input[type="radio"] ~ label:hover,
 #bookmark-filter > #filter-all:checked ~ label[for="filter-all"]:hover,
 #bookmark-filter > #filter-unread:checked ~ label[for="filter-unread"]:hover {
@@ -74,6 +83,7 @@ button, label {
     background-color: var(--color-btn-hover-bkgd);
 }
 
+#add-link:active,
 #bookmark-filter > input[type="radio"] ~ label:active {
     background-color: var(--color-btn-active-bkgd);
 }
