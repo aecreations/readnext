@@ -10,7 +10,7 @@ let gDialogs = {};
 
 // Page initialization
 $(async () => {
-  $("#unread-links-bold-label").html(browser.i18n.getMessage("prefUnreadBold"));
+  $("#unread-links-bold-label").html(sanitizeHTML(browser.i18n.getMessage("prefUnreadBold")));
 
   let prefs = await aePrefs.getAllPrefs();
   showSyncStatus(prefs, true);
@@ -47,7 +47,7 @@ function initDialogs()
 {
   gDialogs.connectWiz = new aeDialog("#connect-dlg");
   gDialogs.connectWiz.setProps({
-    backnd: null,
+    backnd: aeConst.FILEHOST_DROPBOX,
   });
   
   gDialogs.connectWiz.goToPage = function (aPageID)
@@ -57,11 +57,7 @@ function initDialogs()
 
     let btnAccept = $("#connect-dlg > .dlg-btns > .dlg-accept");
     let btnCancel = $("#connect-dlg > .dlg-btns > .dlg-cancel");
-
-    let fh;
-    if (this.backnd) {
-      fh = aeFileHostUI(this.backnd);
-    }
+    let {fileHostName} = aeFileHostUI(this.backnd);
 
     switch (aPageID) {
     case "drive-conn-svc":
@@ -70,7 +66,7 @@ function initDialogs()
 
     case "authz-prologue":
       $("#connect-dlg > .dlg-btns > .dlg-accept").addClass("default");
-      $("#connect-dlg #authz-instr").text(browser.i18n.getMessage("wizAuthzInstr1", fh.fileHostName));
+      $("#connect-dlg #authz-instr").text(browser.i18n.getMessage("wizAuthzInstr1", fileHostName));
       break;
 
     case "authz-progress":
@@ -78,13 +74,13 @@ function initDialogs()
       break;
 
     case "authz-success":
-      $("#connect-dlg #authz-succs-msg").text(browser.i18n.getMessage("wizAuthzSuccs", fh.fileHostName));
+      $("#connect-dlg #authz-succs-msg").text(browser.i18n.getMessage("wizAuthzSuccs", fileHostName));
       btnAccept.removeAttr("disabled").text(browser.i18n.getMessage("btnClose"));
       btnCancel.hide();
       break;
 
     case "authz-retry":
-      $("#connect-dlg #authz-interrupt").text(browser.i18n.getMessage("wizAuthzInterrupt", fh.fileHostName));
+      $("#connect-dlg #authz-interrupt").text(browser.i18n.getMessage("wizAuthzInterrupt", fileHostName));
       $("#connect-dlg > .dlg-btns > button").removeAttr("disabled");
       btnAccept.text(browser.i18n.getMessage("btnRetry"));
       break;
@@ -444,6 +440,12 @@ $(".hyperlink").click(aEvent => {
 //
 // Utilities
 //
+
+function sanitizeHTML(aHTMLStr)
+{
+  return DOMPurify.sanitize(aHTMLStr, { SAFE_FOR_JQUERY: true });
+}
+
 
 function gotoURL(aURL)
 {

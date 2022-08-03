@@ -35,6 +35,7 @@
     "scripts": [
       "lib/dexie.min.js",
       "lib/md5.min.js",
+      "lib/purify.min.js",
       "scripts/aeConst.js",
       "scripts/aePrefs.js",
       "scripts/aeBookmark.js",

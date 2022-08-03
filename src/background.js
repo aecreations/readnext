@@ -618,7 +618,7 @@ browser.pageAction.onClicked.addListener(async () => {
     await aeReadingList.remove(id);
   }
   else {
-    bkmk = new aeBookmark(id, actvTab.url, actvTab.title);
+    bkmk = new aeBookmark(id, actvTab.url, sanitizeHTML(actvTab.title));
     await setBookmarkFavIcon(id, actvTab.favIconUrl);
     await addBookmark(bkmk);
   }
@@ -637,7 +637,7 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
 
   switch (aInfo.menuItemId) {
   case "ae-readnext-add-bkmk":
-    bkmk = new aeBookmark(id, aTab.url, aTab.title);
+    bkmk = new aeBookmark(id, aTab.url, sanitizeHTML(aTab.title));
     await setBookmarkFavIcon(id, aTab.favIconUrl);
     await addBookmark(bkmk);
     togglePageActionIcon(true, aTab);
@@ -703,6 +703,12 @@ browser.permissions.onRemoved.addListener(async (aPermissions) => {
 //
 // Utilities
 //
+
+function sanitizeHTML(aHTMLStr)
+{
+  return DOMPurify.sanitize(aHTMLStr, { SAFE_FOR_JQUERY: true });
+}
+
 
 function getBookmarkIDFromURL(aURL)
 {

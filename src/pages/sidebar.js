@@ -730,7 +730,7 @@ browser.storage.onChanged.addListener((aChanges, aAreaName) => {
 
 $("#add-link").on("click", async (aEvent) => {
   let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
-  let title = actvTab.title;
+  let title = sanitizeHTML(actvTab.title);
   let url = actvTab.url;
   let id = getBookmarkIDFromURL(url);
   let bkmk = new aeBookmark(id, url, title);
@@ -806,6 +806,12 @@ $(document).on("contextmenu", aEvent => {
 //
 // Utilities
 //
+
+function sanitizeHTML(aHTMLStr)
+{
+  return DOMPurify.sanitize(aHTMLStr, { SAFE_FOR_JQUERY: true });
+}
+
 
 function getBookmarkIDFromURL(aURL)
 {
