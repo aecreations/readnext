@@ -31,6 +31,10 @@
     "message": "Try Again"
   },
 
+  "btnNotNow": {
+    "message": "Not Now"
+  },
+
   "msgUnavail": {
     "message": "The selected action is not available right now."
   },
@@ -273,5 +277,10 @@
 
   "prefUnreadBold": {
     "message": "Show unread links in <b>bold</b>"
+  },
+
+  "reauthzRetry": {
+    "message": "Reauthorization to $1 didn't finish successfully.  Do you want to try again?",
+    "description": "Reauthorization to <name of cloud file service, e.g. Dropbox> didn't finish successfully.  Do you want to try again?"
   }
 }

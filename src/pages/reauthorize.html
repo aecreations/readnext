@@ -19,14 +19,13 @@
       </div>
 
       <div id="dlg-content" class="deck">
-	<div id="reauthz-progress" class="deck-content">
+	<div id="reauthz-progress">
 	  <div class="row">
             <img id="spinner" src="chrome://global/skin/icons/loading@2x.png"/>
-	    <span>reauthorizing...</span>
 	  </div>
 	</div>
 
-	<div id="reauthz-error" class="deck-content">
+        <div id="retry-reauthz">
 	  <div id="icon">
 	    <div id="msgbox-icon"></div>
 	  </div>
@@ -34,9 +33,10 @@
 	    <p></p>
 	  </div>
 	  <div id="msgbox-buttons">
-	    <button id="btn-accept" class="default">ok</button>
+	    <button id="btn-retry" class="default" data-i18n="btnRetry"></button>
+            <button id="btn-cancel" data-i18n="btnNotNow"></button>
 	  </div>
-	</div>
+        </div>
       </div>
     </main>
 
@@ -46,6 +46,7 @@
     <script src="../scripts/aePrefs.js"></script>
     <script src="../scripts/aeOAuth.js"></script>
     <script src="../scripts/aeInterxn.js"></script>
+    <script src="../scripts/aeFileHostUI.js"></script>
     <script src="reauthorize.js"></script>
   </body>
 </html>

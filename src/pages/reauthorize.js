@@ -4,26 +4,50 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
-async function init()
-{
+// Page initialization
+$(async () => {
   let platform = await browser.runtime.getPlatformInfo();
   document.body.dataset.os = platform.os;
 
+  let backnd = getFileHostID();
+  reauthorize(backnd);  
+});
+
+
+function getFileHostID()
+{
+  let rv;
   let url = new URL(window.location.href);
-  let backnd = url.searchParams.get("bknd");
-  if (! backnd) {
+  rv = url.searchParams.get("bknd");
+  if (! rv) {
     throw new Error("URL parameter 'bknd' is invalid or undefined");
   }
-  backnd = Number(backnd);
 
+  return rv;
+}
+
+
+async function reauthorize(aBackend)
+{
+  let backnd = Number(aBackend);
   aeOAuth.init(backnd);
+
   let authzCode, tokens;
   try {
     authzCode = await aeOAuth.getAuthorizationCode();
     log("Read Next::reauthorize.js: Authorization code: " + authzCode);
   }
   catch (e) {
-    showErrorMsgDeck(e);
+    log("Read Next::reauthorize.js: " + e);
+
+    if (e instanceof TypeError) {
+      // TypeError: NetworkError when attempting to fetch resource.
+      showNetworkErrorMsg();
+    }
+    else {
+      showRetryPrompt(backnd);
+    }
+    
     return;
   }
 
@@ -33,7 +57,8 @@ async function init()
     log(tokens);
   }
   catch (e) {
-    showErrorMsgDeck(e);
+    log("Read Next::reauthorize.js: " + e);
+    showRetryPrompt(backnd);
     return;
   }
 
@@ -53,12 +78,21 @@ async function init()
 }
 
 
-function showErrorMsgDeck(aErrorMsg)
+function showRetryPrompt(aBackend)
 {
   $("#reauthz-progress").hide();
 
-  $("#reauthz-error > #msgbox-content > p").text(aErrorMsg);
-  $("#reauthz-error").show();
+  let {fileHostName} = aeFileHostUI(aBackend);
+  $("#retry-reauthz > #msgbox-content > p").text(browser.i18n.getMessage("reauthzRetry", fileHostName));
+  $("#retry-reauthz").show();
+}
+
+
+function showNetworkErrorMsg()
+{
+  $("#reauthz-progress").hide();
+  $("#retry-reauthz > #msgbox-content > p").text(browser.i18n.getMessage("wizAuthzNetErr"));
+  $("#retry-reauthz").show();
 }
 
 
@@ -73,22 +107,23 @@ async function closePage()
 // Event handlers
 //
 
-document.addEventListener("DOMContentLoaded", async (aEvent) => {
-  init();
-});
-
-
 document.addEventListener("keydown", aEvent => {
   aeInterxn.suppressBrowserShortcuts(aEvent, false);
 });
-
 
 document.addEventListener("contextmenu", aEvent => {
   aEvent.preventDefault();
 });
 
+$("#btn-retry").on("click", aEvent => {
+  $("#retry-reauthz").hide();
+  $("#reauthz-progress").show();
+  
+  let backnd = getFileHostID();
+  reauthorize(backnd);
+});
 
-$("#btn-accept").on("click", aEvent => { closePage() });
+$("#btn-cancel").on("click", async (aEvent) => { await closePage() });
 
 
 //
