@@ -57,7 +57,11 @@ function initDialogs()
 
     let btnAccept = $("#connect-dlg > .dlg-btns > .dlg-accept");
     let btnCancel = $("#connect-dlg > .dlg-btns > .dlg-cancel");
-    let fileHost = getFileHostUI(this.backnd);
+
+    let fh;
+    if (this.backnd) {
+      fh = aeFileHostUI(this.backnd);
+    }
 
     switch (aPageID) {
     case "drive-conn-svc":
@@ -66,7 +70,7 @@ function initDialogs()
 
     case "authz-prologue":
       $("#connect-dlg > .dlg-btns > .dlg-accept").addClass("default");
-      $("#connect-dlg #authz-instr").text(browser.i18n.getMessage("wizAuthzInstr1", fileHost.name));
+      $("#connect-dlg #authz-instr").text(browser.i18n.getMessage("wizAuthzInstr1", fh.fileHostName));
       break;
 
     case "authz-progress":
@@ -74,13 +78,13 @@ function initDialogs()
       break;
 
     case "authz-success":
-      $("#connect-dlg #authz-succs-msg").text(browser.i18n.getMessage("wizAuthzSuccs", fileHost.name));
+      $("#connect-dlg #authz-succs-msg").text(browser.i18n.getMessage("wizAuthzSuccs", fh.fileHostName));
       btnAccept.removeAttr("disabled").text(browser.i18n.getMessage("btnClose"));
       btnCancel.hide();
       break;
 
     case "authz-retry":
-      $("#connect-dlg #authz-interrupt").text(browser.i18n.getMessage("wizAuthzInterrupt", fileHost.name));
+      $("#connect-dlg #authz-interrupt").text(browser.i18n.getMessage("wizAuthzInterrupt", fh.fileHostName));
       $("#connect-dlg > .dlg-btns > button").removeAttr("disabled");
       btnAccept.text(browser.i18n.getMessage("btnRetry"));
       break;
@@ -194,9 +198,9 @@ function initDialogs()
   gDialogs.disconnectConfirm.onInit = async function ()
   {
     let syncBackend = await aePrefs.getPref("syncBackend");
-    let fileHost = getFileHostUI(syncBackend);
+    let {fileHostName} = aeFileHostUI(syncBackend);
 
-    $("#disconnect-dlg > .dlg-content > .msgbox-content > #disconnect-confirm").text(browser.i18n.getMessage("disconnTitle", fileHost.name));
+    $("#disconnect-dlg > .dlg-content > .msgbox-content > #disconnect-confirm").text(browser.i18n.getMessage("disconnTitle", fileHostName));
   };
 
   gDialogs.disconnectConfirm.onAccept = async function ()
@@ -243,7 +247,7 @@ async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
   // END nested function
 
   if (aPrefs.syncEnabled) {
-    let fileHost = getFileHostUI(aPrefs.syncBackend);
+    let {fileHostName, iconPath} = aeFileHostUI(aPrefs.syncBackend);
     let fileHostUsr = aPrefs.fileHostUsr;
 
     if (! fileHostUsr) {
@@ -257,8 +261,8 @@ async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
       }
     }
 
-    $("#sync-icon").css({backgroundImage: `url("${fileHost.iconPath}")`});
-    $("#sync-status").text(browser.i18n.getMessage("connectedTo", [fileHost.name, fileHostUsr]));
+    $("#sync-icon").css({backgroundImage: `url("${iconPath}")`});
+    $("#sync-status").text(browser.i18n.getMessage("connectedTo", [fileHostName, fileHostUsr]));
     $("#toggle-sync").text(browser.i18n.getMessage("btnDisconnect"));
 
     if (aRefetchUserInfo) {
@@ -286,42 +290,6 @@ function setInitSyncProgressIndicator(aInProgress)
     $("#toggle-sync").removeAttr("disabled");     
     $("#init-sync-spinner").hide();
   }
-}
-
-
-function getFileHostUI(aFileHostID)
-{
-  let rv;
-  let backnd = Number(aFileHostID);
-  
-  switch (backnd) {
-  case aeConst.FILEHOST_DROPBOX:
-    rv = {
-      name: browser.i18n.getMessage("fhDropbox"),
-      iconPath: "../img/dropbox.svg",
-    };
-    break;
-
-  case aeConst.FILEHOST_GOOGLE_DRIVE:
-    rv = {
-      name: browser.i18n.getMessage("fhGoogleDrive"),
-      iconPath: "../img/googledrive.svg",
-    };
-    break;
-
-  case aeConst.FILEHOST_ONEDRIVE:
-    rv = {
-      name: browser.i18n.getMessage("fhOneDrive"),
-      iconPath: "../img/onedrive.svg",
-    };
-    break;
-
-  default:
-    break;
-  }
-
-  return rv;
-  
 }
 
 
@@ -426,8 +394,8 @@ browser.runtime.onMessage.addListener(aMessage => {
 
   case "sync-failed-authz-error":
     aePrefs.getPref("syncBackend").then(aSyncBacknd => {
-      let fileHost = getFileHostUI(aSyncBacknd);
-      $("#reauthz-msgbar-content").text(browser.i18n.getMessage("reauthzMsgBar", fileHost.name));
+      let {fileHostName} = aeFileHostUI(aSyncBacknd);
+      $("#reauthz-msgbar-content").text(browser.i18n.getMessage("reauthzMsgBar", fileHostName));
       $("#reauthz-msgbar").css({display: "flow-root"});
     });
     break;
