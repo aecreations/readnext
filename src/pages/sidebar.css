@@ -167,12 +167,47 @@ button, label {
   border-radius: 4px;
   background-color: #ffe900;
   color: #3e2800;
-  font-size: 13px;
 }
 
 #msgbar-actions {
     margin-top: 4px;
     text-align: right;
+}
+
+.msgbar .msgbar-content {
+    margin-right: 16px;
+}
+
+.msgbar label {
+    font-size: 12px;
+}
+
+.msgbar button {
+    height: 24px;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 3px;
+    font-size: 11.5px;
+}
+
+.msgbar .msgbar-dismiss {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 16px;
+    height: 16px;
+    margin: 4px;
+    background-image: url("../img/close-panel.svg");
+    background-size: contain;
+    border-radius: 2px;
+}
+
+.msgbar .msgbar-dismiss:hover {
+    background-color: #a47f00;
+}
+
+.msgbar .msgbar-dismiss:active {
+    background-color: #715100;
 }
 
 #welcome {

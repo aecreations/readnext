@@ -797,6 +797,10 @@ $("#reauthorize").on("click", aEvent => {
   browser.runtime.sendMessage({id: "reauthorize"});
 });
 
+$("#reauthz-msgbar > .msgbar-dismiss").on("click", aEvent => {
+  hideMessageBar();
+});
+
 
 $(document).on("contextmenu", aEvent => {
   aEvent.preventDefault();
