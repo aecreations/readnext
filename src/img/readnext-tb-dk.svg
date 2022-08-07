@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="SVGRoot" width="16px" height="16px" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <linearGradient id="linearGradient2682" x1=".19068" x2="5.6186" y1="1.9901" y2="10.03" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#eee" offset="0"/>
+   <stop stop-color="#ddd" offset="1"/>
+  </linearGradient>
+  <linearGradient id="linearGradient2704" x1="4.8941" x2="2.0275" y1="8.7911" y2="2.0855" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#068d8d" offset="0"/>
+   <stop stop-color="#08bfb6" offset="1"/>
+  </linearGradient>
+ </defs>
+ <g>
+  <path d="m0.5 0.5v13.812l2.5-3.4827 2.5 3.4827v-13.812z" fill="url(#linearGradient2704)" stroke="url(#linearGradient2682)"/>
+  <g fill="none" stroke="#eee" stroke-width="1px">
+   <path d="m9.0027 2.5318 6.9947-0.03178"/>
+   <path d="m7.0159 2.5315 0.99603-0.03178"/>
+  </g>
+  <g transform="translate(0,3)" fill="none" stroke="#eee" stroke-width="1px">
+   <path d="m9.0027 2.5318 6.9947-0.03178"/>
+   <path d="m7.0159 2.5315 0.99603-0.03178"/>
+  </g>
+  <g transform="translate(0,6)" fill="none" stroke="#eee" stroke-width="1px">
+   <path d="m9.0027 2.5318 6.9947-0.03178"/>
+   <path d="m7.0159 2.5315 0.99603-0.03178"/>
+  </g>
+  <g transform="translate(0,9)" fill="none" stroke="#eee" stroke-width="1px">
+   <path d="m9.0027 2.5318 6.9947-0.03178"/>
+   <path d="m7.0159 2.5315 0.99603-0.03178"/>
+  </g>
+ </g>
+</svg>

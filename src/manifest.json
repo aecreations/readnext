@@ -13,8 +13,8 @@
   },
 
   "icons": {
-    "48": "img/icon.svg",
-    "96": "img/icon.svg"
+    "48": "img/readnext48.svg",
+    "96": "img/readnext64.svg"
   },
 
   "permissions": [
@@ -53,17 +53,17 @@
   },
 
   "browser_action": {
-    "default_icon": "img/readnext16.svg",
+    "default_icon": "img/readnext-tb.svg",
     "default_title": "__MSG_extName__",
     "theme_icons": [
       {
-	"light": "img/readnext16-dk.svg",
-	"dark": "img/readnext16.svg",
+	"light": "img/readnext-tb-dk.svg",
+	"dark": "img/readnext-tb.svg",
 	"size": 16
       },
       {
-	"light": "img/readnext16-dk.svg",
-	"dark": "img/readnext16.svg",
+	"light": "img/readnext-tb-dk.svg",
+	"dark": "img/readnext-tb.svg",
 	"size": 32
       }
     ]
