@@ -29,7 +29,7 @@ let gFileHostReauthorizer = {
         type: "basic",
         title: browser.i18n.getMessage("extName"),
         message: browser.i18n.getMessage("reauthzNotifcn", fileHostName),
-        iconUrl: "img/readnext48.svg"
+        iconUrl: "img/icon.svg"
       });
       this._notifcnShown = true;
     }
@@ -693,7 +693,7 @@ browser.permissions.onRemoved.addListener(async (aPermissions) => {
         type: "basic",
         title: browser.i18n.getMessage("extName"),
         message: browser.i18n.getMessage("googDrvSyncOff"),
-        iconUrl: "img/readnext48.svg"
+        iconUrl: "img/icon.svg"
       });
     }
   }
