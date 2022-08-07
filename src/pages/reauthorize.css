@@ -21,7 +21,6 @@
 	--color-main-border: #0c0c0d;
 	--color-main-bkgd: #2a2a2e;
 	--color-main-border-shadow: #0c0c0d;
-	--url-prmpt-icon: url("../img/readnext128-dk.svg");
     }
 }
 
@@ -74,18 +73,6 @@ button {
     padding: 0 24px 0;
     border-radius: 4px;
     font-size: 15px;
-}
-
-button.default {
-    border: 1px solid #005bab;
-}
-
-button.default:focus {
-    border: 1px solid #003eaa;
-}
-
-button.default:hover {
-    border-color: #002275;
 }
 
 #dlg-hdr {
