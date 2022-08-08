@@ -728,7 +728,7 @@ browser.storage.onChanged.addListener((aChanges, aAreaName) => {
 });
 
 
-$("#add-link").on("click", async (aEvent) => {
+$("#add-link, #add-link-cta").on("click", async (aEvent) => {
   let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
   let title = sanitizeHTML(actvTab.title);
   let url = actvTab.url;
@@ -752,7 +752,7 @@ $("#add-link").on("click", async (aEvent) => {
 });
 
 
-$("#setup").on("click", aEvent => {
+$("#setup-sync").on("click", aEvent => {
   browser.runtime.openOptionsPage();
 });
 

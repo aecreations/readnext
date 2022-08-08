@@ -84,18 +84,23 @@
     "description": "Hint text appearing on empty search box in reading list sidebar"
   },
 
-  "welcTitle": {
-    "message": "Welcome to Read Next!",
-    "description": "Sidebar welcome title"
+  "emptyTitle": {
+    "message": "Add to Reading List",
+    "description": "Sidebar empty state title"
   },
 
-  "welcInstr": {
-    "message": "Click \u201cAdd Current Tab\u201d to add to the reading list",
-    "description": "Sidebar first-use instructions"
+  "emptyInstr": {
+    "message": "Click \u201cAdd Current Tab\u201d to add to the reading list.",
+    "description": "Sidebar empty state instructions"
+  },
+
+  "emptyInstrEx": {
+    "message": "Click \u201cAdd Current Tab\u201d or click <img class=\"icon\" src=\"../img/bookmark.svg\"> in the address bar.",
+    "description": "Sidebar empty state instructions (alternate text)"
   },
 
   "setupSync": {
-    "message": "Setup Sync"
+    "message": "Set Up Sync"
   },
 
   "mnuOpenNewTab": {

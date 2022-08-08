@@ -38,11 +38,15 @@
 	</div>
       </div>
       <div id="welcome">
-	<!-- TO DO: Extension icon -->
-        <p data-i18n="welcTitle"></p>
-	<p data-i18n="welcInstr"></p>
+	<img id="empty-icon" src="../img/add-link-cta.svg" />
+        <p data-i18n="emptyTitle"></p>
+	<p data-i18n="emptyInstr"></p>
+        <button id="add-link-cta" class="default" data-i18n="addLink"></button>
 
-        <button id="setup" data-i18n="setupSync"></button>
+	<div id="sync-cta">
+	  <p data-i18n="noSync"></p>
+          <button id="setup-sync" data-i18n="setupSync"></button>
+        </div>
       </div>
 
       <div id="reading-list"></div>
