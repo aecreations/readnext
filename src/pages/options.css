@@ -9,6 +9,7 @@
 
 :root {
     --url-bkgd-img: url("../img/bkgrd.png");
+    --color-bkgd: #ededf0;
 
     --color-main-border: #ddd;
     --color-main-bkgd: #fefefe;
@@ -45,11 +46,21 @@
 }
 
 
+body {
+    background-color: var(--color-bkgd);
+    background-image: var(--url-bkgd-img);
+    color: var(--color-default-text);
+}
+
 main {
-  width: 640px;
-  margin: 24px auto 24px auto;
-  padding: 16px;
-  cursor: inherit;
+    width: 640px;
+    margin: 24px auto 24px auto;
+    padding: 16px;
+    border: 1px solid var(--color-main-border);
+    border-radius: 2px;
+    box-shadow: 0 0 8px 2px var(--color-main-border-shadow);
+    background-color: var(--color-main-bkgd);
+    cursor: inherit;
 }
 
 #addon-icon {
@@ -58,45 +69,100 @@ main {
 }
 
 h2 {
-  display: inline-block;
-  margin-top: 0;
-  margin-right: 6px;
-  margin-bottom: 20px;
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: -0.2px;
+    display: inline-block;
+    margin-top: 0;
+    margin-right: 6px;
+    margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+}
+
+label {
+    font-size: 15px;
+}
+
+fieldset {
+    padding-top: 4px;
+    padding-bottom: 18px;
+    border-top: 1px solid var(--color-fieldset-border);
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+}
+
+fieldset:last-of-type {
+    padding-bottom: 8px;
+}
+
+legend {
+    margin-left: -12px;
+    padding-right: 4px;
+    font-size: 15px;
+}
+
+fieldset button {
+    min-width: 88px;
+    height: 32px;
+    padding: 0 14px 0;
+    box-shadow: 0 0 0 0 transparent;
+    border-radius: 4px;
+    font: caption;
+    font-size: 15px;
 }
 
 .spinner {
-  width: 16px;
-  height: 16px;    
+    width: 16px;
+    height: 16px;    
+}
+
+#sync-options {
+    padding-top: 0;
 }
 
 #init-sync-spinner {
-  display: none;
-  margin-left: 4px;
-  vertical-align: -2px;
+    display: none;
+    margin-left: 4px;
+    vertical-align: -2px;
 }
 
 #sync-icon {
     float: left;
     width: 48px;
     height: 48px;
-    margin-right: 18px;
+    margin-right: 16px;
     margin-left: 8px;
     background-image: url("../img/syncReadingList.svg");
     background-size: contain;
     background-repeat: no-repeat;
 }
 
+#sync-status {
+    font-size: 15px;
+}
+
+#sync-actions {
+    margin-left: 72px;
+}
+
 #reauthz-msgbar {
-  display: none;
-  margin-bottom: 12px;
-  padding: 8px;
-  border-radius: 4px;
-  background-color: #ffe900;
-  color: #3e2800;
-  font-size: 13px;
+    display: none;
+    margin-bottom: 12px;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #ffe900;
+    color: #3e2800;
+    font-size: 13px;
+}
+
+#reauthz-msgbar label,
+#reauthz-msgbar button {
+    font-size: 13px !important;
+}
+
+#reauthz-msgbar button {
+    height: 28px;
+    border-radius: 3.5px;
 }
 
 #msgbar-actions {
@@ -198,7 +264,7 @@ h2 {
 #disconnect-dlg {
     top: 160px;
     --width: 486px;
-    --height: 216px;
+    --height: 200px;
 }
 
 #disconnect-dlg > .dlg-content {
@@ -225,6 +291,7 @@ h2 {
 }
 
 #disconnect-dlg > .dlg-content > .msgbox-content > .title {
+    margin-bottom: 12px;
     font-size: 15px;
     font-weight: bold;
 }
