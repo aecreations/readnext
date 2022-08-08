@@ -162,11 +162,11 @@ button, label {
 }
 
 #msgbars > #reauthz-msgbar {
-  display: none;
-  padding: 4px;
-  border-radius: 4px;
-  background-color: #ffe900;
-  color: #3e2800;
+    display: none;
+    padding: 4px;
+    border-radius: 4px;
+    background-color: #ffe900;
+    color: #3e2800;
 }
 
 #msgbar-actions {
@@ -211,10 +211,10 @@ button, label {
 }
 
 #welcome {
-  display: none;
-  margin-left: 8px;
-  margin-right: 8px;
-  text-align: center;
+    display: none;
+    margin-left: 8px;
+    margin-right: 8px;
+    text-align: center;
 }
 
 #welcome p {
@@ -259,7 +259,7 @@ button, label {
 }
 
 #add-link[disabled] {
-  cursor: not-allowed;
+    cursor: not-allowed;
 }
 
 .favicon {
@@ -267,26 +267,26 @@ button, label {
 }
 
 .reading-list-item {
-  padding: 4px 8px 4px 8px;
-  min-height: 1em;
-  max-height: 3.15em;
-  overflow: hidden;
+    padding: 4px 8px 4px 8px;
+    min-height: 1em;
+    max-height: 3.15em;
+    overflow: hidden;
 
-  font-size: 12px;
-  font-weight: normal;
+    font-size: 12px;
+    font-weight: normal;
 }
 
 .reading-list-item.unread {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 .reading-list-item:hover {
-  background-color: rgba(12, 12, 13, 0.2);
-  color: #0c0c0d;
+    background-color: rgba(12, 12, 13, 0.2);
+    color: #0c0c0d;
 }
 
 .reading-list-item:active {
-  background-color: rgba(12, 12, 13, 0.3);
+    background-color: rgba(12, 12, 13, 0.3);
 }
 
 .reading-list-item-title {
@@ -294,8 +294,8 @@ button, label {
 }
 
 .error {
-  margin-left: 4px;
-  color: red;
+    margin-left: 4px;
+    color: red;
 }
 
 /* jQuery contextMenu CSS overrides */
