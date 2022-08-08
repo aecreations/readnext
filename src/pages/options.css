@@ -111,6 +111,12 @@ fieldset button {
     font-size: 15px;
 }
 
+.row {
+    margin-top: 4px;
+    margin-bottom: 2px;
+    margin-left: 4px;
+}
+
 .spinner {
     width: 16px;
     height: 16px;    
