@@ -287,5 +287,26 @@
   "reauthzRetry": {
     "message": "Reauthorization to $1 didn't finish successfully.  Do you want to try again?",
     "description": "Reauthorization to <name of cloud file service, e.g. Dropbox> didn't finish successfully.  Do you want to try again?"
+  },
+
+  "aboutBtn": {
+    "message": "About…"
+  },
+
+  "aboutExtVer": {
+    "message": "Version $1",
+    "description": "Extension version number"
+  },
+
+  "aboutAuthor": {
+    "message": "Created by AE Creations."
+  },
+  
+  "aboutHomePgLink": {
+    "message": "Visit home page"
+  },
+
+  "aboutLicLink": {
+    "message": "License information"
   }
 }

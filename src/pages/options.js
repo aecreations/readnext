@@ -226,6 +226,24 @@ function initDialogs()
     this.close();
     showSyncStatus(syncPrefs.syncEnabled);
   };
+
+  gDialogs.about = new aeDialog("#about-dlg");
+  gDialogs.about.extInfo = null;
+  gDialogs.about.onFirstInit = function ()
+  {
+    let extManifest = browser.runtime.getManifest();
+    this.extInfo = {
+      name: extManifest.name,
+      version: extManifest.version,
+      description: extManifest.description,
+      homePgURL: extManifest.homepage_url,
+    };
+
+    $("#ext-name").text(this.extInfo.name);
+    $("#ext-ver").text(browser.i18n.getMessage("aboutExtVer", this.extInfo.version));
+    $("#ext-desc").text(this.extInfo.description);
+    $("#ext-home-pg-link").attr("href", this.extInfo.homePgURL);
+  };  
 }
 
 
@@ -430,6 +448,8 @@ $(document).on("contextmenu", aEvent => {
     aEvent.preventDefault();
   }
 });
+
+$("#about-btn").on("click", aEvent => { gDialogs.about.showModal() });
 
 $(".hyperlink").click(aEvent => {
   aEvent.preventDefault();
