@@ -6,9 +6,11 @@ EXCLUDE=*~ *\.pl Makefile
 
 
 $(DIST_FILE):
+	cp -v ../LICENSE.txt .
 	zip -r $(DIST_FILE) * -x $(EXCLUDE)
 
 clean:
-	rm -v *.zip
+	rm -fv $(DIST_FILE)
+	rm -fv LICENSE.txt
 
 # END Makefile
