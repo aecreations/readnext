@@ -49,6 +49,7 @@
       "scripts/aeGoogleDrive.js",
       "scripts/aeAuthorizationError.js",
       "scripts/aeNotFoundError.js",
+      "scripts/aeFileHostUI.js",
       "background.js"
     ]
   },

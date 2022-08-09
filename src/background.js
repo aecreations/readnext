@@ -13,7 +13,7 @@ let gFileHostReauthorizer = {
   
   async showPrompts()
   {
-    let fileHostName = getFileHostUIString();
+    let {fileHostName} = aeFileHostUI(gPrefs.syncBackend);
     let msg = {
       id: "reauthorize-prompt",
       fileHostName,
@@ -393,32 +393,6 @@ async function getBookmarkFromTab(aTab)
   let id = getBookmarkIDFromURL(url);
 
   rv = await aeReadingList.get(id);
-  return rv;
-}
-
-
-function getFileHostUIString()
-{
-  let rv;
-  let backnd = Number(gPrefs.syncBackend);
-
-  switch (backnd) {
-  case aeConst.FILEHOST_DROPBOX:
-    rv = browser.i18n.getMessage("fhDropbox");
-    break;
-
-  case aeConst.FILEHOST_GOOGLE_DRIVE:
-    rv = browser.i18n.getMessage("fhGoogleDrive");
-    break;
-
-  case aeConst.FILEHOST_ONEDRIVE:
-    rv = browser.i18n.getMessage("fhOneDrive");
-    break;
-
-  default:
-    break;
-  }
-
   return rv;
 }
 
