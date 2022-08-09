@@ -20,11 +20,6 @@ let aeConst = {
   HTTP_STATUS_NOT_FOUND: 404,
   HTTP_STATUS_CONFLICT: 409,
 
-  // Native messaging helper app
-  DRIVE_CONNECTOR_SVC_APP_NAME: "driveConnectorSvc",
-
   DEFAULT_FAVICON: "chrome://global/skin/icons/defaultFavicon.svg",
   FAVICON_LOAD_RETRY_DELAY_MS: 1000,
-
-  DRIVE_CONN_SVC_DOWNLOAD_URL: "https://aecreations.io/readnext/drive-connector-service.php",
 };

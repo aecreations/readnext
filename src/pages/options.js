@@ -60,10 +60,6 @@ function initDialogs()
     let {fileHostName} = aeFileHostUI(this.backnd);
 
     switch (aPageID) {
-    case "drive-conn-svc":
-      $("#connect-dlg > .dlg-btns > .dlg-accept").removeClass("default");
-      break;
-
     case "authz-prologue":
       $("#connect-dlg > .dlg-btns > .dlg-accept").addClass("default");
       $("#connect-dlg #authz-instr").text(browser.i18n.getMessage("wizAuthzInstr1", fileHostName));
@@ -107,20 +103,9 @@ function initDialogs()
     return rv;
   };
 
-  gDialogs.connectWiz.onFirstInit = function ()
-  {
-    $("#connect-dlg #select-file-host #file-hosts").on("click", aEvent => {
-      $("#connect-dlg > .dlg-btns > .dlg-accept").removeAttr("disabled");
-    });
-
-    $("#connect-dlg #drive-conn-svc #dwnld-dcs").on("click", aEvent => {
-      gotoURL(aeConst.DRIVE_CONN_SVC_DOWNLOAD_URL);
-    }).attr("title", aeConst.DRIVE_CONN_SVC_DOWNLOAD_URL);
-  };
-
   gDialogs.connectWiz.onInit = function ()
   {
-    this.goToPage("select-file-host");
+    this.goToPage("authz-prologue");
   };
 
   gDialogs.connectWiz.onAccept = async function ()
@@ -128,43 +113,6 @@ function initDialogs()
     let currPg = this.getPageID();
 
     switch (currPg) {
-    case "select-file-host":
-      this.backnd = $("#connect-dlg #select-file-host #file-hosts")[0].selectedOptions[0].value;
-
-      if (this.backnd == aeConst.FILEHOST_GOOGLE_DRIVE) {
-        let isPermGranted = await browser.permissions.request({
-          permissions: ["nativeMessaging"]
-        });
-
-        if (! isPermGranted) {
-          console.warn("Read Next was not granted the optional WebExtension permission 'nativeMessaging' to connect to Drive Connector Service.");
-          return;
-        }
-
-        let dcsAppInfo = await getDriveConnectorInfo();
-        if (dcsAppInfo) {
-          console.info(`${dcsAppInfo.appName} version ${dcsAppInfo.appVersion}`);
-          this.goToPage("authz-prologue");
-        }
-        else {
-          this.goToPage("drive-conn-svc");
-        }
-      }
-      else {
-        this.goToPage("authz-prologue");
-      }
-      break;
-
-    case "drive-conn-svc":
-      let isNatvAppInstalled = await getDriveConnectorInfo();
-      if (isNatvAppInstalled) {
-        this.goToPage("authz-prologue");
-      }
-      else {
-        warn("Read Next::options.js: Drive Connector Service not installed.");
-      }
-      break;
-
     case "authz-prologue":
     case "authz-retry":
     case "authz-network-error":
@@ -183,9 +131,8 @@ function initDialogs()
 
   gDialogs.connectWiz.onUnload = function ()
   {
-    this.goToPage("select-file-host");
-    $("#connect-dlg #select-file-host #file-hosts")[0].selectedIndex = -1;
-    $("#connect-dlg > .dlg-btns > .dlg-accept").addClass("default").attr("disabled", "true")
+    this.goToPage("authz-prologue");
+    $("#connect-dlg > .dlg-btns > .dlg-accept").addClass("default")
       .text(browser.i18n.getMessage("btnNext"));
     $("#connect-dlg > .dlg-btns > .dlg-cancel").removeAttr("disabled").show();
   };
@@ -375,22 +322,6 @@ async function connectCloudFileSvc(aBackend)
   catch {}
 
   showSyncStatus(syncPrefs);
-}
-
-
-async function getDriveConnectorInfo()
-{
-  let rv;
-  let msg = {id: "get-app-version"};
-
-  try {
-    rv = await browser.runtime.sendNativeMessage(aeConst.DRIVE_CONNECTOR_SVC_APP_NAME, msg);
-  }
-  catch (e) {
-    console.error("Error connecting to Drive Connector Service: " + e);
-  }
-
-  return rv;
 }
 
 

@@ -17,20 +17,6 @@ function aeFileHostUI(aFileHostID)
     };
     break;
 
-  case aeConst.FILEHOST_GOOGLE_DRIVE:
-    rv = {
-      fileHostName: browser.i18n.getMessage("fhGoogleDrive"),
-      iconPath: "../img/googledrive.svg",
-    };
-    break;
-
-  case aeConst.FILEHOST_ONEDRIVE:
-    rv = {
-      fileHostName: browser.i18n.getMessage("fhOneDrive"),
-      iconPath: "../img/onedrive.svg",
-    };
-    break;
-
   default:
     break;
   }

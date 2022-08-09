@@ -641,39 +641,6 @@ browser.notifications.onClicked.addListener(aNotificationID => {
 });
 
 
-browser.permissions.onRemoved.addListener(async (aPermissions) => {
-  if (aPermissions.permissions.includes("nativeMessaging")) {
-    let {syncEnabled, syncBackend} = await aePrefs.getAllPrefs();
-
-    if (syncEnabled && syncBackend == aeConst.FILEHOST_GOOGLE_DRIVE) {
-      // Cannot sync to Google Drive if the optional WebExtension permission
-      // was revoked. If this happens, turn off sync.
-      await aePrefs.setPrefs({
-        syncEnabled: false,
-        syncBackend: null,
-        accessToken: null,
-        refreshToken: null,
-        fileHostUsr: null,
-      });
-      try {
-        await browser.runtime.sendMessage({
-          id: "sync-setting-changed",
-          syncEnabled: false,
-        });
-      }
-      catch {}
-
-      browser.notifications.create("removed-natv-msg-perm", {
-        type: "basic",
-        title: browser.i18n.getMessage("extName"),
-        message: browser.i18n.getMessage("googDrvSyncOff"),
-        iconUrl: "img/icon.svg"
-      });
-    }
-  }
-});
-
-
 //
 // Utilities
 //

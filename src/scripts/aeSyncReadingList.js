@@ -35,17 +35,6 @@ let aeSyncReadingList = {
       rv = new aeDropbox(aOAuthClient);
       break;
 
-    case aeConst.FILEHOST_ONEDRIVE:
-      rv = new aeOneDrive(aOAuthClient);
-      break;
-
-    case aeConst.FILEHOST_GOOGLE_DRIVE:
-      let googleDrive = new aeGoogleDrive(aOAuthClient, this._prefs.readingListSliceLength);
-      let syncFileID = this._prefs.syncFileID;
-      await googleDrive.setSyncFileID(syncFileID);
-      rv = googleDrive;
-      break;
-
     default:
       break;
     }

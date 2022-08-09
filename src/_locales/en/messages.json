@@ -43,14 +43,6 @@
     "message": "Dropbox"
   },
 
-  "fhGoogleDrive": {
-    "message": "Google Drive"
-  },
-
-  "fhOneDrive": {
-    "message": "Microsoft OneDrive"
-  },
-
   "addBkmk": {
     "message": "Add to Read Next"
   },
@@ -159,7 +151,7 @@
   },
 
   "noSync": {
-    "message": "Sync your reading list to the cloud using Dropbox, Google Drive or Microsoft OneDrive."
+    "message": "Sync your reading list to the cloud using Dropbox."
   },
 
   "connectedTo": {
@@ -167,7 +159,7 @@
   },
 
   "connWizTitle1": {
-    "message": "Connect to Cloud Drive",
+    "message": "Connect to Dropbox",
     "description": "Cloud file service connection wizard in extension preferences page"
   },
 
@@ -185,32 +177,8 @@
     "message": "Unable to Connect"
   },
 
-  "connWizTitDCS": {
-    "message": "Drive Connector Service"
-  },
-
-  "dcsInstr": {
-    "message": "To connect Read Next with Google Drive, the Drive Connector Service needs to be installed first.  Once the app is installed, it'll run quietly in the background to keep your reading list synced with Google Drive."
-  },
-
-  "dcsAfterInst": {
-    "message": "After installing, come back here to continue with setup."
-  },
-
-  "dcsDwnldCTA": {
-    "message": "Download Drive Connector Service"
-  },
-
-  "dcsDwnldInfo": {
-    "message": "You'll be taken to the Drive Connector Service download page on the AE Creations website (opens in a new browser tab)."
-  },
-  
   "wizAuthzNetErr": {
     "message": "Read Next needs to connect to the network. Check your network connection, or try again later."
-  },
-
-  "wizSelSvc": {
-    "message": "Select a cloud file service:"
   },
 
   "wizAuthzInstr1": {
@@ -243,11 +211,6 @@
 
   "btnDisconn": {
     "message": "Disconnect"
-  },
-
-  "googDrvSyncOff": {
-    "message": "Reading list sync to Google Drive has been turned off.",
-    "description": "Notification that appears after user revokes optional WebExtension permission 'nativeMessaging', which is required for syncing reading list to Google Drive."
   },
 
   "prefToolbar": {
