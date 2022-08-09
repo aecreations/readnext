@@ -2,8 +2,9 @@
   "manifest_version": 2,
   "name": "__MSG_extName__",
   "description": "__MSG_extDesc__",
-  "version": "0.7.1+",
+  "version": "0.8a1",
   "author": "AE Creations",
+  "homepage_url": "https://aecreations.io/readnext/index.php",
 
   "browser_specific_settings": {
     "gecko": {
@@ -87,7 +88,7 @@
     "page": "pages/options.html",
     "open_in_tab": true,
     "browser_style": true
-},
+  },
 
-"default_locale": "en"
+  "default_locale": "en"
 }
