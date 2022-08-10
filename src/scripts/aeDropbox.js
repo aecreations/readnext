@@ -277,8 +277,6 @@ class aeDropbox extends aeAbstractFileHost
     await aePrefs.setPrefs({accessToken: newAccessToken});
     rv = newAccessToken;
 
-    this._log("aeDropbox._refreshAccessToken(): " + newAccessToken);
-
     return rv;
   }
 

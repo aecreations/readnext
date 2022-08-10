@@ -35,7 +35,6 @@ async function reauthorize(aBackend)
   let authzCode, tokens;
   try {
     authzCode = await aeOAuth.getAuthorizationCode();
-    log("Read Next::reauthorize.js: Authorization code: " + authzCode);
   }
   catch (e) {
     log("Read Next::reauthorize.js: " + e);
@@ -53,8 +52,6 @@ async function reauthorize(aBackend)
 
   try {
     tokens = await aeOAuth.getAccessToken();
-    log("Read Next::reauthorize.js: Received access token and refresh token from authorization server: ");
-    log(tokens);
   }
   catch (e) {
     log("Read Next::reauthorize.js: " + e);
