@@ -227,11 +227,11 @@
   },
 
   "prefAddrBarBtn": {
-    "message": "Show button in address bar"
+    "message": "Show address bar button"
   },
 
   "prefCxtMenuBtn": {
-    "message": "Show menu item in context menu"
+    "message": "Show menu item in the context menu"
   },
 
   "prefHdgSidebar": {
