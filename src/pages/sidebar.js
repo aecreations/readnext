@@ -305,6 +305,7 @@ $(async () => {
   }
   // END TO DO
 
+  $("#empty-instr").html(sanitizeHTML(browser.i18n.getMessage("emptyInstrEx")));
   setCustomizations();
   gSearchBox.init();
 
