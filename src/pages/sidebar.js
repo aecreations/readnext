@@ -681,6 +681,7 @@ function handleExtMessage(aMessage)
     break;
 
   case "tab-loading-finish-event":
+  case "tab-switching-event":
     $("#add-link").prop("disabled", aMessage.bkmkExists);
     break;
 

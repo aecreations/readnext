@@ -573,6 +573,17 @@ browser.tabs.onActivated.addListener(async (aActiveTab) => {
   if (tab.url) {
     showPageAction(tab);
     updateMenus(tab);
+
+    let bkmk = await getBookmarkFromTab(tab);
+    let bkmkExists = !!bkmk;
+
+    try {
+      await browser.runtime.sendMessage({
+        id: "tab-switching-event",
+        bkmkExists,
+      });
+    }
+    catch {}
   }
 });
 
