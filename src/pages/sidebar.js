@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+const TOOLBAR_HEIGHT = 28;
 let gPrefs;
 
 // Sidebar actions
@@ -298,7 +299,8 @@ let gSearchBox = {
 // Sidebar initialization
 $(async () => {
   gPrefs = await aePrefs.getAllPrefs();
-  
+  setScrollableContentHeight();
+
   // TO DO: Is this still needed? Should this be done in the background script?
   if (gPrefs.syncEnabledFromExtPrefs) {
     await aePrefs.setPrefs({syncEnabledFromExtPrefs: false});
@@ -322,6 +324,19 @@ $(async () => {
   initContextMenu.showOpenInPrivBrws = await browser.extension.isAllowedIncognitoAccess();
   initContextMenu();
 });
+
+
+function setScrollableContentHeight()
+{
+  let cntHeight = window.innerHeight;
+  if (gPrefs.toolbar) {
+    cntHeight -= TOOLBAR_HEIGHT;
+  }
+  if (gPrefs.searchBar) {
+    cntHeight -= TOOLBAR_HEIGHT;
+  }
+  $("#scroll-content").css({height: `${cntHeight}px`});
+}
 
 
 async function initReadingList(aLocalDataOnly=false)
@@ -572,18 +587,26 @@ initContextMenu.showOpenInPrivBrws = false;
 
 function setCustomizations()
 {
+  let cntHeight = window.innerHeight;
+  
   if (gPrefs.toolbar) {
     $("#toolbar").show();
+    cntHeight -= TOOLBAR_HEIGHT;
   }
   else {
     $("#toolbar").hide();
+    cntHeight += TOOLBAR_HEIGHT;
   }
   if (gPrefs.searchBar) {
     $("#search-bar").show();
+    cntHeight -= TOOLBAR_HEIGHT;
   }
   else {
     $("#search-bar").hide();
+    cntHeight += TOOLBAR_HEIGHT;
   }
+
+  $("#scroll-content").css({height: `${cntHeight}px`});
 }
 
 
@@ -727,6 +750,11 @@ browser.storage.onChanged.addListener((aChanges, aAreaName) => {
       bkmk.classList.replace(oldCls, newCls);
     }
   }
+});
+
+
+$(window).on("resize", aEvent => {
+  setScrollableContentHeight();
 });
 
 

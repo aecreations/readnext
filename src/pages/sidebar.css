@@ -21,6 +21,8 @@
     --color-cxtmenu-menuitem-hover-text: #0c0c0d;
     --color-cxtmenu-menuitem-active-bkgd: rgba(12, 12, 13, 0.3);
     --color-cxtmenu-separator: #e6e6e6;
+
+    --toolbar-height: 28px;
 }
 
 
@@ -30,11 +32,16 @@ html {
 
 body {
     background-color: var(--color-bkgd);
+    overflow-y: hidden;
 }
 
 button, label {
     font: caption;
     font-size: 11px;
+}
+
+#scroll-content {
+    overflow-y: auto;
 }
 
 #toolbars {
@@ -43,6 +50,7 @@ button, label {
 
 #toolbar, #search-bar {
     width: 100%;
+    height: var(--toolbar-height);
     padding: 2px 4px 2px 4px;
     background: var(--color-main-toolbar-bkgd);
     color: var(--color-main-toolbar-text);
@@ -110,7 +118,7 @@ button, label {
 }
 
 #search-bar {
-    padding-top: 3px;
+    padding-top: 5px;
     padding-bottom: 3px;
 }
 

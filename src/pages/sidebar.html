@@ -11,45 +11,49 @@
 
   <body>
     <main id="sidebar-content">
-      <div id="msgbars">
-        <div id="reauthz-msgbar" class="msgbar msgbar-warning">
-          <div class="msgbar-content">
-            <label id="reauthz-msgbar-content"></label>
-          </div>
-          <div id="msgbar-actions" class="row">
-            <button id="reauthorize" data-i18n="btnReauthz"></button>
-          </div>
-          <div class="msgbar-dismiss dlg-accept"></div>
-        </div>
-      </div>
-      <div id="toolbars">
-	<div id="toolbar">
-	  <button id="add-link" data-i18n="addLink"></button>
-	  <span id="bookmark-filter">
-	    <input type="radio" id="filter-all" name="bookmark-filter" value="0" checked/><label for="filter-all" data-i18n="filterAll"></label>
-	    <input type="radio" id="filter-unread" name="bookmark-filter" value="1"/><label for="filter-unread" data-i18n="filterUnread"></label>
-	  </span>
-	</div>
-	<div id="search-bar">
-	  <div id="search-box-ctr">
-	    <input type="search" id="search-box"/>
-	    <div id="clear-search"></div>
+      <div id="fixed-pos-content">
+	<div id="msgbars">
+	  <div id="reauthz-msgbar" class="msgbar msgbar-warning">
+	    <div class="msgbar-content">
+	      <label id="reauthz-msgbar-content"></label>
+	    </div>
+	    <div id="msgbar-actions" class="row">
+	      <button id="reauthorize" data-i18n="btnReauthz"></button>
+	    </div>
+	    <div class="msgbar-dismiss dlg-accept"></div>
 	  </div>
 	</div>
-      </div>
-      <div id="welcome">
-	<img id="empty-icon" src="../img/add-link-cta.svg" />
-        <p data-i18n="emptyTitle"></p>
-	<p id="empty-instr"></p>
-        <button id="add-link-cta" class="default" data-i18n="addLink"></button>
+	<div id="toolbars">
+	  <div id="toolbar">
+	    <button id="add-link" data-i18n="addLink"></button>
+	    <span id="bookmark-filter">
+	      <input type="radio" id="filter-all" name="bookmark-filter" value="0" checked/><label for="filter-all" data-i18n="filterAll"></label>
+	      <input type="radio" id="filter-unread" name="bookmark-filter" value="1"/><label for="filter-unread" data-i18n="filterUnread"></label>
+	    </span>
+	  </div>
+	  <div id="search-bar">
+	    <div id="search-box-ctr">
+	      <input type="search" id="search-box"/>
+	      <div id="clear-search"></div>
+	    </div>
+	  </div>
+	</div>
+      </div>  <!-- /#fixed-pos-content -->
 
-	<div id="sync-cta">
-	  <p data-i18n="noSync"></p>
-          <button id="setup-sync" data-i18n="setupSync"></button>
-        </div>
-      </div>
+      <div id="scroll-content">
+	<div id="welcome">
+	  <img id="empty-icon" src="../img/add-link-cta.svg" />
+	  <p data-i18n="emptyTitle"></p>
+	  <p id="empty-instr"></p>
+	  <button id="add-link-cta" class="default" data-i18n="addLink"></button>
 
-      <div id="reading-list"></div>
+	  <div id="sync-cta">
+	    <p data-i18n="noSync"></p>
+	    <button id="setup-sync" data-i18n="setupSync"></button>
+	  </div>
+	</div>
+	<div id="reading-list"></div>
+      </div>  <!-- /#scroll-content -->
     </main>
 
     <script src="../lib/md5.min.js"></script>
