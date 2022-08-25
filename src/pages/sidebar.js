@@ -80,6 +80,18 @@ let gCmd = {
     }
   },
 
+  async getBookmark(aBkmkID)
+  {
+    let rv;
+    let msg = {
+      id: "get-bookmark",
+      bookmarkID: aBkmkID,
+    };
+
+    rv = await browser.runtime.sendMessage(msg);
+    return rv;
+  },
+
   async getBookmarks()
   {
     let rv;
@@ -329,6 +341,7 @@ $(async () => {
     return;
   }
 
+  initAddLinkBtn();
   initContextMenu.showManualSync = gPrefs.syncEnabled;
   initContextMenu.showOpenInPrivBrws = await browser.extension.isAllowedIncognitoAccess();
   initContextMenu();
@@ -498,6 +511,16 @@ function updateFavIcon(aBookmarkID, aFavIconData)
 }
 
 
+async function initAddLinkBtn()
+{
+  let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
+  let id = getBookmarkIDFromURL(actvTab.url);
+  let bkmkExists = await gCmd.getBookmark(id);
+
+  $("#add-link").prop("disabled", bkmkExists);
+}
+
+
 function initContextMenu()
 {
   $.contextMenu({
@@ -642,18 +665,6 @@ function showNoUnreadMsg()
 function hideNoUnreadMsg()
 {
   $("#no-unread").hide();
-}
-
-
-function enableAddLinkBtn()
-{
-  $("#add-link").removeAttr("disabled");
-}
-
-
-function disableAddLinkBtn()
-{
-  $("#add-link").attr("disabled", "true");
 }
 
 

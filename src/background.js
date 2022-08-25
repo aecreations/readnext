@@ -425,6 +425,9 @@ browser.runtime.onMessage.addListener(aMessage => {
       .catch(aErr => Promise.reject(aErr));
     break;
 
+  case "get-bookmark":
+    return aeReadingList.get(aMessage.bookmarkID);
+
   case "get-all-bookmarks":
     return aeReadingList.getAll();
 
@@ -584,6 +587,9 @@ browser.tabs.onActivated.addListener(async (aActiveTab) => {
       });
     }
     catch {}
+  }
+  else {
+    warn("Read Next: Tab 'onActivated' event handler is unable to retrieve URL for tab " + aActiveTab.tabId);
   }
 });
 
