@@ -143,7 +143,16 @@ let gReadingListFilter = {
 
     this._filter = aFilter;
     let bkmks = await gCmd.getBookmarks();
-    await rebuildReadingList(bkmks, this._filter == this.UNREAD);
+    await rebuildReadingList(bkmks, aFilter == this.UNREAD);
+
+    if (bkmks.length == 0) {
+      showEmptyMsg();
+    }
+    else {
+      if (aFilter == this.UNREAD && isReadingListEmpty()) {
+        showNoUnreadMsg();
+      }
+    }
   },
 };
 
@@ -356,10 +365,10 @@ async function initReadingList(aLocalDataOnly=false)
     }
 
     if (bkmks.length == 0) {
-      showWelcome();
+      showEmptyMsg();
     }
     else {
-      hideWelcome();
+      hideEmptyMsg();
       buildReadingList(bkmks, false);
     }
   }
@@ -382,7 +391,8 @@ function buildReadingList(aBookmarks, aUnreadOnly)
 
 function addReadingListItem(aBookmark)
 {
-  hideWelcome();
+  hideEmptyMsg();
+  hideNoUnreadMsg();
   
   let tooltipText = `${aBookmark.title}\n${aBookmark.url}`;
   let listItemDiv = $("<div>").addClass("reading-list-item").attr("title", tooltipText)[0];
@@ -429,7 +439,8 @@ function removeReadingListItem(aBookmarkID)
 
 async function rebuildReadingList(aBookmarks, aUnreadOnly, aReloadFavIcons=false)
 {
-  hideWelcome();
+  hideEmptyMsg();
+  hideNoUnreadMsg();
   $("#reading-list").empty();
 
   if (aReloadFavIcons) {
@@ -610,15 +621,27 @@ function setCustomizations()
 }
 
 
-function showWelcome()
+function showEmptyMsg()
 {
   $("#welcome").show();
 }
 
 
-function hideWelcome()
+function hideEmptyMsg()
 {
   $("#welcome").hide();
+}
+
+
+function showNoUnreadMsg()
+{
+  $("#no-unread").show();
+}
+
+
+function hideNoUnreadMsg()
+{
+  $("#no-unread").hide();
 }
 
 
@@ -680,6 +703,9 @@ function handleExtMessage(aMessage)
   case "remove-bookmark-event":
     removeReadingListItem(aMessage.bookmarkID);
     $("#add-link").prop("disabled", false);
+    if ($("#reading-list").length == 0) {
+      showEmptyMsg();
+    }
     break;
 
   case "reload-bookmarks-event":
@@ -778,7 +804,8 @@ $("#add-link, #add-link-cta").on("click", async (aEvent) => {
     return;
   }
  
-  hideWelcome();  
+  hideEmptyMsg();
+  hideNoUnreadMsg();
 });
 
 

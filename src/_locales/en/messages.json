@@ -91,6 +91,10 @@
     "description": "Sidebar empty state instructions (alternate text)"
   },
 
+  "noUnread": {
+    "message": "No unread items."
+  },
+
   "setupSync": {
     "message": "Set Up Sync"
   },
