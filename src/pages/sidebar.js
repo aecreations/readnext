@@ -622,14 +622,13 @@ initContextMenu.showOpenInPrivBrws = false;
 function setCustomizations()
 {
   let cntHeight = window.innerHeight;
-  
+
   if (gPrefs.toolbar) {
     $("#toolbar").show();
     cntHeight -= TOOLBAR_HEIGHT;
   }
   else {
     $("#toolbar").hide();
-    cntHeight += TOOLBAR_HEIGHT;
   }
   if (gPrefs.searchBar) {
     $("#search-bar").show();
@@ -637,9 +636,7 @@ function setCustomizations()
   }
   else {
     $("#search-bar").hide();
-    cntHeight += TOOLBAR_HEIGHT;
   }
-
   $("#scroll-content").css({height: `${cntHeight}px`});
 }
 
