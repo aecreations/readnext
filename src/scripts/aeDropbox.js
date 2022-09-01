@@ -253,7 +253,7 @@ class aeDropbox extends aeAbstractFileHost
     
     let resp;
     try {
-      resp = await fetch("https://aeoaps.herokuapp.com/readnext/token", reqOpts);
+      resp = await fetch("https://aecreations-oauth.up.railway.app/readnext/token", reqOpts);
     }
     catch (e) {
       console.error("aeDropbox._refreshAccessToken(): Error getting new access token: " + e);

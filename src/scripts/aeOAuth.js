@@ -41,7 +41,7 @@ let aeOAuth = function () {
       
       let resp;
       try {
-        resp = await fetch(`https://aeoaps.herokuapp.com/readnext/apikey?svc=${_authzSrvKey}`);
+        resp = await fetch(`https://aecreations-oauth.up.railway.app/readnext/apikey?svc=${_authzSrvKey}`);
       }
       catch (e) {
         console.error("aeOAuth.getAPIKey(): Error calling OAPS /readnext/apikey: " + e);
@@ -118,7 +118,7 @@ let aeOAuth = function () {
 
       let resp;  
       try {
-        resp = await fetch("https://aeoaps.herokuapp.com/readnext/token", requestOpts);
+        resp = await fetch("https://aecreations-oauth.up.railway.app/readnext/token", requestOpts);
       }
       catch (e) {
         console.error("aeOAuth.getAccessToken(): Error getting access token: " + e);
