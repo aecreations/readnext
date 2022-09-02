@@ -151,7 +151,7 @@
   },
 
   "btnDisconnect": {
-    "message": "Disconnect…"
+    "message": "Disconnect"
   },
 
   "noSync": {
@@ -202,6 +202,10 @@
   "wizAuthzSuccs": {
     "message": "Read Next has started syncing your reading list to $1.  It may take a moment to finish.",
     "description": "Read Next has started syncing your reading list to <name of cloud file service, e.g. Dropbox>.  It may take a moment to finish."
+  },
+
+  "wizSetupRem": {
+    "message": "Repeat this setup on your other devices where your reading list should be synced with."
   },
 
   "disconnTitle": {
