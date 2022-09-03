@@ -4,6 +4,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
+let gOS;
+let gHostAppName;
+let gHostAppVer;
 let gPrefs;
 let gFirstRun = false;
 let gIsMajorVerUpdate = false;
@@ -76,6 +79,18 @@ void async function () {
 
 async function init()
 {
+  let [brws, platform] = await Promise.all([
+    browser.runtime.getBrowserInfo(),
+    browser.runtime.getPlatformInfo(),
+  ]);
+  
+  gHostAppName = brws.name;
+  gHostAppVer = brws.version;
+  log(`Read Next: Host app: ${gHostAppName} (version ${gHostAppVer})`);
+
+  gOS = platform.os;
+  log("Read Next: OS: " + gOS);
+
   aeReadingList.init();
   
   if (gPrefs.syncEnabled) {
