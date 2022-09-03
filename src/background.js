@@ -105,6 +105,12 @@ async function init()
   });
 
   setUICustomizations();
+
+  // Initialize integration with browser
+  let [tab] = await browser.tabs.query({active: true, currentWindow: true});
+  let bkmk = await getBookmarkFromTab(tab);
+  showPageAction(tab, !!bkmk);
+  updateMenus(tab);
 }
 
 
@@ -135,7 +141,9 @@ async function setUICustomizations()
   }
   else {
     try {
-      await browser.menus.removeAll();
+      await browser.menus.remove("ae-readnext-add-bkmk");
+      await browser.menus.remove("ae-readnext-remove-bkmk");
+      await browser.menus.remove("ae-readnext-submnu");
     }
     catch {}
   }
@@ -386,9 +394,12 @@ async function togglePageActionIcon(aIsBookmarked, aTab=null)
 
 async function updateMenus(aTab=null)
 {
+  if (! gPrefs.showCxtMenu) {
+    return;
+  }
+
   if (! aTab) {
-    let tabs = await browser.tabs.query({active: true, currentWindow: true});
-    aTab = tabs[0];
+    [aTab] = await browser.tabs.query({active: true, currentWindow: true});
   }
 
   let bkmk = await getBookmarkFromTab(aTab);
