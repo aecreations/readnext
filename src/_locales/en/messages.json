@@ -137,6 +137,11 @@
     "message": "Reauthorize"
   },
 
+  "mnuPrefs": {
+    "message": "Read Next Preferences…",
+    "description": "Browser toolbar context menu item for opening extension preferences page"
+  },
+
   "prefsTitle": {
     "message": "Read Next Preferences"
   },

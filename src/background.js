@@ -83,6 +83,12 @@ async function init()
     initSyncInterval();
   }
 
+  browser.menus.create({
+    id: "ae-readnext-prefs",
+    title: browser.i18n.getMessage("mnuPrefs"),
+    contexts: ["browser_action"],
+  });
+
   setUICustomizations();
 }
 
@@ -624,23 +630,21 @@ browser.pageAction.onClicked.addListener(async () => {
 
 
 browser.menus.onClicked.addListener(async (aInfo, aTab) => {
-  let id = getBookmarkIDFromURL(aTab.url);
-
-  switch (aInfo.menuItemId) {
-  case "ae-readnext-add-bkmk":
+  if (aInfo.menuItemId == "ae-readnext-add-bkmk") {
+    let id = getBookmarkIDFromURL(aTab.url);
     bkmk = new aeBookmark(id, aTab.url, sanitizeHTML(aTab.title));
     await setBookmarkFavIcon(id, aTab.favIconUrl);
     await addBookmark(bkmk);
     togglePageActionIcon(true, aTab);
-    break;
-
-  case "ae-readnext-remove-bkmk":
+  }
+  else if (aInfo.menuItemId == "ae-readnext-remove-bkmk") {
+    let id = getBookmarkIDFromURL(aTab.url);
     await aeReadingList.remove(id);
     togglePageActionIcon(false, aTab);
-    break;
-
-  default:
-    break;
+  }
+  else if (aInfo.menuItemId == "ae-readnext-prefs") {
+    browser.runtime.openOptionsPage();
+    return;
   }
 
   updateMenus(aTab);
