@@ -60,7 +60,8 @@ browser.runtime.onInstalled.addListener(async (aInstall) => {
 
 
 // WebExtension initialization
-void async function () {
+void async function ()
+{
   log("Read Next: WebExtension startup initiated.");
 
   gPrefs = await aePrefs.getAllPrefs();
@@ -71,6 +72,11 @@ void async function () {
     log("Initializing Read Next user preferences.");
     gIsFirstRun = true;
     await aePrefs.setUserPrefs(gPrefs);
+  }
+
+  if (! aePrefs.hasPomaikaiPrefs(gPrefs)) {
+    log("Initializing 0.8.3 user preferences.");
+    await aePrefs.setPomaikaiPrefs(gPrefs);
   }
 
   init();
@@ -98,10 +104,16 @@ async function init()
     initSyncInterval();
   }
 
+  // Context menus for browser toolbar button and address bar button
+  browser.menus.create({
+    id: "ae-readnext-add-and-close-tab",
+    title: browser.i18n.getMessage("mnuCloseTabAfterAdd"),
+    contexts: ["page_action"],
+  });
   browser.menus.create({
     id: "ae-readnext-prefs",
     title: browser.i18n.getMessage("mnuPrefs"),
-    contexts: ["browser_action"],
+    contexts: ["browser_action", "page_action"],
   });
 
   setUICustomizations();
@@ -392,12 +404,39 @@ async function togglePageActionIcon(aIsBookmarked, aTab=null)
 }
 
 
-async function updateMenus(aTab=null)
+async function addBookmarkFromPageAction(aCloseTab=false)
 {
-  if (! gPrefs.showCxtMenu) {
-    return;
+  let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
+  let bkmk = await getBookmarkFromTab(actvTab);
+  let bkmkExists = !!bkmk;
+  let id = getBookmarkIDFromURL(actvTab.url);
+  
+  if (bkmkExists) {
+    await aeReadingList.remove(id);
+  }
+  else {
+    bkmk = new aeBookmark(id, actvTab.url, sanitizeHTML(actvTab.title));
+    await setBookmarkFavIcon(id, actvTab.favIconUrl);
+    await addBookmark(bkmk);
   }
 
+  if (aCloseTab) {
+    await closeTab(actvTab.id);
+  }
+  else {
+    showPageAction(actvTab, !bkmkExists);
+    updateMenus();
+  }
+
+  try {
+    await pushLocalChanges();
+  }
+  catch {}
+}
+
+
+async function updateMenus(aTab=null)
+{
   if (! aTab) {
     [aTab] = await browser.tabs.query({active: true, currentWindow: true});
   }
@@ -406,14 +445,20 @@ async function updateMenus(aTab=null)
   let bkmkExists = !!bkmk;
   
   if (bkmkExists) {
-    await browser.menus.update("ae-readnext-add-bkmk", {visible: false});
-    await browser.menus.update("ae-readnext-submnu", {visible: true});
-    await browser.menus.update("ae-readnext-remove-bkmk", {visible: true});
+    await browser.menus.update("ae-readnext-add-and-close-tab", {enabled: false});
+    if (gPrefs.showCxtMenu) {
+      await browser.menus.update("ae-readnext-add-bkmk", {visible: false});
+      await browser.menus.update("ae-readnext-submnu", {visible: true});
+      await browser.menus.update("ae-readnext-remove-bkmk", {visible: true});
+    }
   }
   else {
-    await browser.menus.update("ae-readnext-add-bkmk", {visible: true});
-    await browser.menus.update("ae-readnext-submnu", {visible: false});
-    await browser.menus.update("ae-readnext-remove-bkmk", {visible: false});      
+    await browser.menus.update("ae-readnext-add-and-close-tab", {enabled: true});
+    if (gPrefs.showCxtMenu) {
+      await browser.menus.update("ae-readnext-add-bkmk", {visible: true});
+      await browser.menus.update("ae-readnext-submnu", {visible: false});
+      await browser.menus.update("ae-readnext-remove-bkmk", {visible: false});
+    }
   }
 }
 
@@ -426,6 +471,21 @@ async function getBookmarkFromTab(aTab)
 
   rv = await aeReadingList.get(id);
   return rv;
+}
+
+
+async function closeTab(aTabID)
+{
+  let tabs = await browser.tabs.query({currentWindow: true});
+ 
+  if (tabs.length == 1) {
+    let brwsWnds = await browser.windows.getAll({windowTypes: ["normal"]});
+    if (brwsWnds.length == 1) {
+      // Open a new blank tab to keep the browser window open.
+      await browser.tabs.create({});
+    }
+  }
+  await browser.tabs.remove(aTabID);
 }
 
 
@@ -511,6 +571,10 @@ browser.runtime.onMessage.addListener(aMessage => {
     
   case "reauthorize":
     gFileHostReauthorizer.openReauthorizeDlg();
+    break;
+
+  case "close-tab":
+    return closeTab(aMessage.tabID);
     break;
     
   default:
@@ -631,27 +695,8 @@ browser.browserAction.onClicked.addListener(aTab => {
 });
 
 
-browser.pageAction.onClicked.addListener(async () => {
-  let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
-  let bkmk = await getBookmarkFromTab(actvTab);
-  let bkmkExists = !!bkmk;
-  let id = getBookmarkIDFromURL(actvTab.url);
-  
-  if (bkmkExists) {
-    await aeReadingList.remove(id);
-  }
-  else {
-    bkmk = new aeBookmark(id, actvTab.url, sanitizeHTML(actvTab.title));
-    await setBookmarkFavIcon(id, actvTab.favIconUrl);
-    await addBookmark(bkmk);
-  }
-
-  showPageAction(actvTab, !bkmkExists);
-  updateMenus();
-  try {
-    await pushLocalChanges();
-  }
-  catch {}
+browser.pageAction.onClicked.addListener(() => {
+  addBookmarkFromPageAction(gPrefs.closeTabAfterAdd);
 });
 
 
@@ -662,11 +707,19 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
     await setBookmarkFavIcon(id, aTab.favIconUrl);
     await addBookmark(bkmk);
     togglePageActionIcon(true, aTab);
+
+    if (gPrefs.closeTabAfterAdd) {
+      closeTab(aTab.id);
+    }
   }
   else if (aInfo.menuItemId == "ae-readnext-remove-bkmk") {
     let id = getBookmarkIDFromURL(aTab.url);
     await aeReadingList.remove(id);
     togglePageActionIcon(false, aTab);
+  }
+  else if (aInfo.menuItemId == "ae-readnext-add-and-close-tab") {
+    addBookmarkFromPageAction(true);
+    return;
   }
   else if (aInfo.menuItemId == "ae-readnext-prefs") {
     browser.runtime.openOptionsPage();

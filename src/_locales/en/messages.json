@@ -260,6 +260,23 @@
     "message": "Show unread links in <b>bold</b>"
   },
 
+  "prefHdgActions": {
+    "message": "Actions"
+  },
+
+  "prefCloseTabAfterAdd": {
+    "message": "Close tab after adding to Read Next"
+  },
+
+  "closeTabAfterAddDesc": {
+    "message": "You can also do this by right-clicking <img class=\"inline-icon\" src=\"../img/bookmark.svg\"> in the address bar and then selecting \"Add and Close Tab.\""
+  },
+
+  "mnuCloseTabAfterAdd": {
+    "message": "Add and Close Tab",
+    "description": "Address bar button context menu"
+  },
+
   "reauthzRetry": {
     "message": "Reauthorization to $1 didn't finish successfully.  Do you want to try again?",
     "description": "Reauthorization to <name of cloud file service, e.g. Dropbox> didn't finish successfully.  Do you want to try again?"

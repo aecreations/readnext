@@ -108,6 +108,17 @@ fieldset button {
     margin-left: 4px;
 }
 
+.description {
+    margin: 4px 0 4px 31px;
+    font-size: 13px;
+}
+
+.inline-icon {
+    width: 16px;
+    height: 16px;
+    vertical-align: bottom;
+}
+
 .spinner {
     width: 16px;
     height: 16px;    
@@ -316,6 +327,7 @@ fieldset button {
 }
 
 #disconnect-dlg > .dlg-content > .msgbox-content > .description {
+    margin: revert;
     font-size: 13px;
 }
 

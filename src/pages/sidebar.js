@@ -94,32 +94,33 @@ let gCmd = {
 
   async getBookmarks()
   {
-    let rv;
-    let msg = {
-      id: "get-all-bookmarks"
-    };
-
-    rv = await browser.runtime.sendMessage(msg);
+    let rv = await browser.runtime.sendMessage({id: "get-all-bookmarks"});
     return rv;
   },
 
   async syncBookmarks()
   {
-    let msg = {
+    await browser.runtime.sendMessage({
       id: "sync-reading-list",
       isReauthorized: false,
-    };
-    await browser.runtime.sendMessage(msg);
+    });
   },
 
   async markAsRead(aBookmarkID, aIsRead)
   {
-    let msg = {
+    await browser.runtime.sendMessage({
       id: "mark-as-read",
       bookmarkID: aBookmarkID,
       isRead: aIsRead,
-    };
-    await browser.runtime.sendMessage(msg);
+    });
+  },
+
+  async closeTab(aTabID)
+  {
+    await browser.runtime.sendMessage({
+      id: "close-tab",
+      tabID: aTabID,
+    });
   },
 
 
@@ -814,6 +815,10 @@ $("#add-link, #add-link-cta").on("click", async (aEvent) => {
  
   hideEmptyMsg();
   hideNoUnreadMsg();
+
+  if (gPrefs.closeTabAfterAdd) {
+    gCmd.closeTab(actvTab.id);
+  }
 });
 
 

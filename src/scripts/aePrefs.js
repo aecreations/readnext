@@ -20,6 +20,7 @@ let aePrefs = {
     boldUnreadBkmks: true,
     toolbar: true,
     searchBar: true,
+    closeTabAfterAdd: false,
 
     // Applicable to Google Drive file host.
     syncFileID: null,
@@ -81,6 +82,20 @@ let aePrefs = {
       readingListSliceLength: aeConst.DCS_READING_LIST_SLICE_LENGTH,      
     };
     
+    await this._addPrefs(aPrefs, prefs);
+  },
+
+  hasPomaikaiPrefs(aPrefs)
+  {
+    // Version 0.8.3
+    return aPrefs.hasOwnProperty("closeTabAfterAdd");
+  },
+
+  async setPomaikaiPrefs(aPrefs)
+  {
+    let prefs = {
+      closeTabAfterAdd: false,
+    };
     await this._addPrefs(aPrefs, prefs);
   },
 

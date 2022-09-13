@@ -11,6 +11,7 @@ let gDialogs = {};
 // Page initialization
 $(async () => {
   $("#unread-links-bold-label").html(sanitizeHTML(browser.i18n.getMessage("prefUnreadBold")));
+  $("#close-tab-after-add-desc").html(sanitizeHTML(browser.i18n.getMessage("closeTabAfterAddDesc")));
 
   let prefs = await aePrefs.getAllPrefs();
   showSyncStatus(prefs, true);
@@ -37,6 +38,10 @@ $(async () => {
 
   $("#show-search-bar").prop("checked", prefs.searchBar).on("click", aEvent => {
     aePrefs.setPrefs({searchBar: aEvent.target.checked});
+  });
+
+  $("#close-tab-after-add").prop("checked", prefs.closeTabAfterAdd).on("click", aEvent => {
+    aePrefs.setPrefs({closeTabAfterAdd: aEvent.target.checked});
   });
 
   initDialogs();
