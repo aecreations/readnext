@@ -311,7 +311,6 @@ async function connectCloudFileSvc(aBackend)
     syncBackend: aBackend,
     accessToken: tokens.accessToken,
     refreshToken: tokens.refreshToken,
-    syncEnabledFromExtPrefs: true
   };
 
   await aePrefs.setPrefs(syncPrefs);

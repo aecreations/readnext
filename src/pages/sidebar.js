@@ -323,12 +323,6 @@ $(async () => {
   gPrefs = await aePrefs.getAllPrefs();
   setScrollableContentHeight();
 
-  // TO DO: Is this still needed? Should this be done in the background script?
-  if (gPrefs.syncEnabledFromExtPrefs) {
-    await aePrefs.setPrefs({syncEnabledFromExtPrefs: false});
-  }
-  // END TO DO
-
   $("#empty-instr").html(sanitizeHTML(browser.i18n.getMessage("emptyInstrEx")));
   setCustomizations();
   gSearchBox.init();
