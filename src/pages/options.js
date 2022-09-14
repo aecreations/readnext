@@ -21,7 +21,14 @@ $(async () => {
   });
 
   $("#add-awesome-bar").prop("checked", prefs.showPageAction).on("click", aEvent => {
-    aePrefs.setPrefs({showPageAction: aEvent.target.checked});
+    let showPageAction = aEvent.target.checked;
+    aePrefs.setPrefs({showPageAction});
+    if (showPageAction) {
+      $("#close-tab-after-add-desc").show();
+    }
+    else {
+      $("#close-tab-after-add-desc").hide();
+    }
   });
 
   $("#add-cxt-menu").prop("checked", prefs.showCxtMenu).on("click", aEvent => {
