@@ -135,13 +135,13 @@ async function setUICustomizations()
     browser.menus.create({
       id: "ae-readnext-add-bkmk",
       title: browser.i18n.getMessage("addBkmk"),
-      contexts: ["page"],
+      contexts: ["page", "tab"],
       visible: false,
     });
     browser.menus.create({
       id: "ae-readnext-submnu",
       title: browser.i18n.getMessage("extName"),
-      contexts: ["page"],
+      contexts: ["page", "tab"],
       visible: false,
     });
     browser.menus.create({
