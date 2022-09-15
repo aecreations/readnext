@@ -441,7 +441,12 @@ function addReadingListItem(aBookmark)
 function removeReadingListItem(aBookmarkID)
 {
   let bkmkElt = $(`.reading-list-item[data-id="${aBookmarkID}"]`);
-  bkmkElt.fadeOut(800);
+  bkmkElt.fadeOut(800, function () {
+    this.remove();
+    if ($("#reading-list").children().length == 0) {
+      showEmptyMsg();
+    }
+  });
 }
 
 
@@ -706,9 +711,6 @@ function handleExtMessage(aMessage)
   case "remove-bookmark-event":
     removeReadingListItem(aMessage.bookmarkID);
     $("#add-link").prop("disabled", false);
-    if ($("#reading-list").length == 0) {
-      showEmptyMsg();
-    }
     break;
 
   case "reload-bookmarks-event":
