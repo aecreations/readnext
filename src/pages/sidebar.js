@@ -98,8 +98,13 @@ let gCmd = {
     return rv;
   },
 
-  async syncBookmarks()
+  async syncBookmarks(aShowLoadingProgress=false)
   {
+    if (aShowLoadingProgress) {
+      clearReadingList();
+      showLoadingProgress();
+    }
+
     await browser.runtime.sendMessage({
       id: "sync-reading-list",
       isReauthorized: false,
@@ -360,6 +365,8 @@ async function initReadingList(aLocalDataOnly=false)
 {
   log("Read Next::sidebar.js: initReadingList(): Initializing sidebar" + (aLocalDataOnly ? " (local data only).":"."));
 
+  showLoadingProgress();
+
   await gFavIconMap.init();
 
   if (gPrefs.syncEnabled && !aLocalDataOnly) {
@@ -369,13 +376,16 @@ async function initReadingList(aLocalDataOnly=false)
   else {
     let bkmks = await gCmd.getBookmarks();
     if (! bkmks) {
+      hideLoadingProgress();
       throw new Error("Failed to load reading list");
     }
 
     if (bkmks.length == 0) {
+      hideLoadingProgress();
       showEmptyMsg();
     }
     else {
+      hideLoadingProgress();
       hideEmptyMsg();
       buildReadingList(bkmks, false);
     }
@@ -401,6 +411,7 @@ function addReadingListItem(aBookmark)
 {
   hideEmptyMsg();
   hideNoUnreadMsg();
+  hideLoadingProgress();
   
   let tooltipText = `${aBookmark.title}\n${aBookmark.url}`;
   let listItemDiv = $("<div>").addClass("reading-list-item").attr("title", tooltipText)[0];
@@ -454,7 +465,7 @@ async function rebuildReadingList(aBookmarks, aUnreadOnly, aReloadFavIcons=false
 {
   hideEmptyMsg();
   hideNoUnreadMsg();
-  $("#reading-list").empty();
+  clearReadingList();
 
   if (aReloadFavIcons) {
     gFavIconMap.clear();
@@ -468,6 +479,12 @@ async function rebuildReadingList(aBookmarks, aUnreadOnly, aReloadFavIcons=false
 function isReadingListEmpty()
 {
   return ($("#reading-list").children().length == 0);
+}
+
+
+function clearReadingList()
+{
+  $("#reading-list").empty();
 }
 
 
@@ -606,7 +623,7 @@ function initContextMenu()
         name: browser.i18n.getMessage("mnuSyncNow"),
         className: "ae-menuitem",
         callback(aKey, aOpt) {
-          gCmd.syncBookmarks();
+          gCmd.syncBookmarks(true);
         },
         visible(aKey, aOpt) {
           return initContextMenu.showManualSync;
@@ -665,6 +682,18 @@ function hideNoUnreadMsg()
 }
 
 
+function showLoadingProgress()
+{
+  $("#loading").show();
+}
+
+
+function hideLoadingProgress()
+{
+  $("#loading").hide();
+}
+
+
 function showMessageBar(aMsgBarStor)
 {
   $(`#msgbars, #msgbars > ${aMsgBarStor}`).show();
@@ -717,6 +746,7 @@ function handleExtMessage(aMessage)
     if ($("#reauthz-msgbar").is(":visible")) {
       hideMessageBar();
     }
+    hideLoadingProgress();
     let unreadOnly = gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD;
     rebuildReadingList(aMessage.bookmarks, unreadOnly);
     break;
@@ -740,6 +770,12 @@ function handleExtMessage(aMessage)
     break;
 
   case "sync-setting-changed":
+    if (aMessage.syncEnabled) {
+      hideEmptyMsg();
+      hideNoUnreadMsg();
+      clearReadingList();
+      showLoadingProgress();
+    }
     initContextMenu.showManualSync = aMessage.syncEnabled;
     // The message listener in the background script for the same message
     // returns a promise, so do the same here.

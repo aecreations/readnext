@@ -218,7 +218,7 @@ button, label {
     background-color: #715100;
 }
 
-#welcome, #no-unread {
+#welcome, #no-unread, #loading {
     display: none;
     margin-left: 8px;
     margin-right: 8px;
@@ -264,6 +264,17 @@ button, label {
     height: 24px;
     border-radius: 3px;
     font-size: 11.5px !important;
+}
+
+#loading {
+    margin-top: 16px;
+    text-align: center;
+}
+
+#loading > img {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 12px;
 }
 
 #add-link[disabled] {
