@@ -660,6 +660,13 @@ function setCustomizations()
 
 function showEmptyMsg()
 {
+  if (gPrefs.syncEnabled) {
+    $("#sync-cta").hide();
+  }
+  else {
+    $("#sync-cta").show();
+  }
+
   $("#welcome").show();
 }
 
