@@ -254,10 +254,15 @@ let gSearchBox = {
         $("#search-box-ctr").removeClass("focus");
       })
       .keyup(aEvent => {
-        this.updateSearch();
-        $("#clear-search").css({
-          visibility: (aEvent.target.value ? "visible" : "hidden")
-        });
+        if (aEvent.key == "Escape") {
+          this.reset();
+        }
+        else {
+          this.updateSearch();
+          $("#clear-search").css({
+            visibility: (aEvent.target.value ? "visible" : "hidden")
+          });
+        }
       });
 
     $("#clear-search").click(aEvent => { this.reset() });
@@ -290,6 +295,15 @@ let gSearchBox = {
     let srchResults = await browser.runtime.sendMessage(msg);
 
     this._numMatches = srchResults.length;
+
+    if (srchResults.length == 0) {
+      clearReadingList();
+      hideEmptyMsg();
+      hideNoUnreadMsg();
+      showNotFoundMsg();
+      return;
+    }
+    
     let unreadOnly = gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD;
     await rebuildReadingList(srchResults, unreadOnly);
   },
@@ -315,9 +329,24 @@ let gSearchBox = {
     $("#clear-search").css({visibility: "hidden"});
     this._isActive = false;
     this._numMatches = null;
+    hideNotFoundMsg();
 
     let bkmks = await gCmd.getBookmarks();
+    if (bkmks.length == 0) {
+      clearReadingList();
+      showEmptyMsg();
+      return;
+    }
+
     let unreadOnly = gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD;
+    if (unreadOnly) {
+      let unreadBkmks = bkmks.filter(aBkmk => aBkmk.unread);
+      if (unreadBkmks.length == 0) {
+        showNoUnreadMsg();
+        return;
+      }
+    }
+    
     rebuildReadingList(bkmks, unreadOnly);
   }
 };
@@ -689,6 +718,18 @@ function hideNoUnreadMsg()
 }
 
 
+function showNotFoundMsg()
+{
+  $("#not-found").show();
+}
+
+
+function hideNotFoundMsg()
+{
+  $("#not-found").hide();
+}
+
+
 function showLoadingProgress()
 {
   $("#loading").show();
@@ -887,20 +928,6 @@ $("#filter-unread").click(handleFilterSelection);
 $("#search-box").focus(aEvent => {
   gSearchBox.activate();
 });
-
-
-$("#search-box").on("keyup", aEvent => {
-  if (aEvent.key == "Escape" && gSearchBox.isActivated()) {
-    gSearchBox.reset();
-  }
-  else {
-    if (! gSearchBox.isActivated()) {
-      gSearchBox.activate();
-    }
-    gSearchBox.updateSearch();
-  }
-});
-
 
 $("#reauthorize").on("click", aEvent => {
   browser.runtime.sendMessage({id: "reauthorize"});
