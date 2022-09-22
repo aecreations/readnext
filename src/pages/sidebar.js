@@ -732,6 +732,7 @@ function hideNotFoundMsg()
 
 function showLoadingProgress()
 {
+  $("#search-box").attr("disabled", "true");
   $("#loading").show();
 }
 
@@ -739,6 +740,7 @@ function showLoadingProgress()
 function hideLoadingProgress()
 {
   $("#loading").hide();
+  $("#search-box").removeAttr("disabled");
 }
 
 
