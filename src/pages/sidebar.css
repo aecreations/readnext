@@ -271,12 +271,6 @@ button, label {
     text-align: center;
 }
 
-#loading > img {
-    width: 64px;
-    height: 64px;
-    margin-bottom: 12px;
-}
-
 #add-link[disabled] {
     cursor: not-allowed;
 }
