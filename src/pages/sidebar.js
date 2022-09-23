@@ -823,6 +823,7 @@ function handleExtMessage(aMessage)
     if (aMessage.syncEnabled) {
       hideEmptyMsg();
       hideNoUnreadMsg();
+      hideNotFoundMsg();
       clearReadingList();
       showLoadingProgress();
     }

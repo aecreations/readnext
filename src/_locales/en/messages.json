@@ -95,6 +95,10 @@
     "message": "No unread items."
   },
 
+  "noItems": {
+    "message": "No items found."
+  },
+
   "setupSync": {
     "message": "Set Up Sync"
   },

@@ -218,14 +218,14 @@ button, label {
     background-color: #715100;
 }
 
-#welcome, #no-unread, #loading {
+#welcome, #loading, #no-unread, #not-found {
     display: none;
     margin-left: 8px;
     margin-right: 8px;
     text-align: center;
 }
 
-#welcome p, #no-unread p {
+#welcome p, #no-unread p, #not-found p {
     font-size: 13px;
     text-align: center;
 }
