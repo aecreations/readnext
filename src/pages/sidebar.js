@@ -563,7 +563,7 @@ async function initAddLinkBtn()
   let id = getBookmarkIDFromURL(actvTab.url);
   let bkmkExists = await gCmd.getBookmark(id);
 
-  $("#add-link").prop("disabled", bkmkExists);
+  $("#add-link").prop("disabled", (bkmkExists || !isSupportedURL(actvTab.url)));
 }
 
 
@@ -816,7 +816,7 @@ function handleExtMessage(aMessage)
 
   case "tab-loading-finish-event":
   case "tab-switching-event":
-    $("#add-link").prop("disabled", aMessage.bkmkExists);
+    $("#add-link").prop("disabled", (aMessage.bkmkExists || !aMessage.isSupportedURL));
     break;
 
   case "sync-setting-changed":
@@ -959,6 +959,12 @@ function sanitizeHTML(aHTMLStr)
 function getBookmarkIDFromURL(aURL)
 {
   return md5(aURL);
+}
+
+
+function isSupportedURL(aURL)
+{
+  return (aURL.startsWith("http") || aURL.startsWith("about:reader"));
 }
 
 
