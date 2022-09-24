@@ -13,5 +13,6 @@ class aeBookmark
     this.createdAt = new Date().toISOString();
     this.updatedAt = new Date().toISOString();
     this.unread = true;
+    this.readerMode = false;
   }
 };

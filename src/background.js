@@ -413,16 +413,22 @@ async function togglePageActionIcon(aIsBookmarked, aTab=null)
 async function addBookmarkFromPageAction(aCloseTab=false)
 {
   let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
+  let url = processURL(actvTab.url);
   let bkmk = await getBookmarkFromTab(actvTab);
   let bkmkExists = !!bkmk;
-  let id = getBookmarkIDFromURL(actvTab.url);
+  let id = getBookmarkIDFromURL(url);
   
   if (bkmkExists) {
     await aeReadingList.remove(id);
   }
   else {
-    bkmk = new aeBookmark(id, actvTab.url, sanitizeHTML(actvTab.title));
+    bkmk = new aeBookmark(id, url, sanitizeHTML(actvTab.title));
     await setBookmarkFavIcon(id, actvTab.favIconUrl);
+
+    if (actvTab.isInReaderMode) {
+      bkmk.readerMode = true;
+    }
+
     await addBookmark(bkmk);
   }
 
@@ -711,8 +717,14 @@ browser.pageAction.onClicked.addListener(() => {
 browser.menus.onClicked.addListener(async (aInfo, aTab) => {
   if (aInfo.menuItemId == "ae-readnext-add-bkmk") {
     let id = getBookmarkIDFromURL(aTab.url);
-    bkmk = new aeBookmark(id, aTab.url, sanitizeHTML(aTab.title));
+    let url = processURL(aTab.url);
+    bkmk = new aeBookmark(id, url, sanitizeHTML(aTab.title));
     await setBookmarkFavIcon(id, aTab.favIconUrl);
+
+    if (aTab.isInReaderMode) {
+      bkmk.readerMode = true;
+    }
+    
     await addBookmark(bkmk);
     togglePageActionIcon(true, aTab);
 
@@ -721,7 +733,7 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
     }
   }
   else if (aInfo.menuItemId == "ae-readnext-remove-bkmk") {
-    let id = getBookmarkIDFromURL(aTab.url);
+    let id = getBookmarkIDFromURL(url);
     await aeReadingList.remove(id);
     togglePageActionIcon(false, aTab);
   }
@@ -762,6 +774,21 @@ function sanitizeHTML(aHTMLStr)
 function getBookmarkIDFromURL(aURL)
 {
   return md5(aURL);
+}
+
+
+function processURL(aURL)
+{
+  let rv;
+  
+  if (aURL.startsWith("about:reader")) {
+    rv = decodeURIComponent(aURL.substring(17));
+  }
+  else {
+    rv = aURL;
+  }
+
+  return rv;
 }
 
 

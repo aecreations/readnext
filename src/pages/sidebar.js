@@ -11,35 +11,37 @@ let gPrefs;
 let gCmd = {
   async open(aBookmarkID, aURL)
   {
-    let tabs = await browser.tabs.query({active: true, currentWindow: true});
-    await browser.tabs.update(tabs[0].id, {
-      active: true,
-      url: aURL,
-    });
-  
+    let url = processURL(aURL);
+    let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
+    await browser.tabs.update(actvTab.id, {url, active: true});
+
     this._afterBookmarkOpened(aBookmarkID);
   },
 
   openInNewTab(aBookmarkID, aURL)
   {
-    browser.tabs.create({url: aURL});
+    let url = processURL(aURL);
+    browser.tabs.create({url});
     this._afterBookmarkOpened(aBookmarkID);
   },
 
   openInNewWnd(aBookmarkID, aURL)
   {
-    browser.windows.create({url: aURL});
+    let url = processURL(aURL);
+    browser.windows.create({url});
     this._afterBookmarkOpened(aBookmarkID);
   },
 
   async openInNewPrivateWnd(aBookmarkID, aURL)
   {
+    let url = processURL(aURL);
     try {
-      await browser.windows.create({url: aURL, incognito: true});
+      await browser.windows.create({url, incognito: true});
     }
     catch (e) {
-      console.error("Read Next: Error from sidebar context menu: " + e);
+      console.error("Read Next::sidebar.js: gCmd.openInNewPrivateWnd(): Error from sidebar context menu: " + e);
     }
+
     this._afterBookmarkOpened(aBookmarkID);
   },
 
@@ -139,7 +141,7 @@ let gCmd = {
       // END TEMPORARY
     }
   },
-};
+}; 
 
 
 let gReadingListFilter = {
@@ -879,13 +881,17 @@ $(window).on("resize", aEvent => {
 $("#add-link, #add-link-cta").on("click", async (aEvent) => {
   let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
   let title = sanitizeHTML(actvTab.title);
-  let url = actvTab.url;
+  let url = processURL(actvTab.url);
   let id = getBookmarkIDFromURL(url);
   let bkmk = new aeBookmark(id, url, title);
 
   let iconURL = actvTab.favIconUrl;
   if (iconURL) {
     gFavIconMap.add(id, iconURL);
+  }
+
+  if (actvTab.isInReaderMode) {
+    bkmk.readerMode = true;
   }
 
   try {
@@ -965,6 +971,21 @@ function getBookmarkIDFromURL(aURL)
 function isSupportedURL(aURL)
 {
   return (aURL.startsWith("http") || aURL.startsWith("about:reader"));
+}
+
+
+function processURL(aURL)
+{
+  let rv;
+  
+  if (aURL.startsWith("about:reader")) {
+    rv = decodeURIComponent(aURL.substring(17));
+  }
+  else {
+    rv = aURL;
+  }
+
+  return rv;
 }
 
 
