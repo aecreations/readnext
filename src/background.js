@@ -501,6 +501,17 @@ async function closeTab(aTabID)
 }
 
 
+function showAddBookmarkErrorNotification()
+{
+  browser.notifications.create("add-error", {
+    type: "basic",
+    title: browser.i18n.getMessage("extName"),
+    message: browser.i18n.getMessage("errAddBkmk"),
+    iconUrl: "img/error.svg"
+  });
+}
+
+
 //
 // Event handlers
 //
@@ -716,6 +727,11 @@ browser.pageAction.onClicked.addListener(() => {
 
 browser.menus.onClicked.addListener(async (aInfo, aTab) => {
   if (aInfo.menuItemId == "ae-readnext-add-bkmk") {
+    if (! isSupportedURL(aTab.url)) {
+      showAddBookmarkErrorNotification();
+      return;
+    }
+
     let id = getBookmarkIDFromURL(aTab.url);
     let url = processURL(aTab.url);
     bkmk = new aeBookmark(id, url, sanitizeHTML(aTab.title));
@@ -774,6 +790,12 @@ function sanitizeHTML(aHTMLStr)
 function getBookmarkIDFromURL(aURL)
 {
   return md5(aURL);
+}
+
+
+function isSupportedURL(aURL)
+{
+  return (aURL.startsWith("http") || aURL.startsWith("about:reader"));
 }
 
 

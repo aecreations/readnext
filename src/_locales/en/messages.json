@@ -57,6 +57,11 @@
     "description": "Context menu item for deleting reading list item"
   },
 
+  "errAddBkmk": {
+    "message": "This page can't be added to Read Next.",
+    "description": "Error notification that appears when attempting to add an unsupported URL to the reading list"
+  },
+
   "addLink": {
     "message": "Add Current Tab"
   },
