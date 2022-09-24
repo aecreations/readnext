@@ -135,13 +135,13 @@ async function setUICustomizations()
     browser.menus.create({
       id: "ae-readnext-add-bkmk",
       title: browser.i18n.getMessage("addBkmk"),
-      contexts: ["page"],
+      contexts: ["page", "tab"],
       visible: false,
     });
     browser.menus.create({
       id: "ae-readnext-submnu",
       title: browser.i18n.getMessage("extName"),
-      contexts: ["page"],
+      contexts: ["page", "tab"],
       visible: false,
     });
     browser.menus.create({
@@ -732,8 +732,8 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
       return;
     }
 
-    let id = getBookmarkIDFromURL(aTab.url);
     let url = processURL(aTab.url);
+    let id = getBookmarkIDFromURL(url);
     bkmk = new aeBookmark(id, url, sanitizeHTML(aTab.title));
     await setBookmarkFavIcon(id, aTab.favIconUrl);
 
@@ -749,6 +749,7 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
     }
   }
   else if (aInfo.menuItemId == "ae-readnext-remove-bkmk") {
+    let url = processURL(aTab.url);
     let id = getBookmarkIDFromURL(url);
     await aeReadingList.remove(id);
     togglePageActionIcon(false, aTab);
