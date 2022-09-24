@@ -507,7 +507,7 @@ function showAddBookmarkErrorNotification()
     type: "basic",
     title: browser.i18n.getMessage("extName"),
     message: browser.i18n.getMessage("errAddBkmk"),
-    iconUrl: "img/error.svg"
+    iconUrl: "img/warning-64.png",
   });
 }
 
