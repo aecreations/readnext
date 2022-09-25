@@ -261,7 +261,7 @@ fieldset button {
 }
 
 #connect-dlg {
-    --width: 450px;
+    --width: 514px;
     --height: 350px;
 }
 
@@ -269,26 +269,24 @@ fieldset button {
     font-size: 13px;
 }
 
-#connect-dlg > .dlg-content > #select-file-host {
-    font-size: 15px;
+#connect-dlg .wiz-icon {
+    float: left;
 }
 
-#connect-dlg #file-hosts {
-    width: 100%;
-    font: caption;
-    font-size: 15px;
+#connect-dlg .wiz-icon > img {
+    width: 48px;
+    height: 48px;
 }
 
-#connect-dlg #dwnld-dcs-ctr {
-    text-align: center;
+#connect-dlg #authz-retry > .wiz-icon > img,
+#connect-dlg #authz-network-error > .wiz-icon > img {
+    width: 52px;
+    height: 52px;
+    margin-top: -2px;
 }
 
-#connect-dlg #dwnld-dcs {
-    padding: 0 12px 0;
-}
-
-#connect-dlg #dcs-dwnld-info {
-    font-size: 11.5px;
+#connect-dlg .wiz-body {
+    margin-left: 64px;
 }
 
 #disconnect-dlg {
