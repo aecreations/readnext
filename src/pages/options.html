@@ -6,68 +6,72 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title data-i18n="prefsTitle"></title>
-
-    <link rel="stylesheet" href="options.css"/>
+    <link rel="stylesheet" href="options.css">
   </head>
 
   <body>
-    <main id="ae-readnext-preferences">
-      <h2 data-i18n="prefsTitle"></h2>
-      <button id="about-btn" data-i18n="aboutBtn"></button>
+    <main>
+      <div id="pref-logo">
+        <img id="addon-icon" src="../img/readnext128.svg">
+        <p id="hdr-ext-name" data-i18n="extName"></p>
+      </div>
+      <div id="pref-body">
+	<h2 id="pref-hdg"></h2>
+	<button id="about-btn" data-i18n="aboutBtn"></button>
 
-      <fieldset id="sync-options">
-        <legend data-i18n="prefsHdgSync"></legend>
-        <div id="sync-status-ctr">
-          <div id="sync-icon"></div>
-          <div id="sync-status-info">
-            <p id="sync-status"></div>
+	<fieldset id="sync-options">
+	  <legend data-i18n="prefsHdgSync"></legend>
+	  <div id="sync-status-ctr">
+	    <div id="sync-icon"></div>
+	    <div id="sync-status-info">
+	      <div id="sync-status"></div>
 
-	    <div id="reauthz-msgbar">
-	      <label id="reauthz-msgbar-content"></label>
-	      <div id="msgbar-actions" class="row">
-		<button id="reauthorize" data-i18n="btnReauthz"></button>
+	      <div id="reauthz-msgbar">
+		<label id="reauthz-msgbar-content"></label>
+		<div id="msgbar-actions" class="row">
+		  <button id="reauthorize" data-i18n="btnReauthz"></button>
+		</div>
+	      </div>
+
+	      <div id="sync-actions" class="row">
+		<button id="toggle-sync"></button>
 	      </div>
 	    </div>
+	  </div>
+	</fieldset>
 
-            <div id="sync-actions" class="row">
-              <button id="toggle-sync"></button>
-            </div>
-          </div>
-        </div>
-      </fieldset>
-
-      <fieldset id="general-options">
-        <legend data-i18n="prefsHdgInteg"></legend>
-        <div class="row browser-style">
-          <input type="checkbox" id="add-awesome-bar"><label for="add-awesome-bar" data-i18n="prefAddrBarBtn"></label>
-        </div>
-        <div class="row browser-style">
-          <input type="checkbox" id="add-cxt-menu"><label for="add-cxt-menu" data-i18n="prefCxtMenuBtn"></label>
-        </div>
-      </fieldset>
-      <fieldset id="sidebar-options">
-        <legend data-i18n="prefHdgSidebar"></legend>
-        <div class="row browser-style">
-          <input type="checkbox" id="show-toolbar"><label for="show-toolbar" data-i18n="prefToolbar"></label>
-        </div>
-        <div class="row browser-style">
-          <input type="checkbox" id="show-search-bar"><label for="show-search-bar" data-i18n="prefSrchBar"></label>
-        </div>
-        <div class="row browser-style">
-          <input type="checkbox" id="auto-delete-when-read"><label for="auto-delete-when-read" data-i18n="prefAutoDel"></label>
-        </div>
-        <div class="row browser-style">
-          <input type="checkbox" id="unread-links-bold"><label id="unread-links-bold-label" for="unread-links-bold"></label>
-        </div>
-      </fieldset>
-      <fieldset id="actions-options">
-        <legend data-i18n="prefHdgActions"></legend>
-        <div class="row browser-style">
-          <input type="checkbox" id="close-tab-after-add"><label for="close-tab-after-add" data-i18n="prefCloseTabAfterAdd"></label>
-        </div>
-        <p id="close-tab-after-add-desc" class="description"></p>
-      </fieldset>
+	<fieldset id="general-options">
+	  <legend data-i18n="prefsHdgInteg"></legend>
+	  <div class="row browser-style">
+	    <input type="checkbox" id="add-awesome-bar"><label for="add-awesome-bar" data-i18n="prefAddrBarBtn"></label>
+	  </div>
+	  <div class="row browser-style">
+	    <input type="checkbox" id="add-cxt-menu"><label for="add-cxt-menu" data-i18n="prefCxtMenuBtn"></label>
+	  </div>
+	</fieldset>
+	<fieldset id="sidebar-options">
+	  <legend data-i18n="prefHdgSidebar"></legend>
+	  <div class="row browser-style">
+	    <input type="checkbox" id="show-toolbar"><label for="show-toolbar" data-i18n="prefToolbar"></label>
+	  </div>
+	  <div class="row browser-style">
+	    <input type="checkbox" id="show-search-bar"><label for="show-search-bar" data-i18n="prefSrchBar"></label>
+	  </div>
+	  <div class="row browser-style">
+	    <input type="checkbox" id="auto-delete-when-read"><label for="auto-delete-when-read" data-i18n="prefAutoDel"></label>
+	  </div>
+	  <div class="row browser-style">
+	    <input type="checkbox" id="unread-links-bold"><label id="unread-links-bold-label" for="unread-links-bold"></label>
+	  </div>
+	</fieldset>
+	<fieldset id="actions-options">
+	  <legend data-i18n="prefHdgActions"></legend>
+	  <div class="row browser-style">
+	    <input type="checkbox" id="close-tab-after-add"><label for="close-tab-after-add" data-i18n="prefCloseTabAfterAdd"></label>
+	  </div>
+	  <p id="close-tab-after-add-desc" class="description"></p>
+	</fieldset>
+      </div>  <!-- /pref-body -->
     </main>
 
     <!-- Dialog boxes -->

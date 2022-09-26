@@ -151,8 +151,29 @@
     "description": "Browser toolbar context menu item for opening extension preferences page"
   },
 
+  "mnuPrefsWin": {
+    "message": "Read Next Options…",
+    "description": "Browser toolbar context menu item for opening extension preferences page (Windows only)"
+  },
+
   "prefsTitle": {
-    "message": "Read Next Preferences"
+    "message": "Read Next Preferences",
+    "description": "Extension preferences page title (appears on tab and window title bar)"
+  },
+
+  "prefsTitleWin": {
+    "message": "Read Next Options",
+    "description": "Extension preferences page title on Windows (appears on tab and window title bar)"
+  },
+
+  "prefsHdg": {
+    "message": "Preferences",
+    "description": "Extension preferences page heading"
+  },
+  
+  "prefsHdgWin": {
+    "message": "Options",
+    "description": "Extension preferences page heading on Windows"
   },
 
   "prefsHdgSync": {
@@ -173,7 +194,7 @@
   },
 
   "connectedTo": {
-    "message": "Connected to $1 ($2)"
+    "message": "Connected to $1"
   },
 
   "connWizTitle1": {

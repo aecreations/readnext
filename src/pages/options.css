@@ -8,9 +8,11 @@
 
 
 :root {
+    --color-bkgd: #ededf0;
     --color-main-border: #ddd;
-    --color-main-bkgd: #fefefe;
-    --color-main-border-shadow: #e0e0e0;
+    --color-main-bkgd: #fff;
+    --color-main-border-shadow: #d7d7db;
+    --color-pref-body: #fefefe;
     --color-fieldset-border: #d7d7db;
     --color-dlg-fieldset-border: #d7d7db;
     --color-text-sync-status-on: #003706;
@@ -24,9 +26,11 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
+	--color-bkgd: #1a1a1e;
 	--color-main-border: #0c0c0d;
 	--color-main-bkgd: #2a2a2e;
 	--color-main-border-shadow: #0c0c0d;
+	--color-pref-body: #2a2a2e;
 	--color-fieldset-border: #4a4a4f;
 	--color-dlg-fieldset-border: #585858;
 	--color-text-sync-status-on: #30e60b;
@@ -41,22 +45,51 @@
 
 
 body {
-    background-color: var(--color-main-bkgd);
-    background-image: var(--url-bkgd-img);
+    background-color: var(--color-bkgd);
     color: var(--color-default-text);
 }
 
 main {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+
     width: 640px;
-    margin: 24px auto 24px auto;
-    padding: 16px;
-    background-color: var(--color-main-bkgd);
+    margin: 24px auto 0 auto;
     cursor: inherit;
+    border: 1px solid var(--color-main-border);
+    border-radius: 2px;
+    box-shadow: 0 0 8px 2px var(--color-main-border-shadow);
+    background-color: var(--color-main-bkgd);
+}
+
+#pref-logo {
+    order: 1;
+    flex: 0 1 auto;
+    min-width: 180px;
+    margin-top: 32px;
+    text-align: center;
+}
+
+#pref-body {
+    order: 2;
+    flex: 1 1 auto;
+    border-left: 1px solid var(--color-about-btn-border);
+    padding: 16px 16px 16px 16px;
+    background-color: var(--color-pref-body);
 }
 
 #addon-icon {
-  vertical-align: -14px;
-  margin-right: 8px;
+    width: 96px;
+    height: 96px;
+}
+
+#hdr-ext-name {
+    margin-top: 8px;
+    font-size: 17px;
+    font-weight: 600;
+    text-align: center;
 }
 
 h2 {
@@ -64,8 +97,8 @@ h2 {
     margin-top: 0;
     margin-right: 6px;
     margin-bottom: 20px;
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 28px;
+    font-weight: 200;
     letter-spacing: -0.2px;
 }
 
@@ -146,7 +179,13 @@ fieldset button {
 }
 
 #sync-status {
+    margin-top: 15px;
+    margin-bottom: 15px;
     font-size: 15px;
+}
+
+#fh-usr-info {
+    font-size: 13px;
 }
 
 #sync-actions {

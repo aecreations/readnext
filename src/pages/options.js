@@ -10,6 +10,16 @@ let gDialogs = {};
 
 // Page initialization
 $(async () => {
+  let platform = await browser.runtime.getPlatformInfo();
+  if (platform.os == "win") {
+    document.title = browser.i18n.getMessage("prefsTitleWin");
+    $("#pref-hdg").text(browser.i18n.getMessage("prefsHdgWin"));
+  }
+  else {
+    document.title = browser.i18n.getMessage("prefsTitle");
+    $("#pref-hdg").text(browser.i18n.getMessage("prefsHdg"));
+  }
+
   $("#unread-links-bold-label").html(sanitizeHTML(browser.i18n.getMessage("prefUnreadBold")));
   $("#close-tab-after-add-desc").html(sanitizeHTML(browser.i18n.getMessage("closeTabAfterAddDesc")));
 
@@ -235,7 +245,9 @@ async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
     }
 
     $("#sync-icon").css({backgroundImage: `url("${iconPath}")`});
-    $("#sync-status").text(browser.i18n.getMessage("connectedTo", [fileHostName, fileHostUsr]));
+
+    let syncStatus = sanitizeHTML(`<span id="fh-svc-info">${browser.i18n.getMessage("connectedTo", fileHostName)}</span><br><span id="fh-usr-info">${fileHostUsr}</span>`);
+    $("#sync-status").html(syncStatus);
     $("#toggle-sync").text(browser.i18n.getMessage("btnDisconnect"));
 
     if (aRefetchUserInfo) {
@@ -245,7 +257,7 @@ async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
   }
   else {
     $("#sync-icon").css({backgroundImage: `url("../img/syncReadingList.svg")`});
-    $("#sync-status").text(browser.i18n.getMessage("noSync"));
+    $("#sync-status").empty().text(browser.i18n.getMessage("noSync"));
     $("#toggle-sync").text(browser.i18n.getMessage("btnConnect"));   
   }
 }
@@ -351,12 +363,6 @@ browser.runtime.onMessage.addListener(aMessage => {
       $("#reauthz-msgbar-content").text(browser.i18n.getMessage("reauthzMsgBar", fileHostName));
       $("#reauthz-msgbar").css({display: "flow-root"});
     });
-    break;
-
-  case "sync-setting-changed":
-    // Reached here if reading list sync turned off by user revoking the
-    // optional WebExtension permission "nativeMessaging".
-    showSyncStatus(aMessage.syncEnabled);
     break;
 
   default:
