@@ -11,9 +11,9 @@
 
 :root {
     --color-bkgd: #fbfbfb;
-    --color-main-toolbar-bkgd: #f0f0f0;
+    --color-main-toolbar-bkgd: transparent;
     --color-main-toolbar-text: #0c0c0d;
-    --color-main-toolbar-border: silver;
+    --color-main-toolbar-border: transparent;
     --color-msgbars-bkgd: white;
     --color-cxtmenu-bkgd: #fff;
     --color-cxtmenu-border: #bebebe;

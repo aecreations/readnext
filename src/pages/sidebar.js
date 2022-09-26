@@ -357,6 +357,9 @@ let gSearchBox = {
 
 // Sidebar initialization
 $(async () => {
+  let platform = await browser.runtime.getPlatformInfo();
+  document.body.dataset.os = platform.os;
+  
   gPrefs = await aePrefs.getAllPrefs();
   setScrollableContentHeight();
 
