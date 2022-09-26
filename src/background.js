@@ -97,6 +97,11 @@ async function init()
   gOS = platform.os;
   log("Read Next: OS: " + gOS);
 
+  let prefsStrKey = "mnuPrefs";
+  if (gOS == "win") {
+    prefsStrKey = "mnuPrefsWin";
+  }
+
   aeReadingList.init();
   
   if (gPrefs.syncEnabled) {
@@ -112,7 +117,7 @@ async function init()
   });
   browser.menus.create({
     id: "ae-readnext-prefs",
-    title: browser.i18n.getMessage("mnuPrefs"),
+    title: browser.i18n.getMessage(prefsStrKey),
     contexts: ["browser_action", "page_action"],
   });
 
