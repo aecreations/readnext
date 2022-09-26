@@ -5,6 +5,7 @@
 
 @import url("../lib/contextMenu/jquery.contextMenu.min.css");
 @import url("../style/laf.css");
+@import url("../style/lightbox.css");
 @import url("../style/searchbox.css");
 
 
@@ -353,3 +354,34 @@ button, label {
     border-bottom: 1px solid var(--color-cxtmenu-separator);
 }
 
+/* Customize dialog */
+.lightbox {
+    padding: 12px;
+    font-size: 12px;
+}
+
+.lightbox .dlg-hdg {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.lightbox .row {
+    width: 100%;
+    margin-bottom: 2px;
+}
+
+.lightbox label {
+    font-size: 12px;
+}
+
+.lightbox input[type="checkbox"] {
+    border-radius: 0;
+}
+
+#customize-dlg {
+    top: 88px;
+    --width: 200px;
+    --height: 154px;
+}

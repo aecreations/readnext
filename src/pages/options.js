@@ -21,7 +21,6 @@ $(async () => {
     $("#pref-hdg").text(browser.i18n.getMessage("prefsHdg"));
   }
 
-  $("#unread-links-bold-label").html(sanitizeHTML(browser.i18n.getMessage("prefUnreadBold")));
   $("#close-tab-after-add-desc").html(sanitizeHTML(browser.i18n.getMessage("closeTabAfterAddDesc")));
 
   let prefs = await aePrefs.getAllPrefs();
@@ -44,18 +43,6 @@ $(async () => {
 
   $("#add-cxt-menu").prop("checked", prefs.showCxtMenu).on("click", aEvent => {
     aePrefs.setPrefs({showCxtMenu: aEvent.target.checked});
-  });
-
-  $("#unread-links-bold").prop("checked", prefs.boldUnreadBkmks).on("click", aEvent => {
-    aePrefs.setPrefs({boldUnreadBkmks: aEvent.target.checked});
-  });
-
-  $("#show-toolbar").prop("checked", prefs.toolbar).on("click", aEvent => {
-    aePrefs.setPrefs({toolbar: aEvent.target.checked});
-  });
-
-  $("#show-search-bar").prop("checked", prefs.searchBar).on("click", aEvent => {
-    aePrefs.setPrefs({searchBar: aEvent.target.checked});
   });
 
   $("#close-tab-after-add").prop("checked", prefs.closeTabAfterAdd).on("click", aEvent => {

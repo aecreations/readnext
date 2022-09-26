@@ -6,6 +6,7 @@
 
 const TOOLBAR_HEIGHT = 28;
 let gPrefs;
+let gCustomizeDlg;
 
 // Sidebar actions
 let gCmd = {
@@ -376,6 +377,7 @@ $(async () => {
   initContextMenu.showManualSync = gPrefs.syncEnabled;
   initContextMenu.showOpenInPrivBrws = await browser.extension.isAllowedIncognitoAccess();
   initContextMenu();
+  initDialogs();
 });
 
 
@@ -569,6 +571,30 @@ async function initAddLinkBtn()
 }
 
 
+function initDialogs()
+{
+  gCustomizeDlg = new aeDialog("#customize-dlg");
+  gCustomizeDlg.onFirstInit = function ()
+  {
+    $("#unread-links-bold-label").html(sanitizeHTML(browser.i18n.getMessage("prefUnreadBold")));
+  };
+  gCustomizeDlg.onInit = function ()
+  {
+    $("#unread-links-bold").prop("checked", gPrefs.boldUnreadBkmks).on("click", aEvent => {
+      aePrefs.setPrefs({boldUnreadBkmks: aEvent.target.checked});
+    });
+
+    $("#show-toolbar").prop("checked", gPrefs.toolbar).on("click", aEvent => {
+      aePrefs.setPrefs({toolbar: aEvent.target.checked});
+    });
+
+    $("#show-search-bar").prop("checked", gPrefs.searchBar).on("click", aEvent => {
+      aePrefs.setPrefs({searchBar: aEvent.target.checked});
+    });
+  };
+}
+
+
 function initContextMenu()
 {
   $.contextMenu({
@@ -658,6 +684,14 @@ function initContextMenu()
         },
         visible(aKey, aOpt) {
           return initContextMenu.showManualSync;
+        }
+      },
+      custzSep: "---",
+      customize: {
+        name: browser.i18n.getMessage("mnuCustz"),
+        className: "ae-menuitem",
+        callback(aKey, aOpt) {
+          gCustomizeDlg.showModal(false);
         }
       }
     }

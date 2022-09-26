@@ -19,6 +19,10 @@
     "message": "Close"
   },
 
+  "btnDone": {
+    "message": "Done"
+  },
+
   "btnNext": {
     "message": "Next"
   },
@@ -144,6 +148,16 @@
 
   "btnReauthz": {
     "message": "Reauthorize"
+  },
+
+  "mnuCustz": {
+    "message": "Customize…",
+    "description": "Sidebar context menu item"
+  },
+
+  "custzHdg": {
+    "message": "Customize",
+    "description": "Customize dialog heading"
   },
 
   "mnuPrefs": {
