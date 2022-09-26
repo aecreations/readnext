@@ -5,6 +5,7 @@
  */
 
 
+let gIsInitialized = false;
 let gDialogs = {};
 
 
@@ -62,6 +63,13 @@ $(async () => {
   });
 
   initDialogs();
+  gIsInitialized = true;
+
+  // Check if the cloud file host connection wizard should be opened automatically.
+  let openConnectWiz = await browser.runtime.sendMessage({id: "should-open-connect-wiz"});
+  if (openConnectWiz) {
+    gDialogs.connectWiz.showModal();
+  }
 });
 
 
@@ -351,6 +359,10 @@ async function connectCloudFileSvc(aBackend)
 
 browser.runtime.onMessage.addListener(aMessage => {
   switch (aMessage.id) {
+  case "open-connection-wiz":
+    gDialogs.connectWiz.showModal();
+    break;
+
   case "sync-reading-list":
     if (aMessage.isReauthorized) {
       $("#reauthz-msgbar").css({display: "none"});
@@ -385,6 +397,22 @@ $("#toggle-sync").on("click", async (aEvent) => {
 
 $("#reauthorize").on("click", aEvent => {
   browser.runtime.sendMessage({id: "reauthorize"});
+});
+
+
+$(window).on("focus", async (aEvent) => {
+  // This event handler is meant to be fired when the extension preferences page
+  // was already opened and has been given the focus.  Skip if the page is just
+  // being loaded.
+  if (! gIsInitialized) {
+    return;
+  }
+
+  // Check if the cloud file host connection wizard should be opened automatically.
+  let openConnectWiz = await browser.runtime.sendMessage({id: "should-open-connect-wiz"});
+  if (openConnectWiz) {
+    gDialogs.connectWiz.showModal();
+  } 
 });
 
 

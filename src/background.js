@@ -10,6 +10,7 @@ let gHostAppVer;
 let gPrefs;
 let gFirstRun = false;
 let gIsMajorVerUpdate = false;
+let gAutoOpenConnectWiz = false;
 
 let gFileHostReauthorizer = {
   _notifcnShown: false,
@@ -604,7 +605,22 @@ browser.runtime.onMessage.addListener(aMessage => {
   case "close-tab":
     return closeTab(aMessage.tabID);
     break;
-    
+
+  case "enable-auto-open-connect-wiz":
+    gAutoOpenConnectWiz = true;
+    return Promise.resolve();
+    break;
+
+  case "should-open-connect-wiz":
+    if (gAutoOpenConnectWiz) {
+      gAutoOpenConnectWiz = false;
+      return Promise.resolve(true);
+    }
+    else {
+      return Promise.resolve(false);
+    }
+    break;
+
   default:
     break;
   }

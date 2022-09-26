@@ -911,7 +911,8 @@ $("#add-link, #add-link-cta").on("click", async (aEvent) => {
 });
 
 
-$("#setup-sync").on("click", aEvent => {
+$("#setup-sync").on("click", async (aEvent) => {
+  await browser.runtime.sendMessage({id: "enable-auto-open-connect-wiz"});
   browser.runtime.openOptionsPage();
 });
 
