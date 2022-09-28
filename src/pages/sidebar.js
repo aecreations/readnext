@@ -519,6 +519,7 @@ async function initAddLinkBtn()
   let bkmkExists = await gCmd.getBookmark(id);
 
   $("#add-link").prop("disabled", (bkmkExists || !isSupportedURL(actvTab.url)));
+  $("#add-link-cta").prop("disabled", (bkmkExists || !isSupportedURL(actvTab.url)));
 }
 
 
