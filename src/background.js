@@ -755,7 +755,7 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
 
     let url = processURL(aTab.url);
     let id = getBookmarkIDFromURL(url);
-    bkmk = new aeBookmark(id, url, sanitizeHTML(aTab.title));
+    let bkmk = new aeBookmark(id, url, sanitizeHTML(aTab.title));
     await setBookmarkFavIcon(id, aTab.favIconUrl);
 
     if (aTab.isInReaderMode) {
