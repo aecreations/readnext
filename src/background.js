@@ -374,12 +374,6 @@ async function showPageAction(aTab, aBookmarkExists=null)
 }
 
 
-function isSupportedURL(aURL)
-{
-  return (aURL.startsWith("http") || aURL.startsWith("about:reader"));
-}
-
-
 async function togglePageActionIcon(aIsBookmarked, aTab=null)
 {
   if (! aTab) {
@@ -716,7 +710,12 @@ browser.pageAction.onClicked.addListener(() => {
 
 browser.menus.onClicked.addListener(async (aInfo, aTab) => {
   if (aInfo.menuItemId == "ae-readnext-add-bkmk") {
-    let url = processURL(aTab.url);
+    if (! isSupportedURL(aTab.url)) {
+      warn(`The page at "${aTab.url}" can't be added to Read Next.`);
+      return;
+    }
+
+    let url = processURL(aTb.url);
     let id = getBookmarkIDFromURL(url);
     let bkmk = new aeBookmark(id, url, sanitizeHTML(aTab.title));
     await setBookmarkFavIcon(id, aTab.favIconUrl);
@@ -775,6 +774,12 @@ function sanitizeHTML(aHTMLStr)
 function getBookmarkIDFromURL(aURL)
 {
   return md5(aURL);
+}
+
+
+function isSupportedURL(aURL)
+{
+  return (aURL.startsWith("http") || aURL.startsWith("about:reader"));
 }
 
 
