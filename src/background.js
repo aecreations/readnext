@@ -358,7 +358,7 @@ async function updateBookmarkFavIcon(aBookmarkID, aTabID)
 
 async function showPageAction(aTab, aBookmarkExists=null)
 {
-  if (gPrefs.showPageAction && aTab.url.startsWith("http")) {
+  if (gPrefs.showPageAction && isSupportedURL(aTab.url)) {
     browser.pageAction.show(aTab.id);
 
     if (aBookmarkExists === null) {
@@ -371,6 +371,12 @@ async function showPageAction(aTab, aBookmarkExists=null)
   else {
     browser.pageAction.hide(aTab.id);
   }
+}
+
+
+function isSupportedURL(aURL)
+{
+  return (aURL.startsWith("http") || aURL.startsWith("about:reader"));
 }
 
 
@@ -635,6 +641,7 @@ browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
       await browser.runtime.sendMessage({
         id: "tab-loading-finish-event",
         bkmkExists,
+        isSupportedURL: isSupportedURL(aTab.url),
       });
     }
     catch {}
@@ -680,6 +687,7 @@ browser.tabs.onActivated.addListener(async (aActiveTab) => {
       await browser.runtime.sendMessage({
         id: "tab-switching-event",
         bkmkExists,
+        isSupportedURL: isSupportedURL(tab.url),
       });
     }
     catch {}
