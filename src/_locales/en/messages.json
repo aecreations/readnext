@@ -204,7 +204,7 @@
   },
 
   "noSync": {
-    "message": "Sync your reading list to the cloud using Dropbox."
+    "message": "Synchronize your reading list to the cloud using Dropbox."
   },
 
   "connectedTo": {
@@ -340,7 +340,7 @@
   },
   
   "aboutHomePgLink": {
-    "message": "Visit home page"
+    "message": "Visit website"
   },
 
   "aboutLicLink": {
