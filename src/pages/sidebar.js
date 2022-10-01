@@ -447,6 +447,7 @@ function addReadingListItem(aBookmark)
 {
   hideEmptyMsg();
   hideNoUnreadMsg();
+  hideNotFoundMsg();
   hideLoadingProgress();
   
   let tooltipText = `${aBookmark.title}\n${aBookmark.url}`;
