@@ -696,7 +696,7 @@ function initContextMenu()
         name: browser.i18n.getMessage("mnuCustz"),
         className: "ae-menuitem",
         callback(aKey, aOpt) {
-          gCustomizeDlg.showModal(false);
+          gCustomizeDlg.showModal();
         }
       }
     }
@@ -985,6 +985,29 @@ $("#reauthorize").on("click", aEvent => {
 
 $("#reauthz-msgbar > .msgbar-dismiss").on("click", aEvent => {
   hideMessageBar();
+});
+
+
+$(window).keydown(aEvent => {
+  if (aEvent.key == "Enter") {
+    if (aeDialog.isOpen()) {
+      if (aEvent.target.tagName == "BUTTON" && !aEvent.target.classList.contains("default")) {
+        aEvent.target.click();
+      }
+      else {
+        aeDialog.acceptDlgs();
+      }
+    }
+    else {
+      if (aEvent.target.tagName == "BUTTON") {
+        aEvent.target.click();
+      }
+    }
+    aEvent.preventDefault();
+  }
+  else if (aEvent.key == "Escape" && aeDialog.isOpen()) {
+    aeDialog.cancelDlgs();
+  }
 });
 
 
