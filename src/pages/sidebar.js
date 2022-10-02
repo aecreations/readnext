@@ -971,9 +971,15 @@ $("#reading-list").on("click", async (aEvent) => {
 });
 
 
-$("#filter-all").click(handleFilterSelection);
+$("#filter-all").click(handleFilterSelection)
+  .on("focus", aEvent => { $('#bookmark-filter > input[type="radio"] ~ label').addClass("focused") })
+  .on("blur", aEvent => { $('#bookmark-filter > input[type="radio"] ~ label').removeClass("focused") });
 
-$("#filter-unread").click(handleFilterSelection);
+
+$("#filter-unread").click(handleFilterSelection)
+  .on("focus", aEvent => { $('#bookmark-filter > input[type="radio"] ~ label').addClass("focused") })
+  .on("blur", aEvent => { $('#bookmark-filter > input[type="radio"] ~ label').removeClass("focused") });
+
 
 $("#search-box").focus(aEvent => {
   gSearchBox.activate();
