@@ -168,6 +168,31 @@ class aeDialog
     firstTabStop.focus();
   }
 
+  changeKeyboardNavigableElts(aFocusableEltsArray)
+  {
+    let firstTabStop = aFocusableEltsArray[0];
+    let lastTabStop = aFocusableEltsArray[aFocusableEltsArray.length - 1];
+
+    this._dlgElt.on("keydown.aeDialog", aEvent => {
+      if (aEvent.key == "Tab") {
+        if (aEvent.shiftKey) {
+          if (document.activeElement == firstTabStop) {
+            aEvent.preventDefault();
+            lastTabStop.focus();
+          }
+        }
+        else {
+          if (document.activeElement == lastTabStop) {
+            aEvent.preventDefault();
+            firstTabStop.focus();
+          }
+        }
+      }
+    });
+
+    firstTabStop.focus();
+  }
+
   close()
   {
     this._dlgElt.off("keydown.aeDialog");

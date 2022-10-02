@@ -90,6 +90,7 @@ function initDialogs()
       $("#connect-dlg #authz-succs-msg").text(browser.i18n.getMessage("wizAuthzSuccs", fileHostName));
       btnAccept.removeAttr("disabled").text(browser.i18n.getMessage("btnClose"));
       btnCancel.hide();
+      this.changeKeyboardNavigableElts([btnAccept.get(0)]);
       break;
 
     case "authz-retry":
@@ -377,13 +378,21 @@ $("#toggle-sync").on("click", async (aEvent) => {
     gDialogs.disconnectConfirm.showModal();
   }
   else {
-    gDialogs.connectWiz.showModal(false);
+    gDialogs.connectWiz.showModal();
   }
 });
 
 
 $("#reauthorize").on("click", aEvent => {
   browser.runtime.sendMessage({id: "reauthorize"});
+});
+
+
+$("#about-btn").on("click", aEvent => { gDialogs.about.showModal() });
+
+$(".hyperlink").click(aEvent => {
+  aEvent.preventDefault();
+  gotoURL(aEvent.target.href);
 });
 
 
@@ -403,17 +412,41 @@ $(window).on("focus", async (aEvent) => {
 });
 
 
+$(window).keydown(aEvent => {
+  if (aEvent.key == "Enter") {
+    if (aeDialog.isOpen()) {
+      if (aEvent.target.tagName == "BUTTON" && !aEvent.target.classList.contains("default")) {
+        aEvent.target.click();
+      }
+      else {
+        aeDialog.acceptDlgs();
+      }
+    }
+    else {
+      if (aEvent.target.tagName == "BUTTON") {
+        aEvent.target.click();
+      }
+    }
+    aEvent.preventDefault();
+  }
+  else if (aEvent.key == "Escape" && aeDialog.isOpen()) {
+    aeDialog.cancelDlgs();
+  }
+  else if (aEvent.key == " ") {
+    if (aEvent.target.tagName == "A") {
+      aEvent.target.click();
+    }
+  }
+  else {
+    aeInterxn.suppressBrowserShortcuts(aEvent, aeConst.DEBUG);
+  }
+});
+
+
 $(document).on("contextmenu", aEvent => {
   if (aEvent.target.tagName != "INPUT" && aEvent.target.getAttribute("type") != "text") {
     aEvent.preventDefault();
   }
-});
-
-$("#about-btn").on("click", aEvent => { gDialogs.about.showModal() });
-
-$(".hyperlink").click(aEvent => {
-  aEvent.preventDefault();
-  gotoURL(aEvent.target.href);
 });
 
 
