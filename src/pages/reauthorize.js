@@ -104,14 +104,6 @@ async function closePage()
 // Event handlers
 //
 
-document.addEventListener("keydown", aEvent => {
-  aeInterxn.suppressBrowserShortcuts(aEvent, false);
-});
-
-document.addEventListener("contextmenu", aEvent => {
-  aEvent.preventDefault();
-});
-
 $("#btn-retry").on("click", aEvent => {
   $("#retry-reauthz").hide();
   $("#reauthz-progress").show();
@@ -121,6 +113,29 @@ $("#btn-retry").on("click", aEvent => {
 });
 
 $("#btn-cancel").on("click", async (aEvent) => { await closePage() });
+
+
+$(window).keydown(aEvent => {
+  if (aEvent.key == "Enter") {
+    if (aEvent.target.tagName == "BUTTON" && !aEvent.target.classList.contains("default")) {
+      aEvent.target.click();
+    }
+    else {
+      $("#btn-retry").click();
+    }
+  }
+  else if (aEvent.key == "Escape") {
+    $("#btn-cancel").click();
+  }
+  else {
+    aeInterxn.suppressBrowserShortcuts(aEvent);
+  }
+});
+
+
+$(document).on("contextmenu", aEvent => {
+  aEvent.preventDefault();
+});
 
 
 //
