@@ -504,6 +504,19 @@ function removeReadingListItem(aBookmarkID)
       showEmptyMsg();
       disableReadingListKeyboardNav();
     }
+    else {
+      if (gKeybSelectedIdx !== null) {
+        let numItems = $("#reading-list").children().length;
+        if (gKeybSelectedIdx > numItems - 1) {
+          // Handle deletion of last reading list item.
+          gKeybSelectedIdx--;
+        }
+        else {
+          $("#reading-list").children().removeClass("focused");
+        }
+        $("#reading-list").children().get(gKeybSelectedIdx).classList.add("focused");
+      }
+    }
   });
 }
 
