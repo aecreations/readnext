@@ -735,6 +735,14 @@ function setCustomizations()
   else {
     $("#search-bar").hide();
   }
+
+  let msgBarsCSS = window.getComputedStyle($("#msgbars")[0]);
+  let msgBarsHeight = parseInt(msgBarsCSS.getPropertyValue("height"));
+  if (isNaN(msgBarsHeight)) {
+    msgBarsHeight = 0;
+  }
+  cntHeight -= msgBarsHeight;
+
   $("#scroll-content").css({height: `${cntHeight}px`});
 }
 
@@ -799,12 +807,14 @@ function hideLoadingProgress()
 function showMessageBar(aMsgBarStor)
 {
   $(`#msgbars, #msgbars > ${aMsgBarStor}`).show();
+  setCustomizations();
 }
 
 
 function hideMessageBar()
 {
-  $("#msgbars, #msgbars > .msgbar").hide();
+  $("#msgbars, #msgbars > .inline-msgbar").hide();
+  setCustomizations();
 }
 
 
@@ -1033,6 +1043,11 @@ $("#add-link, #add-link-cta").on("click", async (aEvent) => {
 $("#setup-sync").on("click", async (aEvent) => {
   await browser.runtime.sendMessage({id: "enable-auto-open-connect-wiz"});
   browser.runtime.openOptionsPage();
+});
+
+
+$("#scroll-content").on("focus", aEvent => {
+  $("#reading-list").focus();
 });
 
 
