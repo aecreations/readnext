@@ -840,6 +840,8 @@ function enableReadingListKeyboardNav()
       let readingListItem = $("#reading-list").children().get(gKeybSelectedIdx);
       readingListItem.classList.add("focused");
       readingListItem.scrollIntoView({block: "end", behavior: "smooth"});
+
+      aEvent.preventDefault();
     }
     else if (aEvent.key == "ArrowUp") {
       if (! gKeybSelectedIdx) {
@@ -853,13 +855,15 @@ function enableReadingListKeyboardNav()
       let readingListItem = $("#reading-list").children().get(gKeybSelectedIdx);
       readingListItem.classList.add("focused");
       readingListItem.scrollIntoView({block: "start", behavior: "smooth"});
+
+      aEvent.preventDefault();
     }
     else if (aEvent.key == "Enter" || aEvent.key == " ") {
       let readingListItem = $("#reading-list").children().get(gKeybSelectedIdx);
       gCmd.open(readingListItem.dataset.id, readingListItem.dataset.url);
-    }
 
-    aEvent.preventDefault();
+      aEvent.preventDefault();
+    }
   });
 }
 
@@ -1043,6 +1047,11 @@ $("#reading-list").on("click", async (aEvent) => {
   }
 
   gCmd.open(readingListItem.dataset.id, readingListItem.dataset.url);
+});
+
+
+$("#reading-list").on("blur", aEvent => {
+  $("#reading-list").children().removeClass("focused");
 });
 
 
