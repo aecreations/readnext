@@ -290,10 +290,11 @@ button, label {
 }
 
 .reading-list-item {
-    padding: 4px 8px 4px 8px;
+    padding: 2px 6px 2px 6px;
     min-height: 1em;
     max-height: 3.15em;
     overflow: hidden;
+    border: 2px solid transparent;
 
     font-size: 12px;
     font-weight: normal;
@@ -301,6 +302,10 @@ button, label {
 
 .reading-list-item.unread {
     font-weight: bold;
+}
+
+.reading-list-item.focused {
+    border: 2px solid #45a1ff;
 }
 
 .reading-list-item:hover {

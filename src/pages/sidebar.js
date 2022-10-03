@@ -7,6 +7,7 @@
 const TOOLBAR_HEIGHT = 28;
 let gPrefs;
 let gCustomizeDlg;
+let gKeybSelectedIdx = null;
 
 // Sidebar actions
 let gCmd = {
@@ -434,6 +435,10 @@ function buildReadingList(aBookmarks, aUnreadOnly)
   log(`Read Next: ${aBookmarks.length} items.`);
   log(aBookmarks);
 
+  if (aBookmarks.length > 0) {
+    enableReadingListKeyboardNav();
+  }
+
   for (let bkmk of aBookmarks) {
     if (aUnreadOnly && !bkmk.unread) {
       continue;
@@ -483,6 +488,10 @@ function addReadingListItem(aBookmark)
   listItem.append(favIconCanvas);
   listItem.append(listItemTitle);
   $("#reading-list").append(listItem);
+
+  if (isReadingListKeyboardNavDisabled()) {
+    enableReadingListKeyboardNav();
+  }
 }
 
 
@@ -491,8 +500,9 @@ function removeReadingListItem(aBookmarkID)
   let bkmkElt = $(`.reading-list-item[data-id="${aBookmarkID}"]`);
   bkmkElt.fadeOut(800, function () {
     this.remove();
-    if ($("#reading-list").children().length == 0) {
+    if (isReadingListEmpty()) {
       showEmptyMsg();
+      disableReadingListKeyboardNav();
     }
   });
 }
@@ -522,6 +532,7 @@ function isReadingListEmpty()
 function clearReadingList()
 {
   $("#reading-list").empty();
+  disableReadingListKeyboardNav();
 }
 
 
@@ -800,6 +811,70 @@ function hideMessageBar()
 function handleFilterSelection(aEvent)
 {
   gReadingListFilter.setFilter(aEvent.target.value);
+}
+
+
+function enableReadingListKeyboardNav()
+{
+  $("#reading-list").attr("tabindex", "0");
+
+  $("#reading-list").on("keydown.readingList", aEvent => {
+    if (isReadingListEmpty()) {
+      return;
+    }
+
+    let numItems = $("#reading-list").children().length;
+    
+    if (aEvent.key == "ArrowDown") {
+      if (gKeybSelectedIdx === null) {
+        gKeybSelectedIdx = 0;
+      }
+      else if (gKeybSelectedIdx == numItems - 1) {
+        warn("Read Next::sidebar.js: Reached the end of the reading list.");
+      }
+      else {
+        $("#reading-list").children().get(gKeybSelectedIdx).classList.remove("focused");
+        gKeybSelectedIdx++;
+      }
+
+      let readingListItem = $("#reading-list").children().get(gKeybSelectedIdx);
+      readingListItem.classList.add("focused");
+      readingListItem.scrollIntoView({block: "end", behavior: "smooth"});
+    }
+    else if (aEvent.key == "ArrowUp") {
+      if (! gKeybSelectedIdx) {
+        warn("Read Next::sidebar.js: Reached the start of the reading list.");
+      }
+      else {
+        $("#reading-list").children().get(gKeybSelectedIdx).classList.remove("focused");
+        gKeybSelectedIdx--;
+      }
+
+      let readingListItem = $("#reading-list").children().get(gKeybSelectedIdx);
+      readingListItem.classList.add("focused");
+      readingListItem.scrollIntoView({block: "start", behavior: "smooth"});
+    }
+    else if (aEvent.key == "Enter" || aEvent.key == " ") {
+      let readingListItem = $("#reading-list").children().get(gKeybSelectedIdx);
+      gCmd.open(readingListItem.dataset.id, readingListItem.dataset.url);
+    }
+
+    aEvent.preventDefault();
+  });
+}
+
+
+function disableReadingListKeyboardNav()
+{
+  $("#reading-list").removeAttr("tabindex");
+  $("#reading-list").off("keydown.readingList");
+  gKeybSelectedIdx = null;
+}
+
+
+function isReadingListKeyboardNavDisabled()
+{
+  return ($("#reading-list").attr("tabindex") === undefined);
 }
 
 
