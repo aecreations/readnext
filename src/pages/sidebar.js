@@ -258,6 +258,9 @@ let gSearchBox = {
         $("#search-box-ctr").removeClass("focus");
       })
       .keyup(aEvent => {
+        if (["Tab", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(aEvent.key)) {
+          return;
+        }
         if (aEvent.key == "Escape") {
           this.reset();
         }
