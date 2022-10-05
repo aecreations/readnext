@@ -389,7 +389,6 @@ $(async () => {
 
   // Handle changes to Dark Mode system setting.
   gPrefersColorSchemeMedQry = window.matchMedia("(prefers-color-scheme: dark)");
-  handlePrefersColorSchemeChange(gPrefersColorSchemeMedQry);
   gPrefersColorSchemeMedQry.addEventListener("change", handlePrefersColorSchemeChange);
 });
 
@@ -610,8 +609,7 @@ async function initAddLinkBtn()
   let id = getBookmarkIDFromURL(actvTab.url);
   let bkmkExists = await gCmd.getBookmark(id);
 
-  $("#add-link").prop("disabled", (bkmkExists || !isSupportedURL(actvTab.url)));
-  $("#add-link-cta").prop("disabled", (bkmkExists || !isSupportedURL(actvTab.url)));
+  $("#add-link, #add-link-cta").prop("disabled", (bkmkExists || !isSupportedURL(actvTab.url)));
 }
 
 
@@ -780,7 +778,10 @@ async function handlePrefersColorSchemeChange(aMediaQuery)
   addReadingListItem.isDarkMode = aMediaQuery.matches;
 
   let bkmks = await gCmd.getBookmarks();
-  await rebuildReadingList(bkmks, gReadingListFilter.getSelectedFilter());
+  if (bkmks.length > 0) {
+    let unreadOnly = gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD;
+    await rebuildReadingList(bkmks, unreadOnly);
+  }
 }
 
 
@@ -951,12 +952,12 @@ function handleExtMessage(aMessage)
   switch (aMessage.id) {
   case "add-bookmark-event":
     addReadingListItem(aMessage.bookmark);
-    $("#add-link").prop("disabled", true);
+    $("#add-link, #add-link-cta").prop("disabled", true);
     break;
 
   case "remove-bookmark-event":
     removeReadingListItem(aMessage.bookmarkID);
-    $("#add-link").prop("disabled", false);
+    $("#add-link, #add-link-cta").prop("disabled", false);
     break;
 
   case "reload-bookmarks-event":
@@ -983,8 +984,7 @@ function handleExtMessage(aMessage)
 
   case "tab-loading-finish-event":
   case "tab-switching-event":
-    $("#add-link").prop("disabled", (aMessage.bkmkExists || !aMessage.isSupportedURL));
-    $("#add-link-cta").prop("disabled", (aMessage.bkmkExists || !aMessage.isSupportedURL));
+    $("#add-link, #add-link-cta").prop("disabled", (aMessage.bkmkExists || !aMessage.isSupportedURL));
     break;
 
   case "sync-setting-changed":
