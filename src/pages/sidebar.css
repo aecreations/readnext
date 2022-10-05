@@ -15,9 +15,9 @@
     --color-main-toolbar-text: #0c0c0d;
     --color-main-toolbar-border: transparent;
     --color-msgbars-bkgd: white;
-    --color-bkmk-hover-bkgd: rgba(12, 12, 13, 0.2);
+    --color-bkmk-hover-bkgd: #ddd;
     --color-bkmk-hover-text: #0c0c0d;
-    --color-bkmk-active-bkgd: rgba(12, 12, 13, 0.3);
+    --color-bkmk-active-bkgd: #bbb;
     --color-cxtmenu-bkgd: #fff;
     --color-cxtmenu-border: #bebebe;
     --color-cxtmenu-text: #2f2f2f;
@@ -26,6 +26,8 @@
     --color-cxtmenu-menuitem-active-bkgd: rgba(12, 12, 13, 0.3);
     --color-cxtmenu-separator: #e6e6e6;
 
+    --url-toolbar-btn-add-link: url("../img/add-link.svg");
+    --url-toolbar-btn-add-link-hover: url("../img/add-link-hover.svg");
     --url-empty-sidebar-icon: url("../img/add-link-cta.svg");
     --url-add-link-icon: url("../img/bookmark.svg");
     --toolbar-height: 28px;
@@ -47,6 +49,8 @@
 	--color-cxtmenu-menuitem-hover-text: #fff;
 	--color-cxtmenu-separator: #737373;
 
+	--url-toolbar-btn-add-link: url("../img/add-link-dk.svg");
+	--url-toolbar-btn-add-link-hover: url("../img/add-link-dk.svg");
 	--url-empty-sidebar-icon: url("../img/add-link-cta-dk.svg");
 	--url-add-link-icon: url("../img/bookmark-dk.svg");
     }
@@ -94,13 +98,13 @@ button, label {
     padding-left: 24px;
     border-radius: 3.5px;
     background-color: var(--color-main-toolbar-bkgd);
-    background-image: url("../img/add-link.svg");
+    background-image: var(--url-toolbar-btn-add-link);
     background-position: 4px 2px;
     background-repeat: no-repeat;
 }
 
 #add-link:hover {
-    background-image: url("../img/add-link-hover.svg");
+    background-image: var(--url-toolbar-btn-add-link-hover);
 }
 
 #bookmark-filter > input[type="radio"] {
