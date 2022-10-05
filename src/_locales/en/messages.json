@@ -96,7 +96,7 @@
   },
 
   "emptyInstrEx": {
-    "message": "Click \u201cAdd Current Tab\u201d or click <img class=\"inline-icon\" src=\"../img/bookmark.svg\"> in the address bar.",
+    "message": "Click \u201cAdd Current Tab\u201d or click <span id=\"add-link-icon\" class=\"inline-icon\"></span> in the address bar.",
     "description": "Sidebar empty state instructions (alternate text)"
   },
 

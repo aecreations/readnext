@@ -240,6 +240,7 @@ async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
       }
     }
 
+    $("#sync-icon").removeClass("nosync");
     $("#sync-icon").css({backgroundImage: `url("${iconPath}")`});
 
     let syncStatus = sanitizeHTML(`<span id="fh-svc-info">${browser.i18n.getMessage("connectedTo", fileHostName)}</span><br><span id="fh-usr-info">${fileHostUsr}</span>`);
@@ -252,7 +253,7 @@ async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
     }
   }
   else {
-    $("#sync-icon").css({backgroundImage: `url("../img/syncReadingList.svg")`});
+    $("#sync-icon").css({backgroundImage: ""}).addClass("nosync");
     $("#sync-status").empty().text(browser.i18n.getMessage("noSync"));
     $("#toggle-sync").text(browser.i18n.getMessage("btnConnect"));   
   }

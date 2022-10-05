@@ -22,13 +22,14 @@
     --color-about-btn-border: #ededf0;
     --color-about-btn-border-hover: #ededf0;
     --color-about-btn: black;
+    --url-no-sync-icon: url("../img/syncReadingList.svg");
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
 	--color-bkgd: #1a1a1e;
 	--color-main-border: #0c0c0d;
-	--color-main-bkgd: #2a2a2e;
+	--color-main-bkgd: #242426;
 	--color-main-border-shadow: #0c0c0d;
 	--color-pref-body: #2a2a2e;
 	--color-fieldset-border: #4a4a4f;
@@ -40,6 +41,7 @@
 	--color-about-btn-border: #4a4a4f;
 	--color-about-btn-border-hover: #b1b1b3;
 	--color-about-btn: #f9f9fa;
+	--url-no-sync-icon: url("../img/syncReadingList-dk.svg");
     }
 }
 
@@ -134,6 +136,10 @@ fieldset button {
     font-size: 15px;
 }
 
+button:-moz-focusring:not(:disabled) {
+    border-color: var(--color-pref-body) !important;
+}
+
 .row {
     margin-top: 4px;
     margin-bottom: 2px;
@@ -172,9 +178,12 @@ fieldset button {
     height: 48px;
     margin-right: 16px;
     margin-left: 8px;
-    background-image: url("../img/syncReadingList.svg");
     background-size: contain;
     background-repeat: no-repeat;
+}
+
+#sync-icon.nosync {
+    background-image: var(--url-no-sync-icon);
 }
 
 #sync-status {
@@ -194,6 +203,7 @@ fieldset button {
 #reauthz-msgbar {
     display: none;
     margin-bottom: 12px;
+    margin-left: 72px;
     padding: 8px;
     border-radius: 4px;
     background-color: #ffe900;
@@ -275,6 +285,10 @@ fieldset button {
     padding: 0 24px 0;
     border-radius: 4px;
     font-size: 15px !important;
+}
+
+.lightbox button:-moz-focusring:not(:disabled) {
+    border-color: var(--color-lb-bkgd) !important;
 }
 
 .lightbox input[type="text"] {

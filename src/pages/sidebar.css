@@ -15,6 +15,9 @@
     --color-main-toolbar-text: #0c0c0d;
     --color-main-toolbar-border: transparent;
     --color-msgbars-bkgd: white;
+    --color-bkmk-hover-bkgd: rgba(12, 12, 13, 0.2);
+    --color-bkmk-hover-text: #0c0c0d;
+    --color-bkmk-active-bkgd: rgba(12, 12, 13, 0.3);
     --color-cxtmenu-bkgd: #fff;
     --color-cxtmenu-border: #bebebe;
     --color-cxtmenu-text: #2f2f2f;
@@ -23,7 +26,30 @@
     --color-cxtmenu-menuitem-active-bkgd: rgba(12, 12, 13, 0.3);
     --color-cxtmenu-separator: #e6e6e6;
 
+    --url-empty-sidebar-icon: url("../img/add-link-cta.svg");
+    --url-add-link-icon: url("../img/bookmark.svg");
     --toolbar-height: 28px;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+	--color-bkgd: #38383d;
+	--color-main-toolbar-text: #f9f9fa;
+	--color-msgbars-bkgd: #38383d;
+	--color-bkmk-hover-bkgd: #4a4a4f;
+	--color-bkmk-hover-text: #fff;
+	--color-bkmk-active-bkgd: #606060;
+	--color-cxtmenu-bkgd: #4a4a4f;
+	--color-cxtmenu-border: #38383d;
+	--color-cxtmenu-text: #f9f9fa;
+	--color-cxtmenu-menuitem-active-bkgd: #737373;
+	--color-cxtmenu-menuitem-hover-bkgd: #606060;
+	--color-cxtmenu-menuitem-hover-text: #fff;
+	--color-cxtmenu-separator: #737373;
+
+	--url-empty-sidebar-icon: url("../img/add-link-cta-dk.svg");
+	--url-add-link-icon: url("../img/bookmark-dk.svg");
+    }
 }
 
 
@@ -33,6 +59,7 @@ html {
 
 body {
     background-color: var(--color-bkgd);
+    color: var(--color-default-text);
     overflow-y: hidden;
 }
 
@@ -244,9 +271,12 @@ button, label {
 }
 
 #empty-icon {
-    width: 64px;
-    height: 64px;
+    display: inline-block;
+    width: 96px;
+    height: 96px;
     margin-top: 48px;
+    background-image: var(--url-empty-sidebar-icon);
+    background-size: contain;
 }
 
 #add-link-cta {
@@ -262,6 +292,10 @@ button, label {
 
 #sync-cta p {
     font-size: 11.5px;
+}
+
+#add-link-icon {
+    background-image: var(--url-add-link-icon);
 }
 
 #setup-sync {
@@ -280,8 +314,10 @@ button, label {
 }
 
 .inline-icon {
+    display: inline-block;
     width: 16px;
     height: 16px;
+    background-size: contain;
     vertical-align: bottom;
 }
 
@@ -294,10 +330,12 @@ button, label {
     min-height: 1em;
     max-height: 3.15em;
     overflow: hidden;
-    border: 2px solid transparent;
+    border: 2px solid var(--color-bkgd);
 
     font-size: 12px;
     font-weight: normal;
+
+    color: var(--color-default-text);
 }
 
 .reading-list-item.unread {
@@ -309,12 +347,14 @@ button, label {
 }
 
 .reading-list-item:hover {
-    background-color: rgba(12, 12, 13, 0.2);
-    color: #0c0c0d;
+    background-color: var(--color-bkmk-hover-bkgd);
+    color: var(--color-bkmk-hover-text);
+    border: 2px solid var(--color-bkmk-hover-bkgd);
 }
 
 .reading-list-item:active {
-    background-color: rgba(12, 12, 13, 0.3);
+    background-color: var(--color-bkmk-active-bkgd);
+    border: 2px solid var(--color-bkmk-active-bkgd);
 }
 
 .reading-list-item-title {
