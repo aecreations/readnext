@@ -8,6 +8,7 @@ const TOOLBAR_HEIGHT = 28;
 let gPrefs;
 let gCustomizeDlg;
 let gKeybSelectedIdx = null;
+let gPrefersColorSchemeMedQry;
 
 // Sidebar actions
 let gCmd = {
@@ -385,6 +386,11 @@ $(async () => {
   initContextMenu.showOpenInPrivBrws = await browser.extension.isAllowedIncognitoAccess();
   initContextMenu();
   initDialogs();
+
+  // Handle changes to Dark Mode system setting.
+  gPrefersColorSchemeMedQry = window.matchMedia("(prefers-color-scheme: dark)");
+  handlePrefersColorSchemeChange(gPrefersColorSchemeMedQry);
+  gPrefersColorSchemeMedQry.addEventListener("change", handlePrefersColorSchemeChange);
 });
 
 
@@ -483,7 +489,12 @@ function addReadingListItem(aBookmark)
     img.src = favIconDataURL;
   }
   else {
-    img.src = aeConst.DEFAULT_FAVICON;
+    if (addReadingListItem.isDarkMode) {
+      img.src = aeConst.DEFAULT_FAVICON_DK;
+    }
+    else {
+      img.src = aeConst.DEFAULT_FAVICON; 
+    }
   }
 
   let listItemTitle = $("<div>").addClass("reading-list-item-title").text(aBookmark.title);
@@ -496,6 +507,7 @@ function addReadingListItem(aBookmark)
     enableReadingListKeyboardNav();
   }
 }
+addReadingListItem.isDarkMode = false;
 
 
 function removeReadingListItem(aBookmarkID)
@@ -760,6 +772,15 @@ function setCustomizations()
   cntHeight -= msgBarsHeight;
 
   $("#scroll-content").css({height: `${cntHeight}px`});
+}
+
+
+async function handlePrefersColorSchemeChange(aMediaQuery)
+{
+  addReadingListItem.isDarkMode = aMediaQuery.matches;
+
+  let bkmks = await gCmd.getBookmarks();
+  await rebuildReadingList(bkmks, gReadingListFilter.getSelectedFilter());
 }
 
 

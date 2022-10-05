@@ -20,6 +20,10 @@ let aeConst = {
   HTTP_STATUS_NOT_FOUND: 404,
   HTTP_STATUS_CONFLICT: 409,
 
-  DEFAULT_FAVICON: "chrome://global/skin/icons/defaultFavicon.svg",
+  DEFAULT_FAVICON: "../img/defaultFavicon.svg",
+  DEFAULT_FAVICON_DK: "../img/defaultFavicon-dk.svg",
   FAVICON_LOAD_RETRY_DELAY_MS: 1000,
+
+  BLOG_URL: "https://aecreations.blogspot.com/",
+  FORUM_URL: "https://aecreations.io/forums",
 };
