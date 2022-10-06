@@ -1128,7 +1128,7 @@ $("#reauthorize").on("click", aEvent => {
   browser.runtime.sendMessage({id: "reauthorize"});
 });
 
-$("#reauthz-msgbar > .msgbar-dismiss").on("click", aEvent => {
+$(".inline-msgbar > .inline-msgbar-dismiss").on("click", aEvent => {
   hideMessageBar();
 });
 
