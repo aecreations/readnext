@@ -9,6 +9,7 @@ let gPrefs;
 let gCustomizeDlg;
 let gKeybSelectedIdx = null;
 let gPrefersColorSchemeMedQry;
+let gMsgBarTimeout = null;
 
 // Sidebar actions
 let gCmd = {
@@ -390,7 +391,22 @@ $(async () => {
   // Handle changes to Dark Mode system setting.
   gPrefersColorSchemeMedQry = window.matchMedia("(prefers-color-scheme: dark)");
   gPrefersColorSchemeMedQry.addEventListener("change", handlePrefersColorSchemeChange);
+
+  // Show update message bar if Read Next was just updated.
+  let verUpdate = await browser.runtime.sendMessage({id: "get-ver-update-type"});
+  verUpdate && showVersionUpdateMsgBar(verUpdate);
 });
+
+
+function showVersionUpdateMsgBar(aVersionUpdateType)
+{
+  // TO DO: If major version update, show message bar with CTA button.
+  showMessageBar("#update-msgbar");
+
+  gMsgBarTimeout = window.setTimeout(() => {
+    hideMessageBar("#update-msgbar");
+  }, aeConst.VER_UPDATE_MSGBAR_DELAY_MS);
+}
 
 
 function setScrollableContentHeight()
@@ -850,9 +866,9 @@ function showMessageBar(aMsgBarStor)
 }
 
 
-function hideMessageBar()
+function hideMessageBar(aMsgBarStor)
 {
-  $("#msgbars, #msgbars > .inline-msgbar").hide();
+  $(`#msgbars, #msgbars > ${aMsgBarStor}`).hide();
   setCustomizations();
 }
 
@@ -963,7 +979,7 @@ function handleExtMessage(aMessage)
 
   case "reload-bookmarks-event":
     if ($("#reauthz-msgbar").is(":visible")) {
-      hideMessageBar();
+      hideMessageBar("#reauthz-msgbar");
     }
     hideLoadingProgress();
     let unreadOnly = gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD;
@@ -1130,7 +1146,9 @@ $("#reauthorize").on("click", aEvent => {
 });
 
 $(".inline-msgbar > .inline-msgbar-dismiss").on("click", aEvent => {
-  hideMessageBar();
+  let msgBarID = aEvent.target.parentNode.id;
+  hideMessageBar(`#${msgBarID}`);
+  gMsgBarTimeout && (gMsgBarTimeout = null);
 });
 
 

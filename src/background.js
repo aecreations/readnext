@@ -9,7 +9,7 @@ let gHostAppName;
 let gHostAppVer;
 let gPrefs;
 let gFirstRun = false;
-let gIsMajorVerUpdate = false;
+let gVerUpdateType = null;
 let gAutoOpenConnectWiz = false;
 
 let gFileHostReauthorizer = {
@@ -74,6 +74,26 @@ let gFileHostReauthorizer = {
 browser.runtime.onInstalled.addListener(async (aInstall) => {
   if (aInstall.reason == "install") {
     log("Read Next: Extension installed.");
+  }
+  else if (aInstall.reason == "update") {
+    let oldVer = aInstall.previousVersion;
+    let currVer = browser.runtime.getManifest().version;
+
+    if (currVer == oldVer) {
+      log("Read Next: WebExtension reloaded.");
+    }
+    else {
+      log(`Read Next: Updating from version ${oldVer} to ${currVer}`);
+
+      // Version updates will cause the reading list sidebar to open
+      // automatically, even if the user had closed it (WebExtension bug?).
+      // When this happens, a message bar should appear, informing the user
+      // that Read Next was just updated.
+      // By default, any version update is classified as minor.
+      // Specific version updates are considered major if it such that a CTA
+      // button to the What's New page should appear in the message bar.
+      gVerUpdateType = aeConst.VER_UPDATE_MINOR;
+    }
   }
 });
 
@@ -650,6 +670,9 @@ browser.runtime.onMessage.addListener(aMessage => {
       return Promise.resolve(false);
     }
     break;
+
+  case "get-ver-update-type":
+    return gVerUpdateType;
 
   default:
     break;

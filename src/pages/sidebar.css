@@ -221,8 +221,18 @@ button, label {
     color: #3e2800;
 }
 
+.inline-msgbar.msgbar-success {
+    background-color: #30e60b;
+    color: #003706;
+}
+
 .inline-msgbar.msgbar-warning .inline-msgbar-icon {
     background-image: url("chrome://global/skin/icons/warning.svg");
+    background-size: contain;
+}
+
+.inline-msgbar.msgbar-success .inline-msgbar-icon {
+    background-image: url("../img/check.png");
     background-size: contain;
 }
 
@@ -260,12 +270,20 @@ button, label {
     border-radius: 2px;
 }
 
-.inline-msgbar .inline-msgbar-dismiss:hover {
+.msgbar-warning .inline-msgbar-dismiss:hover {
     background-color: #a47f00;
 }
 
-.inline-msgbar .inline-msgbar-dismiss:active {
+.msgbar-warning .inline-msgbar-dismiss:active {
     background-color: #715100;
+}
+
+.msgbar-success .inline-msgbar-dismiss:hover {
+    background-color: #058b00;
+}
+
+.msgbar-success .inline-msgbar-dismiss:active {
+    background-color: #006504;
 }
 
 #welcome, #loading, #no-unread, #not-found {

@@ -43,16 +43,13 @@
     "message": "The selected action is not available right now."
   },
 
+  "verMinorUpd": {
+    "message": "Read Next was updated!",
+    "description": "Message bar in the Read Next sidebar (appears after Read Next is updated)"
+  },
+
   "fhDropbox": {
     "message": "Dropbox"
-  },
-
-  "linkBlog": {
-    "message": "AE Creations Blog"
-  },
-
-  "linkForum": {
-    "message": "Help and Support Forums"
   },
 
   "addBkmk": {
