@@ -1082,12 +1082,6 @@ $("#setup-sync").on("click", async (aEvent) => {
   browser.runtime.openOptionsPage();
 });
 
-
-$("#scroll-content").on("focus", aEvent => {
-  $("#reading-list").focus();
-});
-
-
 $("#reading-list").on("click", async (aEvent) => {
   let readingListItem;
   if (aEvent.target.className == "reading-list-item-title"
@@ -1099,6 +1093,15 @@ $("#reading-list").on("click", async (aEvent) => {
   }
 
   gCmd.open(readingListItem.dataset.id, readingListItem.dataset.url);
+});
+
+
+$("#reading-list").on("focus", aEvent => {
+  if (whatInput.ask() == "keyboard") {
+    gKeybSelectedIdx === null && (gKeybSelectedIdx = 0);
+    $("#reading-list").children().removeClass("focused");
+    $("#reading-list").children().get(gKeybSelectedIdx).classList.add("focused");
+  } 
 });
 
 
