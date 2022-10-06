@@ -545,6 +545,9 @@ async function rebuildReadingList(aBookmarks, aUnreadOnly, aReloadFavIcons=false
     gFavIconMap.clear();
     await gFavIconMap.init();
   }
+
+  let mediaQry = window.matchMedia("(prefers-color-scheme: dark)");
+  addReadingListItem.isDarkMode = mediaQry.matches;
   
   buildReadingList(aBookmarks, aUnreadOnly);
 }
@@ -775,8 +778,6 @@ function setCustomizations()
 
 async function handlePrefersColorSchemeChange(aMediaQuery)
 {
-  addReadingListItem.isDarkMode = aMediaQuery.matches;
-
   let bkmks = await gCmd.getBookmarks();
   if (bkmks.length > 0) {
     let unreadOnly = gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD;
