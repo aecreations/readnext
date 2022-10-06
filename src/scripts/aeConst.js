@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-let aeConst = {
+const aeConst = Object.freeze({
   DEBUG: true,
   EXTENSION_ID: "readnext@aecreations.github.io",
 
@@ -30,4 +30,4 @@ let aeConst = {
 
   BLOG_URL: "https://aecreations.blogspot.com/",
   FORUM_URL: "https://aecreations.io/forums",
-};
+});
