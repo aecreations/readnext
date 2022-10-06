@@ -47,29 +47,12 @@
     "message": "Dropbox"
   },
 
-  "welcomePageTitle": {
-    "message": "Welcome to Read Next",
-    "description": "Welcome to Read Next (post-installation) page title"
-  },
-
-  "welcInstallSuccessHdg": {
-    "message": "Welcome to Read Next!"
-  },
-
-  "welcInstallSuccessSubh": {
-    "message": "Installation successfully completed."
-  },
-
   "linkBlog": {
     "message": "AE Creations Blog"
   },
 
   "linkForum": {
     "message": "Help and Support Forums"
-  },
-
-  "closeWelcomePg": {
-    "message": "Close This Page"
   },
 
   "addBkmk": {
