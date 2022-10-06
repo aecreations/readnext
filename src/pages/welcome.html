@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title data-i18n="welcomePageTitle"></title>
+
+    <link rel="shortcut icon" href="../img/readnext16.svg">
+    <link rel="stylesheet" href="../style/lightbox.css">
+    <link rel="stylesheet" href="welcome.css">
+  </head>
+
+  <body>
+    <main>
+      <div id="welcome-pg">
+	<div id="main-header">
+	  <div id="install-success-header">
+     	    <img id="install-success-hdr-icon" src="../img/readnext128.svg">
+	    <h1 data-i18n="welcInstallSuccessHdg"></h1>
+	    <div class="subhead" data-i18n="welcInstallSuccessSubh"></div>
+	  </div>
+	</div>
+
+	<div id="welcome-body-content" class="welcome-content">
+	  <h2>Getting Started</h2>
+
+          <div class="sxs">
+            <div class="sxs-left">
+              <span>{Screen shot img}</span>
+            </div>
+	    <div class="sxs-right">
+	      <p>Add a web page to the reading list by clicking the <img class="inline-icon" src="../img/bookmark.svg"> button on the address bar, or selecting <span class="cmd">Add to Read Next</span> from the browser context menu.</p>
+
+	      <div class="callout">
+		<div class="callout-icon"></div>
+		<div class="callout-content">You can't add extension pages such as this page, or Firefox pages such as Add-ons Manager and Firefox Settings.</div>
+	      </div>
+	    </div>
+          </div>
+
+          <div class="sxs">
+            <div class="sxs-left">
+              <span>{Screen shot img}</span>
+            </div>
+	    <div class="sxs-right">
+	      <p>Use the reading list sidebar to browse or search for saved links to the web pages you want to resume reading.  Toggle open or closed by clicking <img class="inline-icon" src="../img/readnext-tb.svg"> on the browser toolbar.</p>
+            </div>
+          </div>
+
+          <div class="sxs">
+            <div class="sxs-left">
+              <span>{Screen shot img}</span>
+            </div>
+	    <div class="sxs-right">
+	      <p>Sync your reading list to the cloud with Dropbox to make it available on your other devices with Firefox and Read Next installed.
+ 	      <br>
+	      <button id="open-ext-prefs" class="welcome-action-btn" data-i18n="setupSync"></button>
+	      </p>
+            </div>
+          </div>
+        </div>
+
+        <div id="welcome-help">
+          <div id="welcome-help-links" class="welcome-action-card-horiz">
+            <div id="aecreations-links">
+              <ul>
+                <li id="link-website"><a data-i18n="aboutHomePgLink"></a></li>
+                <li id="link-forum"><a data-i18n="linkForum"></a></li>
+                <li id="link-blog"><a data-i18n="linkBlog"></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+	<div id="dismiss-welcome-footer">
+	  <button id="dismiss-welcome" data-i18n="closeWelcomePg"></button>
+	</div>
+      </div> <!-- #welcome-page -->
+    </main>
+
+    <script src="../lib/jquery.js"></script>
+    <script src="../lib/purify.min.js"></script>
+    <script src="../scripts/aeConst.js"></script>
+    <script src="../scripts/aeI18n.js"></script>
+    <script src="../scripts/aeInterxn.js"></script>
+    <script src="welcome.js"></script>
+  </body>
+</html>
