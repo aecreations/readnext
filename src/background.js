@@ -11,11 +11,21 @@ let gPrefs;
 let gFirstRun = false;
 let gIsMajorVerUpdate = false;
 let gAutoOpenConnectWiz = false;
-let gReauthzPg = null;
 
 let gFileHostReauthorizer = {
   _notifcnShown: false,
-  
+  _reauthzPg: null,
+
+  get reauthorizePg()
+  {
+    return this._reauthzPg;
+  },
+
+  set reauthorizePg(aWndTabInfo)
+  {
+    return this._reauthzPg = aWndTabInfo;
+  },
+
   async showPrompts()
   {
     let {fileHostName} = aeFileHostUI(gPrefs.syncBackend);
@@ -40,12 +50,12 @@ let gFileHostReauthorizer = {
     }
   },
 
-  async openReauthorizeDlg()
+  async openReauthorizePg()
   {
     // If the reauthorize page is already open, focus its window and tab.
-    if (gReauthzPg) {
-      await browser.windows.update(gReauthzPg.wndID, {focused: true});
-      await browser.tabs.update(gReauthzPg.tabID, {active: true});
+    if (this._reauthzPg) {
+      await browser.windows.update(this._reauthzPg.wndID, {focused: true});
+      await browser.tabs.update(this._reauthzPg.tabID, {active: true});
       return;
     }
 
@@ -607,18 +617,18 @@ browser.runtime.onMessage.addListener(aMessage => {
     break;
     
   case "reauthorize":
-    gFileHostReauthorizer.openReauthorizeDlg();
+    gFileHostReauthorizer.openReauthorizePg();
     break;
 
   case "reauthz-pg-status":
     if (aMessage.isOpen) {
-      gReauthzPg = {
+      gFileHostReauthorizer.reauthorizePg = {
         tabID: aMessage.tabID,
         wndID: aMessage.wndID,
       };
     }
     else {
-      gReauthzPg = null;
+      gFileHostReauthorizer.reauthorizePg = null;
     }
     break;
 
@@ -814,7 +824,7 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
 
 browser.notifications.onClicked.addListener(aNotificationID => {
   if (aNotificationID == "reauthorize") {
-    gFileHostReauthorizer.openReauthorizeDlg();
+    gFileHostReauthorizer.openReauthorizePg();
   }
 });
 
