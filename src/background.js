@@ -11,6 +11,7 @@ let gPrefs;
 let gFirstRun = false;
 let gIsMajorVerUpdate = false;
 let gAutoOpenConnectWiz = false;
+let gReauthzPg = null;
 
 let gFileHostReauthorizer = {
   _notifcnShown: false,
@@ -41,6 +42,13 @@ let gFileHostReauthorizer = {
 
   async openReauthorizeDlg()
   {
+    // If the reauthorize page is already open, focus its window and tab.
+    if (gReauthzPg) {
+      await browser.windows.update(gReauthzPg.wndID, {focused: true});
+      await browser.tabs.update(gReauthzPg.tabID, {active: true});
+      return;
+    }
+
     let backnd = gPrefs.syncBackend;
     let url = browser.runtime.getURL("pages/reauthorize.html?bknd=" + backnd);
     await browser.tabs.create({url});
@@ -600,6 +608,18 @@ browser.runtime.onMessage.addListener(aMessage => {
     
   case "reauthorize":
     gFileHostReauthorizer.openReauthorizeDlg();
+    break;
+
+  case "reauthz-pg-status":
+    if (aMessage.isOpen) {
+      gReauthzPg = {
+        tabID: aMessage.tabID,
+        wndID: aMessage.wndID,
+      };
+    }
+    else {
+      gReauthzPg = null;
+    }
     break;
 
   case "close-tab":

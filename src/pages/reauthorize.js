@@ -9,6 +9,15 @@ $(async () => {
   let platform = await browser.runtime.getPlatformInfo();
   document.body.dataset.os = platform.os;
 
+  let msg = {
+    id: "reauthz-pg-status",
+    isOpen: true,
+  };
+  let tab = await browser.tabs.getCurrent();
+  msg.tabID = tab.id;
+  msg.wndID = tab.windowId;  
+  browser.runtime.sendMessage(msg);
+
   let backnd = getFileHostID();
   reauthorize(backnd);  
 });
@@ -135,6 +144,14 @@ $(window).keydown(aEvent => {
 
 $(document).on("contextmenu", aEvent => {
   aEvent.preventDefault();
+});
+
+
+$(window).on("beforeunload", aEvent => {
+  browser.runtime.sendMessage({
+    id: "reauthz-pg-status",
+    isOpen: false,
+  });
 });
 
 
