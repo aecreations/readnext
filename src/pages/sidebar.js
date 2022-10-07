@@ -9,7 +9,7 @@ let gPrefs;
 let gCustomizeDlg;
 let gKeybSelectedIdx = null;
 let gPrefersColorSchemeMedQry;
-let gMsgBarTimeout = null;
+let gMsgBarTimerID = null;
 
 // Sidebar actions
 let gCmd = {
@@ -403,7 +403,7 @@ function showVersionUpdateMsgBar(aVersionUpdateType)
   // TO DO: If major version update, show message bar with CTA button.
   showMessageBar("#update-msgbar");
 
-  gMsgBarTimeout = window.setTimeout(() => {
+  gMsgBarTimerID = setTimeout(() => {
     hideMessageBar("#update-msgbar");
   }, aeConst.VER_UPDATE_MSGBAR_DELAY_MS);
 }
@@ -1148,7 +1148,7 @@ $("#reauthorize").on("click", aEvent => {
 $(".inline-msgbar > .inline-msgbar-dismiss").on("click", aEvent => {
   let msgBarID = aEvent.target.parentNode.id;
   hideMessageBar(`#${msgBarID}`);
-  gMsgBarTimeout && (gMsgBarTimeout = null);
+  gMsgBarTimerID && clearTimeout(gMsgBarTimerID);    
 });
 
 
