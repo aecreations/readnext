@@ -50,6 +50,14 @@ $(async () => {
   });
 
   initDialogs();
+
+  // Initialize static UI strings for user contribution CTA in the about dialog.
+  let usrContribCTA = $("#usr-contrib-cta");
+  usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-hdg">${browser.i18n.getMessage("aboutContribHdg")}</label>&nbsp;&nbsp;`));
+  usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.DONATE_URL}" class="hyperlink">${browser.i18n.getMessage("aboutDonate")}</a>&nbsp;`));
+  usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-conj">${browser.i18n.getMessage("aboutContribConj")}</label>&nbsp;`));
+  usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.L10N_URL}" class="hyperlink">${browser.i18n.getMessage("aboutL10n")}</a>`));
+
   gIsInitialized = true;
 
   // Check if the cloud file host connection wizard should be opened automatically.
@@ -193,17 +201,21 @@ function initDialogs()
   };
 
   gDialogs.about = new aeDialog("#about-dlg");
-  gDialogs.about.extInfo = null;
+  gDialogs.about.setProps({
+    extInfo: null,
+  });
   gDialogs.about.onFirstInit = function ()
   {
-    let extManifest = browser.runtime.getManifest();
-    this.extInfo = {
-      name: extManifest.name,
-      version: extManifest.version,
-      description: extManifest.description,
-      homePgURL: extManifest.homepage_url,
-    };
-
+    if (! this.extInfo) {
+      let extManifest = browser.runtime.getManifest();
+      this.extInfo = {
+        name: extManifest.name,
+        version: extManifest.version,
+        description: extManifest.description,
+        homePgURL: extManifest.homepage_url,
+      };
+    }
+    
     $("#ext-name").text(this.extInfo.name);
     $("#ext-ver").text(browser.i18n.getMessage("aboutExtVer", this.extInfo.version));
     $("#ext-desc").text(this.extInfo.description);

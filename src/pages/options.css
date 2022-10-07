@@ -450,6 +450,10 @@ button:-moz-focusring:not(:disabled) {
     font-size: 13px;
 }
 
+#about-dlg #ext-author {
+    margin-right: 4px;
+}
+
 #about-dlg #credits label {
     line-height: 18px;
 }

@@ -30,4 +30,6 @@ const aeConst = Object.freeze({
 
   BLOG_URL: "https://aecreations.blogspot.com/",
   FORUM_URL: "https://aecreations.io/forums",
+  DONATE_URL: "https://liberapay.com/aecreations/",
+  L10N_URL: "https://crowdin.com/project/readnext",
 });
