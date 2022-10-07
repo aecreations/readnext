@@ -369,7 +369,8 @@ $(async () => {
   gPrefs = await aePrefs.getAllPrefs();
   setScrollableContentHeight();
 
-  $("#empty-instr").html(sanitizeHTML(browser.i18n.getMessage("emptyInstrEx")));
+  let strKey = gPrefs.showPageAction ? "emptyInstrEx" : "emptyInstr";
+  $("#empty-instr").html(sanitizeHTML(browser.i18n.getMessage(strKey)));
   setCustomizations();
   gSearchBox.init();
 
