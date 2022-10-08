@@ -103,6 +103,10 @@ button, label {
     background-repeat: no-repeat;
 }
 
+body[data-os="win"] #add-link {
+    letter-spacing: -2px;
+}
+
 #add-link:hover {
     background-image: var(--url-toolbar-btn-add-link-hover);
 }
@@ -120,6 +124,10 @@ button, label {
     margin-bottom: 2px;
     padding: 3px 8px 3px 8px;
     background-color: var(--color-main-toolbar-bkgd);
+}
+
+body[data-os="win"] #bookmark-filter > input[type="radio"] ~ label {
+    letter-spacing: -2px;
 }
 
 #add-link:hover,
