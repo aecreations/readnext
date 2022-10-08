@@ -104,7 +104,7 @@ button, label {
 }
 
 body[data-os="win"] #add-link {
-    letter-spacing: -0.2px;
+    letter-spacing: -0.1px;
 }
 
 #add-link:hover {
@@ -127,7 +127,7 @@ body[data-os="win"] #add-link {
 }
 
 body[data-os="win"] #bookmark-filter > input[type="radio"] ~ label {
-    letter-spacing: -0.2px;
+    letter-spacing: -0.1px;
 }
 
 #add-link:hover,
