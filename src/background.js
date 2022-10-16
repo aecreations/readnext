@@ -672,7 +672,7 @@ browser.runtime.onMessage.addListener(aMessage => {
     break;
 
   case "get-ver-update-type":
-    return gVerUpdateType;
+    return Promise.resolve(gVerUpdateType);
 
   default:
     break;
