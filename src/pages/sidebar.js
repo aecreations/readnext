@@ -986,6 +986,12 @@ function handleExtMessage(aMessage)
       hideMessageBar("#reauthz-msgbar");
     }
     hideLoadingProgress();
+
+    if (aMessage.bookmarks.length == 0) {
+      showEmptyMsg();
+      return;
+    }
+
     let unreadOnly = gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD;
     rebuildReadingList(aMessage.bookmarks, unreadOnly);
     break;
