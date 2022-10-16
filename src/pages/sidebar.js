@@ -1061,6 +1061,11 @@ browser.storage.onChanged.addListener((aChanges, aAreaName) => {
 
 
 $(window).on("resize", aEvent => {
+  // The "resize" event is sometimes fired when the sidebar is shown, but
+  // before it is initialized.
+  if (! gPrefs) {
+    return;
+  }
   setScrollableContentHeight();
 });
 
