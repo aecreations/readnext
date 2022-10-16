@@ -366,6 +366,9 @@ $(async () => {
   let platform = await browser.runtime.getPlatformInfo();
   document.body.dataset.os = platform.os;
   
+  log(`Read Next: Sidebar width ${window.innerWidth} px`);
+  $("#toolbar").css({width: `${window.innerWidth}px`});
+
   gPrefs = await aePrefs.getAllPrefs();
   setScrollableContentHeight();
 
