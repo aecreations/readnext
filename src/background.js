@@ -458,6 +458,13 @@ async function addBookmarkFromPageAction(aCloseTab=false)
 {
   let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
   let url = processURL(actvTab.url);
+
+  // Don't allow adding cloud file host authorization pages.
+  if (url.startsWith(aeDropbox.AUTHZ_SRV_URL)) {
+    showAddBookmarkErrorNotification();
+    return;
+  }
+  
   let bkmk = await getBookmarkFromTab(actvTab);
   let bkmkExists = !!bkmk;
   let id = getBookmarkIDFromURL(url);
