@@ -198,6 +198,9 @@ function initDialogs()
 
     this.close();
     showSyncStatus(syncPrefs.syncEnabled);
+    if ($("#reauthz-msgbar").is(":visible")) {
+      $("#reauthz-msgbar").hide();
+    }
   };
 
   gDialogs.about = new aeDialog("#about-dlg");
