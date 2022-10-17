@@ -458,13 +458,6 @@ async function addBookmarkFromPageAction(aCloseTab=false)
 {
   let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
   let url = processURL(actvTab.url);
-
-  // Don't allow adding cloud file host authorization pages.
-  if (url.startsWith(aeDropbox.AUTHZ_SRV_URL)) {
-    showAddBookmarkErrorNotification();
-    return;
-  }
-  
   let bkmk = await getBookmarkFromTab(actvTab);
   let bkmkExists = !!bkmk;
   let id = getBookmarkIDFromURL(url);
@@ -680,6 +673,7 @@ browser.runtime.onMessage.addListener(aMessage => {
 
   case "get-ver-update-type":
     return Promise.resolve(gVerUpdateType);
+    break;
 
   default:
     break;
@@ -730,6 +724,13 @@ browser.windows.onFocusChanged.addListener(async (aWndID) => {
 
 browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
   if (aChangeInfo.status == "complete") {
+    let url = processURL(aTab.url);
+    if (isRestrictedURL(url)) {
+      // Don't show page action button in address bar if URL is restricted,
+      // e.g. cloud file host authorization page.
+      return;
+    }
+    
     let bkmk = await getBookmarkFromTab(aTab);
     let bkmkExists = !!bkmk;
 
@@ -878,6 +879,12 @@ function getBookmarkIDFromURL(aURL)
 function isSupportedURL(aURL)
 {
   return (aURL.startsWith("http") || aURL.startsWith("about:reader"));
+}
+
+
+function isRestrictedURL(aURL)
+{
+  return aURL.startsWith(aeDropbox.AUTHZ_SRV_URL);
 }
 
 
