@@ -25,6 +25,10 @@ $(async () => {
 
   let prefs = await aePrefs.getAllPrefs();
   showSyncStatus(prefs, true);
+  if (! prefs.showPageAction) {
+    $("#close-tab-after-add-desc").hide();
+  }
+
 
   $("#auto-delete-when-read").prop("checked", prefs.deleteReadLinks).on("click", aEvent => {
     aePrefs.setPrefs({deleteReadLinks: aEvent.target.checked});
