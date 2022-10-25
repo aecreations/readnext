@@ -6,10 +6,14 @@
 
 class aeDropbox extends aeAbstractFileHost
 {
+  // Private constants.
   AUTHZ_SRV_KEY = "dropbox";
   ROOT_APP_FOLDER = "";
   
+  // Public static constant.
+  static AUTHZ_SRV_URL = "https://www.dropbox.com/oauth2/authorize";
 
+  
   constructor(aOAuthClient)
   {
     super(aOAuthClient);

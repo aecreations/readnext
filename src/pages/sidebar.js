@@ -366,6 +366,9 @@ $(async () => {
   let platform = await browser.runtime.getPlatformInfo();
   document.body.dataset.os = platform.os;
   
+  log(`Read Next: Sidebar width ${window.innerWidth} px`);
+  $("#toolbar").css({width: `${window.innerWidth}px`});
+
   gPrefs = await aePrefs.getAllPrefs();
   setScrollableContentHeight();
 
@@ -983,6 +986,12 @@ function handleExtMessage(aMessage)
       hideMessageBar("#reauthz-msgbar");
     }
     hideLoadingProgress();
+
+    if (aMessage.bookmarks.length == 0) {
+      showEmptyMsg();
+      return;
+    }
+
     let unreadOnly = gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD;
     rebuildReadingList(aMessage.bookmarks, unreadOnly);
     break;
@@ -1012,6 +1021,11 @@ function handleExtMessage(aMessage)
       hideNotFoundMsg();
       clearReadingList();
       showLoadingProgress();
+    }
+    else {
+      if ($("#reauthz-msgbar").is(":visible")) {
+        hideMessageBar("#reauthz-msgbar");
+      }
     }
     initContextMenu.showManualSync = aMessage.syncEnabled;
     // The message listener in the background script for the same message
@@ -1058,6 +1072,11 @@ browser.storage.onChanged.addListener((aChanges, aAreaName) => {
 
 
 $(window).on("resize", aEvent => {
+  // The "resize" event is sometimes fired when the sidebar is shown, but
+  // before it is initialized.
+  if (! gPrefs) {
+    return;
+  }
   setScrollableContentHeight();
 });
 

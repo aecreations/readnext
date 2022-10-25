@@ -90,6 +90,7 @@ button, label {
 
 #toolbar {
     margin-bottom: -1px;
+    overflow-x: hidden;
 }
 
 #add-link {
@@ -101,10 +102,11 @@ button, label {
     background-image: var(--url-toolbar-btn-add-link);
     background-position: 4px 2px;
     background-repeat: no-repeat;
+    letter-spacing: -0.1px;
 }
 
-body[data-os="win"] #add-link {
-    letter-spacing: -0.1px;
+body[data-os="mac"] #add-link {
+    letter-spacing: -0.2px;
 }
 
 #add-link:hover {
@@ -124,10 +126,11 @@ body[data-os="win"] #add-link {
     margin-bottom: 2px;
     padding: 3px 8px 3px 8px;
     background-color: var(--color-main-toolbar-bkgd);
+    letter-spacing: -0.1px;
 }
 
-body[data-os="win"] #bookmark-filter > input[type="radio"] ~ label {
-    letter-spacing: -0.1px;
+body[data-os="mac"] #bookmark-filter > input[type="radio"] ~ label {
+    letter-spacing: -0.2px;
 }
 
 #add-link:hover,
