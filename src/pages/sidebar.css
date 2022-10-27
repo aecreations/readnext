@@ -106,7 +106,7 @@ button, label {
 }
 
 body[data-os="mac"] #add-link {
-    letter-spacing: -0.2px;
+    letter-spacing: -0.25px;
 }
 
 #add-link:hover {
@@ -130,7 +130,7 @@ body[data-os="mac"] #add-link {
 }
 
 body[data-os="mac"] #bookmark-filter > input[type="radio"] ~ label {
-    letter-spacing: -0.2px;
+    letter-spacing: -0.25px;
 }
 
 #add-link:hover,
