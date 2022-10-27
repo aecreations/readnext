@@ -253,8 +253,8 @@
   },
 
   "wizAuthzInterrupt": {
-    "message": "Authorization to $1 didn't finish successfully.  Do you want to try again?",
-    "description": "Authorization to <name of cloud file service, e.g. Dropbox> didn't finish successfully.  Do you want to try again?"
+    "message": "Read Next didn't finish connecting to $1.  Do you want to try again?",
+    "description": "Read Next didn't finish connecting to <name of cloud file service, e.g. Dropbox>.  Do you want to try again?"
   },
 
   "wizAuthzSuccs": {
@@ -331,8 +331,8 @@
   },
 
   "reauthzRetry": {
-    "message": "Reauthorization to $1 didn't finish successfully.  Do you want to try again?",
-    "description": "Reauthorization to <name of cloud file service, e.g. Dropbox> didn't finish successfully.  Do you want to try again?"
+    "message": "Read Next didn't finish reconnecting to $1.  Do you want to try again?",
+    "description": "Read Next didn't finish reconnecting to <name of cloud file service, e.g. Dropbox>.  Do you want to try again?"
   },
 
   "aboutBtn": {
