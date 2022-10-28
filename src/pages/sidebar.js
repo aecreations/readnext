@@ -397,8 +397,10 @@ $(async () => {
   gPrefersColorSchemeMedQry.addEventListener("change", handlePrefersColorSchemeChange);
 
   // Show update message bar if Read Next was just updated.
-  let verUpdate = await browser.runtime.sendMessage({id: "get-ver-update-type"});
-  verUpdate && showVersionUpdateMsgBar(verUpdate);
+  let {verUpdateType, showBanner} = await browser.runtime.sendMessage({id: "get-ver-update-info"});
+  if (verUpdateType && showBanner) {
+    showVersionUpdateMsgBar(verUpdateType);
+  }
 });
 
 

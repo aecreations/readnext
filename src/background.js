@@ -10,6 +10,7 @@ let gHostAppVer;
 let gPrefs;
 let gFirstRun = false;
 let gVerUpdateType = null;
+let gShowUpdateBanner = false;
 let gAutoOpenConnectWiz = false;
 
 let gFileHostReauthorizer = {
@@ -93,6 +94,7 @@ browser.runtime.onInstalled.addListener(async (aInstall) => {
       // Specific version updates are considered major if it such that a CTA
       // button to the What's New page should appear in the message bar.
       gVerUpdateType = aeConst.VER_UPDATE_MINOR;
+      gShowUpdateBanner = true;
     }
   }
 });
@@ -671,8 +673,17 @@ browser.runtime.onMessage.addListener(aMessage => {
     }
     break;
 
-  case "get-ver-update-type":
-    return Promise.resolve(gVerUpdateType);
+  case "get-ver-update-info":
+    let showBanner = false;
+    if (gVerUpdateType && gShowUpdateBanner) {
+      // Only show the sidebar post-update banner once.
+      gShowUpdateBanner = false;
+      showBanner = true;
+    }
+    return Promise.resolve({
+      verUpdateType: gVerUpdateType,
+      showBanner,
+    });
     break;
 
   default:
