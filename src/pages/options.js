@@ -12,6 +12,8 @@ let gDialogs = {};
 // Page initialization
 $(async () => {
   let platform = await browser.runtime.getPlatformInfo();
+  document.body.dataset.os = platform.os;
+
   if (platform.os == "win") {
     document.title = browser.i18n.getMessage("prefsTitleWin");
     $("#pref-hdg").text(browser.i18n.getMessage("prefsHdgWin"));

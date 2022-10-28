@@ -66,6 +66,10 @@ main {
     background-color: var(--color-main-bkgd);
 }
 
+body[data-os="mac"] main {
+    width: 648px;
+}
+
 #pref-logo {
     order: 1;
     flex: 0 1 auto;
@@ -331,6 +335,10 @@ button:-moz-focusring:not(:disabled) {
 #connect-dlg {
     --width: 514px;
     --height: 350px;
+}
+
+body[data-os="mac"] #connect-dlg {
+    --width: 518px;
 }
 
 #connect-dlg > .dlg-content {
