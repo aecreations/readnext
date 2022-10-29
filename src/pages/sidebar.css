@@ -97,16 +97,13 @@ button, label {
     height: 24px;
     margin-right: 4px;
     padding-left: 24px;
+    padding-right: 4px;
     border-radius: 3.5px;
     background-color: var(--color-main-toolbar-bkgd);
     background-image: var(--url-toolbar-btn-add-link);
     background-position: 4px 2px;
     background-repeat: no-repeat;
     letter-spacing: -0.1px;
-}
-
-body[data-os="mac"] #add-link {
-    letter-spacing: -0.35px;
 }
 
 #add-link:hover {
@@ -122,15 +119,9 @@ body[data-os="mac"] #add-link {
 
 #bookmark-filter > input[type="radio"] ~ label {
     border: 1px solid var(--color-btn-border);
-    margin-top: 2px;
-    margin-bottom: 2px;
-    padding: 3px 8px 3px 8px;
+    padding: 4px 8px 3px 8px;
     background-color: var(--color-main-toolbar-bkgd);
     letter-spacing: -0.1px;
-}
-
-body[data-os="mac"] #bookmark-filter > input[type="radio"] ~ label {
-    letter-spacing: -0.35px;
 }
 
 #add-link:hover,
