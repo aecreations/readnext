@@ -242,8 +242,9 @@ button:-moz-focusring:not(:disabled) {
 }
 
 .inline-msgbar-actions {
-    margin-top: 4px;
-    text-align: right;
+    margin-top: 8px;
+    margin-left: 20px;
+    text-align: left;
 }
 
 #about-btn {
@@ -347,18 +348,43 @@ body[data-os="mac"] #connect-dlg {
 
 #connect-dlg .wiz-icon {
     float: left;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
-#connect-dlg .wiz-icon > img {
+#connect-dlg #authz-prologue > .wiz-icon,
+#connect-dlg #authz-progress > .wiz-icon {
     width: 48px;
     height: 48px;
+    background-image: url("../img/dropbox.svg");
 }
 
-#connect-dlg #authz-retry > .wiz-icon > img,
-#connect-dlg #authz-network-error > .wiz-icon > img {
+#connect-dlg #authz-success > .wiz-icon {
+    width: 48px;
+    height: 48px;
+    background-image: url("../img/success.svg");
+}
+
+#connect-dlg #authz-retry > .wiz-icon {
+    margin-top: -2px;    
     width: 52px;
     height: 52px;
-    margin-top: -2px;
+    background-image: url("../img/question-64.png");
+}
+
+body[data-os="mac"] #connect-dlg #authz-retry > .wiz-icon {
+    background-image: url("../img/question-64-mac.png");
+}
+
+#connect-dlg #authz-network-error > .wiz-icon {
+    margin-top: -2px;    
+    width: 52px;
+    height: 52px;
+    background-image: url("../img/warning-64.png");
+}
+
+body[data-os="mac"] #connect-dlg #authz-network-error > .wiz-icon {
+    background-image: url("../img/warning-64-mac.png");
 }
 
 #connect-dlg .wiz-body {
@@ -387,6 +413,10 @@ body[data-os="mac"] #connect-dlg {
     background-image: url("../img/question-64.png");
     background-size: 52px 52px;
     background-repeat: no-repeat;
+}
+
+body[data-os="mac"] #disconnect-dlg > .dlg-content > .msgbox-icon {
+    background-image: url("../img/question-64-mac.png");
 }
 
 #disconnect-dlg > .dlg-content > .msgbox-content {
