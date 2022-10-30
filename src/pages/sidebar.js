@@ -367,7 +367,6 @@ $(async () => {
   document.body.dataset.os = platform.os;
   
   log(`Read Next: Sidebar width ${window.innerWidth} px`);
-  $("#toolbar").css({width: `${window.innerWidth}px`});
 
   gPrefs = await aePrefs.getAllPrefs();
   setScrollableContentHeight();
@@ -867,14 +866,22 @@ function hideLoadingProgress()
 
 function showMessageBar(aMsgBarStor)
 {
-  $(`#msgbars, #msgbars > ${aMsgBarStor}`).show();
+  $(`#msgbars > ${aMsgBarStor}`).css({display: "flex"});
+  if (! $("#msgbars").hasClass("msgbars-visible")) {
+    $("#msgbars").addClass("msgbars-visible");
+  }
+  
   setCustomizations();
 }
 
 
 function hideMessageBar(aMsgBarStor)
 {
-  $(`#msgbars, #msgbars > ${aMsgBarStor}`).hide();
+  $(`#msgbars > ${aMsgBarStor}`).css({display: "none"});
+  if (! $("#msgbars").children().is(":visible")) {
+    $("#msgbars").removeClass("msgbars-visible");
+  }
+  
   setCustomizations();
 }
 
@@ -1074,6 +1081,7 @@ browser.storage.onChanged.addListener((aChanges, aAreaName) => {
 
 
 $(window).on("resize", aEvent => {
+  warn("Read Next::sidebar.js: The 'resize' event was fired!!");
   // The "resize" event is sometimes fired when the sidebar is shown, but
   // before it is initialized.
   if (! gPrefs) {
