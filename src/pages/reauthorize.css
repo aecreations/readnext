@@ -6,30 +6,28 @@
 
 
 :root {
-    --color-bkgd: #ededf0;
-    --color-main-border: #ddd;
+    --color-bkgd: none;
+    --color-main-border: #ccc;
     --color-main-bkgd: #fff;
-    --color-main-border-shadow: #d7d7db;
+    --color-main-border-shadow: #c8c8c8;
+    --url-bkgd-img: url("../img/bkgd.png");
     --url-prmpt-icon: url("../img/readnext128.svg");
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-	--url-bkgd-img: none;
 	--color-bkgd: #1a1a1e;
 	--color-main-border: #0c0c0d;
 	--color-main-bkgd: #2a2a2e;
 	--color-main-border-shadow: #0c0c0d;
+	--url-bkgd-img: none;
     }
 }
 
 
 body {
-/**
-    background-image: var(--url-bkgd-img);
-    background-repeat: repeat;
-**/
     background-color: var(--color-bkgd);
+    background-image: var(--url-bkgd-img);
     color: var(--color-default-text);
 }
 

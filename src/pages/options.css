@@ -8,10 +8,10 @@
 
 
 :root {
-    --color-bkgd: #ededf0;
-    --color-main-border: #ddd;
+    --color-bkgd: revert;
+    --color-main-border: #ccc;
     --color-main-bkgd: #fff;
-    --color-main-border-shadow: #d7d7db;
+    --color-main-border-shadow: #c8c8c8;
     --color-pref-body: #fefefe;
     --color-fieldset-border: #d7d7db;
     --color-dlg-fieldset-border: #d7d7db;
@@ -22,6 +22,7 @@
     --color-about-btn-border: #ededf0;
     --color-about-btn-border-hover: #ededf0;
     --color-about-btn: black;
+    --url-bkgd-img: url("../img/bkgd.png");
     --url-no-sync-icon: url("../img/syncReadingList.svg");
 }
 
@@ -41,6 +42,7 @@
 	--color-about-btn-border: #4a4a4f;
 	--color-about-btn-border-hover: #b1b1b3;
 	--color-about-btn: #f9f9fa;
+	--url-bkgd-img: none;
 	--url-no-sync-icon: url("../img/syncReadingList-dk.svg");
     }
 }
@@ -48,6 +50,7 @@
 
 body {
     background-color: var(--color-bkgd);
+    background-image: var(--url-bkgd-img);
     color: var(--color-default-text);
 }
 
@@ -100,7 +103,7 @@ body[data-os="mac"] main {
 
 h2 {
     display: inline-block;
-    margin-top: 12px;
+    margin-top: 8px;
     margin-right: 6px;
     font-size: 28px;
     font-weight: 200;
