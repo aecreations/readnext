@@ -376,6 +376,11 @@ $(async () => {
   setCustomizations();
   gSearchBox.init();
 
+  // Handle changes to Dark Mode system setting.
+  gPrefersColorSchemeMedQry = window.matchMedia("(prefers-color-scheme: dark)");
+  gPrefersColorSchemeMedQry.addEventListener("change", handlePrefersColorSchemeChange);
+  addReadingListItem.isDarkMode = gPrefersColorSchemeMedQry.matches;
+
   try {
     await initReadingList();
   }
@@ -390,11 +395,6 @@ $(async () => {
   initContextMenu.showOpenInPrivBrws = await browser.extension.isAllowedIncognitoAccess();
   initContextMenu();
   initDialogs();
-
-  // Handle changes to Dark Mode system setting.
-  gPrefersColorSchemeMedQry = window.matchMedia("(prefers-color-scheme: dark)");
-  gPrefersColorSchemeMedQry.addEventListener("change", handlePrefersColorSchemeChange);
-  addReadingListItem.isDarkMode = gPrefersColorSchemeMedQry.matches;
 
   // Show update message bar if Read Next was just updated.
   let {verUpdateType, showBanner} = await browser.runtime.sendMessage({id: "get-ver-update-info"});
