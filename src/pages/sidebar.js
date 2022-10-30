@@ -496,8 +496,14 @@ function addReadingListItem(aBookmark)
     listItemDiv.classList.add(cls);
   }
 
-  let favIconCanvas = $("<canvas>").addClass("favicon").attr("width", "16").attr("height", "16")[0];
+  let favIconCanvas = $("<canvas>").addClass("favicon").css({width: "16px", height: "16px"})[0];
+  let scale = window.devicePixelRatio;
+  favIconCanvas.width = Math.floor(16 * scale);
+  favIconCanvas.height = Math.floor(16 * scale);
+  
   let canvasCtx = favIconCanvas.getContext("2d");
+  canvasCtx.scale(scale, scale);
+  
   let img = new Image();
   img.onload = function () {
     canvasCtx.clearRect(0, 0, 16, 16);
