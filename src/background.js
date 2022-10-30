@@ -12,6 +12,7 @@ let gFirstRun = false;
 let gVerUpdateType = null;
 let gShowUpdateBanner = false;
 let gAutoOpenConnectWiz = false;
+let gOptionsPgOpen = false;
 
 let gFileHostReauthorizer = {
   _notifcnShown: false,
@@ -40,7 +41,7 @@ let gFileHostReauthorizer = {
     }
     catch {}
     
-    if (! this._notifcnShown) {
+    if (!this._notifcnShown && !gOptionsPgOpen) {
       browser.notifications.create("reauthorize", {
         type: "basic",
         title: browser.i18n.getMessage("extName"),
@@ -67,7 +68,7 @@ let gFileHostReauthorizer = {
 
   reset()
   {
-    this._notificnShown = false;
+    this._notifcnShown = false;
   }
 };
 
@@ -652,6 +653,10 @@ browser.runtime.onMessage.addListener(aMessage => {
     else {
       gFileHostReauthorizer.reauthorizePg = null;
     }
+    break;
+
+  case "options-pg-status":
+    gOptionsPgOpen = aMessage.isOpen;
     break;
 
   case "close-tab":

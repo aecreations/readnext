@@ -31,6 +31,10 @@ $(async () => {
     $("#close-tab-after-add-desc").hide();
   }
 
+  browser.runtime.sendMessage({
+    id: "options-pg-status",
+    isOpen: true,
+  });
 
   $("#auto-delete-when-read").prop("checked", prefs.deleteReadLinks).on("click", aEvent => {
     aePrefs.setPrefs({deleteReadLinks: aEvent.target.checked});
@@ -469,6 +473,14 @@ $(document).on("contextmenu", aEvent => {
   if (aEvent.target.tagName != "INPUT" && aEvent.target.getAttribute("type") != "text") {
     aEvent.preventDefault();
   }
+});
+
+
+$(window).on("beforeunload", aEvent => {
+  browser.runtime.sendMessage({
+    id: "options-pg-status",
+    isOpen: false,
+  });
 });
 
 
