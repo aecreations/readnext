@@ -262,6 +262,10 @@ async function syncReadingList()
       log("Regenerating sync file...");
       await aeSyncReadingList.push(true);
     }
+    else if (e instanceof TypeError) {
+      warn("Read Next: syncReadingList(): Caught TypeError exception.  Unable to connect to the cloud file host.  Details:\n" + e);
+      throw e;
+    }
     else {
       console.error("Read Next: syncReadingList(): An unexpected error has occurred.  Details:\n" + e);
       throw e;
@@ -356,6 +360,9 @@ async function getFileHostUserInfo()
       if (e instanceof aeAuthorizationError) {
         warn("Read Next: getFileHostUserInfo(): Caught aeAuthorizationError exception.  Details:\n" + e);
         await handleAuthorizationError();
+      }
+      else if (e instanceof TypeError) {
+        warn("Read Next: getFileHostUserInfo(): Caught TypeError exception.  Unable to connect to the cloud file host.  Details:\n" + e);
       }
       else {
         console.error("Read Next: getFileHostUserInfo(): An unexpected error has occurred.  Details:\n" + e);

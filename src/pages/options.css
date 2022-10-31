@@ -193,6 +193,14 @@ button:-moz-focusring:not(:disabled) {
     background-image: var(--url-no-sync-icon);
 }
 
+#sync-icon.neterr {
+    background-image: url("../img/warning-64.png");
+}
+
+body[data-os="mac"] #sync-icon.neterr {
+    background-image: url("../img/warning-64-mac.png");
+}
+
 #sync-status {
     margin-top: 15px;
     margin-bottom: 15px;

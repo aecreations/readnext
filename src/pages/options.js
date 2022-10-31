@@ -239,13 +239,18 @@ function initDialogs()
 
 async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
 {
+  let isConnected = true;
+  
   async function getFileHostUsr()
   {
     let rv;
     try {
       rv = await browser.runtime.sendMessage({id: "get-username"});
     }
-    catch {} 
+    catch (e) {
+      log("Read Next::options.js: showSyncStatus() > getFileHostUsr(): Unable to get user info - either the network connection is lost, or the cloud file host is not responding.  Details:\n" + e);
+      isConnected = false;
+    } 
     return rv;
   }
   // END nested function
@@ -265,12 +270,20 @@ async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
       }
     }
 
-    $("#sync-icon").removeClass("nosync");
+    $("#sync-icon").removeClass();
     $("#sync-icon").css({backgroundImage: `url("${iconPath}")`});
+    $("#sync-status").removeClass();
 
-    let syncStatus = sanitizeHTML(`<span id="fh-svc-info">${browser.i18n.getMessage("connectedTo", fileHostName)}</span><br><span id="fh-usr-info">${fileHostUsr}</span>`);
-    $("#sync-status").html(syncStatus);
-    $("#toggle-sync").text(browser.i18n.getMessage("btnDisconnect"));
+    if (isConnected) {
+      let syncStatus = sanitizeHTML(`<span id="fh-svc-info">${browser.i18n.getMessage("connectedTo", fileHostName)}</span><br><span id="fh-usr-info">${fileHostUsr}</span>`);
+      $("#sync-status").html(syncStatus);
+      $("#toggle-sync").text(browser.i18n.getMessage("btnDisconnect"));
+    }
+    else {
+      $("#sync-icon").css({backgroundImage: ""}).addClass("neterr");
+      $("#sync-status").addClass("error").text(browser.i18n.getMessage("connWizTitNetErr"));
+      $("#toggle-sync").text(browser.i18n.getMessage("btnDisconnect"));
+    }
 
     if (aRefetchUserInfo) {
       // Refetch cloud file service user info to check if reauthz is required.
@@ -278,8 +291,8 @@ async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
     }
   }
   else {
-    $("#sync-icon").css({backgroundImage: ""}).addClass("nosync");
-    $("#sync-status").empty().text(browser.i18n.getMessage("noSync"));
+    $("#sync-icon").css({backgroundImage: ""}).removeClass().addClass("nosync");
+    $("#sync-status").empty().removeClass().text(browser.i18n.getMessage("noSync"));
     $("#toggle-sync").text(browser.i18n.getMessage("btnConnect"));   
   }
 }
@@ -380,6 +393,10 @@ browser.runtime.onMessage.addListener(aMessage => {
   case "sync-reading-list":
     if (aMessage.isReauthorized) {
       $("#reauthz-msgbar").css({display: "none"});
+      // Update sync status if necessary.
+      aePrefs.getAllPrefs().then(aPrefs => {
+        showSyncStatus(aPrefs);
+      });
     }
     break;
 
