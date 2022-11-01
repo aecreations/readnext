@@ -411,7 +411,18 @@ function showVersionUpdateMsgBar(aVersionUpdateType)
 
   gMsgBarTimerID = setTimeout(() => {
     hideMessageBar("#update-msgbar");
-  }, aeConst.VER_UPDATE_MSGBAR_DELAY_MS);
+  }, aeConst.MSGBAR_DELAY_MS);
+}
+
+
+function showNetworkConnectErrorMsgBar(aFileHostName)
+{
+  $("#neterr-msgbar-content").text(browser.i18n.getMessage("errNoConn", aFileHostName));
+  showMessageBar("#neterr-msgbar");
+
+  gMsgBarTimerID = setTimeout(() => {
+    hideMessageBar("#neterr-msgbar");
+  }, aeConst.MSGBAR_DELAY_MS);
 }
 
 
@@ -1049,6 +1060,13 @@ function handleExtMessage(aMessage)
     return Promise.resolve();
 
   case "sync-failed-authz-error":
+    if (isReadingListEmpty()) {
+      initReadingList(true);
+    }
+    break;
+
+  case "sync-failed-netwk-error":
+    showNetworkConnectErrorMsgBar(aMessage.fileHostName);
     if (isReadingListEmpty()) {
       initReadingList(true);
     }

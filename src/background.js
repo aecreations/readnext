@@ -264,6 +264,7 @@ async function syncReadingList()
     }
     else if (e instanceof TypeError) {
       warn("Read Next: syncReadingList(): Caught TypeError exception.  Unable to connect to the cloud file host.  Details:\n" + e);
+      await handleNetworkConnectError();
       throw e;
     }
     else {
@@ -299,6 +300,19 @@ async function handleAuthorizationError()
     log("Read Next: handleAuthorizationError(): Suspending auto sync interval.");
     await browser.alarms.clear("sync-reading-list");
   }
+}
+
+
+async function handleNetworkConnectError()
+{
+  let {fileHostName} = aeFileHostUI(gPrefs.syncBackend);
+  try {
+    await browser.runtime.sendMessage({
+      id: "sync-failed-netwk-error",
+      fileHostName,
+    });
+  }
+  catch {}
 }
 
 

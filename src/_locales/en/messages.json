@@ -279,6 +279,11 @@
     "message": "Disconnect"
   },
 
+  "errNoConn": {
+    "message": "Read Next couldn't connect to $1",
+    "description": "Read Next couldn't connect to <name of cloud file service, e.g. Dropbox>"
+  },
+
   "prefToolbar": {
     "message": "Show toolbar"
   },
