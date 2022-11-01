@@ -207,12 +207,20 @@ body[data-os="mac"] #sync-icon.neterr {
     font-size: 15px;
 }
 
+#sync-status-spinner {
+    display: none;
+}
+
 #fh-usr-info {
     font-size: 13px;
 }
 
 #sync-actions {
     margin-left: 72px;
+}
+
+#toggle-sync {
+    display: none;
 }
 
 .inline-msgbar .inline-msgbar-icon {

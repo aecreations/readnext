@@ -26,7 +26,11 @@ $(async () => {
   $("#close-tab-after-add-desc").html(sanitizeHTML(browser.i18n.getMessage("closeTabAfterAddDesc")));
 
   let prefs = await aePrefs.getAllPrefs();
+  if (prefs.syncEnabled) {
+    $("#sync-status-spinner").show();
+  }
   showSyncStatus(prefs, true);
+
   if (! prefs.showPageAction) {
     $("#close-tab-after-add-desc").hide();
   }
@@ -255,11 +259,18 @@ async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
   }
   // END nested function
 
+  let toggleSyncBtn = $("#toggle-sync");
+
   if (aPrefs.syncEnabled) {
     let {fileHostName, iconPath} = aeFileHostUI(aPrefs.syncBackend);
     let fileHostUsr = aPrefs.fileHostUsr;
 
-    if (! fileHostUsr) {
+    if (fileHostUsr) {
+      if (! toggleSyncBtn.is(":visible")) {
+        toggleSyncBtn.show();
+      }
+    }
+    else {
       fileHostUsr = await getFileHostUsr();
 
       if (fileHostUsr) {
@@ -273,16 +284,19 @@ async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
     $("#sync-icon").removeClass();
     $("#sync-icon").css({backgroundImage: `url("${iconPath}")`});
     $("#sync-status").removeClass();
+    if ($("#sync-status-spinner").is(":visible")) {
+      $("#sync-status-spinner").hide();
+    }
 
     if (isConnected) {
       let syncStatus = sanitizeHTML(`<span id="fh-svc-info">${browser.i18n.getMessage("connectedTo", fileHostName)}</span><br><span id="fh-usr-info">${fileHostUsr}</span>`);
       $("#sync-status").html(syncStatus);
-      $("#toggle-sync").text(browser.i18n.getMessage("btnDisconnect"));
+      toggleSyncBtn.text(browser.i18n.getMessage("btnDisconnect"));
     }
     else {
       $("#sync-icon").css({backgroundImage: ""}).addClass("neterr");
-      $("#sync-status").addClass("error").text(browser.i18n.getMessage("connWizTitNetErr"));
-      $("#toggle-sync").text(browser.i18n.getMessage("btnDisconnect"));
+      $("#sync-status").addClass("error").text(browser.i18n.getMessage("errNoConn", fileHostName));
+      toggleSyncBtn.text(browser.i18n.getMessage("btnDisconnect"));
     }
 
     if (aRefetchUserInfo) {
@@ -293,7 +307,11 @@ async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
   else {
     $("#sync-icon").css({backgroundImage: ""}).removeClass().addClass("nosync");
     $("#sync-status").empty().removeClass().text(browser.i18n.getMessage("noSync"));
-    $("#toggle-sync").text(browser.i18n.getMessage("btnConnect"));   
+    toggleSyncBtn.text(browser.i18n.getMessage("btnConnect"));   
+  }
+
+  if (! toggleSyncBtn.is(":visible")) {
+    toggleSyncBtn.show();
   }
 }
 
