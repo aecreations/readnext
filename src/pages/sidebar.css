@@ -97,16 +97,13 @@ button, label {
     height: 24px;
     margin-right: 4px;
     padding-left: 24px;
+    padding-right: 4px;
     border-radius: 3.5px;
     background-color: var(--color-main-toolbar-bkgd);
     background-image: var(--url-toolbar-btn-add-link);
     background-position: 4px 2px;
     background-repeat: no-repeat;
     letter-spacing: -0.1px;
-}
-
-body[data-os="mac"] #add-link {
-    letter-spacing: -0.2px;
 }
 
 #add-link:hover {
@@ -122,15 +119,9 @@ body[data-os="mac"] #add-link {
 
 #bookmark-filter > input[type="radio"] ~ label {
     border: 1px solid var(--color-btn-border);
-    margin-top: 2px;
-    margin-bottom: 2px;
-    padding: 3px 8px 3px 8px;
+    padding: 4px 8px 3px 8px;
     background-color: var(--color-main-toolbar-bkgd);
     letter-spacing: -0.1px;
-}
-
-body[data-os="mac"] #bookmark-filter > input[type="radio"] ~ label {
-    letter-spacing: -0.2px;
 }
 
 #add-link:hover,
@@ -209,22 +200,33 @@ body[data-os="mac"] #bookmark-filter > input[type="radio"] ~ label {
 }
 
 #msgbars {
-    display: none;
+    display: block;
     width: 100%;
-    padding: 2px;
     background: var(--color-msgbars-bkgd);
+}
+
+#msgbars.msgbars-visible {
+    padding: 0 2px 2px 2px;
 }
 
 .inline-msgbar {
     display: none;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-content: center;
+    align-items: stretch;
+    
+    margin-top: 2px;
     padding: 4px;
-    border-radius: 4px;   
+    border-radius: 4px;
 }
 
 .inline-msgbar .inline-msgbar-icon {
-    width: 16px;
+    order: 1;
+    flex: 0 1 auto;
+
+    min-width: 16px;
     height: 16px;
-    float: left;
 }
 
 .inline-msgbar.msgbar-warning {
@@ -240,25 +242,30 @@ body[data-os="mac"] #bookmark-filter > input[type="radio"] ~ label {
 .inline-msgbar.msgbar-warning .inline-msgbar-icon {
     background-image: url("chrome://global/skin/icons/warning.svg");
     background-size: contain;
+    background-repeat: no-repeat;
 }
 
 .inline-msgbar.msgbar-success .inline-msgbar-icon {
     background-image: url("../img/check.png");
     background-size: contain;
+    background-repeat: no-repeat;
 }
 
-.inline-msgbar .inline-msgbar-content {
-    margin-left: 20px;
-    margin-right: 20px;
+.inline-msgbar .inline-msgbar-body {
+    order: 2;
+    flex: 1 1 auto;
+
+    margin-left: 4px;
+    margin-right: 4px;
 }
 
-.inline-msgbar label {
+.inline-msgbar .inline-msgbar-body .inline-msgbar-content label {
     font-size: 12px;
 }
 
 .inline-msgbar-actions {
-    margin-top: 4px;
-    text-align: right;
+    margin: 6px 0 1px 0;
+    text-align: left;
 }
 
 .inline-msgbar button {
@@ -266,18 +273,19 @@ body[data-os="mac"] #bookmark-filter > input[type="radio"] ~ label {
     padding-left: 8px;
     padding-right: 8px;
     border-radius: 3px;
-    font-size: 11.5px;
+    font-size: 12px;
 }
 
 .inline-msgbar .inline-msgbar-dismiss {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    width: 16px;
+    order: 3;
+    flex: 0 1 auto;
+
+    min-width: 16px;
     height: 16px;
-    margin: 4px;
+    margin: 0;
     background-image: url("../img/close-panel.svg");
     background-size: contain;
+    background-repeat: no-repeat;
     border-radius: 2px;
 }
 
@@ -339,7 +347,7 @@ body[data-os="mac"] #bookmark-filter > input[type="radio"] ~ label {
 }
 
 #sync-cta p {
-    font-size: 11.5px;
+    font-size: 12px;
 }
 
 #add-link-icon {
@@ -349,7 +357,7 @@ body[data-os="mac"] #bookmark-filter > input[type="radio"] ~ label {
 #setup-sync {
     height: 24px;
     border-radius: 3px;
-    font-size: 11.5px !important;
+    font-size: 12px !important;
 }
 
 #loading {

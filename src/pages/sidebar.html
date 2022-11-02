@@ -13,20 +13,33 @@
     <main id="sidebar-content">
       <div id="fixed-pos-content">
 	<div id="msgbars">
-	  <div id="reauthz-msgbar" class="inline-msgbar msgbar-warning">
-            <div class="inline-msgbar-icon"></div>
-	    <div class="inline-msgbar-content">
-	      <label id="reauthz-msgbar-content"></label>
-	    </div>
-	    <div class="inline-msgbar-actions" class="row">
-	      <button id="reauthorize" data-i18n="btnReauthz"></button>
-	    </div>
-	    <div class="inline-msgbar-dismiss"></div>
-	  </div>
 	  <div id="update-msgbar" class="inline-msgbar msgbar-success">
             <div class="inline-msgbar-icon"></div>
-            <div class="inline-msgbar-content">
-              <label id="update-msgbar-content" data-i18n="verMinorUpd"></label>
+            <div class="inline-msgbar-body">
+	      <div class="inline-msgbar-content">
+		<label id="update-msgbar-content" data-i18n="verMinorUpd"></label>
+	      </div>
+            </div>
+	    <div class="inline-msgbar-dismiss"></div>
+          </div>
+	  <div id="reauthz-msgbar" class="inline-msgbar msgbar-warning">
+            <div class="inline-msgbar-icon"></div>
+            <div class="inline-msgbar-body">
+	      <div class="inline-msgbar-content">
+		<label id="reauthz-msgbar-content"></label>
+	      </div>
+	      <div class="inline-msgbar-actions" class="row">
+		<button id="reauthorize" data-i18n="btnReauthz"></button>
+	      </div>
+            </div>
+	    <div class="inline-msgbar-dismiss"></div>
+	  </div>
+          <div id="neterr-msgbar" class="inline-msgbar msgbar-warning">
+            <div class="inline-msgbar-icon"></div>
+            <div class="inline-msgbar-body">
+	      <div class="inline-msgbar-content">
+		<label id="neterr-msgbar-content"></label>
+	      </div>
             </div>
 	    <div class="inline-msgbar-dismiss"></div>
           </div>

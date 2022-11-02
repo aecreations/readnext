@@ -18,22 +18,18 @@ let gCmd = {
     let url = processURL(aURL);
     let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
     await browser.tabs.update(actvTab.id, {url, active: true});
-
-    this._afterBookmarkOpened(aBookmarkID);
   },
 
   openInNewTab(aBookmarkID, aURL)
   {
     let url = processURL(aURL);
     browser.tabs.create({url});
-    this._afterBookmarkOpened(aBookmarkID);
   },
 
   openInNewWnd(aBookmarkID, aURL)
   {
     let url = processURL(aURL);
     browser.windows.create({url});
-    this._afterBookmarkOpened(aBookmarkID);
   },
 
   async openInNewPrivateWnd(aBookmarkID, aURL)
@@ -45,8 +41,6 @@ let gCmd = {
     catch (e) {
       console.error("Read Next::sidebar.js: gCmd.openInNewPrivateWnd(): Error from sidebar context menu: " + e);
     }
-
-    this._afterBookmarkOpened(aBookmarkID);
   },
 
   async addBookmark(aBookmark)
@@ -132,18 +126,6 @@ let gCmd = {
       id: "close-tab",
       tabID: aTabID,
     });
-  },
-
-
-  // Helper
-  async _afterBookmarkOpened(aBookmarkID)
-  {
-    if (gPrefs.deleteReadLinks) {
-      // TEMPORARY
-      // TO DO: Delete the bookmark after the page has finished loading.
-      setTimeout(() => { this.deleteBookmark(aBookmarkID) }, 3000);
-      // END TEMPORARY
-    }
   },
 }; 
 
@@ -367,7 +349,6 @@ $(async () => {
   document.body.dataset.os = platform.os;
   
   log(`Read Next: Sidebar width ${window.innerWidth} px`);
-  $("#toolbar").css({width: `${window.innerWidth}px`});
 
   gPrefs = await aePrefs.getAllPrefs();
   setScrollableContentHeight();
@@ -376,6 +357,11 @@ $(async () => {
   $("#empty-instr").html(sanitizeHTML(browser.i18n.getMessage(strKey)));
   setCustomizations();
   gSearchBox.init();
+
+  // Handle changes to Dark Mode system setting.
+  gPrefersColorSchemeMedQry = window.matchMedia("(prefers-color-scheme: dark)");
+  gPrefersColorSchemeMedQry.addEventListener("change", handlePrefersColorSchemeChange);
+  addReadingListItem.isDarkMode = gPrefersColorSchemeMedQry.matches;
 
   try {
     await initReadingList();
@@ -392,13 +378,11 @@ $(async () => {
   initContextMenu();
   initDialogs();
 
-  // Handle changes to Dark Mode system setting.
-  gPrefersColorSchemeMedQry = window.matchMedia("(prefers-color-scheme: dark)");
-  gPrefersColorSchemeMedQry.addEventListener("change", handlePrefersColorSchemeChange);
-
   // Show update message bar if Read Next was just updated.
-  let verUpdate = await browser.runtime.sendMessage({id: "get-ver-update-type"});
-  verUpdate && showVersionUpdateMsgBar(verUpdate);
+  let {verUpdateType, showBanner} = await browser.runtime.sendMessage({id: "get-ver-update-info"});
+  if (verUpdateType && showBanner) {
+    showVersionUpdateMsgBar(verUpdateType);
+  }
 });
 
 
@@ -409,7 +393,18 @@ function showVersionUpdateMsgBar(aVersionUpdateType)
 
   gMsgBarTimerID = setTimeout(() => {
     hideMessageBar("#update-msgbar");
-  }, aeConst.VER_UPDATE_MSGBAR_DELAY_MS);
+  }, aeConst.MSGBAR_DELAY_MS);
+}
+
+
+function showNetworkConnectErrorMsgBar(aFileHostName)
+{
+  $("#neterr-msgbar-content").text(browser.i18n.getMessage("errNoConn", aFileHostName));
+  showMessageBar("#neterr-msgbar");
+
+  gMsgBarTimerID = setTimeout(() => {
+    hideMessageBar("#neterr-msgbar");
+  }, aeConst.MSGBAR_DELAY_MS);
 }
 
 
@@ -495,8 +490,14 @@ function addReadingListItem(aBookmark)
     listItemDiv.classList.add(cls);
   }
 
-  let favIconCanvas = $("<canvas>").addClass("favicon").attr("width", "16").attr("height", "16")[0];
+  let favIconCanvas = $("<canvas>").addClass("favicon").css({width: "16px", height: "16px"})[0];
+  let scale = window.devicePixelRatio;
+  favIconCanvas.width = Math.floor(16 * scale);
+  favIconCanvas.height = Math.floor(16 * scale);
+  
   let canvasCtx = favIconCanvas.getContext("2d");
+  canvasCtx.scale(scale, scale);
+  
   let img = new Image();
   img.onload = function () {
     canvasCtx.clearRect(0, 0, 16, 16);
@@ -865,14 +866,22 @@ function hideLoadingProgress()
 
 function showMessageBar(aMsgBarStor)
 {
-  $(`#msgbars, #msgbars > ${aMsgBarStor}`).show();
+  $(`#msgbars > ${aMsgBarStor}`).css({display: "flex"});
+  if (! $("#msgbars").hasClass("msgbars-visible")) {
+    $("#msgbars").addClass("msgbars-visible");
+  }
+  
   setCustomizations();
 }
 
 
 function hideMessageBar(aMsgBarStor)
 {
-  $(`#msgbars, #msgbars > ${aMsgBarStor}`).hide();
+  $(`#msgbars > ${aMsgBarStor}`).css({display: "none"});
+  if (! $("#msgbars").children().is(":visible")) {
+    $("#msgbars").removeClass("msgbars-visible");
+  }
+  
   setCustomizations();
 }
 
@@ -1038,6 +1047,13 @@ function handleExtMessage(aMessage)
     }
     break;
 
+  case "sync-failed-netwk-error":
+    showNetworkConnectErrorMsgBar(aMessage.fileHostName);
+    if (isReadingListEmpty()) {
+      initReadingList(true);
+    }
+    break;
+
   case "reauthorize-prompt":
     $("#reauthz-msgbar-content").text(browser.i18n.getMessage("reauthzMsgBar", aMessage.fileHostName));
     showMessageBar("#reauthz-msgbar");
@@ -1072,6 +1088,7 @@ browser.storage.onChanged.addListener((aChanges, aAreaName) => {
 
 
 $(window).on("resize", aEvent => {
+  warn("Read Next::sidebar.js: The 'resize' event was fired!!");
   // The "resize" event is sometimes fired when the sidebar is shown, but
   // before it is initialized.
   if (! gPrefs) {

@@ -10,7 +10,9 @@ let gHostAppVer;
 let gPrefs;
 let gFirstRun = false;
 let gVerUpdateType = null;
+let gShowUpdateBanner = false;
 let gAutoOpenConnectWiz = false;
+let gOptionsPgOpen = false;
 
 let gFileHostReauthorizer = {
   _notifcnShown: false,
@@ -39,7 +41,7 @@ let gFileHostReauthorizer = {
     }
     catch {}
     
-    if (! this._notifcnShown) {
+    if (!this._notifcnShown && !gOptionsPgOpen) {
       browser.notifications.create("reauthorize", {
         type: "basic",
         title: browser.i18n.getMessage("extName"),
@@ -66,7 +68,7 @@ let gFileHostReauthorizer = {
 
   reset()
   {
-    this._notificnShown = false;
+    this._notifcnShown = false;
   }
 };
 
@@ -93,6 +95,7 @@ browser.runtime.onInstalled.addListener(async (aInstall) => {
       // Specific version updates are considered major if it such that a CTA
       // button to the What's New page should appear in the message bar.
       gVerUpdateType = aeConst.VER_UPDATE_MINOR;
+      gShowUpdateBanner = true;
     }
   }
 });
@@ -259,6 +262,11 @@ async function syncReadingList()
       log("Regenerating sync file...");
       await aeSyncReadingList.push(true);
     }
+    else if (e instanceof TypeError) {
+      warn("Read Next: syncReadingList(): Caught TypeError exception.  Unable to connect to the cloud file host.  Details:\n" + e);
+      await handleNetworkConnectError();
+      throw e;
+    }
     else {
       console.error("Read Next: syncReadingList(): An unexpected error has occurred.  Details:\n" + e);
       throw e;
@@ -292,6 +300,19 @@ async function handleAuthorizationError()
     log("Read Next: handleAuthorizationError(): Suspending auto sync interval.");
     await browser.alarms.clear("sync-reading-list");
   }
+}
+
+
+async function handleNetworkConnectError()
+{
+  let {fileHostName} = aeFileHostUI(gPrefs.syncBackend);
+  try {
+    await browser.runtime.sendMessage({
+      id: "sync-failed-netwk-error",
+      fileHostName,
+    });
+  }
+  catch {}
 }
 
 
@@ -353,6 +374,9 @@ async function getFileHostUserInfo()
       if (e instanceof aeAuthorizationError) {
         warn("Read Next: getFileHostUserInfo(): Caught aeAuthorizationError exception.  Details:\n" + e);
         await handleAuthorizationError();
+      }
+      else if (e instanceof TypeError) {
+        warn("Read Next: getFileHostUserInfo(): Caught TypeError exception.  Unable to connect to the cloud file host.  Details:\n" + e);
       }
       else {
         console.error("Read Next: getFileHostUserInfo(): An unexpected error has occurred.  Details:\n" + e);
@@ -652,6 +676,10 @@ browser.runtime.onMessage.addListener(aMessage => {
     }
     break;
 
+  case "options-pg-status":
+    gOptionsPgOpen = aMessage.isOpen;
+    break;
+
   case "close-tab":
     return closeTab(aMessage.tabID);
     break;
@@ -671,8 +699,17 @@ browser.runtime.onMessage.addListener(aMessage => {
     }
     break;
 
-  case "get-ver-update-type":
-    return Promise.resolve(gVerUpdateType);
+  case "get-ver-update-info":
+    let showBanner = false;
+    if (gVerUpdateType && gShowUpdateBanner) {
+      // Only show the sidebar post-update banner once.
+      gShowUpdateBanner = false;
+      showBanner = true;
+    }
+    return Promise.resolve({
+      verUpdateType: gVerUpdateType,
+      showBanner,
+    });
     break;
 
   default:
@@ -746,6 +783,19 @@ browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
     catch {}
 
     if (! bkmkExists) {
+      return;
+    }
+
+    if (gPrefs.deleteReadLinks) {
+      // Delete the link regardless of its "read" status.  Need to handle links
+      // that were already marked as read before this setting was turned on.
+      await aeReadingList.remove(bkmk.id);
+      togglePageActionIcon(false);
+      updateMenus();
+      try {
+        await pushLocalChanges();
+      }
+      catch {}
       return;
     }
 

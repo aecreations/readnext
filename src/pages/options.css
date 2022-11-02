@@ -8,10 +8,10 @@
 
 
 :root {
-    --color-bkgd: #ededf0;
-    --color-main-border: #ddd;
+    --color-bkgd: revert;
+    --color-main-border: #ccc;
     --color-main-bkgd: #fff;
-    --color-main-border-shadow: #d7d7db;
+    --color-main-border-shadow: #c8c8c8;
     --color-pref-body: #fefefe;
     --color-fieldset-border: #d7d7db;
     --color-dlg-fieldset-border: #d7d7db;
@@ -22,6 +22,7 @@
     --color-about-btn-border: #ededf0;
     --color-about-btn-border-hover: #ededf0;
     --color-about-btn: black;
+    --url-bkgd-img: url("../img/bkgd.png");
     --url-no-sync-icon: url("../img/syncReadingList.svg");
 }
 
@@ -41,6 +42,7 @@
 	--color-about-btn-border: #4a4a4f;
 	--color-about-btn-border-hover: #b1b1b3;
 	--color-about-btn: #f9f9fa;
+	--url-bkgd-img: none;
 	--url-no-sync-icon: url("../img/syncReadingList-dk.svg");
     }
 }
@@ -48,6 +50,7 @@
 
 body {
     background-color: var(--color-bkgd);
+    background-image: var(--url-bkgd-img);
     color: var(--color-default-text);
 }
 
@@ -64,6 +67,10 @@ main {
     border-radius: 2px;
     box-shadow: 0 0 8px 2px var(--color-main-border-shadow);
     background-color: var(--color-main-bkgd);
+}
+
+body[data-os="mac"] main {
+    width: 648px;
 }
 
 #pref-logo {
@@ -96,7 +103,7 @@ main {
 
 h2 {
     display: inline-block;
-    margin-top: 12px;
+    margin-top: 8px;
     margin-right: 6px;
     font-size: 28px;
     font-weight: 200;
@@ -186,10 +193,22 @@ button:-moz-focusring:not(:disabled) {
     background-image: var(--url-no-sync-icon);
 }
 
+#sync-icon.neterr {
+    background-image: url("../img/warning-64.png");
+}
+
+body[data-os="mac"] #sync-icon.neterr {
+    background-image: url("../img/warning-64-mac.png");
+}
+
 #sync-status {
     margin-top: 15px;
     margin-bottom: 15px;
     font-size: 15px;
+}
+
+#sync-status-spinner {
+    display: none;
 }
 
 #fh-usr-info {
@@ -198,6 +217,10 @@ button:-moz-focusring:not(:disabled) {
 
 #sync-actions {
     margin-left: 72px;
+}
+
+#toggle-sync {
+    display: none;
 }
 
 .inline-msgbar .inline-msgbar-icon {
@@ -238,8 +261,9 @@ button:-moz-focusring:not(:disabled) {
 }
 
 .inline-msgbar-actions {
-    margin-top: 4px;
-    text-align: right;
+    margin-top: 8px;
+    margin-left: 20px;
+    text-align: left;
 }
 
 #about-btn {
@@ -333,24 +357,53 @@ button:-moz-focusring:not(:disabled) {
     --height: 350px;
 }
 
+body[data-os="mac"] #connect-dlg {
+    --width: 518px;
+}
+
 #connect-dlg > .dlg-content {
     font-size: 13px;
 }
 
 #connect-dlg .wiz-icon {
     float: left;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
-#connect-dlg .wiz-icon > img {
+#connect-dlg #authz-prologue > .wiz-icon,
+#connect-dlg #authz-progress > .wiz-icon {
     width: 48px;
     height: 48px;
+    background-image: url("../img/dropbox.svg");
 }
 
-#connect-dlg #authz-retry > .wiz-icon > img,
-#connect-dlg #authz-network-error > .wiz-icon > img {
+#connect-dlg #authz-success > .wiz-icon {
+    width: 48px;
+    height: 48px;
+    background-image: url("../img/success.svg");
+}
+
+#connect-dlg #authz-retry > .wiz-icon {
+    margin-top: -2px;    
     width: 52px;
     height: 52px;
-    margin-top: -2px;
+    background-image: url("../img/question-64.png");
+}
+
+body[data-os="mac"] #connect-dlg #authz-retry > .wiz-icon {
+    background-image: url("../img/question-64-mac.png");
+}
+
+#connect-dlg #authz-network-error > .wiz-icon {
+    margin-top: -2px;    
+    width: 52px;
+    height: 52px;
+    background-image: url("../img/warning-64.png");
+}
+
+body[data-os="mac"] #connect-dlg #authz-network-error > .wiz-icon {
+    background-image: url("../img/warning-64-mac.png");
 }
 
 #connect-dlg .wiz-body {
@@ -379,6 +432,10 @@ button:-moz-focusring:not(:disabled) {
     background-image: url("../img/question-64.png");
     background-size: 52px 52px;
     background-repeat: no-repeat;
+}
+
+body[data-os="mac"] #disconnect-dlg > .dlg-content > .msgbox-icon {
+    background-image: url("../img/question-64-mac.png");
 }
 
 #disconnect-dlg > .dlg-content > .msgbox-content {

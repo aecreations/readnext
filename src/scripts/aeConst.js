@@ -22,7 +22,7 @@ const aeConst = Object.freeze({
 
   VER_UPDATE_MAJOR: 1,
   VER_UPDATE_MINOR: 2,
-  VER_UPDATE_MSGBAR_DELAY_MS: 15000,
+  MSGBAR_DELAY_MS: 15000,
 
   DEFAULT_FAVICON: "../img/defaultFavicon.svg",
   DEFAULT_FAVICON_DK: "../img/defaultFavicon-dk.svg",

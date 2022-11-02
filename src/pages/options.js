@@ -12,6 +12,8 @@ let gDialogs = {};
 // Page initialization
 $(async () => {
   let platform = await browser.runtime.getPlatformInfo();
+  document.body.dataset.os = platform.os;
+
   if (platform.os == "win") {
     document.title = browser.i18n.getMessage("prefsTitleWin");
     $("#pref-hdg").text(browser.i18n.getMessage("prefsHdgWin"));
@@ -24,11 +26,19 @@ $(async () => {
   $("#close-tab-after-add-desc").html(sanitizeHTML(browser.i18n.getMessage("closeTabAfterAddDesc")));
 
   let prefs = await aePrefs.getAllPrefs();
+  if (prefs.syncEnabled) {
+    $("#sync-status-spinner").show();
+  }
   showSyncStatus(prefs, true);
+
   if (! prefs.showPageAction) {
     $("#close-tab-after-add-desc").hide();
   }
 
+  browser.runtime.sendMessage({
+    id: "options-pg-status",
+    isOpen: true,
+  });
 
   $("#auto-delete-when-read").prop("checked", prefs.deleteReadLinks).on("click", aEvent => {
     aePrefs.setPrefs({deleteReadLinks: aEvent.target.checked});
@@ -233,22 +243,34 @@ function initDialogs()
 
 async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
 {
+  let isConnected = true;
+  
   async function getFileHostUsr()
   {
     let rv;
     try {
       rv = await browser.runtime.sendMessage({id: "get-username"});
     }
-    catch {} 
+    catch (e) {
+      log("Read Next::options.js: showSyncStatus() > getFileHostUsr(): Unable to get user info - either the network connection is lost, or the cloud file host is not responding.  Details:\n" + e);
+      isConnected = false;
+    } 
     return rv;
   }
   // END nested function
+
+  let toggleSyncBtn = $("#toggle-sync");
 
   if (aPrefs.syncEnabled) {
     let {fileHostName, iconPath} = aeFileHostUI(aPrefs.syncBackend);
     let fileHostUsr = aPrefs.fileHostUsr;
 
-    if (! fileHostUsr) {
+    if (fileHostUsr) {
+      if (! toggleSyncBtn.is(":visible")) {
+        toggleSyncBtn.show();
+      }
+    }
+    else {
       fileHostUsr = await getFileHostUsr();
 
       if (fileHostUsr) {
@@ -259,12 +281,23 @@ async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
       }
     }
 
-    $("#sync-icon").removeClass("nosync");
+    $("#sync-icon").removeClass();
     $("#sync-icon").css({backgroundImage: `url("${iconPath}")`});
+    $("#sync-status").removeClass();
+    if ($("#sync-status-spinner").is(":visible")) {
+      $("#sync-status-spinner").hide();
+    }
 
-    let syncStatus = sanitizeHTML(`<span id="fh-svc-info">${browser.i18n.getMessage("connectedTo", fileHostName)}</span><br><span id="fh-usr-info">${fileHostUsr}</span>`);
-    $("#sync-status").html(syncStatus);
-    $("#toggle-sync").text(browser.i18n.getMessage("btnDisconnect"));
+    if (isConnected) {
+      let syncStatus = sanitizeHTML(`<span id="fh-svc-info">${browser.i18n.getMessage("connectedTo", fileHostName)}</span><br><span id="fh-usr-info">${fileHostUsr}</span>`);
+      $("#sync-status").html(syncStatus);
+      toggleSyncBtn.text(browser.i18n.getMessage("btnDisconnect"));
+    }
+    else {
+      $("#sync-icon").css({backgroundImage: ""}).addClass("neterr");
+      $("#sync-status").addClass("error").text(browser.i18n.getMessage("errNoConn", fileHostName));
+      toggleSyncBtn.text(browser.i18n.getMessage("btnDisconnect"));
+    }
 
     if (aRefetchUserInfo) {
       // Refetch cloud file service user info to check if reauthz is required.
@@ -272,9 +305,13 @@ async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
     }
   }
   else {
-    $("#sync-icon").css({backgroundImage: ""}).addClass("nosync");
-    $("#sync-status").empty().text(browser.i18n.getMessage("noSync"));
-    $("#toggle-sync").text(browser.i18n.getMessage("btnConnect"));   
+    $("#sync-icon").css({backgroundImage: ""}).removeClass().addClass("nosync");
+    $("#sync-status").empty().removeClass().text(browser.i18n.getMessage("noSync"));
+    toggleSyncBtn.text(browser.i18n.getMessage("btnConnect"));   
+  }
+
+  if (! toggleSyncBtn.is(":visible")) {
+    toggleSyncBtn.show();
   }
 }
 
@@ -374,6 +411,10 @@ browser.runtime.onMessage.addListener(aMessage => {
   case "sync-reading-list":
     if (aMessage.isReauthorized) {
       $("#reauthz-msgbar").css({display: "none"});
+      // Update sync status if necessary.
+      aePrefs.getAllPrefs().then(aPrefs => {
+        showSyncStatus(aPrefs);
+      });
     }
     break;
 
@@ -467,6 +508,14 @@ $(document).on("contextmenu", aEvent => {
   if (aEvent.target.tagName != "INPUT" && aEvent.target.getAttribute("type") != "text") {
     aEvent.preventDefault();
   }
+});
+
+
+$(window).on("beforeunload", aEvent => {
+  browser.runtime.sendMessage({
+    id: "options-pg-status",
+    isOpen: false,
+  });
 });
 
 
