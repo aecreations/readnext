@@ -18,22 +18,18 @@ let gCmd = {
     let url = processURL(aURL);
     let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
     await browser.tabs.update(actvTab.id, {url, active: true});
-
-    this._afterBookmarkOpened(aBookmarkID);
   },
 
   openInNewTab(aBookmarkID, aURL)
   {
     let url = processURL(aURL);
     browser.tabs.create({url});
-    this._afterBookmarkOpened(aBookmarkID);
   },
 
   openInNewWnd(aBookmarkID, aURL)
   {
     let url = processURL(aURL);
     browser.windows.create({url});
-    this._afterBookmarkOpened(aBookmarkID);
   },
 
   async openInNewPrivateWnd(aBookmarkID, aURL)
@@ -45,8 +41,6 @@ let gCmd = {
     catch (e) {
       console.error("Read Next::sidebar.js: gCmd.openInNewPrivateWnd(): Error from sidebar context menu: " + e);
     }
-
-    this._afterBookmarkOpened(aBookmarkID);
   },
 
   async addBookmark(aBookmark)
@@ -132,18 +126,6 @@ let gCmd = {
       id: "close-tab",
       tabID: aTabID,
     });
-  },
-
-
-  // Helper
-  async _afterBookmarkOpened(aBookmarkID)
-  {
-    if (gPrefs.deleteReadLinks) {
-      // TEMPORARY
-      // TO DO: Delete the bookmark after the page has finished loading.
-      setTimeout(() => { this.deleteBookmark(aBookmarkID) }, 3000);
-      // END TEMPORARY
-    }
   },
 }; 
 

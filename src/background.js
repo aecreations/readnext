@@ -786,6 +786,19 @@ browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
       return;
     }
 
+    if (gPrefs.deleteReadLinks) {
+      // Delete the link regardless of its "read" status.  Need to handle links
+      // that were already marked as read before this setting was turned on.
+      await aeReadingList.remove(bkmk.id);
+      togglePageActionIcon(false);
+      updateMenus();
+      try {
+        await pushLocalChanges();
+      }
+      catch {}
+      return;
+    }
+
     if (bkmk.unread) {
       await aeReadingList.markAsRead(bkmk.id, true);
       try {
