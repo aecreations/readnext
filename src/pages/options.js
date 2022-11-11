@@ -212,6 +212,10 @@ function initDialogs()
 
     this.close();
     showSyncStatus(syncPrefs.syncEnabled);
+    
+    if ($("#retry-sync").is(":visible")) {
+      $("#retry-sync").hide();
+    }
     if ($("#reauthz-msgbar").is(":visible")) {
       $("#reauthz-msgbar").hide();
     }
@@ -267,7 +271,7 @@ async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
 
     if (fileHostUsr) {
       if (! toggleSyncBtn.is(":visible")) {
-        toggleSyncBtn.show();
+        toggleSyncBtn.css({display: "inline"});
       }
     }
     else {
@@ -291,11 +295,13 @@ async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
     if (isConnected) {
       let syncStatus = sanitizeHTML(`<span id="fh-svc-info">${browser.i18n.getMessage("connectedTo", fileHostName)}</span><br><span id="fh-usr-info">${fileHostUsr}</span>`);
       $("#sync-status").html(syncStatus);
+      $("#retry-sync").hide();
       toggleSyncBtn.text(browser.i18n.getMessage("btnDisconnect"));
     }
     else {
       $("#sync-icon").css({backgroundImage: ""}).addClass("neterr");
-      $("#sync-status").addClass("error").text(browser.i18n.getMessage("errNoConn", fileHostName));
+      $("#sync-status").addClass("warning").text(browser.i18n.getMessage("errNoConnEx", fileHostName));
+      $("#retry-sync").css({display: "inline"});
       toggleSyncBtn.text(browser.i18n.getMessage("btnDisconnect"));
     }
 
@@ -311,7 +317,7 @@ async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
   }
 
   if (! toggleSyncBtn.is(":visible")) {
-    toggleSyncBtn.show();
+    toggleSyncBtn.css({display: "inline"});
   }
 }
 
@@ -441,6 +447,17 @@ $("#toggle-sync").on("click", async (aEvent) => {
   else {
     gDialogs.connectWiz.showModal();
   }
+});
+
+
+$("#retry-sync").on("click", async (aEvent) => {
+  $("#sync-icon").removeClass();
+  $("#sync-status").empty().removeClass();
+  $("#sync-status-spinner").show();
+  $("#retry-sync, #toggle-sync").hide();
+  
+  let prefs = await aePrefs.getAllPrefs();
+  showSyncStatus(prefs);
 });
 
 

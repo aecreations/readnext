@@ -169,6 +169,14 @@ button:-moz-focusring:not(:disabled) {
     height: 16px;    
 }
 
+.warning {
+    background-color: #fbfb77;
+    color: black;
+    margin-left: 70px;
+    padding: 12px;
+    border-radius: 4px;
+}
+
 #sync-options {
     padding-top: 0;
 }
@@ -219,8 +227,12 @@ body[data-os="mac"] #sync-icon.neterr {
     margin-left: 72px;
 }
 
-#toggle-sync {
+#retry-sync, #toggle-sync {
     display: none;
+}
+
+#retry-sync {
+    margin-right: 10px;
 }
 
 .inline-msgbar .inline-msgbar-icon {
