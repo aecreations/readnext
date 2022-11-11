@@ -146,17 +146,17 @@
   },
 
   "reauthzNotifcn": {
-    "message": "Read Next needs to reauthorize your $1 account. Click here to reauthorize.",
-    "description": "Reauthorization notification - appears when user needs to reauthorize their cloud file host account"
+    "message": "Read Next needs to reconnect your $1 account. Click here to reconnect.",
+    "description": "Reconnection notification - appears when user needs to reconnect their cloud file host account"
   },
 
   "reauthzMsgBar": {
-    "message": "Read Next needs to reauthorize your $1 account",
-    "description": "Reauthorization message bar - appears in the reading list sidebar when user needs to reauthorize their cloud file host account"
+    "message": "Read Next needs to reconnect your $1 account",
+    "description": "Reconnection message bar - appears in the reading list sidebar when user needs to reconnect their cloud file host account"
   },
 
   "btnReauthz": {
-    "message": "Reauthorize"
+    "message": "Reconnect"
   },
 
   "mnuCustz": {
@@ -226,7 +226,7 @@
   },
 
   "connWizTitle2": {
-    "message": "Authorizing",
+    "message": "Connecting",
     "description": "Cloud file service connection wizard in extension preferences page"
   },
 
@@ -263,7 +263,7 @@
   },
 
   "wizSetupRem": {
-    "message": "Repeat this setup on your other devices where your reading list should be synced with."
+    "message": "Repeat this setup on your other devices where you want your reading list synced."
   },
 
   "disconnTitle": {
