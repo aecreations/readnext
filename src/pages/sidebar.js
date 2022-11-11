@@ -401,10 +401,6 @@ function showNetworkConnectErrorMsgBar(aFileHostName)
 {
   $("#neterr-msgbar-content").text(browser.i18n.getMessage("errNoConn", aFileHostName));
   showMessageBar("#neterr-msgbar");
-
-  gMsgBarTimerID = setTimeout(() => {
-    hideMessageBar("#neterr-msgbar");
-  }, aeConst.MSGBAR_DELAY_MS);
 }
 
 
@@ -994,6 +990,9 @@ function handleExtMessage(aMessage)
     if ($("#reauthz-msgbar").is(":visible")) {
       hideMessageBar("#reauthz-msgbar");
     }
+    if ($("#neterr-msgbar").is(":visible")) {
+      hideMessageBar("#neterr-msgbar");
+    }
     hideLoadingProgress();
 
     if (aMessage.bookmarks.length == 0) {
@@ -1034,6 +1033,9 @@ function handleExtMessage(aMessage)
     else {
       if ($("#reauthz-msgbar").is(":visible")) {
         hideMessageBar("#reauthz-msgbar");
+      }
+      if ($("#neterr-msgbar").is(":visible")) {
+        hideMessageBar("#neterr-msgbar");
       }
     }
     initContextMenu.showManualSync = aMessage.syncEnabled;
@@ -1180,6 +1182,11 @@ $("#search-box").focus(aEvent => {
 
 $("#reauthorize").on("click", aEvent => {
   browser.runtime.sendMessage({id: "reauthorize"});
+});
+
+$("#retry-sync").on("click", aEvent => {
+  gCmd.syncBookmarks(true);
+  hideMessageBar("#neterr-msgbar");
 });
 
 $(".inline-msgbar > .inline-msgbar-dismiss").on("click", aEvent => {
