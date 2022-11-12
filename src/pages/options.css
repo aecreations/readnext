@@ -201,11 +201,11 @@ button:-moz-focusring:not(:disabled) {
     background-image: var(--url-no-sync-icon);
 }
 
-#sync-icon.neterr {
+#sync-icon.conn-error {
     background-image: url("../img/warning-64.png");
 }
 
-body[data-os="mac"] #sync-icon.neterr {
+body[data-os="mac"] #sync-icon.conn-error {
     background-image: url("../img/warning-64-mac.png");
 }
 
@@ -227,55 +227,12 @@ body[data-os="mac"] #sync-icon.neterr {
     margin-left: 72px;
 }
 
-#retry-sync, #toggle-sync {
+#retry-conn, #reauthorize, #toggle-sync {
     display: none;
 }
 
-#retry-sync {
+#retry-conn, #reauthorize {
     margin-right: 10px;
-}
-
-.inline-msgbar .inline-msgbar-icon {
-    width: 16px;
-    height: 16px;
-    float: left;
-}
-
-.inline-msgbar.msgbar-warning .inline-msgbar-icon {
-    background-image: url("chrome://global/skin/icons/warning.svg");
-    background-size: contain;
-}
-
-.inline-msgbar .inline-msgbar-content {
-    margin-left: 20px;
-    margin-right: 20px;
-}
-
-#reauthz-msgbar {
-    display: none;
-    margin-bottom: 12px;
-    margin-left: 72px;
-    padding: 8px;
-    border-radius: 4px;
-    background-color: #ffe900;
-    color: #3e2800;
-    font-size: 13px;
-}
-
-#reauthz-msgbar label,
-#reauthz-msgbar button {
-    font-size: 13px !important;
-}
-
-#reauthz-msgbar button {
-    height: 28px;
-    border-radius: 3.5px;
-}
-
-.inline-msgbar-actions {
-    margin-top: 8px;
-    margin-left: 20px;
-    text-align: left;
 }
 
 #about-btn {

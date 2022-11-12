@@ -29,7 +29,7 @@ $(async () => {
   if (prefs.syncEnabled) {
     $("#sync-status-spinner").show();
   }
-  showSyncStatus(prefs, true);
+  showSyncStatus(prefs);
 
   if (! prefs.showPageAction) {
     $("#close-tab-after-add-desc").hide();
@@ -213,11 +213,11 @@ function initDialogs()
     this.close();
     showSyncStatus(syncPrefs.syncEnabled);
     
-    if ($("#retry-sync").is(":visible")) {
-      $("#retry-sync").hide();
+    if ($("#retry-conn").is(":visible")) {
+      $("#retry-conn").hide();
     }
-    if ($("#reauthz-msgbar").is(":visible")) {
-      $("#reauthz-msgbar").hide();
+    if ($("#reauthorize").is(":visible")) {
+      $("#reauthorize").hide();
     }
   };
 
@@ -245,20 +245,11 @@ function initDialogs()
 }
 
 
-async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
+async function showSyncStatus(aPrefs)
 {
-  let isConnected = true;
-  
   async function getFileHostUsr()
   {
-    let rv;
-    try {
-      rv = await browser.runtime.sendMessage({id: "get-username"});
-    }
-    catch (e) {
-      log("Read Next::options.js: showSyncStatus() > getFileHostUsr(): Unable to get user info - either the network connection is lost, or the cloud file host is not responding.  Details:\n" + e);
-      isConnected = false;
-    } 
+    let rv = await browser.runtime.sendMessage({id: "get-username"});
     return rv;
   }
   // END nested function
@@ -269,20 +260,39 @@ async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
     let {fileHostName, iconPath} = aeFileHostUI(aPrefs.syncBackend);
     let fileHostUsr = aPrefs.fileHostUsr;
 
-    if (fileHostUsr) {
+    // Always query the cloud file host for the user's account info to verify
+    // the connection.
+    try {
+      fileHostUsr = await getFileHostUsr();
+    }
+    catch (e) {
+      log("Read Next::options.js: showSyncStatus(): Error returned from inner helper function getFileHostUsr():\n" + e);
+      
+      $("#sync-icon").css({backgroundImage: ""}).addClass("conn-error");
+      $("#sync-status").addClass("warning");
+
+      // Need to check error type this way, because the error object type info
+      // is lost when passed between extension pages via extension messaging.
+      if (e.message.includes("NetworkError")) {  // TypeError
+        $("#sync-status").text(browser.i18n.getMessage("errNoConnEx", fileHostName));
+        $("#retry-conn").css({display: "inline"});
+      }
+      else if (e.message.includes("invalid_grant")) {  // aeAuthorizationError
+        $("#sync-status").text(browser.i18n.getMessage("reauthzMsgBar", fileHostName));
+        $("#reauthorize").css({display: "inline"});
+      }
+      
+      toggleSyncBtn.text(browser.i18n.getMessage("btnDisconnect"));
       if (! toggleSyncBtn.is(":visible")) {
         toggleSyncBtn.css({display: "inline"});
       }
+      return;
     }
-    else {
-      fileHostUsr = await getFileHostUsr();
 
-      if (fileHostUsr) {
-        aePrefs.setPrefs({fileHostUsr});
-      }
-      else {
-        fileHostUsr = "";
-      }
+    aePrefs.setPrefs({fileHostUsr});
+    toggleSyncBtn.text(browser.i18n.getMessage("btnDisconnect"));
+    if (! toggleSyncBtn.is(":visible")) {
+      toggleSyncBtn.css({display: "inline"});
     }
 
     $("#sync-icon").removeClass();
@@ -292,23 +302,10 @@ async function showSyncStatus(aPrefs, aRefetchUserInfo=false)
       $("#sync-status-spinner").hide();
     }
 
-    if (isConnected) {
-      let syncStatus = sanitizeHTML(`<span id="fh-svc-info">${browser.i18n.getMessage("connectedTo", fileHostName)}</span><br><span id="fh-usr-info">${fileHostUsr}</span>`);
-      $("#sync-status").html(syncStatus);
-      $("#retry-sync").hide();
-      toggleSyncBtn.text(browser.i18n.getMessage("btnDisconnect"));
-    }
-    else {
-      $("#sync-icon").css({backgroundImage: ""}).addClass("neterr");
-      $("#sync-status").addClass("warning").text(browser.i18n.getMessage("errNoConnEx", fileHostName));
-      $("#retry-sync").css({display: "inline"});
-      toggleSyncBtn.text(browser.i18n.getMessage("btnDisconnect"));
-    }
-
-    if (aRefetchUserInfo) {
-      // Refetch cloud file service user info to check if reauthz is required.
-      await getFileHostUsr();
-    }
+    let syncStatus = sanitizeHTML(`<span id="fh-svc-info">${browser.i18n.getMessage("connectedTo", fileHostName)}</span><br><span id="fh-usr-info">${fileHostUsr}</span>`);
+    $("#sync-status").html(syncStatus);
+    $("#retry-conn, #reauthorize").hide();
+    toggleSyncBtn.text(browser.i18n.getMessage("btnDisconnect"));
   }
   else {
     $("#sync-icon").css({backgroundImage: ""}).removeClass().addClass("nosync");
@@ -416,20 +413,11 @@ browser.runtime.onMessage.addListener(aMessage => {
 
   case "sync-reading-list":
     if (aMessage.isReauthorized) {
-      $("#reauthz-msgbar").css({display: "none"});
       // Update sync status if necessary.
       aePrefs.getAllPrefs().then(aPrefs => {
         showSyncStatus(aPrefs);
       });
     }
-    break;
-
-  case "sync-failed-authz-error":
-    aePrefs.getPref("syncBackend").then(aSyncBacknd => {
-      let {fileHostName} = aeFileHostUI(aSyncBacknd);
-      $("#reauthz-msgbar-content").text(browser.i18n.getMessage("reauthzMsgBar", fileHostName));
-      $("#reauthz-msgbar").css({display: "flow-root"});
-    });
     break;
 
   default:
@@ -450,11 +438,11 @@ $("#toggle-sync").on("click", async (aEvent) => {
 });
 
 
-$("#retry-sync").on("click", async (aEvent) => {
-  $("#sync-icon").removeClass();
+$("#retry-conn").on("click", async (aEvent) => {
+  $("#sync-icon").removeClass().addClass("nosync");
   $("#sync-status").empty().removeClass();
   $("#sync-status-spinner").show();
-  $("#retry-sync, #toggle-sync").hide();
+  $("#retry-conn, #toggle-sync").hide();
   
   let prefs = await aePrefs.getAllPrefs();
   showSyncStatus(prefs);
