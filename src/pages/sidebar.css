@@ -14,7 +14,7 @@
     --color-main-toolbar-bkgd: transparent;
     --color-main-toolbar-text: #0c0c0d;
     --color-main-toolbar-border: transparent;
-    --color-toolbar-btn-hover-bkgd: #d7d7db;
+    --color-toolbar-btn-hover-bkgd: #ccc;
     --color-toolbar-btn-active-bkgd: #b1b1b3;
     --color-msgbars-bkgd: white;
     --color-bkmk-hover-bkgd: #ddd;
@@ -136,7 +136,9 @@ button, label {
 }
 
 #add-link:active,
-#bookmark-filter > input[type="radio"] ~ label:active {
+#bookmark-filter > input[type="radio"] ~ label:active,
+#bookmark-filter > #filter-all:checked ~ label[for="filter-all"]:active,
+#bookmark-filter > #filter-unread:checked ~ label[for="filter-unread"]:active {
     background-color: var(--color-toolbar-btn-active-bkgd);
     border-color: var(--color-toolbar-btn-active-bkgd) !important;
 }
