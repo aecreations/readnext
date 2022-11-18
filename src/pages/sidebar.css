@@ -14,6 +14,8 @@
     --color-main-toolbar-bkgd: transparent;
     --color-main-toolbar-text: #0c0c0d;
     --color-main-toolbar-border: transparent;
+    --color-toolbar-btn-hover-bkgd: #ccc;
+    --color-toolbar-btn-active-bkgd: #b1b1b3;
     --color-msgbars-bkgd: white;
     --color-bkmk-hover-bkgd: #ddd;
     --color-bkmk-hover-text: #0c0c0d;
@@ -37,6 +39,8 @@
     :root {
 	--color-bkgd: #38383d;
 	--color-main-toolbar-text: #f9f9fa;
+	--color-toolbar-btn-hover-bkgd: #606060;
+	--color-toolbar-btn-active-bkgd: #737373;
 	--color-msgbars-bkgd: #38383d;
 	--color-bkmk-hover-bkgd: #4a4a4f;
 	--color-bkmk-hover-text: #fff;
@@ -128,13 +132,15 @@ button, label {
 #bookmark-filter > input[type="radio"] ~ label:hover,
 #bookmark-filter > #filter-all:checked ~ label[for="filter-all"]:hover,
 #bookmark-filter > #filter-unread:checked ~ label[for="filter-unread"]:hover {
-    border-color: var(--color-btn-hover-border);
-    background-color: var(--color-btn-hover-bkgd);
+    background-color: var(--color-toolbar-btn-hover-bkgd);
 }
 
 #add-link:active,
-#bookmark-filter > input[type="radio"] ~ label:active {
-    background-color: var(--color-btn-active-bkgd);
+#bookmark-filter > input[type="radio"] ~ label:active,
+#bookmark-filter > #filter-all:checked ~ label[for="filter-all"]:active,
+#bookmark-filter > #filter-unread:checked ~ label[for="filter-unread"]:active {
+    background-color: var(--color-toolbar-btn-active-bkgd);
+    border-color: var(--color-toolbar-btn-active-bkgd) !important;
 }
 
 #bookmark-filter > #filter-all:checked ~ label[for="filter-all"],
@@ -434,6 +440,10 @@ button, label {
     font-size: 12px;
     background-color: var(--color-cxtmenu-bkgd);
     color: var(--color-cxtmenu-text);
+}
+
+body[data-os="mac"] .ae-menuitem {
+    letter-spacing: -0.3px;
 }
 
 .context-menu-item.context-menu-disabled {

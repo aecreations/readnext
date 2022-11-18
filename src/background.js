@@ -279,11 +279,20 @@ async function syncReadingList()
   let msg = {
     id: "reload-bookmarks-event",
     bookmarks,
-  }; 
+  };
   try {
     await browser.runtime.sendMessage(msg);
   }
   catch {}
+
+  // Update page action and context menu if the current page is now in the
+  // reading list.
+  let [tab] = await browser.tabs.query({active: true, currentWindow: true});
+  let bkmk = await getBookmarkFromTab(tab);
+  let isCurrPgSaved = !!bkmk;
+
+  togglePageActionIcon(isCurrPgSaved, tab);
+  updateMenus(tab);
 }
 
 

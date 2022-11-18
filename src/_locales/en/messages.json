@@ -1,10 +1,12 @@
 {
   "extName": {
-    "message": "Read Next"
+    "message": "Read Next",
+    "description": "Extension name"
   },
 
   "extDesc": {
-    "message": "The reading list that syncs to the cloud."
+    "message": "The reading list that syncs to the cloud.",
+    "description": "Extension description"
   },
 
   "btnOK": {
@@ -47,7 +49,7 @@
 
   "verMinorUpd": {
     "message": "Read Next was updated!",
-    "description": "Message bar in the reading list sidebar - appears after Read Next is updated"
+    "description": "Message bar in the reading list sidebar - appears after Read Next is updated to a new version"
   },
 
   "fhDropbox": {
@@ -76,7 +78,8 @@
   },
 
   "addLink": {
-    "message": "Add Current Tab"
+    "message": "Add Current Tab",
+    "description": "Toolbar button label"
   },
 
   "filterAll": {
@@ -146,17 +149,17 @@
   },
 
   "reauthzNotifcn": {
-    "message": "Read Next needs to reauthorize your $1 account. Click here to reauthorize.",
-    "description": "Reauthorization notification - appears when user needs to reauthorize their cloud file host account"
+    "message": "Read Next needs to reconnect your $1 account. Click here to reconnect.",
+    "description": "Reconnection notification - appears when user needs to reconnect their cloud file host account"
   },
 
   "reauthzMsgBar": {
-    "message": "Read Next needs to reauthorize your $1 account",
-    "description": "Reauthorization message bar - appears in the reading list sidebar when user needs to reauthorize their cloud file host account"
+    "message": "Read Next needs to reconnect your $1 account",
+    "description": "Reconnection message bar - appears in the reading list sidebar when user needs to reconnect their cloud file host account"
   },
 
   "btnReauthz": {
-    "message": "Reauthorize"
+    "message": "Reconnect"
   },
 
   "mnuCustz": {
@@ -217,7 +220,8 @@
   },
 
   "connectedTo": {
-    "message": "Connected to $1"
+    "message": "Connected to $1",
+    "description": "Connected to <name of cloud file service, e.g. Dropbox>"
   },
 
   "connWizTitle1": {
@@ -226,7 +230,7 @@
   },
 
   "connWizTitle2": {
-    "message": "Authorizing",
+    "message": "Connecting",
     "description": "Cloud file service connection wizard in extension preferences page"
   },
 
@@ -263,7 +267,7 @@
   },
 
   "wizSetupRem": {
-    "message": "Repeat this setup on your other devices where your reading list should be synced with."
+    "message": "Repeat this setup on your other devices where you want your reading list synced."
   },
 
   "disconnTitle": {
@@ -282,6 +286,11 @@
   "errNoConn": {
     "message": "Read Next couldn't connect to $1",
     "description": "Read Next couldn't connect to <name of cloud file service, e.g. Dropbox>"
+  },
+
+  "errNoConnEx": {
+    "message": "Read Next couldn't connect to $1.  Check your network connection, or try again later.",
+    "description": "Read Next couldn't connect to <name of cloud file service, e.g. Dropbox>"   
   },
 
   "prefToolbar": {
