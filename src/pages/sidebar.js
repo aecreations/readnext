@@ -897,6 +897,12 @@ function enableReadingListKeyboardNav()
       return;
     }
 
+    // Ignore key press if the context menu is open.
+    if ($(".context-menu-active").length > 0) {
+      aEvent.preventDefault();
+      return;
+    }
+
     let numItems = $("#reading-list").children().length;
     
     if (aEvent.key == "ArrowDown") {
@@ -1215,6 +1221,12 @@ $(window).keydown(aEvent => {
   }
   else if (aEvent.key == "Escape" && aeDialog.isOpen()) {
     aeDialog.cancelDlgs();
+  }
+  else if (aEvent.key == "F10" && aEvent.shiftKey) {
+    let focusedBkmk = $(".reading-list-item.focused");
+    if (focusedBkmk.length == 1) {
+      focusedBkmk.first().trigger("contextmenu");
+    }
   }
 });
 
