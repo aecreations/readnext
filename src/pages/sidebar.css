@@ -388,14 +388,15 @@ button, label {
 }
 
 .reading-list-item {
-    padding: 2px 6px 2px 6px;
     min-height: 1em;
     max-height: 3.15em;
     overflow: hidden;
-    border: 2px solid var(--color-bkgd);
+    padding: 4px 8px 4px 8px;
+    border: none;
 
     font-size: 12px;
     font-weight: normal;
+    line-height: 1.27em;
 
     color: var(--color-default-text);
 }
@@ -405,18 +406,34 @@ button, label {
 }
 
 .reading-list-item.focused {
+    padding: 2px 6px 2px 6px;
     border: 2px solid #45a1ff;
 }
 
 .reading-list-item:hover {
+    padding: 2px 6px 2px 6px;
+    border: 2px solid var(--color-bkmk-hover-bkgd);
     background-color: var(--color-bkmk-hover-bkgd);
     color: var(--color-bkmk-hover-text);
-    border: 2px solid var(--color-bkmk-hover-bkgd);
+}
+
+.reading-list-item.focused:hover {
+    padding: 2px 6px 2px 6px;
+    border: 2px solid #45a1ff;   
+    background-color: var(--color-bkmk-hover-bkgd);
+    color: var(--color-bkmk-hover-text);
 }
 
 .reading-list-item:active {
-    background-color: var(--color-bkmk-active-bkgd);
+    padding: 2px 6px 2px 6px;
     border: 2px solid var(--color-bkmk-active-bkgd);
+    background-color: var(--color-bkmk-active-bkgd);
+}
+
+.reading-list-item.focused:active {    
+    padding: 2px 6px 2px 6px;
+    border: 2px solid #45a1ff;   
+    background-color: var(--color-bkmk-active-bkgd);
 }
 
 .reading-list-item-title {
