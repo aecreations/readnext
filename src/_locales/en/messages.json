@@ -336,7 +336,7 @@
   },
 
   "closeTabAfterAddDesc": {
-    "message": "You can also do this by right-clicking <img class=\"inline-icon\" src=\"../img/bookmark.svg\"> in the address bar and then selecting \"Add and Close Tab.\""
+    "message": "You can also do this by right-clicking <span id=\"add-link-icon\" class=\"inline-icon\"></span> in the address bar and then selecting \u201cAdd and Close Tab.\u201d"
   },
 
   "mnuCloseTabAfterAdd": {
