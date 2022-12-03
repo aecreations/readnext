@@ -5,7 +5,7 @@
  */
 
 const aeConst = Object.freeze({
-  DEBUG: true,
+  DEBUG: false,
   EXTENSION_ID: "readnext@aecreations.github.io",
 
   FILEHOST_DROPBOX: 1,
