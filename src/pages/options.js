@@ -91,38 +91,38 @@ function initDialogs()
   
   gDialogs.connectWiz.goToPage = function (aPageID)
   {
-    $("#connect-dlg > .dlg-content > .wiz-page").hide();
-    $(`#connect-dlg > .dlg-content > #${aPageID}`).show();
+    this.find(".dlg-content > .wiz-page").hide();
+    this.find(`.dlg-content > #${aPageID}`).show();
 
-    let btnAccept = $("#connect-dlg > .dlg-btns > .dlg-accept");
-    let btnCancel = $("#connect-dlg > .dlg-btns > .dlg-cancel");
+    let btnAccept = this.find(".dlg-btns > .dlg-accept");
+    let btnCancel = this.find(".dlg-btns > .dlg-cancel");
     let {fileHostName} = aeFileHostUI(this.backnd);
 
     switch (aPageID) {
     case "authz-prologue":
-      $("#connect-dlg > .dlg-btns > .dlg-accept").addClass("default");
-      $("#connect-dlg #authz-instr").text(browser.i18n.getMessage("wizAuthzInstr1", fileHostName));
+      this.find(".dlg-btns > .dlg-accept").addClass("default");
+      $("#authz-instr").text(browser.i18n.getMessage("wizAuthzInstr1", fileHostName));
       break;
 
     case "authz-progress":
-      $("#connect-dlg > .dlg-btns > button").attr("disabled", "true");
+      this.find(".dlg-btns > button").attr("disabled", "true");
       break;
 
     case "authz-success":
-      $("#connect-dlg #authz-succs-msg").text(browser.i18n.getMessage("wizAuthzSuccs", fileHostName));
+      $("#authz-succs-msg").text(browser.i18n.getMessage("wizAuthzSuccs", fileHostName));
       btnAccept.removeAttr("disabled").text(browser.i18n.getMessage("btnClose"));
       btnCancel.hide();
       this.changeKeyboardNavigableElts([btnAccept.get(0)]);
       break;
 
     case "authz-retry":
-      $("#connect-dlg #authz-interrupt").text(browser.i18n.getMessage("wizAuthzInterrupt", fileHostName));
-      $("#connect-dlg > .dlg-btns > button").removeAttr("disabled");
+      $("#authz-interrupt").text(browser.i18n.getMessage("wizAuthzInterrupt", fileHostName));
+      this.find(".dlg-btns > button").removeAttr("disabled");
       btnAccept.text(browser.i18n.getMessage("btnRetry"));
       break;
 
     case "authz-network-error":
-      $("#connect-dlg > .dlg-btns > button").removeAttr("disabled");
+      this.find(".dlg-btns > button").removeAttr("disabled");
       btnAccept.text(browser.i18n.getMessage("btnRetry"));
       break;
 
@@ -134,7 +134,7 @@ function initDialogs()
   gDialogs.connectWiz.getPageID = function ()
   {
     let rv;
-    let pages = $("#connect-dlg > .dlg-content > .wiz-page").toArray();
+    let pages = this.find(".dlg-content > .wiz-page").toArray();
     let page = pages.filter(aPage => $(aPage).css("display") == "block");
 
     if (page.length == 1) {
@@ -172,54 +172,55 @@ function initDialogs()
   gDialogs.connectWiz.onUnload = function ()
   {
     this.goToPage("authz-prologue");
-    $("#connect-dlg > .dlg-btns > .dlg-accept").addClass("default")
-      .text(browser.i18n.getMessage("btnNext"));
-    $("#connect-dlg > .dlg-btns > .dlg-cancel").removeAttr("disabled").show();
+    this.find(".dlg-btns > .dlg-accept").addClass("default").text(browser.i18n.getMessage("btnNext"));
+    this.find(".dlg-btns > .dlg-cancel").removeAttr("disabled").show();
   };
 
   gDialogs.disconnectConfirm = new aeDialog("#disconnect-dlg");
+  gDialogs.disconnectConfirm.onFirstInit = function ()
+  {
+    this.find(".dlg-btns > .dlg-btn-disconn").click(async (aEvent) => {
+      let syncPrefs = {
+        syncEnabled: false,
+        syncBackend: null,
+        accessToken: null,
+        refreshToken: null,
+        fileHostUsr: null,
+      };
+
+      try {
+        await browser.runtime.sendMessage({id: "sync-disconnected-from-ext-prefs"});
+      }
+      catch {}
+
+      await aePrefs.setPrefs(syncPrefs);
+      try {
+        await browser.runtime.sendMessage({
+          id: "sync-setting-changed",
+          syncEnabled: syncPrefs.syncEnabled,
+        });
+      }
+      catch {}
+
+      this.close();
+      showSyncStatus(syncPrefs.syncEnabled);
+      
+      if ($("#retry-conn").is(":visible")) {
+        $("#retry-conn").hide();
+      }
+      if ($("#reauthorize").is(":visible")) {
+        $("#reauthorize").hide();
+      }
+    });
+  };
   gDialogs.disconnectConfirm.onInit = async function ()
   {
     let syncBackend = await aePrefs.getPref("syncBackend");
     let {fileHostName} = aeFileHostUI(syncBackend);
 
-    $("#disconnect-dlg > .dlg-content > .msgbox-content > #disconnect-confirm").text(browser.i18n.getMessage("disconnTitle", fileHostName));
+    $("#disconnect-confirm").text(browser.i18n.getMessage("disconnTitle", fileHostName));
   };
-
-  gDialogs.disconnectConfirm.onAccept = async function ()
-  {
-    let syncPrefs = {
-      syncEnabled: false,
-      syncBackend: null,
-      accessToken: null,
-      refreshToken: null,
-      fileHostUsr: null,
-    };
-
-    try {
-      await browser.runtime.sendMessage({id: "sync-disconnected-from-ext-prefs"});
-    }
-    catch {}
-
-    await aePrefs.setPrefs(syncPrefs);
-    try {
-      await browser.runtime.sendMessage({
-        id: "sync-setting-changed",
-        syncEnabled: syncPrefs.syncEnabled,
-      });
-    }
-    catch {}
-
-    this.close();
-    showSyncStatus(syncPrefs.syncEnabled);
-    
-    if ($("#retry-conn").is(":visible")) {
-      $("#retry-conn").hide();
-    }
-    if ($("#reauthorize").is(":visible")) {
-      $("#reauthorize").hide();
-    }
-  };
+  gDialogs.disconnectConfirm.focusedSelector = ".dlg-btns > .dlg-accept";
 
   gDialogs.about = new aeDialog("#about-dlg");
   gDialogs.about.setProps({
