@@ -21,6 +21,7 @@ class aeDialog
     this._fnAfterDlgAccept = function () {};
     this._popupTimerID = null;
     this._lastFocusedElt = null;
+    this._focusedElt = null;
 
     this._fnDlgAccept = function (aEvent) {
       if (this.isPopup()) {
@@ -102,6 +103,16 @@ class aeDialog
     this._fnDlgCancel = aFnCancel;    
   }
 
+  set focusedSelector(aFocusedEltStor)
+  {
+    this._focusedElt = this._dlgElt.find(aFocusedEltStor)[0];
+  }
+
+  find(aEltStor)
+  {
+    return this._dlgElt.find(aEltStor);
+  }
+
   setProps(aProperties)
   {
     for (let prop in aProperties) {
@@ -165,7 +176,12 @@ class aeDialog
       }
     });
 
-    firstTabStop.focus();
+    if (this._focusedElt) {
+      this._focusedElt.focus();
+    }
+    else {
+      firstTabStop.focus();
+    }
   }
 
   changeKeyboardNavigableElts(aFocusableEltsArray)
