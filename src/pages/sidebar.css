@@ -94,7 +94,7 @@ button, label {
 
 #toolbar {
     margin-bottom: -1px;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 #add-link {
