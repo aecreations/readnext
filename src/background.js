@@ -8,7 +8,7 @@ let gOS;
 let gHostAppName;
 let gHostAppVer;
 let gPrefs;
-let gFirstRun = false;
+let gIsFirstRun = false;
 let gVerUpdateType = null;
 let gShowUpdateBanner = false;
 let gAutoOpenConnectWiz = false;

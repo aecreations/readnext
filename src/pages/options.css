@@ -24,6 +24,7 @@
     --color-about-btn: black;
     --url-bkgd-img: url("../img/bkgd.png");
     --url-no-sync-icon: url("../img/syncReadingList.svg");
+    --url-add-link-icon: url("../img/bookmark.svg");
 }
 
 @media (prefers-color-scheme: dark) {
@@ -44,6 +45,7 @@
 	--color-about-btn: #f9f9fa;
 	--url-bkgd-img: none;
 	--url-no-sync-icon: url("../img/syncReadingList-dk.svg");
+	--url-add-link-icon: url("../img/bookmark-dk.svg");
     }
 }
 
@@ -159,8 +161,10 @@ button:-moz-focusring:not(:disabled) {
 }
 
 .inline-icon {
+    display: inline-block;
     width: 16px;
     height: 16px;
+    background-size: contain;
     vertical-align: bottom;
 }
 
@@ -233,6 +237,10 @@ body[data-os="mac"] #sync-icon.conn-error {
 
 #retry-conn, #reauthorize {
     margin-right: 10px;
+}
+
+#add-link-icon {
+    background-image: var(--url-add-link-icon);
 }
 
 #about-btn {
