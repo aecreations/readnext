@@ -816,6 +816,12 @@ function showEmptyMsg()
 }
 
 
+function isEmptyMsgVisible()
+{
+  return $("#welcome").is(":visible");
+}
+
+
 function hideEmptyMsg()
 {
   $("#welcome").hide();
@@ -848,6 +854,9 @@ function hideNotFoundMsg()
 
 function showLoadingProgress()
 {
+  if (isEmptyMsgVisible()) {
+    hideEmptyMsg();
+  }
   $("#search-box").attr("disabled", "true");
   $("#loading").show();
 }
