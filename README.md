@@ -13,7 +13,7 @@ If you are skilled at Firefox extension development and want to contribute code 
 
 1. [Create an issue](https://github.com/aecreations/readnext/issues/new) to describe your bug fix or feature.
 2. Create a new branch originating from the branch for the current major version, `branches/1.0`.  The new branch is where you should commit your code changes.  The branch name should follow the naming convention `branches/your-branch-name`.
-3. When your code changes are ready for review, open a pull request to merge to the branch for the current major version.
+3. When your code changes are ready for review, open a pull request to merge to the branch for the current major version.  Ensure that your PR references the issue you created in step 1.
 4. **IMPORTANT!**  The `main` branch contains the source code for the current release.  Do not commit directly to the `main` branch.
 
 
