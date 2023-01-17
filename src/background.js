@@ -238,13 +238,11 @@ async function syncReadingList()
 {
   // Don't assume that the saved access token is the most up to date.
   // This function may be called immediately after the user has reauthorized
-  // their file host account, and before the changed storage event handler has
-  // executed, so always load prefs from storage.
+  // their file host account and before the changed storage event handler has
+  // finished executing, so always load prefs from storage.
   let {syncBackend, accessToken, refreshToken} = await aePrefs.getAllPrefs();
   let oauthClient = new aeOAuthClient(accessToken, refreshToken);
-  let syncBacknd = Number(syncBackend);
-  
-  await aeSyncReadingList.init(syncBacknd, oauthClient);
+  await aeSyncReadingList.init(Number(syncBackend), oauthClient);
 
   log("Read Next: Starting reading list sync...");
   let isLocalDataChanged;
@@ -375,7 +373,15 @@ async function getFileHostUserInfo()
 {
   let rv;
   
-  if (gPrefs.syncEnabled) {
+  // Don't assume that the saved access token is the most up to date.
+  // This function may be called immediately after the user has reauthorized
+  // their file host account and before the changed storage event handler has
+  // finished executing, so always load prefs from storage.
+  let {syncEnabled, syncBackend, accessToken, refreshToken} = await aePrefs.getAllPrefs();
+  let oauthClient = new aeOAuthClient(accessToken, refreshToken);
+  await aeSyncReadingList.init(Number(syncBackend), oauthClient);
+ 
+  if (syncEnabled) {
     try {
       rv = await aeSyncReadingList.getFileHostUsername();
     }

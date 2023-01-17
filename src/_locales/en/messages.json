@@ -154,7 +154,7 @@
   },
 
   "reauthzMsgBar": {
-    "message": "Read Next needs to reconnect your $1 account",
+    "message": "Read Next needs to reconnect your $1 account.",
     "description": "Reconnection message bar - appears in the reading list sidebar when user needs to reconnect their cloud file host account"
   },
 
