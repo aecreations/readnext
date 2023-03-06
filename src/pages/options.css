@@ -54,6 +54,7 @@ body {
     background-color: var(--color-bkgd);
     background-image: var(--url-bkgd-img);
     color: var(--color-default-text);
+    font-size: 15px;
 }
 
 main {
@@ -110,10 +111,6 @@ h2 {
     font-size: 28px;
     font-weight: 200;
     letter-spacing: -0.2px;
-}
-
-label {
-    font-size: 15px;
 }
 
 fieldset {
