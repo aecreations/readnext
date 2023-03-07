@@ -221,6 +221,7 @@ body[data-os="mac"] #sync-icon.conn-error {
 }
 
 #fh-usr-info {
+    display: block;
     width: 324px;
     padding-left: 1px;
     padding-right: 1px;

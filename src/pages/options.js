@@ -303,7 +303,7 @@ async function showSyncStatus(aPrefs)
       $("#sync-status-spinner").hide();
     }
 
-    let syncStatus = sanitizeHTML(`<span id="fh-svc-info">${browser.i18n.getMessage("connectedTo", fileHostName)}</span><br><input type="text" id="fh-usr-info" value="${fileHostUsr}" readonly>`);
+    let syncStatus = sanitizeHTML(`<div id="fh-svc-info">${browser.i18n.getMessage("connectedTo", fileHostName)}</div><input type="text" id="fh-usr-info" value="${fileHostUsr}" readonly>`);
     $("#sync-status").html(syncStatus);
     $("#retry-conn, #reauthorize").hide();
     toggleSyncBtn.text(browser.i18n.getMessage("btnDisconnect"));
