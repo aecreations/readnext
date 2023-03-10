@@ -266,6 +266,11 @@ let gSearchBox = {
     return this._isActive;
   },
 
+  isSearchInProgress()
+  {
+    return ($("#search-box").val() != "");
+  },
+
   show()
   {
     $("#search-bar").show();
@@ -297,6 +302,22 @@ let gSearchBox = {
     
     let unreadOnly = gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD;
     await rebuildReadingList(srchResults, unreadOnly);
+  },
+
+  async isInSearchResult(aSearchText)
+  {
+    let rv = false;
+    let srchResults = await browser.runtime.sendMessage({
+      id: "search-bookmarks",
+      searchTerms: $("#search-box").val(),
+    });
+
+    if (srchResults.length > 0) {
+      let findIdx = srchResults.findIndex(aItem => aItem.title == aSearchText);
+      rv = findIdx != -1;
+    }
+    
+    return rv;
   },
 
   getCountMatches()
@@ -443,13 +464,13 @@ async function initReadingList(aLocalDataOnly=false)
     else {
       hideLoadingProgress();
       hideEmptyMsg();
-      buildReadingList(bkmks, false);
+      await buildReadingList(bkmks, false);
     }
   }
 }
 
 
-function buildReadingList(aBookmarks, aUnreadOnly)
+async function buildReadingList(aBookmarks, aUnreadOnly)
 {
   log(`Read Next: ${aBookmarks.length} items.`);
   log(aBookmarks);
@@ -462,16 +483,24 @@ function buildReadingList(aBookmarks, aUnreadOnly)
     if (aUnreadOnly && !bkmk.unread) {
       continue;
     }
-    addReadingListItem(bkmk);
+    await addReadingListItem(bkmk);
   }
 }
 
 
-function addReadingListItem(aBookmark)
+async function addReadingListItem(aBookmark)
 {
+  if (gSearchBox.isSearchInProgress()) {
+    if (await gSearchBox.isInSearchResult(aBookmark.title)) {
+      hideNotFoundMsg();
+    }
+    else {
+      return;
+    }
+  }
+
   hideEmptyMsg();
   hideNoUnreadMsg();
-  hideNotFoundMsg();
   hideLoadingProgress();
   
   let tooltipText = `${aBookmark.title}\n${aBookmark.url}`;
@@ -532,7 +561,9 @@ function removeReadingListItem(aBookmarkID)
   bkmkElt.fadeOut(800, function () {
     this.remove();
     if (isReadingListEmpty()) {
-      showEmptyMsg();
+      if (! gSearchBox.isSearchInProgress()) {
+        showEmptyMsg();
+      }
       disableReadingListKeyboardNav();
     }
     else {
@@ -566,7 +597,7 @@ async function rebuildReadingList(aBookmarks, aUnreadOnly, aReloadFavIcons=false
   let mediaQry = window.matchMedia("(prefers-color-scheme: dark)");
   addReadingListItem.isDarkMode = mediaQry.matches;
   
-  buildReadingList(aBookmarks, aUnreadOnly);
+  await buildReadingList(aBookmarks, aUnreadOnly);
 }
 
 
@@ -992,8 +1023,9 @@ function handleExtMessage(aMessage)
 {
   switch (aMessage.id) {
   case "add-bookmark-event":
-    addReadingListItem(aMessage.bookmark);
-    $("#add-link, #add-link-cta").prop("disabled", true);
+    addReadingListItem(aMessage.bookmark).then(() => {
+      $("#add-link, #add-link-cta").prop("disabled", true);
+    });
     break;
 
   case "remove-bookmark-event":

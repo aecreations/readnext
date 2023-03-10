@@ -54,6 +54,7 @@ body {
     background-color: var(--color-bkgd);
     background-image: var(--url-bkgd-img);
     color: var(--color-default-text);
+    font-size: 15px;
 }
 
 main {
@@ -110,10 +111,6 @@ h2 {
     font-size: 28px;
     font-weight: 200;
     letter-spacing: -0.2px;
-}
-
-label {
-    font-size: 15px;
 }
 
 fieldset {
@@ -224,6 +221,16 @@ body[data-os="mac"] #sync-icon.conn-error {
 }
 
 #fh-usr-info {
+    display: block;
+    width: 324px;
+    padding-left: 1px;
+    padding-right: 1px;
+    border: none;
+    
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
     font-size: 13px;
 }
 
