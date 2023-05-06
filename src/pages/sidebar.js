@@ -17,7 +17,12 @@ let gCmd = {
   {
     let url = processURL(aURL);
     let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
-    await browser.tabs.update(actvTab.id, {url, active: true});
+
+    browser.runtime.sendMessage({
+      id: "open-link-curr-wnd",
+      activeTabID: actvTab.id,
+      url,
+    });
   },
 
   openInNewTab(aBookmarkID, aURL)
@@ -699,6 +704,7 @@ function initContextMenu()
         callback(aKey, aOpt) {
           let bkmkElt = aOpt.$trigger[0];
           gCmd.openInNewTab(bkmkElt.dataset.id, bkmkElt.dataset.url);
+          gPrefs.closeSidebarAfterNav && browser.sidebarAction.close();
         }
       },
       openInNewWnd: {
@@ -707,6 +713,7 @@ function initContextMenu()
         callback(aKey, aOpt) {
           let bkmkElt = aOpt.$trigger[0];
           gCmd.openInNewWnd(bkmkElt.dataset.id, bkmkElt.dataset.url);
+          gPrefs.closeSidebarAfterNav && browser.sidebarAction.close();
         }
       },
       openInNewPrivateWnd: {
@@ -716,6 +723,7 @@ function initContextMenu()
           let bkmkElt = aOpt.$trigger[0];
           let url = bkmkElt.dataset.url;
           gCmd.openInNewPrivateWnd(bkmkElt.dataset.id, bkmkElt.dataset.url);
+          gPrefs.closeSidebarAfterNav && browser.sidebarAction.close();
         },
         visible(aKey, aOpt) {
           return initContextMenu.showOpenInPrivBrws;
@@ -1196,6 +1204,10 @@ $("#reading-list").on("click", async (aEvent) => {
   }
 
   gCmd.open(readingListItem.dataset.id, readingListItem.dataset.url);
+
+  if (gPrefs.closeSidebarAfterNav) {
+    browser.sidebarAction.close();
+  }
 });
 
 

@@ -121,6 +121,11 @@ void async function ()
     await aePrefs.setPomaikaiPrefs(gPrefs);
   }
 
+  if (! aePrefs.hasMauiPrefs(gPrefs)) {
+    log("Initializing 1.1 user preferences.");
+    await aePrefs.setMauiPrefs(gPrefs);
+  }
+
   init();
 }();
 
@@ -644,6 +649,10 @@ browser.runtime.onMessage.addListener(aMessage => {
       .then(() => pushLocalChanges())
       .then(() => Promise.resolve())
       .catch(aErr => Promise.reject(aErr));
+    break;
+
+  case "open-link-curr-wnd":
+    browser.tabs.update(aMessage.activeTabID, {url: aMessage.url, active: true});
     break;
 
   case "sync-reading-list":

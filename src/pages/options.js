@@ -63,6 +63,10 @@ $(async () => {
     aePrefs.setPrefs({closeTabAfterAdd: aEvent.target.checked});
   });
 
+  $("#auto-close-sidebar").prop("checked", prefs.closeSidebarAfterNav).on("click", aEvent => {
+    aePrefs.setPrefs({closeSidebarAfterNav: aEvent.target.checked});
+  });
+
   initDialogs();
 
   // Initialize static UI strings for user contribution CTA in the about dialog.

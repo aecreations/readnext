@@ -335,6 +335,10 @@
     "message": "Close tab after adding to Read Next"
   },
 
+  "prefCloseSidebar": {
+    "message": "Close sidebar after opening link"
+  },
+
   "closeTabAfterAddDesc": {
     "message": "You can also do this by right-clicking <span id=\"add-link-icon\" class=\"inline-icon\"></span> in the address bar and then selecting \u201cAdd and Close Tab.\u201d"
   },

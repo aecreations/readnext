@@ -20,6 +20,7 @@ let aePrefs = {
     toolbar: true,
     searchBar: true,
     closeTabAfterAdd: false,
+    closeSidebarAfterNav: false,
 
     // Applicable to Google Drive file host.
     syncFileID: null,
@@ -58,7 +59,7 @@ let aePrefs = {
 
   hasUserPrefs(aPrefs)
   {
-    return aPrefs.hasOwnProperty("syncEnabled");
+    return ("syncEnabled" in aPrefs);
   },
 
   async setUserPrefs(aPrefs) {
@@ -86,13 +87,27 @@ let aePrefs = {
   hasPomaikaiPrefs(aPrefs)
   {
     // Version 0.8.3
-    return aPrefs.hasOwnProperty("closeTabAfterAdd");
+    return ("closeTabAfterAdd" in aPrefs);
   },
 
   async setPomaikaiPrefs(aPrefs)
   {
     let prefs = {
       closeTabAfterAdd: false,
+    };
+    await this._addPrefs(aPrefs, prefs);
+  },
+
+  hasMauiPrefs(aPrefs)
+  {
+    // Version 1.1
+    return ("closeSidebarAfterNav" in aPrefs);
+  },
+
+  async setMauiPrefs(aPrefs)
+  {
+    let prefs = {
+      closeSidebarAfterNav: false,
     };
     await this._addPrefs(aPrefs, prefs);
   },
