@@ -883,25 +883,42 @@ browser.pageAction.onClicked.addListener(() => {
 
 browser.menus.onClicked.addListener(async (aInfo, aTab) => {
   if (aInfo.menuItemId == "ae-readnext-add-bkmk") {
-    if (! isSupportedURL(aTab.url)) {
-      showAddBookmarkErrorNotification();
-      return;
-    }
-
-    let url = processURL(aTab.url);
-    let id = getBookmarkIDFromURL(url);
-    let bkmk = new aeBookmark(id, url, sanitizeHTML(aTab.title));
-    await setBookmarkFavIcon(id, aTab.favIconUrl);
-
-    if (aTab.isInReaderMode) {
-      bkmk.readerMode = true;
-    }
+    // By default, the action applies to the currently active browser tab, but
+    // support the selection of more than 1 browser tab from the tab bar.
+    let selectedTabs = await browser.tabs.query({
+      currentWindow: true,
+      highlighted: true,
+    });
     
-    await addBookmark(bkmk);
-    togglePageActionIcon(true, aTab);
+    for (let i = 0; i < selectedTabs.length; i++) {
+      let tab = selectedTabs[i];
 
-    if (gPrefs.closeTabAfterAdd) {
-      closeTab(aTab.id);
+      if (isSupportedURL(tab.url)) {
+        let url = processURL(tab.url);
+        let id = getBookmarkIDFromURL(url);
+        let bkmk = new aeBookmark(id, url, sanitizeHTML(tab.title));
+        await setBookmarkFavIcon(id, tab.favIconUrl);
+
+        if (tab.isInReaderMode) {
+          bkmk.readerMode = true;
+        }
+        
+        await addBookmark(bkmk);
+        togglePageActionIcon(true, tab);
+
+        if (gPrefs.closeTabAfterAdd) {
+          closeTab(tab.id);
+        } 
+      }
+      else {
+        if (selectedTabs.length == 1) {
+          showAddBookmarkErrorNotification();
+        }
+        else {
+          // Silently skip over the tab showing the Firefox page.
+          warn("Read Next: Unsupported page won't be added to reading list: " + tab.url);
+        }
+      }
     }
   }
   else if (aInfo.menuItemId == "ae-readnext-remove-bkmk") {
