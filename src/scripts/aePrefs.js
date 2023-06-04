@@ -21,6 +21,7 @@ let aePrefs = {
     searchBar: true,
     closeTabAfterAdd: false,
     closeSidebarAfterNav: false,
+    allowEditLinks: true,
 
     // Applicable to Google Drive file host.
     syncFileID: null,
@@ -108,6 +109,7 @@ let aePrefs = {
   {
     let prefs = {
       closeSidebarAfterNav: false,
+      allowEditLinks: true,
     };
     await this._addPrefs(aPrefs, prefs);
   },

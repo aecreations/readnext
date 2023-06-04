@@ -619,6 +619,13 @@ browser.runtime.onMessage.addListener(aMessage => {
       .catch(aErr => Promise.reject(aErr));
     break;
 
+  case "rename-bookmark":
+    aeReadingList.rename(aMessage.bookmarkID, aMessage.newName).then(() => {
+      return pushLocalChanges();
+    }).then(() => Promise.resolve())
+      .catch(aErr => Promise.reject(aErr));
+    break;
+
   case "remove-bookmark":
     aeReadingList.remove(aMessage.bookmarkID).then(() => {
       togglePageActionIcon(false);

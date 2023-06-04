@@ -6,7 +6,7 @@
 
 const TOOLBAR_HEIGHT = 28;
 let gPrefs;
-let gCustomizeDlg;
+let gCustomizeDlg, gRenameDlg;
 let gKeybSelectedIdx = null;
 let gPrefersColorSchemeMedQry;
 let gMsgBarTimerID = null;
@@ -123,6 +123,13 @@ let gCmd = {
       bookmarkID: aBookmarkID,
       isRead: aIsRead,
     });
+  },
+
+  rename(aBookmarkID)
+  {
+    let bkmk = $(`.reading-list-item[data-id="${aBookmarkID}"]`);
+    gRenameDlg.setBookmark(bkmk.attr("data-id"), bkmk.attr("data-title"));
+    gRenameDlg.showModal();
   },
 
   async closeTab(aTabID)
@@ -401,6 +408,7 @@ $(async () => {
   initAddLinkBtn();
   initContextMenu.showManualSync = gPrefs.syncEnabled;
   initContextMenu.showOpenInPrivBrws = await browser.extension.isAllowedIncognitoAccess();
+  initContextMenu.allowEditLinks = gPrefs.allowEditLinks;
   initContextMenu();
   initDialogs();
 
@@ -671,6 +679,49 @@ async function initAddLinkBtn()
 
 function initDialogs()
 {
+  gRenameDlg = new aeDialog("#rename-dlg");
+  gRenameDlg.setProps({bkmkID: null});
+  gRenameDlg.setBookmark = function (aBookmarkID, aName)
+  {
+    this.bkmkID = aBookmarkID;
+    this.find("#new-link-name").val(aName);
+  };
+  gRenameDlg.onInit = function ()
+  {
+    let textarea = this.find("#new-link-name")[0];
+    textarea.select();
+  };
+  gRenameDlg.onAccept = async function ()
+  {
+    let textarea = this.find("#new-link-name")[0];
+    let newName = textarea.value;
+    if (newName == "") {
+      textarea.focus();
+      textarea.select();
+      return;
+    }
+
+    await browser.runtime.sendMessage({
+      id: "rename-bookmark",
+      bookmarkID: this.bkmkID,
+      newName,
+    });
+
+    // Update the link name in the reading list.
+    let listItem = $(`.reading-list-item[data-id="${this.bkmkID}"]`);
+    let title = listItem.find(".reading-list-item-title");
+    title.text(newName);
+    listItem.attr("data-title", newName);
+
+    // Update the tooltip for the reading list item.
+    let bkmkURL = listItem.attr("data-url");
+    let tooltipText = `${newName}\n${bkmkURL}`;
+    listItem.attr("title", tooltipText);
+
+    this.bkmkID = null;
+    this.close();
+  };
+
   gCustomizeDlg = new aeDialog("#customize-dlg");
   gCustomizeDlg.onFirstInit = function ()
   {
@@ -756,6 +807,18 @@ function initContextMenu()
           return bkmkElt.dataset.unread === "false";
         }
       },
+      renameBookmark: {
+        name: browser.i18n.getMessage("renameBkmkCxt"),
+        className: "ae-menuitem",
+        async callback(aKey, aOpt) {
+          let bkmkElt = aOpt.$trigger[0];
+          let bkmkID = bkmkElt.dataset.id;
+          gCmd.rename(bkmkID);
+        },
+        visible(aKey, aOpt) {
+          return initContextMenu.allowEditLinks;
+        },
+      },
       deleteBookmark: {
         name: browser.i18n.getMessage("deleteBkmkCxt"),
         className: "ae-menuitem",
@@ -800,6 +863,7 @@ function initContextMenu()
 }
 initContextMenu.showManualSync = false;
 initContextMenu.showOpenInPrivBrws = false;
+initContextMenu.allowEditLinks = true;
 
 
 function setCustomizations()
