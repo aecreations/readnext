@@ -94,7 +94,12 @@ browser.runtime.onInstalled.addListener(async (aInstall) => {
       // By default, any version update is classified as minor.
       // Specific version updates are considered major if it such that a CTA
       // button to the What's New page should appear in the message bar.
-      gVerUpdateType = aeConst.VER_UPDATE_MINOR;
+      if (currVer == "1.1") {
+        gVerUpdateType = aeConst.VER_UPDATE_MAJOR;
+      }
+      else {
+        gVerUpdateType = aeConst.VER_UPDATE_MINOR;
+      }
       gShowUpdateBanner = true;
     }
   }

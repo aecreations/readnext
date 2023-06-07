@@ -49,7 +49,17 @@
 
   "verMinorUpd": {
     "message": "Read Next was updated!",
-    "description": "Message bar in the reading list sidebar - appears after Read Next is updated to a new version"
+    "description": "Minor version update message bar in the reading list sidebar"
+  },
+
+  "verUpgr": {
+    "message": "Read Next was upgraded!",
+    "description": "Major version upgrade message bar in the reading list sidebar"
+  },
+
+  "btnWhatsNew": {
+    "message": "What's New",
+    "description": "Button in the major version upgrade message bar"
   },
 
   "fhDropbox": {
@@ -404,5 +414,66 @@
 
   "aboutL10n": {
     "message": "add a translation."
+  },
+
+  "upgradeNotifcn": {
+    "message": "Read Next was recently upgraded! Click here to see what's new.",
+    "description": "Post-upgrade notification text"
+  },
+
+  "newVerHdg": {
+    "message": "New Version Installed!",
+    "description": "Header for the What's New page (appears after upgrading Read Next)"
+  },
+
+  "upgrade": {
+    "message": "Read Next has been upgraded to version 1.1.",
+    "description": "What's New page (appears after upgrading Read Next)"
+  },
+
+  "whatsNew": {
+    "message": "What’s New",
+    "description": "What's New page (appears after upgrading Read Next)"
+  },
+
+  "whatsNew1": {
+    "message": "New option to automatically close the reading list sidebar when clicking a link",
+    "description": "Description of an enhancement or fix in the new version of Read Next"
+  },
+
+  "whatsNew2": {
+    "message": "You can now rename a link in the reading list",
+    "description": "Description of an enhancement or fix in the new version of Read Next"
+  },
+
+  "whatsNew3": {
+    "message": "Multiple browser tabs can be added to Read Next if they are selected in the tab bar",
+    "description": "Description of an enhancement or fix in the new version of Read Next"
+  },
+
+  "contribHdg": {
+    "message": "Contribute",
+    "description": "Contribution CTA in the What's New page"
+  },
+
+  "contribCTA": {
+    "message": "Support the development of Read Next by <a href=\"$1\">making a donation</a>.",
+    "description": "Call to action message to make donation"
+  },
+
+  "linkBlog": {
+    "message": "AE Creations Blog"
+  },
+
+  "linkAMO": {
+    "message": "Firefox Add-ons Page"
+  },
+
+  "linkForum": {
+    "message": "Help and Support Forums"
+  },
+
+  "closeWelcomePg": {
+    "message": "Close This Page"
   }
 }

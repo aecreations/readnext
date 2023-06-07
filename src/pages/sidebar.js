@@ -422,8 +422,12 @@ $(async () => {
 
 function showVersionUpdateMsgBar(aVersionUpdateType)
 {
-  // TO DO: If major version update, show message bar with CTA button.
-  showMessageBar("#update-msgbar");
+  if (aVersionUpdateType == aeConst.VER_UPDATE_MAJOR) {
+    showMessageBar("#upgrade-msgbar");
+  }
+  else {
+    showMessageBar("#update-msgbar");
+  }
 
   gMsgBarTimerID = setTimeout(() => {
     hideMessageBar("#update-msgbar");
@@ -1301,6 +1305,10 @@ $("#filter-unread").click(handleFilterSelection)
 
 $("#search-box").focus(aEvent => {
   gSearchBox.activate();
+});
+
+$("#show-whats-new").on("click", aEvent => {
+  browser.tabs.create({url: browser.runtime.getURL("pages/whatsnew.html")});
 });
 
 $("#reauthorize").on("click", aEvent => {

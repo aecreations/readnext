@@ -28,6 +28,7 @@ const aeConst = Object.freeze({
   DEFAULT_FAVICON_DK: "../img/defaultFavicon-dk.svg",
   FAVICON_LOAD_RETRY_DELAY_MS: 1000,
 
+  AMO_URL: "https://addons.mozilla.org/firefox/addon/readnext/",
   BLOG_URL: "https://aecreations.blogspot.com/",
   FORUM_URL: "https://aecreations.io/forums",
   DONATE_URL: "https://liberapay.com/aecreations/",
