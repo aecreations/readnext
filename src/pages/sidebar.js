@@ -698,7 +698,7 @@ function initDialogs()
   gRenameDlg.onAccept = async function ()
   {
     let textarea = this.find("#new-link-name")[0];
-    let newName = textarea.value;
+    let newName = sanitizeHTML(textarea.value);
     if (newName == "") {
       textarea.focus();
       textarea.select();
