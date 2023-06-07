@@ -725,6 +725,10 @@ function initDialogs()
     this.bkmkID = null;
     this.close();
   };
+  gRenameDlg.isOpen = function ()
+  {
+    return this._dlgElt.hasClass("lightbox-show");
+  };
 
   gCustomizeDlg = new aeDialog("#customize-dlg");
   gCustomizeDlg.onFirstInit = function ()
@@ -1083,20 +1087,10 @@ function isReadingListKeyboardNavDisabled()
 //
 
 browser.runtime.onMessage.addListener(aMessage => {
-  if (aeConst.DEBUG) {
-    browser.windows.getCurrent().then(aWnd => {
-      log(`Read Next::sidebar.js: [Window ID: ${aWnd.id}] Received extension message "${aMessage.id}"`);
-      handleExtMessage(aMessage);
-    });
-  }
-  else {
-    handleExtMessage(aMessage);
-  }
-});
+  log(`Read Next::sidebar.js: Received extension message "${aMessage.id}"`);
 
+  let resp = null;
 
-function handleExtMessage(aMessage)
-{
   switch (aMessage.id) {
   case "add-bookmark-event":
     addReadingListItem(aMessage.bookmark).then(() => {
@@ -1184,10 +1178,20 @@ function handleExtMessage(aMessage)
     showMessageBar("#reauthz-msgbar");
     break;
 
+  case "sidebar-sync-ready?":
+    resp = {
+      isReadyToSync: !gRenameDlg.isOpen()
+    };
+    break;
+
   default:
     break;
   }
-}
+
+  if (resp) {
+    return Promise.resolve(resp);
+  }
+});
 
 
 browser.storage.onChanged.addListener((aChanges, aAreaName) => {
@@ -1367,7 +1371,7 @@ $(document).on("contextmenu", aEvent => {
 
 function sanitizeHTML(aHTMLStr)
 {
-  return DOMPurify.sanitize(aHTMLStr, { SAFE_FOR_JQUERY: true });
+  return DOMPurify.sanitize(aHTMLStr, {SAFE_FOR_JQUERY: true});
 }
 
 
