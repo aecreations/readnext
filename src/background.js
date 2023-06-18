@@ -131,6 +131,11 @@ void async function ()
     await aePrefs.setMauiPrefs(gPrefs);
   }
 
+  if (! aePrefs.hasMaunaKeaPrefs(gPrefs)) {
+    log("Initializing additional 1.1 user preferences.");
+    await aePrefs.setMaunaKeaPrefs(gPrefs);
+  }
+
   init();
 }();
 

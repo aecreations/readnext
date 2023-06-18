@@ -359,6 +359,21 @@
     "message": "Close sidebar after opening link"
   },
 
+  "prefClickLinkHdg": {
+    "message": "Click link to open in:",
+    "description": "Radio group heading for default action when clicking on a reading list link"
+  },
+
+  "clickLnkCurrTab": {
+    "message": "Current tab",
+    "description": "Radio button option for default action when clicking on a reading list link"
+  },
+
+  "clickLnkNewTab": {
+    "message": "New tab",
+    "description": "Radio button option for default action when clicking on a reading list link"
+  },
+
   "closeTabAfterAddDesc": {
     "message": "You can also do this by right-clicking <span id=\"add-link-icon\" class=\"inline-icon\"></span> in the address bar and then selecting \u201cAdd and Close Tab.\u201d"
   },
@@ -437,12 +452,12 @@
   },
 
   "whatsNew1": {
-    "message": "New option to automatically close the reading list sidebar when clicking a link",
+    "message": "New option to automatically close the reading list sidebar after opening a link",
     "description": "Description of an enhancement or fix in the new version of Read Next"
   },
 
   "whatsNew2": {
-    "message": "You can now rename a link in the reading list",
+    "message": "You can now choose to always open a reading list link in a new browser tab or the current tab when clicking on it",
     "description": "Description of an enhancement or fix in the new version of Read Next"
   },
 

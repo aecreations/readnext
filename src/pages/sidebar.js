@@ -1270,7 +1270,8 @@ $("#setup-sync").on("click", async (aEvent) => {
   browser.runtime.openOptionsPage();
 });
 
-$("#reading-list").on("click", async (aEvent) => {
+
+$("#reading-list").on("click", aEvent => {
   let readingListItem;
   if (aEvent.target.className == "reading-list-item-title"
       || aEvent.target.className == "favicon") {
@@ -1280,7 +1281,13 @@ $("#reading-list").on("click", async (aEvent) => {
     readingListItem = aEvent.target;
   }
 
-  gCmd.open(readingListItem.dataset.id, readingListItem.dataset.url);
+  if (gPrefs.linkClickAction == aeConst.OPEN_LINK_IN_NEW_TAB) {
+    gCmd.openInNewTab(readingListItem.dataset.id, readingListItem.dataset.url);
+  }
+  else {
+    // Default to opening in current tab.
+    gCmd.open(readingListItem.dataset.id, readingListItem.dataset.url);
+  }
 
   if (gPrefs.closeSidebarAfterNav) {
     browser.sidebarAction.close();

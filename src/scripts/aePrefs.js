@@ -22,6 +22,7 @@ let aePrefs = {
     closeTabAfterAdd: false,
     closeSidebarAfterNav: false,
     allowEditLinks: true,
+    linkClickAction: aeConst.OPEN_LINK_IN_CURRENT_TAB,
 
     // Applicable to Google Drive file host.
     syncFileID: null,
@@ -110,6 +111,18 @@ let aePrefs = {
     let prefs = {
       closeSidebarAfterNav: false,
       allowEditLinks: false,
+    };
+    await this._addPrefs(aPrefs, prefs);
+  },
+
+  hasMaunaKeaPrefs(aPrefs) {
+    // Version 1.1b2
+    return ("linkClickAction" in aPrefs);
+  },
+
+  async setMaunaKeaPrefs(aPrefs) {
+    let prefs = {
+      linkClickAction: aeConst.OPEN_LINK_IN_CURRENT_TAB,
     };
     await this._addPrefs(aPrefs, prefs);
   },

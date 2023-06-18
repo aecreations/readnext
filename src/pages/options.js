@@ -67,6 +67,13 @@ $(async () => {
     aePrefs.setPrefs({closeSidebarAfterNav: aEvent.target.checked});
   });
 
+  $("#open-in-curr-tab").prop("checked", prefs.linkClickAction == aeConst.OPEN_LINK_IN_CURRENT_TAB);
+  $("#open-in-new-tab").prop("checked", prefs.linkClickAction == aeConst.OPEN_LINK_IN_NEW_TAB);
+
+  $('input[type="radio"][name="open-links-in"]').on("click", aEvent => {
+    aePrefs.setPrefs({linkClickAction: aEvent.target.value});
+  });
+
   initDialogs();
 
   // Initialize static UI strings for user contribution CTA in the about dialog.
