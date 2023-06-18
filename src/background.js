@@ -175,6 +175,11 @@ async function init()
 
   setUICustomizations();
 
+  // Disable experimental feature from version 1.1b1
+  if (gPrefs.allowEditLinks) {
+    aePrefs.setPrefs({allowEditLinks: false});
+  }
+
   // Initialize integration with browser
   let [tab] = await browser.tabs.query({active: true, currentWindow: true});
   let bkmk = await getBookmarkFromTab(tab);

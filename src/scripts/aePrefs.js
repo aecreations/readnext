@@ -109,7 +109,7 @@ let aePrefs = {
   {
     let prefs = {
       closeSidebarAfterNav: false,
-      allowEditLinks: true,
+      allowEditLinks: false,
     };
     await this._addPrefs(aPrefs, prefs);
   },
