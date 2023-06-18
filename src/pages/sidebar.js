@@ -5,6 +5,8 @@
  */
 
 const TOOLBAR_HEIGHT = 28;
+
+let gWndID;
 let gPrefs;
 let gCustomizeDlg, gRenameDlg;
 let gKeybSelectedIdx = null;
@@ -417,6 +419,9 @@ $(async () => {
   if (verUpdateType && showBanner) {
     showVersionUpdateMsgBar(verUpdateType);
   }
+
+  let currWnd = await browser.windows.getCurrent();
+  gWndID = currWnd.id;
 });
 
 
@@ -1087,7 +1092,7 @@ function isReadingListKeyboardNavDisabled()
 //
 
 browser.runtime.onMessage.addListener(aMessage => {
-  log(`Read Next::sidebar.js: Received extension message "${aMessage.id}"`);
+  log(`Read Next::sidebar.js: Window ID ${gWndID} received extension message "${aMessage.id}"`);
 
   let resp = null;
 
