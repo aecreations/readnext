@@ -8,9 +8,9 @@
 :root {
     --url-bkgd-img: url("../img/bkgd.png");
     --color-bkgd: none;
-    --color-main-border: #ddd;
+    --color-main-border: #ccc;
     --color-main-bkgd: #fefefe;
-    --color-main-border-shadow: #e0e0e0;
+    --color-main-border-shadow: #c8c8c8;
     --color-secondary-text: #737373;
     --url-amo-img: url("../img/amo.png");
 }
@@ -96,6 +96,10 @@ button {
 
 #dlg-content {
     margin-bottom: 24px;
+}
+
+#dlg-content > p {
+    margin-left: 24px;
 }
 
 #aecreations-links > ul {
