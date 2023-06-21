@@ -38,6 +38,7 @@
       "lib/purify.min.js",
       "scripts/aeConst.js",
       "scripts/aePrefs.js",
+      "scripts/aeVersionCmp.js",
       "scripts/aeBookmark.js",
       "scripts/aeReadingList.js",
       "scripts/aeSyncReadingList.js",

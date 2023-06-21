@@ -87,18 +87,18 @@ browser.runtime.onInstalled.addListener(async (aInstall) => {
     else {
       log(`Read Next: Updating from version ${oldVer} to ${currVer}`);
 
-      // Version updates will cause the reading list sidebar to open
+      // Version updates can sometimes cause the reading list sidebar to open
       // automatically, even if the user had closed it (WebExtension bug?).
       // When this happens, a message bar should appear, informing the user
       // that Read Next was just updated.
       // By default, any version update is classified as minor.
       // Specific version updates are considered major if it such that a CTA
       // button to the What's New page should appear in the message bar.
-      if (currVer == "1.1") {
-        gVerUpdateType = aeConst.VER_UPDATE_MAJOR;
+      if (aeVersionCmp(oldVer, aeConst.CURR_MAJOR_VER) < 0) {
+        gVerUpdateType = aeConst.VER_UPDATE_TYPE_MAJOR;
       }
       else {
-        gVerUpdateType = aeConst.VER_UPDATE_MINOR;
+        gVerUpdateType = aeConst.VER_UPDATE_TYPE_MINOR;
       }
       gShowUpdateBanner = true;
     }

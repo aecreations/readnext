@@ -6,7 +6,7 @@
 
 const aeConst = Object.freeze({
   DEBUG: true,
-  EXTENSION_ID: "readnext@aecreations.github.io",
+  CURR_MAJOR_VER: "1.1",
 
   FILEHOST_DROPBOX: 1,
   FILEHOST_GOOGLE_DRIVE: 2,
@@ -20,8 +20,8 @@ const aeConst = Object.freeze({
   HTTP_STATUS_NOT_FOUND: 404,
   HTTP_STATUS_CONFLICT: 409,
 
-  VER_UPDATE_MAJOR: 1,
-  VER_UPDATE_MINOR: 2,
+  VER_UPDATE_TYPE_MAJOR: 1,
+  VER_UPDATE_TYPE_MINOR: 2,
   MSGBAR_DELAY_MS: 15000,
 
   DEFAULT_FAVICON: "../img/defaultFavicon.svg",

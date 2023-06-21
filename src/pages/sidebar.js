@@ -427,7 +427,7 @@ $(async () => {
 
 function showVersionUpdateMsgBar(aVersionUpdateType)
 {
-  if (aVersionUpdateType == aeConst.VER_UPDATE_MAJOR) {
+  if (aVersionUpdateType == aeConst.VER_UPDATE_TYPE_MAJOR) {
     showMessageBar("#upgrade-msgbar");
   }
   else {
