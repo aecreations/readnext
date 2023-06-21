@@ -96,6 +96,7 @@ browser.runtime.onInstalled.addListener(async (aInstall) => {
       // button to the What's New page should appear in the message bar.
       if (aeVersionCmp(oldVer, aeConst.CURR_MAJOR_VER) < 0) {
         gVerUpdateType = aeConst.VER_UPDATE_TYPE_MAJOR;
+        setWhatsNewNotificationDelay();
       }
       else {
         gVerUpdateType = aeConst.VER_UPDATE_TYPE_MINOR;
@@ -226,6 +227,15 @@ async function setUICustomizations()
     }
     catch {}
   }
+}
+
+
+async function setWhatsNewNotificationDelay()
+{
+  // Show post-update notification in 1 minute.
+  browser.alarms.create("show-upgrade-notifcn", {
+    delayInMinutes: aeConst.POST_UPGRADE_NOTIFCN_DELAY_MS / 60000
+  });
 }
 
 
@@ -630,6 +640,17 @@ function showAddBookmarkErrorNotification()
 }
 
 
+function showWhatsNewNotification()
+{
+  browser.notifications.create("whats-new", {
+    type: "basic",
+    title: browser.i18n.getMessage("extName"),
+    message: browser.i18n.getMessage("upgradeNotifcn"),
+    iconUrl: "img/readnext128.svg",
+  });
+}
+
+
 //
 // Event handlers
 //
@@ -785,6 +806,9 @@ browser.alarms.onAlarm.addListener(async (aAlarm) => {
       await syncReadingList();
     }
     catch {}
+  }
+  else if (aAlarm.name == "show-upgrade-notifcn") {
+    showWhatsNewNotification();
   }
 });
 
@@ -981,9 +1005,12 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
 });
 
 
-browser.notifications.onClicked.addListener(aNotificationID => {
-  if (aNotificationID == "reauthorize") {
+browser.notifications.onClicked.addListener(aNotifID => {
+  if (aNotifID == "reauthorize") {
     gFileHostReauthorizer.openReauthorizePg();
+  }
+  else if (aNotifID == "whats-new") {
+    browser.tabs.create({url: browser.runtime.getURL("pages/whatsnew.html")});    
   }
 });
 
