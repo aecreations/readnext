@@ -451,11 +451,6 @@
     "description": "What's New page (appears after upgrading Read Next)"
   },
 
-  "upgradeNotifcn": {
-    "message": "Read Next was recently updated! Click here to see what's new.",
-    "description": "Post-upgrade notification text"
-  },
-
   "whatsNew1": {
     "message": "New option to automatically close the reading list sidebar after opening a link",
     "description": "Description of an enhancement or fix in the new version of Read Next"
