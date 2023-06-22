@@ -110,7 +110,7 @@ let aePrefs = {
   {
     let prefs = {
       closeSidebarAfterNav: false,
-      allowEditLinks: false,
+      allowEditLinks: true,
     };
     await this._addPrefs(aPrefs, prefs);
   },
@@ -123,6 +123,9 @@ let aePrefs = {
   async setMaunaKeaPrefs(aPrefs) {
     let prefs = {
       linkClickAction: aeConst.OPEN_LINK_IN_CURRENT_TAB,
+
+      // Disable experimental feature from ver 1.1b1
+      allowEditLinks: false,
     };
     await this._addPrefs(aPrefs, prefs);
   },

@@ -181,11 +181,6 @@ async function init()
 
   setUICustomizations();
 
-  // Disable experimental feature from version 1.1b1
-  if (gPrefs.allowEditLinks) {
-    aePrefs.setPrefs({allowEditLinks: false});
-  }
-
   // Initialize integration with browser
   let [tab] = await browser.tabs.query({active: true, currentWindow: true});
   let bkmk = await getBookmarkFromTab(tab);
@@ -232,7 +227,7 @@ async function setUICustomizations()
 
 async function setWhatsNewNotificationDelay()
 {
-  // Show post-update notification in 1 minute.
+  // Show post-upgrade notification in 1 minute.
   browser.alarms.create("show-upgrade-notifcn", {
     delayInMinutes: aeConst.POST_UPGRADE_NOTIFCN_DELAY_MS / 60000
   });
