@@ -410,7 +410,6 @@ $(async () => {
   initAddLinkBtn();
   initContextMenu.showManualSync = gPrefs.syncEnabled;
   initContextMenu.showOpenInPrivBrws = await browser.extension.isAllowedIncognitoAccess();
-  initContextMenu.allowEditLinks = gPrefs.allowEditLinks;
   initContextMenu();
   initDialogs();
 
@@ -771,6 +770,18 @@ function initContextMenu()
           gPrefs.closeSidebarAfterNav && browser.sidebarAction.close();
         }
       },
+      openInCurrentTab: {
+        name: browser.i18n.getMessage("mnuOpenCurrTab"),
+        className: "ae-menuitem",
+        callback(aKey, aOpt) {
+          let bkmkElt = aOpt.$trigger[0];
+          gCmd.open(bkmkElt.dataset.id, bkmkElt.dataset.url);
+          gPrefs.closeSidebarAfterNav && browser.sidebarAction.close();
+        },
+        visible(aKey, aOpt) {
+          return (gPrefs.linkClickAction == aeConst.OPEN_LINK_IN_NEW_TAB);
+        }
+      },
       openInNewWnd: {
         name: browser.i18n.getMessage("mnuOpenNewWnd"),
         className: "ae-menuitem",
@@ -829,7 +840,7 @@ function initContextMenu()
           gCmd.rename(bkmkID);
         },
         visible(aKey, aOpt) {
-          return initContextMenu.allowEditLinks;
+          return (gPrefs.allowEditLinks == true);
         },
       },
       deleteBookmark: {
@@ -876,7 +887,6 @@ function initContextMenu()
 }
 initContextMenu.showManualSync = false;
 initContextMenu.showOpenInPrivBrws = false;
-initContextMenu.allowEditLinks = true;
 
 
 function setCustomizations()

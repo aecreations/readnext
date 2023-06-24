@@ -148,6 +148,10 @@
     "message": "Open In New Tab"
   },
 
+  "mnuOpenCurrTab": {
+    "message": "Open In Current Tab"
+  },
+  
   "mnuOpenNewWnd": {
     "message": "Open In New Window"
   },
