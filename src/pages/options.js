@@ -83,6 +83,11 @@ $(async () => {
   usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-conj">${browser.i18n.getMessage("aboutContribConj")}</label>&nbsp;`));
   usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.L10N_URL}" class="hyperlink">${browser.i18n.getMessage("aboutL10n")}</a>`));
 
+  $(".hyperlink").click(aEvent => {
+    aEvent.preventDefault();
+    gotoURL(aEvent.target.href);
+  });
+
   gIsInitialized = true;
 
   // Check if the cloud file host connection wizard should be opened automatically.
@@ -467,11 +472,6 @@ $("#reauthorize").on("click", aEvent => {
 
 
 $("#about-btn").on("click", aEvent => { gDialogs.about.showModal() });
-
-$(".hyperlink").click(aEvent => {
-  aEvent.preventDefault();
-  gotoURL(aEvent.target.href);
-});
 
 
 $(window).on("focus", async (aEvent) => {
