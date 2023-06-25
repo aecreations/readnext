@@ -35,6 +35,6 @@ const aeConst = Object.freeze({
   AMO_URL: "https://addons.mozilla.org/firefox/addon/readnext/",
   BLOG_URL: "https://aecreations.blogspot.com/",
   FORUM_URL: "https://aecreations.io/forums",
-  DONATE_URL: "https://liberapay.com/aecreations/",
+  DONATE_URL: "https://www.paypal.com/paypalme/aecreations88/4.99cad",
   L10N_URL: "https://crowdin.com/project/readnext",
 });
