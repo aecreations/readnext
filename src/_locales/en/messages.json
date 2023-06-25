@@ -84,12 +84,12 @@
 
   "renameBkmkCxt": {
     "message": "Rename…",
-    "description": "Context menu item for renaming a reading list item; also used for the rename dialog heading"
+    "description": "Context menu item for renaming a reading list item; also used for the rename dialog heading (EXPERIMENTAL FEATURE)"
   },
 
   "renameBkmk": {
     "message": "Rename",
-    "description": "Rename dialog heading"
+    "description": "Rename dialog heading (EXPERIMENTAL FEATURE)"
   },
 
   "errAddBkmk": {
