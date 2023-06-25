@@ -424,10 +424,20 @@ $(async () => {
 });
 
 
-function showVersionUpdateMsgBar(aVersionUpdateType)
+async function showVersionUpdateMsgBar(aVersionUpdateType)
 {
   if (aVersionUpdateType == aeConst.VER_UPDATE_TYPE_MAJOR) {
-    showMessageBar("#upgrade-msgbar");
+    // Check if What's New page is already open.
+    let isWhatsNewPgOpen = false;
+    try {
+      await browser.runtime.sendMessage({id: "ping-whats-new-pg"});
+      isWhatsNewPgOpen = true;
+    }
+    catch {}
+
+    if (! isWhatsNewPgOpen) {
+      showMessageBar("#upgrade-msgbar");
+    }
   }
   else {
     showMessageBar("#update-msgbar");
@@ -1335,6 +1345,7 @@ $("#search-box").focus(aEvent => {
 
 $("#show-whats-new").on("click", aEvent => {
   browser.tabs.create({url: browser.runtime.getURL("pages/whatsnew.html")});
+  hideMessageBar("#upgrade-msgbar");
 });
 
 $("#reauthorize").on("click", aEvent => {

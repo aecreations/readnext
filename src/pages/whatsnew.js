@@ -43,6 +43,18 @@ async function closePage()
 }
 
 
+//
+// Event handlers
+//
+
+browser.runtime.onMessage.addListener(aMessage => {
+  if (aMessage.id == "ping-whats-new-pg") {
+    let resp = {isOpen: true};
+    return Promise.resolve(resp);
+  }
+});
+
+
 $(window).on("contextmenu", aEvent => {
   if (aEvent.target.tagName != "INPUT" && aEvent.target.getAttribute("type") != "text") {
     aEvent.preventDefault();
