@@ -430,8 +430,8 @@ async function showVersionUpdateMsgBar(aVersionUpdateType)
     // Check if What's New page is already open.
     let isWhatsNewPgOpen = false;
     try {
-      await browser.runtime.sendMessage({id: "ping-whats-new-pg"});
-      isWhatsNewPgOpen = true;
+      let resp = await browser.runtime.sendMessage({id: "ping-whats-new-pg"});
+      isWhatsNewPgOpen = !!resp;
     }
     catch {}
 
