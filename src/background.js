@@ -643,6 +643,8 @@ function showWhatsNewNotification()
     message: browser.i18n.getMessage("upgradeNotifcn"),
     iconUrl: "img/readnext128.svg",
   });
+  
+  gShowUpdateBanner = false;
 }
 
 
