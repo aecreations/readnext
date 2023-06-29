@@ -49,7 +49,17 @@
 
   "verMinorUpd": {
     "message": "Read Next was updated!",
-    "description": "Message bar in the reading list sidebar - appears after Read Next is updated to a new version"
+    "description": "Minor version update message bar in the reading list sidebar"
+  },
+
+  "verUpgr": {
+    "message": "Read Next was upgraded!",
+    "description": "Major version upgrade message bar in the reading list sidebar"
+  },
+
+  "btnWhatsNew": {
+    "message": "What's New",
+    "description": "Button in the major version upgrade message bar"
   },
 
   "fhDropbox": {
@@ -70,6 +80,16 @@
   "deleteBkmkCxt": {
     "message": "Delete",
     "description": "Context menu item for deleting reading list item"
+  },
+
+  "renameBkmkCxt": {
+    "message": "Rename…",
+    "description": "Context menu item for renaming a reading list item; also used for the rename dialog heading (EXPERIMENTAL FEATURE)"
+  },
+
+  "renameBkmk": {
+    "message": "Rename",
+    "description": "Rename dialog heading (EXPERIMENTAL FEATURE)"
   },
 
   "errAddBkmk": {
@@ -128,6 +148,10 @@
     "message": "Open In New Tab"
   },
 
+  "mnuOpenCurrTab": {
+    "message": "Open In Current Tab"
+  },
+  
   "mnuOpenNewWnd": {
     "message": "Open In New Window"
   },
@@ -335,6 +359,25 @@
     "message": "Close tab after adding to Read Next"
   },
 
+  "prefCloseSidebar": {
+    "message": "Close sidebar after opening link"
+  },
+
+  "prefClickLinkHdg": {
+    "message": "Click link to open in:",
+    "description": "Radio group heading for default action when clicking on a reading list link"
+  },
+
+  "clickLnkCurrTab": {
+    "message": "Current tab",
+    "description": "Radio button option for default action when clicking on a reading list link"
+  },
+
+  "clickLnkNewTab": {
+    "message": "New tab",
+    "description": "Radio button option for default action when clicking on a reading list link"
+  },
+
   "closeTabAfterAddDesc": {
     "message": "You can also do this by right-clicking <span id=\"add-link-icon\" class=\"inline-icon\"></span> in the address bar and then selecting \u201cAdd and Close Tab.\u201d"
   },
@@ -390,5 +433,66 @@
 
   "aboutL10n": {
     "message": "add a translation."
+  },
+
+  "upgradeNotifcn": {
+    "message": "Read Next was recently upgraded! Click here to see what's new.",
+    "description": "Post-upgrade notification text"
+  },
+
+  "newVerHdg": {
+    "message": "New Version Installed!",
+    "description": "Header for the What's New page (appears after upgrading Read Next)"
+  },
+
+  "upgrade": {
+    "message": "Read Next has been upgraded to version 1.1.",
+    "description": "What's New page (appears after upgrading Read Next)"
+  },
+
+  "whatsNew": {
+    "message": "What’s New",
+    "description": "What's New page (appears after upgrading Read Next)"
+  },
+
+  "whatsNew1": {
+    "message": "New option to automatically close the reading list sidebar after opening a link",
+    "description": "Description of an enhancement or fix in the new version of Read Next"
+  },
+
+  "whatsNew2": {
+    "message": "You can now choose to always open a reading list link in a new browser tab or the current tab when clicking on it",
+    "description": "Description of an enhancement or fix in the new version of Read Next"
+  },
+
+  "whatsNew3": {
+    "message": "Multiple browser tabs can be added to Read Next if they're selected in the tab bar",
+    "description": "Description of an enhancement or fix in the new version of Read Next"
+  },
+
+  "contribHdg": {
+    "message": "Contribute",
+    "description": "Contribution CTA in the What's New page"
+  },
+
+  "contribCTA": {
+    "message": "Support the development of Read Next by <a href=\"$1\">making a donation</a>.",
+    "description": "Call to action message to make donation"
+  },
+
+  "linkBlog": {
+    "message": "AE Creations Blog"
+  },
+
+  "linkAMO": {
+    "message": "Firefox Add-ons Page"
+  },
+
+  "linkForum": {
+    "message": "Help and Support Forums"
+  },
+
+  "closeWelcomePg": {
+    "message": "Close This Page"
   }
 }

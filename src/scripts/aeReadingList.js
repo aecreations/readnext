@@ -47,6 +47,18 @@ let aeReadingList = {
     return rv;
   },
 
+  async rename(aBookmarkID, aName)
+  {
+    let db = this._getDB();
+    let changes = {
+      title: aName,
+      updatedAt: new Date().toISOString(),
+    };
+    
+    await db.bookmarks.update(aBookmarkID, changes);
+    this._updateLocalLastModifiedTime();
+  },
+
   async bulkAdd(aBookmarks)
   {
     let db = this._getDB();

@@ -87,14 +87,20 @@ browser.runtime.onInstalled.addListener(async (aInstall) => {
     else {
       log(`Read Next: Updating from version ${oldVer} to ${currVer}`);
 
-      // Version updates will cause the reading list sidebar to open
+      // Version updates can sometimes cause the reading list sidebar to open
       // automatically, even if the user had closed it (WebExtension bug?).
       // When this happens, a message bar should appear, informing the user
       // that Read Next was just updated.
       // By default, any version update is classified as minor.
       // Specific version updates are considered major if it such that a CTA
       // button to the What's New page should appear in the message bar.
-      gVerUpdateType = aeConst.VER_UPDATE_MINOR;
+      if (aeVersionCmp(oldVer, aeConst.CURR_MAJOR_VER) < 0) {
+        gVerUpdateType = aeConst.VER_UPDATE_TYPE_MAJOR;
+        setWhatsNewNotificationDelay();
+      }
+      else {
+        gVerUpdateType = aeConst.VER_UPDATE_TYPE_MINOR;
+      }
       gShowUpdateBanner = true;
     }
   }
@@ -119,6 +125,16 @@ void async function ()
   if (! aePrefs.hasPomaikaiPrefs(gPrefs)) {
     log("Initializing 0.8.3 user preferences.");
     await aePrefs.setPomaikaiPrefs(gPrefs);
+  }
+
+  if (! aePrefs.hasMauiPrefs(gPrefs)) {
+    log("Initializing 1.1 user preferences.");
+    await aePrefs.setMauiPrefs(gPrefs);
+  }
+
+  if (! aePrefs.hasMaunaKeaPrefs(gPrefs)) {
+    log("Initializing additional 1.1 user preferences.");
+    await aePrefs.setMaunaKeaPrefs(gPrefs);
   }
 
   init();
@@ -209,6 +225,15 @@ async function setUICustomizations()
 }
 
 
+async function setWhatsNewNotificationDelay()
+{
+  // Show post-upgrade notification in 1 minute.
+  browser.alarms.create("show-upgrade-notifcn", {
+    delayInMinutes: aeConst.POST_UPGRADE_NOTIFCN_DELAY_MS / 60000
+  });
+}
+
+
 async function firstSyncReadingList()
 {
   let oauthClient = new aeOAuthClient(gPrefs.accessToken, gPrefs.refreshToken);
@@ -236,6 +261,21 @@ async function firstSyncReadingList()
 
 async function syncReadingList()
 {
+  // If the reading list sidebar is open, check that there isn't any editing
+  // action in progress.
+  // TO DO: Make this work for sidebar open in multiple browser windows.
+  let isSyncReady = true;
+  try {
+    let sidebarChk = await browser.runtime.sendMessage({id: "sidebar-sync-ready?"});
+    isSyncReady = sidebarChk.isReadyToSync;
+  }
+  catch {}
+
+  if (! isSyncReady) {
+    warn("Read Next: syncReadingList(): The reading list sidebar is not ready for sync; aborting.");
+    return;
+  }
+  
   // Don't assume that the saved access token is the most up to date.
   // This function may be called immediately after the user has reauthorized
   // their file host account and before the changed storage event handler has
@@ -595,6 +635,19 @@ function showAddBookmarkErrorNotification()
 }
 
 
+function showWhatsNewNotification()
+{
+  browser.notifications.create("whats-new", {
+    type: "basic",
+    title: browser.i18n.getMessage("extName"),
+    message: browser.i18n.getMessage("upgradeNotifcn"),
+    iconUrl: "img/readnext128.svg",
+  });
+  
+  gShowUpdateBanner = false;
+}
+
+
 //
 // Event handlers
 //
@@ -611,6 +664,13 @@ browser.runtime.onMessage.addListener(aMessage => {
       updateMenus();
       return pushLocalChanges();
     }).then(() => Promise.resolve(newBkmkID))
+      .catch(aErr => Promise.reject(aErr));
+    break;
+
+  case "rename-bookmark":
+    aeReadingList.rename(aMessage.bookmarkID, aMessage.newName).then(() => {
+      return pushLocalChanges();
+    }).then(() => Promise.resolve())
       .catch(aErr => Promise.reject(aErr));
     break;
 
@@ -644,6 +704,10 @@ browser.runtime.onMessage.addListener(aMessage => {
       .then(() => pushLocalChanges())
       .then(() => Promise.resolve())
       .catch(aErr => Promise.reject(aErr));
+    break;
+
+  case "open-link-curr-wnd":
+    browser.tabs.update(aMessage.activeTabID, {url: aMessage.url, active: true});
     break;
 
   case "sync-reading-list":
@@ -739,6 +803,9 @@ browser.alarms.onAlarm.addListener(async (aAlarm) => {
       await syncReadingList();
     }
     catch {}
+  }
+  else if (aAlarm.name == "show-upgrade-notifcn") {
+    showWhatsNewNotification();
   }
 });
 
@@ -874,25 +941,42 @@ browser.pageAction.onClicked.addListener(() => {
 
 browser.menus.onClicked.addListener(async (aInfo, aTab) => {
   if (aInfo.menuItemId == "ae-readnext-add-bkmk") {
-    if (! isSupportedURL(aTab.url)) {
-      showAddBookmarkErrorNotification();
-      return;
-    }
-
-    let url = processURL(aTab.url);
-    let id = getBookmarkIDFromURL(url);
-    let bkmk = new aeBookmark(id, url, sanitizeHTML(aTab.title));
-    await setBookmarkFavIcon(id, aTab.favIconUrl);
-
-    if (aTab.isInReaderMode) {
-      bkmk.readerMode = true;
-    }
+    // By default, the action applies to the currently active browser tab, but
+    // support the selection of more than 1 browser tab from the tab bar.
+    let selectedTabs = await browser.tabs.query({
+      currentWindow: true,
+      highlighted: true,
+    });
     
-    await addBookmark(bkmk);
-    togglePageActionIcon(true, aTab);
+    for (let i = 0; i < selectedTabs.length; i++) {
+      let tab = selectedTabs[i];
 
-    if (gPrefs.closeTabAfterAdd) {
-      closeTab(aTab.id);
+      if (isSupportedURL(tab.url)) {
+        let url = processURL(tab.url);
+        let id = getBookmarkIDFromURL(url);
+        let bkmk = new aeBookmark(id, url, sanitizeHTML(tab.title));
+        await setBookmarkFavIcon(id, tab.favIconUrl);
+
+        if (tab.isInReaderMode) {
+          bkmk.readerMode = true;
+        }
+        
+        await addBookmark(bkmk);
+        togglePageActionIcon(true, tab);
+
+        if (gPrefs.closeTabAfterAdd) {
+          closeTab(tab.id);
+        } 
+      }
+      else {
+        if (selectedTabs.length == 1) {
+          showAddBookmarkErrorNotification();
+        }
+        else {
+          // Silently skip over the tab showing the Firefox page.
+          warn("Read Next: Unsupported page won't be added to reading list: " + tab.url);
+        }
+      }
     }
   }
   else if (aInfo.menuItemId == "ae-readnext-remove-bkmk") {
@@ -918,9 +1002,12 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
 });
 
 
-browser.notifications.onClicked.addListener(aNotificationID => {
-  if (aNotificationID == "reauthorize") {
+browser.notifications.onClicked.addListener(aNotifID => {
+  if (aNotifID == "reauthorize") {
     gFileHostReauthorizer.openReauthorizePg();
+  }
+  else if (aNotifID == "whats-new") {
+    browser.tabs.create({url: browser.runtime.getURL("pages/whatsnew.html")});    
   }
 });
 

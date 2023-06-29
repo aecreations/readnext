@@ -5,8 +5,10 @@
  */
 
 const TOOLBAR_HEIGHT = 28;
+
+let gWndID;
 let gPrefs;
-let gCustomizeDlg;
+let gCustomizeDlg, gRenameDlg;
 let gKeybSelectedIdx = null;
 let gPrefersColorSchemeMedQry;
 let gMsgBarTimerID = null;
@@ -17,7 +19,12 @@ let gCmd = {
   {
     let url = processURL(aURL);
     let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
-    await browser.tabs.update(actvTab.id, {url, active: true});
+
+    browser.runtime.sendMessage({
+      id: "open-link-curr-wnd",
+      activeTabID: actvTab.id,
+      url,
+    });
   },
 
   openInNewTab(aBookmarkID, aURL)
@@ -118,6 +125,13 @@ let gCmd = {
       bookmarkID: aBookmarkID,
       isRead: aIsRead,
     });
+  },
+
+  rename(aBookmarkID)
+  {
+    let bkmk = $(`.reading-list-item[data-id="${aBookmarkID}"]`);
+    gRenameDlg.setBookmark(bkmk.attr("data-id"), bkmk.attr("data-title"));
+    gRenameDlg.showModal();
   },
 
   async closeTab(aTabID)
@@ -404,13 +418,30 @@ $(async () => {
   if (verUpdateType && showBanner) {
     showVersionUpdateMsgBar(verUpdateType);
   }
+
+  let currWnd = await browser.windows.getCurrent();
+  gWndID = currWnd.id;
 });
 
 
-function showVersionUpdateMsgBar(aVersionUpdateType)
+async function showVersionUpdateMsgBar(aVersionUpdateType)
 {
-  // TO DO: If major version update, show message bar with CTA button.
-  showMessageBar("#update-msgbar");
+  if (aVersionUpdateType == aeConst.VER_UPDATE_TYPE_MAJOR) {
+    // Check if What's New page is already open.
+    let isWhatsNewPgOpen = false;
+    try {
+      let resp = await browser.runtime.sendMessage({id: "ping-whats-new-pg"});
+      isWhatsNewPgOpen = !!resp;
+    }
+    catch {}
+
+    if (! isWhatsNewPgOpen) {
+      showMessageBar("#upgrade-msgbar");
+    }
+  }
+  else {
+    showMessageBar("#update-msgbar");
+  }
 
   gMsgBarTimerID = setTimeout(() => {
     hideMessageBar("#update-msgbar");
@@ -666,6 +697,53 @@ async function initAddLinkBtn()
 
 function initDialogs()
 {
+  gRenameDlg = new aeDialog("#rename-dlg");
+  gRenameDlg.setProps({bkmkID: null});
+  gRenameDlg.setBookmark = function (aBookmarkID, aName)
+  {
+    this.bkmkID = aBookmarkID;
+    this.find("#new-link-name").val(aName);
+  };
+  gRenameDlg.onInit = function ()
+  {
+    let textarea = this.find("#new-link-name")[0];
+    textarea.select();
+  };
+  gRenameDlg.onAccept = async function ()
+  {
+    let textarea = this.find("#new-link-name")[0];
+    let newName = sanitizeHTML(textarea.value);
+    if (newName == "") {
+      textarea.focus();
+      textarea.select();
+      return;
+    }
+
+    await browser.runtime.sendMessage({
+      id: "rename-bookmark",
+      bookmarkID: this.bkmkID,
+      newName,
+    });
+
+    // Update the link name in the reading list.
+    let listItem = $(`.reading-list-item[data-id="${this.bkmkID}"]`);
+    let title = listItem.find(".reading-list-item-title");
+    title.text(newName);
+    listItem.attr("data-title", newName);
+
+    // Update the tooltip for the reading list item.
+    let bkmkURL = listItem.attr("data-url");
+    let tooltipText = `${newName}\n${bkmkURL}`;
+    listItem.attr("title", tooltipText);
+
+    this.bkmkID = null;
+    this.close();
+  };
+  gRenameDlg.isOpen = function ()
+  {
+    return this._dlgElt.hasClass("lightbox-show");
+  };
+
   gCustomizeDlg = new aeDialog("#customize-dlg");
   gCustomizeDlg.onFirstInit = function ()
   {
@@ -699,6 +777,19 @@ function initContextMenu()
         callback(aKey, aOpt) {
           let bkmkElt = aOpt.$trigger[0];
           gCmd.openInNewTab(bkmkElt.dataset.id, bkmkElt.dataset.url);
+          gPrefs.closeSidebarAfterNav && browser.sidebarAction.close();
+        }
+      },
+      openInCurrentTab: {
+        name: browser.i18n.getMessage("mnuOpenCurrTab"),
+        className: "ae-menuitem",
+        callback(aKey, aOpt) {
+          let bkmkElt = aOpt.$trigger[0];
+          gCmd.open(bkmkElt.dataset.id, bkmkElt.dataset.url);
+          gPrefs.closeSidebarAfterNav && browser.sidebarAction.close();
+        },
+        visible(aKey, aOpt) {
+          return (gPrefs.linkClickAction == aeConst.OPEN_LINK_IN_NEW_TAB);
         }
       },
       openInNewWnd: {
@@ -707,6 +798,7 @@ function initContextMenu()
         callback(aKey, aOpt) {
           let bkmkElt = aOpt.$trigger[0];
           gCmd.openInNewWnd(bkmkElt.dataset.id, bkmkElt.dataset.url);
+          gPrefs.closeSidebarAfterNav && browser.sidebarAction.close();
         }
       },
       openInNewPrivateWnd: {
@@ -716,6 +808,7 @@ function initContextMenu()
           let bkmkElt = aOpt.$trigger[0];
           let url = bkmkElt.dataset.url;
           gCmd.openInNewPrivateWnd(bkmkElt.dataset.id, bkmkElt.dataset.url);
+          gPrefs.closeSidebarAfterNav && browser.sidebarAction.close();
         },
         visible(aKey, aOpt) {
           return initContextMenu.showOpenInPrivBrws;
@@ -747,6 +840,18 @@ function initContextMenu()
           let bkmkElt = aOpt.$trigger[0];
           return bkmkElt.dataset.unread === "false";
         }
+      },
+      renameBookmark: {
+        name: browser.i18n.getMessage("renameBkmkCxt"),
+        className: "ae-menuitem",
+        async callback(aKey, aOpt) {
+          let bkmkElt = aOpt.$trigger[0];
+          let bkmkID = bkmkElt.dataset.id;
+          gCmd.rename(bkmkID);
+        },
+        visible(aKey, aOpt) {
+          return (gPrefs.allowEditLinks == true);
+        },
       },
       deleteBookmark: {
         name: browser.i18n.getMessage("deleteBkmkCxt"),
@@ -1007,20 +1112,10 @@ function isReadingListKeyboardNavDisabled()
 //
 
 browser.runtime.onMessage.addListener(aMessage => {
-  if (aeConst.DEBUG) {
-    browser.windows.getCurrent().then(aWnd => {
-      log(`Read Next::sidebar.js: [Window ID: ${aWnd.id}] Received extension message "${aMessage.id}"`);
-      handleExtMessage(aMessage);
-    });
-  }
-  else {
-    handleExtMessage(aMessage);
-  }
-});
+  log(`Read Next::sidebar.js: Window ID ${gWndID} received extension message "${aMessage.id}"`);
 
+  let resp = null;
 
-function handleExtMessage(aMessage)
-{
   switch (aMessage.id) {
   case "add-bookmark-event":
     addReadingListItem(aMessage.bookmark).then(() => {
@@ -1108,10 +1203,20 @@ function handleExtMessage(aMessage)
     showMessageBar("#reauthz-msgbar");
     break;
 
+  case "sidebar-sync-ready?":
+    resp = {
+      isReadyToSync: !gRenameDlg.isOpen()
+    };
+    break;
+
   default:
     break;
   }
-}
+
+  if (resp) {
+    return Promise.resolve(resp);
+  }
+});
 
 
 browser.storage.onChanged.addListener((aChanges, aAreaName) => {
@@ -1185,7 +1290,8 @@ $("#setup-sync").on("click", async (aEvent) => {
   browser.runtime.openOptionsPage();
 });
 
-$("#reading-list").on("click", async (aEvent) => {
+
+$("#reading-list").on("click", aEvent => {
   let readingListItem;
   if (aEvent.target.className == "reading-list-item-title"
       || aEvent.target.className == "favicon") {
@@ -1195,7 +1301,17 @@ $("#reading-list").on("click", async (aEvent) => {
     readingListItem = aEvent.target;
   }
 
-  gCmd.open(readingListItem.dataset.id, readingListItem.dataset.url);
+  if (gPrefs.linkClickAction == aeConst.OPEN_LINK_IN_NEW_TAB) {
+    gCmd.openInNewTab(readingListItem.dataset.id, readingListItem.dataset.url);
+  }
+  else {
+    // Default to opening in current tab.
+    gCmd.open(readingListItem.dataset.id, readingListItem.dataset.url);
+  }
+
+  if (gPrefs.closeSidebarAfterNav) {
+    browser.sidebarAction.close();
+  }
 });
 
 
@@ -1225,6 +1341,11 @@ $("#filter-unread").click(handleFilterSelection)
 
 $("#search-box").focus(aEvent => {
   gSearchBox.activate();
+});
+
+$("#show-whats-new").on("click", aEvent => {
+  browser.tabs.create({url: browser.runtime.getURL("pages/whatsnew.html")});
+  hideMessageBar("#upgrade-msgbar");
 });
 
 $("#reauthorize").on("click", aEvent => {
@@ -1283,7 +1404,7 @@ $(document).on("contextmenu", aEvent => {
 
 function sanitizeHTML(aHTMLStr)
 {
-  return DOMPurify.sanitize(aHTMLStr, { SAFE_FOR_JQUERY: true });
+  return DOMPurify.sanitize(aHTMLStr, {SAFE_FOR_JQUERY: true});
 }
 
 

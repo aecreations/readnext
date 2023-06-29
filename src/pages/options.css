@@ -223,6 +223,7 @@ body[data-os="mac"] #sync-icon.conn-error {
 #fh-usr-info {
     display: block;
     width: 324px;
+    margin-top: 1px;
     padding-left: 1px;
     padding-right: 1px;
     border: none;
@@ -270,6 +271,19 @@ body[data-os="mac"] #sync-icon.conn-error {
 #about-btn:active {   
     border: 1px solid #b1b1b3;
     background-color: var(--color-about-btn-bkgd-active);
+}
+
+#open-links-in-opts {
+    margin-top: 12px;
+}
+
+#open-links-in-label {
+    margin-right: 4px;
+    vertical-align: bottom;
+}
+
+#open-in-curr-tab + label {
+    margin-right: 4px;
 }
 
 

@@ -22,6 +22,18 @@
             </div>
 	    <div class="inline-msgbar-dismiss"></div>
           </div>
+	  <div id="upgrade-msgbar" class="inline-msgbar msgbar-success">
+            <div class="inline-msgbar-icon"></div>
+            <div class="inline-msgbar-body">
+	      <div class="inline-msgbar-content">
+		<label id="update-msgbar-content" data-i18n="verUpgr"></label>
+	      </div>
+	      <div class="inline-msgbar-actions" class="row">
+		<button id="show-whats-new" data-i18n="btnWhatsNew"></button>
+	      </div>
+            </div>
+	    <div class="inline-msgbar-dismiss"></div>
+          </div>
 	  <div id="reauthz-msgbar" class="inline-msgbar msgbar-warning">
             <div class="inline-msgbar-icon"></div>
             <div class="inline-msgbar-body">
@@ -90,6 +102,18 @@
     </main>
 
     <!-- Dialog boxes -->
+    <div id="rename-dlg" class="lightbox">
+      <div class="dlg-content">
+        <p class="dlg-hdg" data-i18n="renameBkmk"></p>
+        <div class="row browser-style">
+          <textarea id="new-link-name"></textarea>
+        </div>       
+      </div>
+      <div class="dlg-btns">
+	<button class="dlg-accept default" data-i18n="btnOK"></button>
+        <button class="dlg-cancel" data-i18n="btnCancel"></button>
+      </div>
+    </div>
     <div id="customize-dlg" class="lightbox">
       <div class="dlg-content">
         <p class="dlg-hdg" data-i18n="custzHdg"></p>

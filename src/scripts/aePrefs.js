@@ -20,6 +20,9 @@ let aePrefs = {
     toolbar: true,
     searchBar: true,
     closeTabAfterAdd: false,
+    closeSidebarAfterNav: false,
+    allowEditLinks: true,
+    linkClickAction: aeConst.OPEN_LINK_IN_CURRENT_TAB,
 
     // Applicable to Google Drive file host.
     syncFileID: null,
@@ -58,7 +61,7 @@ let aePrefs = {
 
   hasUserPrefs(aPrefs)
   {
-    return aPrefs.hasOwnProperty("syncEnabled");
+    return ("syncEnabled" in aPrefs);
   },
 
   async setUserPrefs(aPrefs) {
@@ -86,13 +89,43 @@ let aePrefs = {
   hasPomaikaiPrefs(aPrefs)
   {
     // Version 0.8.3
-    return aPrefs.hasOwnProperty("closeTabAfterAdd");
+    return ("closeTabAfterAdd" in aPrefs);
   },
 
   async setPomaikaiPrefs(aPrefs)
   {
     let prefs = {
       closeTabAfterAdd: false,
+    };
+    await this._addPrefs(aPrefs, prefs);
+  },
+
+  hasMauiPrefs(aPrefs)
+  {
+    // Version 1.1
+    return ("closeSidebarAfterNav" in aPrefs);
+  },
+
+  async setMauiPrefs(aPrefs)
+  {
+    let prefs = {
+      closeSidebarAfterNav: false,
+      allowEditLinks: true,
+    };
+    await this._addPrefs(aPrefs, prefs);
+  },
+
+  hasMaunaKeaPrefs(aPrefs) {
+    // Version 1.1b2
+    return ("linkClickAction" in aPrefs);
+  },
+
+  async setMaunaKeaPrefs(aPrefs) {
+    let prefs = {
+      linkClickAction: aeConst.OPEN_LINK_IN_CURRENT_TAB,
+
+      // Disable experimental feature from ver 1.1b1
+      allowEditLinks: false,
     };
     await this._addPrefs(aPrefs, prefs);
   },

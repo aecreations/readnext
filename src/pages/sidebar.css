@@ -485,7 +485,7 @@ body[data-os="mac"] .ae-menuitem {
     border-bottom: 1px solid var(--color-cxtmenu-separator);
 }
 
-/* Customize dialog */
+/* Sidebar dialogs */
 .lightbox {
     padding: 12px;
     border-radius: 6px;
@@ -499,6 +499,10 @@ body[data-os="mac"] .ae-menuitem {
     font-weight: 600;
 }
 
+.lightbox > .dlg-btns {
+    right: 2px;
+}
+
 .lightbox .row {
     width: 100%;
     margin-bottom: 2px;
@@ -510,6 +514,19 @@ body[data-os="mac"] .ae-menuitem {
 
 .lightbox input[type="checkbox"] {
     border-radius: 0;
+}
+
+#rename-dlg {   
+    top: 88px;
+    --width: 200px;
+    --height: 150px;
+}
+
+#rename-dlg #new-link-name {
+    width: 100%;
+    padding: 2px;
+    resize: none;
+    font-size: 12px;
 }
 
 #customize-dlg {

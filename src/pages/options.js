@@ -63,6 +63,17 @@ $(async () => {
     aePrefs.setPrefs({closeTabAfterAdd: aEvent.target.checked});
   });
 
+  $("#auto-close-sidebar").prop("checked", prefs.closeSidebarAfterNav).on("click", aEvent => {
+    aePrefs.setPrefs({closeSidebarAfterNav: aEvent.target.checked});
+  });
+
+  $("#open-in-curr-tab").prop("checked", prefs.linkClickAction == aeConst.OPEN_LINK_IN_CURRENT_TAB);
+  $("#open-in-new-tab").prop("checked", prefs.linkClickAction == aeConst.OPEN_LINK_IN_NEW_TAB);
+
+  $('input[type="radio"][name="open-links-in"]').on("click", aEvent => {
+    aePrefs.setPrefs({linkClickAction: aEvent.target.value});
+  });
+
   initDialogs();
 
   // Initialize static UI strings for user contribution CTA in the about dialog.
@@ -71,6 +82,11 @@ $(async () => {
   usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.DONATE_URL}" class="hyperlink">${browser.i18n.getMessage("aboutDonate")}</a>&nbsp;`));
   usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-conj">${browser.i18n.getMessage("aboutContribConj")}</label>&nbsp;`));
   usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.L10N_URL}" class="hyperlink">${browser.i18n.getMessage("aboutL10n")}</a>`));
+
+  $(".hyperlink").click(aEvent => {
+    aEvent.preventDefault();
+    gotoURL(aEvent.target.href);
+  });
 
   gIsInitialized = true;
 
@@ -456,11 +472,6 @@ $("#reauthorize").on("click", aEvent => {
 
 
 $("#about-btn").on("click", aEvent => { gDialogs.about.showModal() });
-
-$(".hyperlink").click(aEvent => {
-  aEvent.preventDefault();
-  gotoURL(aEvent.target.href);
-});
 
 
 $(window).on("focus", async (aEvent) => {
