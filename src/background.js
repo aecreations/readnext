@@ -555,7 +555,7 @@ async function addBookmarkFromPageAction(aCloseTab=false)
     await addBookmark(bkmk);
   }
 
-  if (aCloseTab) {
+  if (aCloseTab && !bkmkExists) {
     await closeTab(actvTab.id);
   }
   else {
