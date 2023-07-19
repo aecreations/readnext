@@ -149,7 +149,13 @@
   },
 
   "mnuOpenCurrTab": {
-    "message": "Open In Current Tab"
+    "message": "Open In Current Tab",
+    "description": "Context menu item in reading list sidebar for opening link in current browser tab (alternate title)"
+  },
+
+  "mnuOpen": {
+    "message": "Open",
+    "description": "Context menu item in reading list sidebar for opening link in current browser tab"
   },
   
   "mnuOpenNewWnd": {
