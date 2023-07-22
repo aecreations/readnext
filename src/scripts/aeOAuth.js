@@ -48,11 +48,14 @@ let aeOAuth = function () {
         throw e;        
       }
 
+      let respBody = await resp.json();
       if (! resp.ok) {
-        throw Error(`failed to get client ID from aeoaps\n\nstatus: ${resp.status} - ${resp.statusText}`);
+        console.error(`Read Next::aeOAuth.js: aeOAuth.getAPIKey(): HTTP error response returned from aeOAPS\nStatus: ${resp.status} - ${resp.statusText}\nDetails:`);
+        console.error(respBody);
+
+        throw Error(`Failed to get client ID from aeOAPS\nStatus: ${resp.status} - ${resp.statusText}`);
       }
 
-      let respBody = await resp.json();
       rv = respBody["api_key"];
 
       return rv;
@@ -72,7 +75,7 @@ let aeOAuth = function () {
         apiKey = await this.getAPIKey();
       }
       catch (e) {
-        console.error("aeOAuth.getAuthorizationCode(): Failed to get API key: " + e);
+        console.error("aeOAuth.getAuthorizationCode(): " + e);
         throw e;
       }
 
