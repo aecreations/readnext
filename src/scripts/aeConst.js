@@ -5,7 +5,7 @@
  */
 
 const aeConst = Object.freeze({
-  DEBUG: false,
+  DEBUG: true,
   CURR_MAJOR_VER: "1.1",
 
   FILEHOST_DROPBOX: 1,
