@@ -4,6 +4,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
+let gWndID, gTabID;
+
+
 function sanitizeHTML(aHTMLStr)
 {
   return DOMPurify.sanitize(aHTMLStr, {SAFE_FOR_JQUERY: true});
@@ -27,6 +30,15 @@ $(async () => {
     aEvent.preventDefault();
     gotoURL(aEvent.target.href);
   });
+
+  let [currWnd, tabs] = await Promise.all([
+    browser.windows.getCurrent(),
+    browser.tabs.query({active: true, currentWindow: true}),
+  ]);
+  gWndID = currWnd.id;
+  gTabID = tabs[0].id;
+
+  browser.runtime.sendMessage({id: "whats-new-pg-open-evt"});
 });
 
 
@@ -49,7 +61,10 @@ async function closePage()
 
 browser.runtime.onMessage.addListener(aMessage => {
   if (aMessage.id == "ping-whats-new-pg") {
-    let resp = {isOpen: true};
+    let resp = {
+      wndID: gWndID,
+      tabID: gTabID,
+    };
     return Promise.resolve(resp);
   }
 });

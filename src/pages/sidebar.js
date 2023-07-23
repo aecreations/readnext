@@ -1203,6 +1203,10 @@ browser.runtime.onMessage.addListener(aMessage => {
     showMessageBar("#reauthz-msgbar");
     break;
 
+  case "whats-new-pg-open-evt":
+    hideMessageBar("#upgrade-msgbar");
+    break;
+
   case "sidebar-sync-ready?":
     resp = {
       isReadyToSync: !gRenameDlg.isOpen()
@@ -1345,7 +1349,6 @@ $("#search-box").focus(aEvent => {
 
 $("#show-whats-new").on("click", aEvent => {
   browser.tabs.create({url: browser.runtime.getURL("pages/whatsnew.html")});
-  hideMessageBar("#upgrade-msgbar");
 });
 
 $("#reauthorize").on("click", aEvent => {
