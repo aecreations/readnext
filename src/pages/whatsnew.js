@@ -17,6 +17,8 @@ function sanitizeHTML(aHTMLStr)
 $(async () => {
   let extInfo = browser.runtime.getManifest();
   let contribCTA = browser.i18n.getMessage("contribCTA", aeConst.DONATE_URL);
+  
+  $("#ver-subhead").text(browser.i18n.getMessage("aboutExtVer", aeConst.CURR_MAJOR_VER));
   $("#contrib-cta").html(sanitizeHTML(contribCTA));
   
   $("#link-website > a").attr("href", extInfo.homepage_url);

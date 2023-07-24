@@ -452,7 +452,7 @@
   },
 
   "upgrade": {
-    "message": "Read Next has been upgraded to version 1.1.",
+    "message": "Read Next has been upgraded to the latest version.",
     "description": "What's New page (appears after upgrading Read Next)"
   },
 
@@ -462,17 +462,12 @@
   },
 
   "whatsNew1": {
-    "message": "New option to automatically close the reading list sidebar after opening a link",
+    "message": "Now available in Chinese (Simplified)",
     "description": "Description of an enhancement or fix in the new version of Read Next"
   },
 
   "whatsNew2": {
-    "message": "You can now choose to always open a reading list link in a new browser tab or the current tab when clicking on it",
-    "description": "Description of an enhancement or fix in the new version of Read Next"
-  },
-
-  "whatsNew3": {
-    "message": "Multiple browser tabs can be added to Read Next if they're selected in the tab bar",
+    "message": "The \u201cOpen In Current Tab\u201d menu item in the reading list context menu has been renamed \u201cOpen\u201d",
     "description": "Description of an enhancement or fix in the new version of Read Next"
   },
 
