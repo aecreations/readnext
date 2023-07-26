@@ -123,12 +123,12 @@
   },
 
   "emptyInstr": {
-    "message": "Click \u201cAdd Current Tab\u201d to add to the reading list.",
+    "message": "Click “Add Current Tab” to add to the reading list.",
     "description": "Sidebar empty state instructions"
   },
 
   "emptyInstrEx": {
-    "message": "Click \u201cAdd Current Tab\u201d or click <span id=\"add-link-icon\" class=\"inline-icon\"></span> in the address bar.",
+    "message": "Click “Add Current Tab” or click <span id=\"add-link-icon\" class=\"inline-icon\"></span> in the address bar.",
     "description": "Sidebar empty state instructions (alternate text)"
   },
 
@@ -385,7 +385,7 @@
   },
 
   "closeTabAfterAddDesc": {
-    "message": "You can also do this by right-clicking <span id=\"add-link-icon\" class=\"inline-icon\"></span> in the address bar and then selecting \u201cAdd and Close Tab.\u201d"
+    "message": "You can also do this by right-clicking <span id=\"add-link-icon\" class=\"inline-icon\"></span> in the address bar and then selecting “Add and Close Tab.”"
   },
 
   "mnuCloseTabAfterAdd": {
@@ -467,7 +467,7 @@
   },
 
   "whatsNew2": {
-    "message": "The \u201cOpen In Current Tab\u201d menu item in the reading list context menu has been renamed \u201cOpen\u201d",
+    "message": "The “Open In Current Tab” menu item in the reading list context menu has been renamed “Open”",
     "description": "Description of an enhancement or fix in the new version of Read Next"
   },
 
