@@ -106,6 +106,7 @@ button {
     margin-left: 24px;
     font-size: 13px;
     font-weight: bold;
+    color: var(--color-secondary-text);
 }
 
 #aecreations-links > ul {
