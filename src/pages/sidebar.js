@@ -1207,12 +1207,6 @@ browser.runtime.onMessage.addListener(aMessage => {
     hideMessageBar("#upgrade-msgbar");
     break;
 
-  case "sidebar-sync-ready?":
-    resp = {
-      isReadyToSync: !gRenameDlg.isOpen()
-    };
-    break;
-
   default:
     break;
   }

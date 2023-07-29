@@ -261,21 +261,6 @@ async function firstSyncReadingList()
 
 async function syncReadingList()
 {
-  // If the reading list sidebar is open, check that there isn't any editing
-  // action in progress.
-  // TO DO: Make this work for sidebar open in multiple browser windows.
-  let isSyncReady = true;
-  try {
-    let sidebarChk = await browser.runtime.sendMessage({id: "sidebar-sync-ready?"});
-    isSyncReady = sidebarChk.isReadyToSync;
-  }
-  catch {}
-
-  if (! isSyncReady) {
-    warn("Read Next: syncReadingList(): The reading list sidebar is not ready for sync; aborting.");
-    return;
-  }
-  
   // Don't assume that the saved access token is the most up to date.
   // This function may be called immediately after the user has reauthorized
   // their file host account and before the changed storage event handler has
