@@ -102,6 +102,13 @@ button {
     margin-left: 24px;
 }
 
+#ver-subhead {
+    margin-left: 24px;
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--color-secondary-text);
+}
+
 #aecreations-links > ul {
     padding-left: 0;
     padding-top: 8px;

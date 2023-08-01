@@ -261,21 +261,6 @@ async function firstSyncReadingList()
 
 async function syncReadingList()
 {
-  // If the reading list sidebar is open, check that there isn't any editing
-  // action in progress.
-  // TO DO: Make this work for sidebar open in multiple browser windows.
-  let isSyncReady = true;
-  try {
-    let sidebarChk = await browser.runtime.sendMessage({id: "sidebar-sync-ready?"});
-    isSyncReady = sidebarChk.isReadyToSync;
-  }
-  catch {}
-
-  if (! isSyncReady) {
-    warn("Read Next: syncReadingList(): The reading list sidebar is not ready for sync; aborting.");
-    return;
-  }
-  
   // Don't assume that the saved access token is the most up to date.
   // This function may be called immediately after the user has reauthorized
   // their file host account and before the changed storage event handler has
@@ -555,7 +540,7 @@ async function addBookmarkFromPageAction(aCloseTab=false)
     await addBookmark(bkmk);
   }
 
-  if (aCloseTab) {
+  if (aCloseTab && !bkmkExists) {
     await closeTab(actvTab.id);
   }
   else {
@@ -776,6 +761,11 @@ browser.runtime.onMessage.addListener(aMessage => {
     else {
       return Promise.resolve(false);
     }
+    break;
+
+  case "whats-new-pg-open-evt":
+    browser.alarms.clear("show-upgrade-notifcn");
+    gShowUpdateBanner = false;
     break;
 
   case "get-ver-update-info":
@@ -1002,12 +992,19 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
 });
 
 
-browser.notifications.onClicked.addListener(aNotifID => {
+browser.notifications.onClicked.addListener(async (aNotifID) => {
   if (aNotifID == "reauthorize") {
     gFileHostReauthorizer.openReauthorizePg();
   }
   else if (aNotifID == "whats-new") {
-    browser.tabs.create({url: browser.runtime.getURL("pages/whatsnew.html")});    
+    let whatsNewPg = await browser.runtime.sendMessage({id: "ping-whats-new-pg"});
+    if (whatsNewPg) {
+      await browser.windows.update(whatsNewPg.wndID, {focused: true});
+      await browser.tabs.update(whatsNewPg.tabID, {active: true});
+    }
+    else {
+      browser.tabs.create({url: browser.runtime.getURL("pages/whatsnew.html")});
+    }
   }
 });
 
@@ -1018,7 +1015,7 @@ browser.notifications.onClicked.addListener(aNotifID => {
 
 function sanitizeHTML(aHTMLStr)
 {
-  return DOMPurify.sanitize(aHTMLStr, { SAFE_FOR_JQUERY: true });
+  return DOMPurify.sanitize(aHTMLStr, {SAFE_FOR_JQUERY: true});
 }
 
 

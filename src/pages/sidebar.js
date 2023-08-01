@@ -771,17 +771,8 @@ function initContextMenu()
   $.contextMenu({
     selector: ".reading-list-item",
     items: {
-      openInNewTab: {
-        name: browser.i18n.getMessage("mnuOpenNewTab"),
-        className: "ae-menuitem",
-        callback(aKey, aOpt) {
-          let bkmkElt = aOpt.$trigger[0];
-          gCmd.openInNewTab(bkmkElt.dataset.id, bkmkElt.dataset.url);
-          gPrefs.closeSidebarAfterNav && browser.sidebarAction.close();
-        }
-      },
       openInCurrentTab: {
-        name: browser.i18n.getMessage("mnuOpenCurrTab"),
+        name: browser.i18n.getMessage("mnuOpen"),
         className: "ae-menuitem",
         callback(aKey, aOpt) {
           let bkmkElt = aOpt.$trigger[0];
@@ -790,6 +781,15 @@ function initContextMenu()
         },
         visible(aKey, aOpt) {
           return (gPrefs.linkClickAction == aeConst.OPEN_LINK_IN_NEW_TAB);
+        }
+      },
+      openInNewTab: {
+        name: browser.i18n.getMessage("mnuOpenNewTab"),
+        className: "ae-menuitem",
+        callback(aKey, aOpt) {
+          let bkmkElt = aOpt.$trigger[0];
+          gCmd.openInNewTab(bkmkElt.dataset.id, bkmkElt.dataset.url);
+          gPrefs.closeSidebarAfterNav && browser.sidebarAction.close();
         }
       },
       openInNewWnd: {
@@ -1203,10 +1203,8 @@ browser.runtime.onMessage.addListener(aMessage => {
     showMessageBar("#reauthz-msgbar");
     break;
 
-  case "sidebar-sync-ready?":
-    resp = {
-      isReadyToSync: !gRenameDlg.isOpen()
-    };
+  case "whats-new-pg-open-evt":
+    hideMessageBar("#upgrade-msgbar");
     break;
 
   default:
@@ -1345,7 +1343,6 @@ $("#search-box").focus(aEvent => {
 
 $("#show-whats-new").on("click", aEvent => {
   browser.tabs.create({url: browser.runtime.getURL("pages/whatsnew.html")});
-  hideMessageBar("#upgrade-msgbar");
 });
 
 $("#reauthorize").on("click", aEvent => {

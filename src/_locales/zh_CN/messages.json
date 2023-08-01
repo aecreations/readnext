@@ -3,497 +3,389 @@
     "message": "Read Next",
     "description": "Extension name"
   },
-
   "extDesc": {
-    "message": "The reading list that syncs to the cloud.",
+    "message": "同步到云的阅读列表。",
     "description": "Extension description"
   },
-
   "btnOK": {
-    "message": "OK"
+    "message": "确定"
   },
-
   "btnCancel": {
-    "message": "Cancel"
+    "message": "取消"
   },
-
   "btnClose": {
-    "message": "Close"
+    "message": "关闭"
   },
-
   "btnDone": {
-    "message": "Done"
+    "message": "完成"
   },
-
   "btnNext": {
-    "message": "Next"
+    "message": "下一步"
   },
-
   "btnFinish": {
-    "message": "Finish"
+    "message": "完成"
   },
-
   "btnRetry": {
-    "message": "Try Again",
+    "message": "再试一次",
     "description": "Button label"
   },
-
   "btnNotNow": {
-    "message": "Not Now",
+    "message": "不是现在",
     "description": "Button label"
   },
-
   "msgUnavail": {
-    "message": "The selected action is not available right now."
+    "message": "选定的操作现在不可用。"
   },
-
   "verMinorUpd": {
-    "message": "Read Next was updated!",
+    "message": "Read Next 更新了！",
     "description": "Minor version update message bar in the reading list sidebar"
   },
-
   "verUpgr": {
-    "message": "Read Next was upgraded!",
+    "message": "Read Next 升级了！",
     "description": "Major version upgrade message bar in the reading list sidebar"
   },
-
   "btnWhatsNew": {
-    "message": "What's New",
+    "message": "更新说明",
     "description": "Button in the major version upgrade message bar"
   },
-
   "fhDropbox": {
     "message": "Dropbox",
     "description": "Cloud file host"
   },
-
   "addBkmk": {
-    "message": "Add to Read Next",
+    "message": "添加到 Read Next",
     "description": "Address bar button caption for adding web page to the reading list"
   },
-
   "deleteBkmk": {
-    "message": "Delete from Read Next",
+    "message": "从 Read Next 删除",
     "description": "Address bar button caption for deleting reading list item"
   },
-
   "deleteBkmkCxt": {
-    "message": "Delete",
+    "message": "删除",
     "description": "Context menu item for deleting reading list item"
   },
-
   "renameBkmkCxt": {
-    "message": "Rename…",
+    "message": "重命名…",
     "description": "Context menu item for renaming a reading list item; also used for the rename dialog heading (EXPERIMENTAL FEATURE)"
   },
-
   "renameBkmk": {
-    "message": "Rename",
+    "message": "重命名",
     "description": "Rename dialog heading (EXPERIMENTAL FEATURE)"
   },
-
   "errAddBkmk": {
-    "message": "This page can't be added to Read Next.",
+    "message": "此页面不能添加到 Read Next。",
     "description": "Error notification that appears when attempting to add an unsupported URL to the reading list"
   },
-
   "addLink": {
-    "message": "Add Current Tab",
+    "message": "添加当前标签页",
     "description": "Toolbar button label"
   },
-
   "filterAll": {
-    "message": "All",
+    "message": "全部",
     "description": "Reading list filter option"
   },
-
   "filterUnread": {
-    "message": "Unread",
+    "message": "未读",
     "description": "Reading list filter option"
   },
-
   "srchBoxHint": {
-    "message": "Search",
+    "message": "搜索",
     "description": "Hint text appearing on empty search box in reading list sidebar"
   },
-
   "emptyTitle": {
-    "message": "Add to Reading List",
+    "message": "添加到阅读列表",
     "description": "Sidebar empty state title"
   },
-
   "emptyInstr": {
-    "message": "Click “Add Current Tab” to add to the reading list.",
+    "message": "点击“添加当前标签页”添加到阅读列表。",
     "description": "Sidebar empty state instructions"
   },
-
   "emptyInstrEx": {
-    "message": "Click “Add Current Tab” or click <span id=\"add-link-icon\" class=\"inline-icon\"></span> in the address bar.",
+    "message": "点击”添加当前标签页“或点击地址栏中的 <span id=\"add-link-icon\" class=\"inline-icon\"></span>。",
     "description": "Sidebar empty state instructions (alternate text)"
   },
-
   "noUnread": {
-    "message": "No unread items."
+    "message": "没有未读项目。"
   },
-
   "noItems": {
-    "message": "No items found."
+    "message": "未找到项目。"
   },
-
   "setupSync": {
-    "message": "Set Up Sync"
+    "message": "设置同步"
   },
-
   "mnuOpenNewTab": {
-    "message": "Open In New Tab"
+    "message": "在新标签页中打开"
   },
-
   "mnuOpenCurrTab": {
-    "message": "Open In Current Tab",
+    "message": "在当前标签页中打开",
     "description": "Context menu item in reading list sidebar for opening link in current browser tab (alternate title)"
   },
-
   "mnuOpen": {
-    "message": "Open",
+    "message": "打开",
     "description": "Context menu item in reading list sidebar for opening link in current browser tab"
   },
-  
   "mnuOpenNewWnd": {
-    "message": "Open In New Window"
+    "message": "在新窗口中打开"
   },
-
   "mnuOpenNewPrvWnd": {
-    "message": "Open In New Private Window"
+    "message": "在新隐私窗口中打开"
   },
-
   "mnuMrkRead": {
-    "message": "Mark As Read"
+    "message": "标记为已读"
   },
-
   "mnuMrkUnread": {
-    "message": "Mark As Unread"
+    "message": "标记为未读"
   },
-
   "mnuSyncNow": {
-    "message": "Sync Now"
+    "message": "立即同步"
   },
-
   "reauthzNotifcn": {
-    "message": "Read Next needs to reconnect your $1 account. Click here to reconnect.",
+    "message": "Read Next 需要重新连接到你的 $1 账户。点击这里重新连接。",
     "description": "Reconnection notification - appears when user needs to reconnect their cloud file host account"
   },
-
   "reauthzMsgBar": {
-    "message": "Read Next needs to reconnect your $1 account.",
+    "message": "Read Next 需要重新连接到你的 $1 账户。",
     "description": "Reconnection message bar - appears in the reading list sidebar when user needs to reconnect their cloud file host account"
   },
-
   "btnReauthz": {
-    "message": "Reconnect"
+    "message": "重新连接"
   },
-
   "mnuCustz": {
-    "message": "Customize…",
+    "message": "自定义…",
     "description": "Sidebar context menu item"
   },
-
   "custzHdg": {
-    "message": "Customize",
+    "message": "自定义",
     "description": "Customize dialog heading"
   },
-
   "mnuPrefs": {
-    "message": "Read Next Preferences…",
+    "message": "Read Next 偏好设置…",
     "description": "Browser toolbar context menu item for opening extension preferences page"
   },
-
   "mnuPrefsWin": {
-    "message": "Read Next Options…",
+    "message": "Read Next 选项…",
     "description": "Browser toolbar context menu item for opening extension preferences page (Windows only)"
   },
-
   "prefsTitle": {
-    "message": "Read Next Preferences",
+    "message": "Read Next 偏好设置",
     "description": "Extension preferences page title (appears on tab and window title bar)"
   },
-
   "prefsTitleWin": {
-    "message": "Read Next Options",
+    "message": "Read Next 选项",
     "description": "Extension preferences page title on Windows (appears on tab and window title bar)"
   },
-
   "prefsHdg": {
-    "message": "Preferences",
+    "message": "偏好设置",
     "description": "Extension preferences page heading"
   },
-  
   "prefsHdgWin": {
-    "message": "Options",
+    "message": "选项",
     "description": "Extension preferences page heading on Windows"
   },
-
   "prefsHdgSync": {
-    "message": "Sync Reading List",
+    "message": "同步阅读列表",
     "description": "Section heading in extension preferences page"
   },
-
   "btnConnect": {
-    "message": "Connect…"
+    "message": "连接…"
   },
-
   "btnDisconnect": {
-    "message": "Disconnect"
+    "message": "断开连接"
   },
-
   "noSync": {
-    "message": "Synchronize your reading list to the cloud using Dropbox."
+    "message": "使用 Dropbox 将你的阅读列表同步到云端。"
   },
-
   "connectedTo": {
-    "message": "Connected to $1",
+    "message": "已连接到 $1",
     "description": "Connected to <name of cloud file service, e.g. Dropbox>"
   },
-
   "connWizTitle1": {
-    "message": "Connect to Dropbox",
+    "message": "连接到 Dropbox",
     "description": "Cloud file service connection wizard in extension preferences page"
   },
-
   "connWizTitle2": {
-    "message": "Connecting",
+    "message": "正在连接",
     "description": "Cloud file service connection wizard in extension preferences page"
   },
-
   "connWizTitle3": {
-    "message": "You're Connected!",
+    "message": "你已连接！",
     "description": "Cloud file service connection wizard in extension preferences page"
   },
-
   "connWizTitNetErr": {
-    "message": "Unable to Connect"
+    "message": "无法连接"
   },
-
   "wizAuthzNetErr": {
-    "message": "Read Next needs to connect to the network. Check your network connection, or try again later."
+    "message": "Read Next 需要连接到网络。请检查您的网络连接，或稍后再试。"
   },
-
   "wizAuthzInstr1": {
-    "message": "You'll be taken to $1 where you can log in and confirm permissions for Read Next.",
+    "message": "你会被带到 $1 为 Read Next 登录并确认权限。",
     "description": "You'll be taken to <name of cloud file service, e.g. Dropbox> where you can log in and confirm permissions for Read Next."
   },
-
   "wizAuthzInstr2": {
-    "message": "Make sure to select the option to grant access to your cloud drive.  This will allow Read Next to sync your reading list."
+    "message": "请选择授予 Read Next 访问你的网盘的选项。这会允许 Read Next 同步你的阅读列表。"
   },
-
   "wizAuthzInterrupt": {
-    "message": "Read Next didn't finish connecting to $1.  Do you want to try again?",
+    "message": "Read Next 没有完成连接到 $1。你想要重试吗？",
     "description": "Read Next didn't finish connecting to <name of cloud file service, e.g. Dropbox>.  Do you want to try again?"
   },
-
   "wizAuthzSuccs": {
-    "message": "Read Next has started syncing your reading list to $1.  It may take a moment to finish.",
+    "message": "Read Next 已经开始同步你的阅读列表到 $1。 可能需要一些时间才能完成。",
     "description": "Read Next has started syncing your reading list to <name of cloud file service, e.g. Dropbox>.  It may take a moment to finish."
   },
-
   "wizSetupRem": {
-    "message": "Repeat this setup on your other devices where you want your reading list synced."
+    "message": "在你想要同步阅读列表的其它设备上重复此设置。"
   },
-
   "disconnTitle": {
-    "message": "Are you sure you want to disconnect Read Next from $1?",
+    "message": "你确定要 Read Next 与 $1 断开连接吗？",
     "description": "Are you sure you want to disconnect Read Next from <name of cloud file service, e.g. Dropbox>?"
   },
-
   "disconnConf": {
-    "message": "Your reading list will still be saved to your device, but it will no longer sync to the cloud."
+    "message": "你的阅读列表仍会保存到你的设备，但它将不再同步到云端。"
   },
-
   "btnDisconn": {
-    "message": "Disconnect"
+    "message": "断开连接"
   },
-
   "errNoConn": {
-    "message": "Read Next couldn't connect to $1",
+    "message": "Read Next 无法连接到 $1",
     "description": "Read Next couldn't connect to <name of cloud file service, e.g. Dropbox>"
   },
-
   "errNoConnEx": {
-    "message": "Read Next couldn't connect to $1.  Check your network connection, or try again later.",
-    "description": "Read Next couldn't connect to <name of cloud file service, e.g. Dropbox>"   
+    "message": "Read Next 无法连接到 $1。请检查你的网络连接，或稍后再试。",
+    "description": "Read Next couldn't connect to <name of cloud file service, e.g. Dropbox>"
   },
-
   "prefToolbar": {
-    "message": "Show toolbar"
+    "message": "显示工具栏"
   },
-
   "prefSrchBar": {
-    "message": "Show search bar"
+    "message": "显示搜索栏"
   },
-
   "prefsHdgInteg": {
-    "message": "Integration",
+    "message": "集成",
     "description": "Section heading in extension preferences page"
   },
-
   "prefAddrBarBtn": {
-    "message": "Show address bar button"
+    "message": "显示地址栏按钮"
   },
-
   "prefCxtMenuBtn": {
-    "message": "Show menu item in the context menu"
+    "message": "在上下文菜单中显示菜单项目"
   },
-
   "prefHdgSidebar": {
-    "message": "Sidebar",
+    "message": "侧栏",
     "description": "Section heading in extension preferences page"
   },
-
   "prefAutoDel": {
-    "message": "Delete link when read"
+    "message": "阅读时删除链接"
   },
-
   "prefUnreadBold": {
-    "message": "Show unread links in <b>bold</b>"
+    "message": "<b>粗体</b>显示未读链接"
   },
-
   "prefHdgActions": {
-    "message": "Actions"
+    "message": "操作"
   },
-
   "prefCloseTabAfterAdd": {
-    "message": "Close tab after adding to Read Next"
+    "message": "添加到 Read Next 后关闭标签页"
   },
-
   "prefCloseSidebar": {
-    "message": "Close sidebar after opening link"
+    "message": "打开链接后关闭侧栏"
   },
-
   "prefClickLinkHdg": {
-    "message": "Click link to open in:",
+    "message": "点击链接打开于：",
     "description": "Radio group heading for default action when clicking on a reading list link"
   },
-
   "clickLnkCurrTab": {
-    "message": "Current tab",
+    "message": "当前标签页",
     "description": "Radio button option for default action when clicking on a reading list link"
   },
-
   "clickLnkNewTab": {
-    "message": "New tab",
+    "message": "新标签页",
     "description": "Radio button option for default action when clicking on a reading list link"
   },
-
   "closeTabAfterAddDesc": {
-    "message": "You can also do this by right-clicking <span id=\"add-link-icon\" class=\"inline-icon\"></span> in the address bar and then selecting “Add and Close Tab.”"
+    "message": "你也可以在地址栏中右键点击 <span id=\"add-link-icon\" class=\"inline-icon\"></span> 然后选择“添加并关闭标签页”。"
   },
-
   "mnuCloseTabAfterAdd": {
-    "message": "Add and Close Tab",
+    "message": "添加并关闭标签页",
     "description": "Address bar button context menu"
   },
-
   "reauthzRetry": {
-    "message": "Read Next didn't finish reconnecting to $1.  Do you want to try again?",
+    "message": "Read Next 没有完成重新连接到 $1。你想要重试吗？",
     "description": "Read Next didn't finish reconnecting to <name of cloud file service, e.g. Dropbox>.  Do you want to try again?"
   },
-
   "aboutBtn": {
-    "message": "About…"
+    "message": "关于…"
   },
-
   "aboutExtVer": {
-    "message": "Version $1",
+    "message": "版本 $1",
     "description": "Extension version number"
   },
-
   "aboutAuthor": {
-    "message": "Created by AE Creations."
+    "message": "由 AE Creations 创建。"
   },
-  
   "aboutHomePgLink": {
-    "message": "Visit website"
+    "message": "访问网站"
   },
-
   "aboutLicLink": {
-    "message": "License information"
+    "message": "许可证信息"
   },
-
   "aboutTrans": {
-    "message": "Localizations contributed by Crowdin translators."
+    "message": "本地化由 Crowdin 译者贡献。"
   },
-
   "aboutContribHdg": {
-    "message": "Want to help?",
+    "message": "想要帮助吗？",
     "description": "About dialog text for encouraging users to donate or help with translation"
   },
-
   "aboutDonate": {
-    "message": "Make a donation"
+    "message": "捐款"
   },
-
   "aboutContribConj": {
-    "message": "or",
+    "message": "或",
     "description": "Conjunction connecting the CTA hyperlinks for donating or supplying a translation"
   },
-
   "aboutL10n": {
-    "message": "add a translation."
+    "message": "添加翻译"
   },
-
   "upgradeNotifcn": {
-    "message": "Read Next was recently upgraded! Click here to see what's new.",
+    "message": "Read Next 最近升级了！点击这里查看更新说明。",
     "description": "Post-upgrade notification text"
   },
-
   "newVerHdg": {
-    "message": "New Version Installed!",
+    "message": "新版本已安装！",
     "description": "Header for the What's New page (appears after upgrading Read Next)"
   },
-
   "upgrade": {
-    "message": "Read Next has been upgraded to the latest version.",
+    "message": "Read Next 已升级到最新版本。",
     "description": "What's New page (appears after upgrading Read Next)"
   },
-
   "whatsNew": {
-    "message": "What’s New",
+    "message": "更新说明",
     "description": "What's New page (appears after upgrading Read Next)"
   },
-
   "whatsNew1": {
-    "message": "Now available in Chinese (Simplified)",
+    "message": "现已提供中文版（简体）",
     "description": "Description of an enhancement or fix in the new version of Read Next"
   },
-
   "whatsNew2": {
-    "message": "The “Open In Current Tab” menu item in the reading list context menu has been renamed “Open”",
+    "message": "阅读列表上下文菜单中的“在当前标签页中打开”菜单项已改名为“打开”",
     "description": "Description of an enhancement or fix in the new version of Read Next"
   },
-
   "contribHdg": {
-    "message": "Contribute",
+    "message": "贡献",
     "description": "Contribution CTA in the What's New page"
   },
-
   "contribCTA": {
-    "message": "Support the development of Read Next by <a href=\"$1\">making a donation</a>.",
+    "message": "<a href=\"$1\">捐款</a>支持 Read Next 的开发。",
     "description": "Call to action message to make donation"
   },
-
   "linkBlog": {
-    "message": "AE Creations Blog"
+    "message": "AE Creations 博客"
   },
-
   "linkAMO": {
-    "message": "Firefox Add-ons Page"
+    "message": "Firefox 附加组件页面"
   },
-
   "linkForum": {
-    "message": "Help and Support Forums"
+    "message": "帮助和支持论坛"
   },
-
   "closeWelcomePg": {
-    "message": "Close This Page"
+    "message": "关闭此页面"
   }
 }
