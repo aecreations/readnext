@@ -997,7 +997,12 @@ browser.notifications.onClicked.addListener(async (aNotifID) => {
     gFileHostReauthorizer.openReauthorizePg();
   }
   else if (aNotifID == "whats-new") {
-    let whatsNewPg = await browser.runtime.sendMessage({id: "ping-whats-new-pg"});
+    let whatsNewPg;
+    try {
+      whatsNewPg = await browser.runtime.sendMessage({id: "ping-whats-new-pg"});
+    }
+    catch {}
+
     if (whatsNewPg) {
       await browser.windows.update(whatsNewPg.wndID, {focused: true});
       await browser.tabs.update(whatsNewPg.tabID, {active: true});
