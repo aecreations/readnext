@@ -1,0 +1,391 @@
+{
+  "extName": {
+    "message": "Читацькі вкладки",
+    "description": "Extension name"
+  },
+  "extDesc": {
+    "message": "Читацький список, що синхронізується з хмарним сховищем.",
+    "description": "Extension description"
+  },
+  "btnOK": {
+    "message": "Ок"
+  },
+  "btnCancel": {
+    "message": "Скасувати"
+  },
+  "btnClose": {
+    "message": "Закрити"
+  },
+  "btnDone": {
+    "message": "Готово"
+  },
+  "btnNext": {
+    "message": "Далі"
+  },
+  "btnFinish": {
+    "message": "Готово"
+  },
+  "btnRetry": {
+    "message": "Спробувати ще раз",
+    "description": "Button label"
+  },
+  "btnNotNow": {
+    "message": "Не зараз",
+    "description": "Button label"
+  },
+  "msgUnavail": {
+    "message": "Наразі обрана дія недоступна."
+  },
+  "verMinorUpd": {
+    "message": "Читацькі вкладки було оновлено!",
+    "description": "Minor version update message bar in the reading list sidebar"
+  },
+  "verUpgr": {
+    "message": "Читацькі вкладки було оновлено!",
+    "description": "Major version upgrade message bar in the reading list sidebar"
+  },
+  "btnWhatsNew": {
+    "message": "Що нового",
+    "description": "Button in the major version upgrade message bar"
+  },
+  "fhDropbox": {
+    "message": "Dropbox",
+    "description": "Cloud file host"
+  },
+  "addBkmk": {
+    "message": "Додати до Читацьких вкладок",
+    "description": "Address bar button caption for adding web page to the reading list"
+  },
+  "deleteBkmk": {
+    "message": "Вилучити з Читацьких вкладок",
+    "description": "Address bar button caption for deleting reading list item"
+  },
+  "deleteBkmkCxt": {
+    "message": "Вилучити",
+    "description": "Context menu item for deleting reading list item"
+  },
+  "renameBkmkCxt": {
+    "message": "Перейменувати…",
+    "description": "Context menu item for renaming a reading list item; also used for the rename dialog heading (EXPERIMENTAL FEATURE)"
+  },
+  "renameBkmk": {
+    "message": "Перейменувати",
+    "description": "Rename dialog heading (EXPERIMENTAL FEATURE)"
+  },
+  "errAddBkmk": {
+    "message": "Цю сторінку не можна додати до Читацьких вкладок.",
+    "description": "Error notification that appears when attempting to add an unsupported URL to the reading list"
+  },
+  "addLink": {
+    "message": "Додати поточну вкладку",
+    "description": "Toolbar button label"
+  },
+  "filterAll": {
+    "message": "Всі",
+    "description": "Reading list filter option"
+  },
+  "filterUnread": {
+    "message": "Непрочитане",
+    "description": "Reading list filter option"
+  },
+  "srchBoxHint": {
+    "message": "Пошук",
+    "description": "Hint text appearing on empty search box in reading list sidebar"
+  },
+  "emptyTitle": {
+    "message": "Додати до читацького списку",
+    "description": "Sidebar empty state title"
+  },
+  "emptyInstr": {
+    "message": "Щоб додати до читацького списку натисніть \"Додати поточну вкладку\".",
+    "description": "Sidebar empty state instructions"
+  },
+  "emptyInstrEx": {
+    "message": "Натисніть «Додати поточну вкладку» або натисніть <span id=\"add-link-icon\" class=\"inline-icon\"></span> на адресному рядку.",
+    "description": "Sidebar empty state instructions (alternate text)"
+  },
+  "noUnread": {
+    "message": "Немає непрочитаних елементів."
+  },
+  "noItems": {
+    "message": "Нічого не знайдено."
+  },
+  "setupSync": {
+    "message": "Налаштувати синхронізацію"
+  },
+  "mnuOpenNewTab": {
+    "message": "Відкрити посилання в новій вкладці"
+  },
+  "mnuOpenCurrTab": {
+    "message": "Відкрити посилання в поточній вкладці",
+    "description": "Context menu item in reading list sidebar for opening link in current browser tab (alternate title)"
+  },
+  "mnuOpen": {
+    "message": "Відкрити",
+    "description": "Context menu item in reading list sidebar for opening link in current browser tab"
+  },
+  "mnuOpenNewWnd": {
+    "message": "Відкрити посилання в новому вікні"
+  },
+  "mnuOpenNewPrvWnd": {
+    "message": "Відкрити посилання в новому приватному вікні"
+  },
+  "mnuMrkRead": {
+    "message": "Позначити як прочитане"
+  },
+  "mnuMrkUnread": {
+    "message": "Позначити як непрочитане"
+  },
+  "mnuSyncNow": {
+    "message": "Синхронізувати зараз"
+  },
+  "reauthzNotifcn": {
+    "message": "Читацькі вкладки потребують повторного підключення Вашого облікового запису $1. Натисніть тут, щоб повторно під'єднатися.",
+    "description": "Reconnection notification - appears when user needs to reconnect their cloud file host account"
+  },
+  "reauthzMsgBar": {
+    "message": "Читацькі вкладки потребують повторного підключення Вашого облікового запису $1.",
+    "description": "Reconnection message bar - appears in the reading list sidebar when user needs to reconnect their cloud file host account"
+  },
+  "btnReauthz": {
+    "message": "З'єднати повторно"
+  },
+  "mnuCustz": {
+    "message": "Налаштувати…",
+    "description": "Sidebar context menu item"
+  },
+  "custzHdg": {
+    "message": "Налаштувати",
+    "description": "Customize dialog heading"
+  },
+  "mnuPrefs": {
+    "message": "Налаштування Читацьких вкладок…",
+    "description": "Browser toolbar context menu item for opening extension preferences page"
+  },
+  "mnuPrefsWin": {
+    "message": "Параметри Читацьких вкладок…",
+    "description": "Browser toolbar context menu item for opening extension preferences page (Windows only)"
+  },
+  "prefsTitle": {
+    "message": "Налаштування Читацьких вкладок",
+    "description": "Extension preferences page title (appears on tab and window title bar)"
+  },
+  "prefsTitleWin": {
+    "message": "Параметри Читацьких вкладок",
+    "description": "Extension preferences page title on Windows (appears on tab and window title bar)"
+  },
+  "prefsHdg": {
+    "message": "Налаштування",
+    "description": "Extension preferences page heading"
+  },
+  "prefsHdgWin": {
+    "message": "Параметри",
+    "description": "Extension preferences page heading on Windows"
+  },
+  "prefsHdgSync": {
+    "message": "Синхронізація читацького списку",
+    "description": "Section heading in extension preferences page"
+  },
+  "btnConnect": {
+    "message": "Під'єднатися…"
+  },
+  "btnDisconnect": {
+    "message": "Від’єднатися"
+  },
+  "noSync": {
+    "message": "Синхронізуйте свій читацький список з хмарним сховищем за допомогою Dropbox."
+  },
+  "connectedTo": {
+    "message": "Під'єднано до $1",
+    "description": "Connected to <name of cloud file service, e.g. Dropbox>"
+  },
+  "connWizTitle1": {
+    "message": "Під'єднатися до Dropbox",
+    "description": "Cloud file service connection wizard in extension preferences page"
+  },
+  "connWizTitle2": {
+    "message": "Підключення",
+    "description": "Cloud file service connection wizard in extension preferences page"
+  },
+  "connWizTitle3": {
+    "message": "Ви під'єдналися!",
+    "description": "Cloud file service connection wizard in extension preferences page"
+  },
+  "connWizTitNetErr": {
+    "message": "Не вдається під'єднатися"
+  },
+  "wizAuthzNetErr": {
+    "message": "Читацькі вкладки потребують з'єднання з мережею. Перевірте підключення до мережі або спробуйте пізніше."
+  },
+  "wizAuthzInstr1": {
+    "message": "Ви перейдете до $1 де Ви зможете увійти та надати дозвіл для Читацьких вкладок.",
+    "description": "You'll be taken to <name of cloud file service, e.g. Dropbox> where you can log in and confirm permissions for Read Next."
+  },
+  "wizAuthzInstr2": {
+    "message": "Переконайтеся, що надано доступ до хмарного сховища. Це надасть можливість Читацьким вкладкам  синхронізувати список читання."
+  },
+  "wizAuthzInterrupt": {
+    "message": "Читацькі вкладки не під'єдналися до $1. Спробувати ще раз?",
+    "description": "Read Next didn't finish connecting to <name of cloud file service, e.g. Dropbox>.  Do you want to try again?"
+  },
+  "wizAuthzSuccs": {
+    "message": "Читацькі вкладки почали синхронізацію читацького списку з $1. Це може зайняти деякий час.",
+    "description": "Read Next has started syncing your reading list to <name of cloud file service, e.g. Dropbox>.  It may take a moment to finish."
+  },
+  "wizSetupRem": {
+    "message": "Повторіть це налаштування на пристроях з якими бажаєте синхронізувати список читання."
+  },
+  "disconnTitle": {
+    "message": "Ви впевнені, що хочете від'єднати Читацькі вкладки від $1?",
+    "description": "Are you sure you want to disconnect Read Next from <name of cloud file service, e.g. Dropbox>?"
+  },
+  "disconnConf": {
+    "message": "Ваш читацький список все ще буде збережено на пристрої, проте він більше не синхронізуватиметься з хмарним сховищем."
+  },
+  "btnDisconn": {
+    "message": "Від’єднатися"
+  },
+  "errNoConn": {
+    "message": "Читацьким вкладкам не вдалося під'єднатися до $1",
+    "description": "Read Next couldn't connect to <name of cloud file service, e.g. Dropbox>"
+  },
+  "errNoConnEx": {
+    "message": "Читацьким вкладкам не вдалося під'єднатися до $1. Перевірте підключення до мережі або спробуйте пізніше.",
+    "description": "Read Next couldn't connect to <name of cloud file service, e.g. Dropbox>"
+  },
+  "prefToolbar": {
+    "message": "Показати панель інструментів"
+  },
+  "prefSrchBar": {
+    "message": "Показати панель пошуку"
+  },
+  "prefsHdgInteg": {
+    "message": "Інтеграція",
+    "description": "Section heading in extension preferences page"
+  },
+  "prefAddrBarBtn": {
+    "message": "Показувати кнопку \"адресний рядок\""
+  },
+  "prefCxtMenuBtn": {
+    "message": "Показувати елементи меню в контекстному меню"
+  },
+  "prefHdgSidebar": {
+    "message": "Бічна панель",
+    "description": "Section heading in extension preferences page"
+  },
+  "prefAutoDel": {
+    "message": "Видалити посилання після прочитання"
+  },
+  "prefUnreadBold": {
+    "message": "Показувати непрочитані посилання в <b>жирний</b>"
+  },
+  "prefHdgActions": {
+    "message": "Дії"
+  },
+  "prefCloseTabAfterAdd": {
+    "message": "Закрити вкладку після додавання до Читацьких вкладок"
+  },
+  "prefCloseSidebar": {
+    "message": "Закривати бічну панель після того, як відкрили посилання"
+  },
+  "prefClickLinkHdg": {
+    "message": "Натисніть на посилання, щоб відкрити в:",
+    "description": "Radio group heading for default action when clicking on a reading list link"
+  },
+  "clickLnkCurrTab": {
+    "message": "Поточна вкладка",
+    "description": "Radio button option for default action when clicking on a reading list link"
+  },
+  "clickLnkNewTab": {
+    "message": "Нова вкладка",
+    "description": "Radio button option for default action when clicking on a reading list link"
+  },
+  "closeTabAfterAddDesc": {
+    "message": "Ви також можете зробити це клацнувши правою кнопкою миші на <span id=\"add-link-icon\" class=\"inline-icon\"></span> в адресному рядку, а потім вибравши \"Додати та закрити вкладку\""
+  },
+  "mnuCloseTabAfterAdd": {
+    "message": "Додати та закрити вкладку",
+    "description": "Address bar button context menu"
+  },
+  "reauthzRetry": {
+    "message": "Читацькі вкладки не під'єдналися до $1. Спробувати ще раз?",
+    "description": "Read Next didn't finish reconnecting to <name of cloud file service, e.g. Dropbox>.  Do you want to try again?"
+  },
+  "aboutBtn": {
+    "message": "Про програму…"
+  },
+  "aboutExtVer": {
+    "message": "Версія $1",
+    "description": "Extension version number"
+  },
+  "aboutAuthor": {
+    "message": "Розробники: AE Creations."
+  },
+  "aboutHomePgLink": {
+    "message": "Відвідати вебсайт"
+  },
+  "aboutLicLink": {
+    "message": "Відомості про ліцензію"
+  },
+  "aboutTrans": {
+    "message": "Локалізація виконана перекладачами Crowdin."
+  },
+  "aboutContribHdg": {
+    "message": "Бажаєте допомогти?",
+    "description": "About dialog text for encouraging users to donate or help with translation"
+  },
+  "aboutDonate": {
+    "message": "Підтримати проєкт"
+  },
+  "aboutContribConj": {
+    "message": "або",
+    "description": "Conjunction connecting the CTA hyperlinks for donating or supplying a translation"
+  },
+  "aboutL10n": {
+    "message": "додати переклад."
+  },
+  "upgradeNotifcn": {
+    "message": "Читацькі вкладки нещодавно оновилися. Натисніть тут, щоб дізнатися, що нового.",
+    "description": "Post-upgrade notification text"
+  },
+  "newVerHdg": {
+    "message": "Встановлена нова версія!",
+    "description": "Header for the What's New page (appears after upgrading Read Next)"
+  },
+  "upgrade": {
+    "message": "Читацькі вкладки оновлено до останньої версії.",
+    "description": "What's New page (appears after upgrading Read Next)"
+  },
+  "whatsNew": {
+    "message": "Що нового",
+    "description": "What's New page (appears after upgrading Read Next)"
+  },
+  "whatsNew1": {
+    "message": "Відтепер доступно китайською (спрощеною)",
+    "description": "Description of an enhancement or fix in the new version of Read Next"
+  },
+  "whatsNew2": {
+    "message": "Елемент меню \"Відкрити посилання в поточній вкладці\" в контекстному меню читацького списку перейменовано на \"Відкрити\"",
+    "description": "Description of an enhancement or fix in the new version of Read Next"
+  },
+  "contribHdg": {
+    "message": "Зробити внесок",
+    "description": "Contribution CTA in the What's New page"
+  },
+  "contribCTA": {
+    "message": "Підтримайте розвиток Читацьких вкладок <a href=\"$1\"> завдяки матеріальному внеску</a>.",
+    "description": "Call to action message to make donation"
+  },
+  "linkBlog": {
+    "message": "Блог AE Creations"
+  },
+  "linkAMO": {
+    "message": "Сторінка доданків Firefox"
+  },
+  "linkForum": {
+    "message": "Форуми допомоги й підтримки"
+  },
+  "closeWelcomePg": {
+    "message": "Закрити сторінку"
+  }
+}
