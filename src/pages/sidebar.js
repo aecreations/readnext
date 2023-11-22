@@ -385,6 +385,9 @@ $(async () => {
   
   log(`Read Next: Sidebar width ${window.innerWidth} px`);
 
+  let lang = browser.i18n.getUILanguage();
+  document.body.dataset.locale = lang;
+
   gPrefs = await aePrefs.getAllPrefs();
   setScrollableContentHeight();
 

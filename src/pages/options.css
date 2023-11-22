@@ -247,6 +247,14 @@ body[data-os="mac"] #sync-icon.conn-error {
     margin-right: 10px;
 }
 
+body[data-locale="uk"] #close-tab-after-add + label {
+    letter-spacing: -0.7px;
+}
+
+body[data-locale="uk"] #auto-close-sidebar + label {
+    letter-spacing: -0.9px;
+}
+
 #add-link-icon {
     background-image: var(--url-add-link-icon);
 }
@@ -282,8 +290,12 @@ body[data-os="mac"] #sync-icon.conn-error {
     vertical-align: bottom;
 }
 
+body[data-locale="uk"] #open-links-in-label {
+    display: block;
+}
+
 #open-in-curr-tab + label {
-    margin-right: 4px;
+    margin-right: 8px;
 }
 
 
@@ -503,6 +515,10 @@ body[data-os="mac"] #disconnect-dlg > .dlg-content > .msgbox-icon {
     clear: left;
     padding-top: 12px;
     font-size: 13px;
+}
+
+body[data-locale="uk"] #about-dlg #ext-desc {
+    letter-spacing: -0.6px;
 }
 
 #about-dlg #ext-author {

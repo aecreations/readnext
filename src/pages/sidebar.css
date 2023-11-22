@@ -97,6 +97,10 @@ button, label {
     overflow: hidden;
 }
 
+body[data-locale="uk"] #toolbar {
+    height: 52px;
+}
+
 #add-link {
     height: 24px;
     margin-right: 4px;
@@ -108,6 +112,10 @@ button, label {
     background-position: 4px 2px;
     background-repeat: no-repeat;
     letter-spacing: -0.1px;
+}
+
+body[data-locale="uk"] #add-link {
+    display: block;
 }
 
 #add-link:hover {
@@ -126,6 +134,11 @@ button, label {
     padding: 4px 8px 3px 8px;
     background-color: var(--color-main-toolbar-bkgd);
     letter-spacing: -0.1px;
+}
+
+body[data-locale="uk"] #bookmark-filter {
+    display: block;
+    margin-top: 5px;
 }
 
 #add-link:hover,
@@ -533,4 +546,14 @@ body[data-os="mac"] .ae-menuitem {
     top: 88px;
     --width: 200px;
     --height: 154px;
+}
+
+body[data-locale="uk"] #customize-dlg {
+    --height: 180px;
+}
+
+#customize-dlg > .dlg-content > .row {
+    margin-left: 22px;
+    text-indent: -22px;
+    width: 152px;
 }

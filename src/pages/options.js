@@ -23,6 +23,9 @@ $(async () => {
     $("#pref-hdg").text(browser.i18n.getMessage("prefsHdg"));
   }
 
+  let lang = browser.i18n.getUILanguage();
+  document.body.dataset.locale = lang;
+
   $("#close-tab-after-add-desc").html(sanitizeHTML(browser.i18n.getMessage("closeTabAfterAddDesc")));
 
   let prefs = await aePrefs.getAllPrefs();
