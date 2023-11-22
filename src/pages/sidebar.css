@@ -98,7 +98,7 @@ button, label {
 }
 
 body[data-locale="uk"] #toolbar {
-    height: 50px;
+    height: 52px;
 }
 
 #add-link {
@@ -138,7 +138,7 @@ body[data-locale="uk"] #add-link {
 
 body[data-locale="uk"] #bookmark-filter {
     display: block;
-    margin-top: 4px;
+    margin-top: 5px;
 }
 
 #add-link:hover,
@@ -550,4 +550,10 @@ body[data-os="mac"] .ae-menuitem {
 
 body[data-locale="uk"] #customize-dlg {
     --height: 180px;
+}
+
+#customize-dlg > .dlg-content > .row {
+    margin-left: 22px;
+    text-indent: -22px;
+    width: 152px;
 }
