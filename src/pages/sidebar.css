@@ -114,6 +114,10 @@ body[data-locale="uk"] #toolbar {
     letter-spacing: -0.1px;
 }
 
+body[data-tbar-fix] #add-link {
+    margin-right: 8px;
+}
+
 body[data-locale="uk"] #add-link {
     display: block;
 }
@@ -163,14 +167,22 @@ body[data-locale="uk"] #bookmark-filter {
 
 #bookmark-filter > #filter-all ~ label[for="filter-all"] {
     border-radius: 3.5px 0 0 3.5px;
-    margin-right: -2px;
+    margin-right: -2px; /* Not needed in Firefox 132+ */
     border-right-style: none;
 }
 
 #bookmark-filter > #filter-unread ~ label[for="filter-unread"] {
     border-radius: 0 3.5px 3.5px 0;
-    margin-left: -2px;
+    margin-left: -2px; /* Not needed in Firefox 132+ */
     border-left-style: none;
+}
+
+body[data-tbar-fix] #bookmark-filter > #filter-all ~ label[for="filter-all"] {
+    margin-right: unset;
+}
+
+body[data-tbar-fix] #bookmark-filter > #filter-unread ~ label[for="filter-unread"] {
+    margin-left: unset;
 }
 
 #search-bar {
