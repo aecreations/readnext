@@ -380,8 +380,12 @@ let gSearchBox = {
 
 // Sidebar initialization
 $(async () => {
-  let platform = await browser.runtime.getPlatformInfo();
-  document.body.dataset.os = platform.os;
+  let {os} = await browser.runtime.getPlatformInfo();
+  document.body.dataset.os = os;
+
+  // UI fix for Firefox 132 and newer.
+  let {version} = await browser.runtime.getBrowserInfo();
+  document.body.dataset.tbarFix = aeVersionCmp("132.0", version) <= 0;
   
   log(`Read Next: Sidebar width ${window.innerWidth} px`);
 
@@ -424,6 +428,10 @@ $(async () => {
 
   let currWnd = await browser.windows.getCurrent();
   gWndID = currWnd.id;
+
+  // Preload toolbar button icon
+  let addLinkIco = new Image();
+  addLinkIco.src = "../img/add-link-hover.svg";
 });
 
 
