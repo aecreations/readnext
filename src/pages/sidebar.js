@@ -1050,6 +1050,14 @@ function toggleSearchBarVisibility(aIsVisible)
 {
   let visibility = aIsVisible ? "visible" : "hidden";
   $("#search-bar").css({visibility});
+
+  // Also enable or disable the link filter radio buttons.
+  if (aIsVisible) {
+    $('#bookmark-filter input[type="radio"]').removeAttr("disabled");
+  }
+  else {
+    $('#bookmark-filter input[type="radio"]').attr("disabled", true);
+  }
 }
 
 

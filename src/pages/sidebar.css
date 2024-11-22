@@ -146,16 +146,16 @@ body[data-locale="uk"] #bookmark-filter {
 }
 
 #add-link:hover,
-#bookmark-filter > input[type="radio"] ~ label:hover,
-#bookmark-filter > #filter-all:checked ~ label[for="filter-all"]:hover,
-#bookmark-filter > #filter-unread:checked ~ label[for="filter-unread"]:hover {
+#bookmark-filter > input[type="radio"]:not([disabled]) ~ label:hover,
+#bookmark-filter > #filter-all:checked:not([disabled]) ~ label[for="filter-all"]:hover,
+#bookmark-filter > #filter-unread:checked:not([disabled]) ~ label[for="filter-unread"]:hover {
     background-color: var(--color-toolbar-btn-hover-bkgd);
 }
 
 #add-link:active,
-#bookmark-filter > input[type="radio"] ~ label:active,
-#bookmark-filter > #filter-all:checked ~ label[for="filter-all"]:active,
-#bookmark-filter > #filter-unread:checked ~ label[for="filter-unread"]:active {
+#bookmark-filter > input[type="radio"]:not([disabled]) ~ label:active,
+#bookmark-filter > #filter-all:checked:not([disabled]) ~ label[for="filter-all"]:active,
+#bookmark-filter > #filter-unread:checked:not([disabled]) ~ label[for="filter-unread"]:active {
     background-color: var(--color-toolbar-btn-active-bkgd);
     border-color: var(--color-toolbar-btn-active-bkgd) !important;
 }
@@ -183,6 +183,10 @@ body[data-tbar-fix] #bookmark-filter > #filter-all ~ label[for="filter-all"] {
 
 body[data-tbar-fix] #bookmark-filter > #filter-unread ~ label[for="filter-unread"] {
     margin-left: unset;
+}
+
+#bookmark-filter input[type="radio"][disabled] ~ label {
+    opacity: 0.4;
 }
 
 #search-bar {
@@ -394,10 +398,6 @@ body[data-tbar-fix] #bookmark-filter > #filter-unread ~ label[for="filter-unread
 #loading {
     margin-top: 16px;
     text-align: center;
-}
-
-#add-link[disabled] {
-    cursor: not-allowed;
 }
 
 .inline-icon {
