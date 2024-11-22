@@ -502,6 +502,7 @@ async function initReadingList(aLocalDataOnly=false)
     if (bkmks.length == 0) {
       hideLoadingProgress();
       showEmptyMsg();
+      toggleSearchBarVisibility(false);
     }
     else {
       hideLoadingProgress();
@@ -517,7 +518,12 @@ async function buildReadingList(aBookmarks, aUnreadOnly)
   log(`Read Next: ${aBookmarks.length} items.`);
   log(aBookmarks);
 
-  if (aBookmarks.length > 0) {
+  if (aBookmarks.length == 0) {
+    toggleSearchBarVisibility(false);
+    return;
+  }
+  else {
+    toggleSearchBarVisibility(true);
     enableReadingListKeyboardNav();
   }
 
@@ -544,6 +550,7 @@ async function addReadingListItem(aBookmark)
   hideEmptyMsg();
   hideNoUnreadMsg();
   hideLoadingProgress();
+  toggleSearchBarVisibility(true);
   
   let tooltipText = `${aBookmark.title}\n${aBookmark.url}`;
   let listItemDiv = $("<div>").addClass("reading-list-item").attr("title", tooltipText)[0];
@@ -607,6 +614,7 @@ function removeReadingListItem(aBookmarkID)
         showEmptyMsg();
       }
       disableReadingListKeyboardNav();
+      toggleSearchBarVisibility(false);
     }
     else {
       if (gKeybSelectedIdx !== null) {
@@ -1035,6 +1043,13 @@ function hideMessageBar(aMsgBarStor)
   }
   
   setCustomizations();
+}
+
+
+function toggleSearchBarVisibility(aIsVisible)
+{
+  let visibility = aIsVisible ? "visible" : "hidden";
+  $("#search-bar").css({visibility});
 }
 
 
