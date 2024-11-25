@@ -166,6 +166,7 @@ let gReadingListFilter = {
     await rebuildReadingList(bkmks, aFilter == this.UNREAD);
 
     if (bkmks.length == 0) {
+      toggleSearchBarVisibility(false);
       showEmptyMsg();
     }
     else {
@@ -359,6 +360,7 @@ let gSearchBox = {
 
     let bkmks = await gCmd.getBookmarks();
     if (bkmks.length == 0) {
+      toggleSearchBarVisibility(false);
       clearReadingList();
       showEmptyMsg();
       return;
@@ -380,8 +382,12 @@ let gSearchBox = {
 
 // Sidebar initialization
 $(async () => {
-  let platform = await browser.runtime.getPlatformInfo();
-  document.body.dataset.os = platform.os;
+  let {os} = await browser.runtime.getPlatformInfo();
+  document.body.dataset.os = os;
+
+  // UI fix for Firefox 132 and newer.
+  let {version} = await browser.runtime.getBrowserInfo();
+  document.body.dataset.tbarFix = aeVersionCmp("132.0", version) <= 0;
   
   log(`Read Next: Sidebar width ${window.innerWidth} px`);
 
@@ -424,6 +430,10 @@ $(async () => {
 
   let currWnd = await browser.windows.getCurrent();
   gWndID = currWnd.id;
+
+  // Preload toolbar button icon
+  let addLinkIco = new Image();
+  addLinkIco.src = "../img/add-link-hover.svg";
 });
 
 
@@ -494,6 +504,7 @@ async function initReadingList(aLocalDataOnly=false)
     if (bkmks.length == 0) {
       hideLoadingProgress();
       showEmptyMsg();
+      toggleSearchBarVisibility(false);
     }
     else {
       hideLoadingProgress();
@@ -509,7 +520,12 @@ async function buildReadingList(aBookmarks, aUnreadOnly)
   log(`Read Next: ${aBookmarks.length} items.`);
   log(aBookmarks);
 
-  if (aBookmarks.length > 0) {
+  if (aBookmarks.length == 0) {
+    toggleSearchBarVisibility(false);
+    return;
+  }
+  else {
+    toggleSearchBarVisibility(true);
     enableReadingListKeyboardNav();
   }
 
@@ -536,6 +552,7 @@ async function addReadingListItem(aBookmark)
   hideEmptyMsg();
   hideNoUnreadMsg();
   hideLoadingProgress();
+  toggleSearchBarVisibility(true);
   
   let tooltipText = `${aBookmark.title}\n${aBookmark.url}`;
   let listItemDiv = $("<div>").addClass("reading-list-item").attr("title", tooltipText)[0];
@@ -595,10 +612,16 @@ function removeReadingListItem(aBookmarkID)
   bkmkElt.fadeOut(800, function () {
     this.remove();
     if (isReadingListEmpty()) {
-      if (! gSearchBox.isSearchInProgress()) {
-        showEmptyMsg();
+      if (gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD) {
+        gSearchBox.reset();
       }
-      disableReadingListKeyboardNav();
+      else {
+        if (! gSearchBox.isSearchInProgress()) {
+          gSearchBox.reset();
+          showEmptyMsg();
+        }
+      }
+      disableReadingListKeyboardNav();        
     }
     else {
       if (gKeybSelectedIdx !== null) {
@@ -1027,6 +1050,21 @@ function hideMessageBar(aMsgBarStor)
   }
   
   setCustomizations();
+}
+
+
+function toggleSearchBarVisibility(aIsVisible)
+{
+  let visibility = aIsVisible ? "visible" : "hidden";
+  $("#search-bar").css({visibility});
+
+  // Also enable or disable the link filter radio buttons.
+  if (aIsVisible) {
+    $('#bookmark-filter input[type="radio"]').removeAttr("disabled");
+  }
+  else {
+    $('#bookmark-filter input[type="radio"]').attr("disabled", true);
+  }
 }
 
 
