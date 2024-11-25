@@ -166,6 +166,7 @@ let gReadingListFilter = {
     await rebuildReadingList(bkmks, aFilter == this.UNREAD);
 
     if (bkmks.length == 0) {
+      toggleSearchBarVisibility(false);
       showEmptyMsg();
     }
     else {
@@ -359,6 +360,7 @@ let gSearchBox = {
 
     let bkmks = await gCmd.getBookmarks();
     if (bkmks.length == 0) {
+      toggleSearchBarVisibility(false);
       clearReadingList();
       showEmptyMsg();
       return;
@@ -610,11 +612,16 @@ function removeReadingListItem(aBookmarkID)
   bkmkElt.fadeOut(800, function () {
     this.remove();
     if (isReadingListEmpty()) {
-      if (! gSearchBox.isSearchInProgress()) {
-        showEmptyMsg();
+      if (gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD) {
+        gSearchBox.reset();
       }
-      disableReadingListKeyboardNav();
-      toggleSearchBarVisibility(false);
+      else {
+        if (! gSearchBox.isSearchInProgress()) {
+          gSearchBox.reset();
+          showEmptyMsg();
+        }
+      }
+      disableReadingListKeyboardNav();        
     }
     else {
       if (gKeybSelectedIdx !== null) {
