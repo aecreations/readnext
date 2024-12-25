@@ -429,7 +429,7 @@ async function getFileHostUserInfo()
 }
 
 
-async function addBookmark(aBookmark, aSourceWindowID=null)
+async function addBookmark(aBookmark)
 {
   let rv;
   try {
@@ -439,16 +439,10 @@ async function addBookmark(aBookmark, aSourceWindowID=null)
     return Promise.reject(e);
   }
 
-  if (typeof aSourceWindowID != "number") {
-    let wnd = await browser.windows.getLastFocused();
-    aSourceWindowID = wnd.id;
-  }
-
   try {
     await browser.runtime.sendMessage({
       id: "add-bookmark-event",
       bookmark: aBookmark,
-      windowID: aSourceWindowID,
     });
   }
   catch {}
@@ -457,20 +451,15 @@ async function addBookmark(aBookmark, aSourceWindowID=null)
 }
 
 
-async function removeBookmark(aBookmarkID, aSourceWindowID=null)
+async function removeBookmark(aBookmarkID)
 {
+  let bookmark = await aeReadingList.get(aBookmarkID);
   await aeReadingList.remove(aBookmarkID);
-  
-  if (typeof aSourceWindowID != "number") {
-    let wnd = await browser.windows.getLastFocused();
-    aSourceWindowID = wnd.id;
-  }
 
   try {
     await browser.runtime.sendMessage({
       id: "remove-bookmark-event",
-      bookmarkID: aBookmarkID,
-      windowID: aSourceWindowID,
+      bookmark,
     });
   }
   catch {}

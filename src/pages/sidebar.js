@@ -1164,18 +1164,23 @@ browser.runtime.onMessage.addListener(aMessage => {
   switch (aMessage.id) {
   case "add-bookmark-event":
     addReadingListItem(aMessage.bookmark).then(() => {
-      return browser.windows.getCurrent();
-    }).then(aCurrWnd => {
-      log(`Read Next::sidebar.js: Handling message "${aMessage.id}"\nOriginating window ID of message: ${aMessage.windowID}; Current window ID: ${aCurrWnd.id}`);
-      if (aCurrWnd.id == aMessage.windowID) {
+      return browser.tabs.query({active: true, currentWindow: true});
+    }).then(aTabs => {
+      let actvTab = aTabs[0];
+      if (aMessage.bookmark.url == actvTab.url) {
         $("#add-link, #add-link-cta").prop("disabled", true);
       }
     });
     break;
 
   case "remove-bookmark-event":
-    removeReadingListItem(aMessage.bookmarkID);
-    $("#add-link, #add-link-cta").prop("disabled", false);
+    removeReadingListItem(aMessage.bookmark.id);
+    browser.tabs.query({active: true, currentWindow: true}).then(aTabs => {
+      let actvTab = aTabs[0];
+      if (aMessage.bookmark.url == actvTab.url) {
+        $("#add-link, #add-link-cta").prop("disabled", false);
+      }
+    });
     break;
 
   case "reload-bookmarks-event":
