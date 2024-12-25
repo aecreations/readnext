@@ -814,6 +814,12 @@ browser.storage.onChanged.addListener((aChanges, aAreaName) => {
 browser.windows.onFocusChanged.addListener(async (aWndID) => {
   let wnd = await browser.windows.getCurrent();
   if (wnd.id == aWndID) {
+    log(`Read Next: Handling window focus changed event for window ${wnd.id}`);
+
+    // If user opened a new window from a reading list link, the browser context
+    // menu items should be applicable to the window that is now focused.
+    updateMenus();
+
     if (gPrefs.syncEnabled) {
       // Don't trigger sync if syncing is suspended.
       let syncAlarm = await browser.alarms.get("sync-reading-list");
@@ -821,7 +827,7 @@ browser.windows.onFocusChanged.addListener(async (aWndID) => {
         return;
       }
 
-      log(`Read Next: Handling window focus changed event for window ${wnd.id} - syncing reading list.`);
+      log("Read Next: Syncing reading list.")
       try {
         await syncReadingList();
       }
@@ -844,15 +850,26 @@ browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
     let bkmkExists = !!bkmk;
 
     showPageAction(aTab, bkmkExists);
-    updateMenus(aTab);
-    try {
-      await browser.runtime.sendMessage({
-        id: "tab-loading-finish-event",
-        bkmkExists,
-        isSupportedURL: isSupportedURL(aTab.url),
-      });
+
+    // Check if the active tab in the current window is the same as the tab
+    // that this handler is being called for.
+    let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
+    log(`Read Next: browser.tabs.onUpdated(): Handler called for tab ${aTabID}\nTab ${actvTab.id} is the active tab in the current window`);
+
+    if (actvTab.id == aTabID) {
+      updateMenus(aTab);
+
+      try {
+        await browser.runtime.sendMessage({
+          id: "tab-loading-finish-event",
+          bkmkExists,
+          isSupportedURL: isSupportedURL(aTab.url),
+          windowID: aTab.windowId,
+          tabID: aTabID,
+        });
+      }
+      catch {}
     }
-    catch {}
 
     if (! bkmkExists) {
       return;
@@ -909,6 +926,7 @@ browser.tabs.onActivated.addListener(async (aActiveTab) => {
         id: "tab-switching-event",
         bkmkExists,
         isSupportedURL: isSupportedURL(tab.url),
+        windowID: tab.windowId,
       });
     }
     catch {}
