@@ -429,7 +429,7 @@ async function getFileHostUserInfo()
 }
 
 
-async function addBookmark(aBookmark)
+async function addBookmark(aBookmark, aSourceWindowID=null)
 {
   let rv;
   try {
@@ -439,7 +439,41 @@ async function addBookmark(aBookmark)
     return Promise.reject(e);
   }
 
+  if (typeof aSourceWindowID != "number") {
+    let wnd = await browser.windows.getLastFocused();
+    aSourceWindowID = wnd.id;
+  }
+
+  try {
+    await browser.runtime.sendMessage({
+      id: "add-bookmark-event",
+      bookmark: aBookmark,
+      windowID: aSourceWindowID,
+    });
+  }
+  catch {}
+
   return rv;
+}
+
+
+async function removeBookmark(aBookmarkID, aSourceWindowID=null)
+{
+  await aeReadingList.remove(aBookmarkID);
+  
+  if (typeof aSourceWindowID != "number") {
+    let wnd = await browser.windows.getLastFocused();
+    aSourceWindowID = wnd.id;
+  }
+
+  try {
+    await browser.runtime.sendMessage({
+      id: "remove-bookmark-event",
+      bookmarkID: aBookmarkID,
+      windowID: aSourceWindowID,
+    });
+  }
+  catch {}
 }
 
 
@@ -527,7 +561,7 @@ async function addBookmarkFromPageAction(aCloseTab=false)
   let id = getBookmarkIDFromURL(url);
   
   if (bkmkExists) {
-    await aeReadingList.remove(id);
+    await removeBookmark(id);
   }
   else {
     bkmk = new aeBookmark(id, url, sanitizeHTML(actvTab.title));
@@ -660,7 +694,7 @@ browser.runtime.onMessage.addListener(aMessage => {
     break;
 
   case "remove-bookmark":
-    aeReadingList.remove(aMessage.bookmarkID).then(() => {
+    removeBookmark(aMessage.bookmarkID).then(() => {
       togglePageActionIcon(false);
       updateMenus();
       return pushLocalChanges();
@@ -878,7 +912,7 @@ browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
     if (gPrefs.deleteReadLinks) {
       // Delete the link regardless of its "read" status.  Need to handle links
       // that were already marked as read before this setting was turned on.
-      await aeReadingList.remove(bkmk.id);
+      await removeBookmark(bkmk.id);
       togglePageActionIcon(false);
       updateMenus();
       try {
@@ -990,7 +1024,7 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
   else if (aInfo.menuItemId == "ae-readnext-remove-bkmk") {
     let url = processURL(aTab.url);
     let id = getBookmarkIDFromURL(url);
-    await aeReadingList.remove(id);
+    await removeBookmark(id);
     togglePageActionIcon(false, aTab);
   }
   else if (aInfo.menuItemId == "ae-readnext-add-and-close-tab") {

@@ -56,9 +56,11 @@ let gCmd = {
       throw new Error("Bookmark ID is invalid or undefined");
     }
 
+    let currWnd = await browser.windows.getCurrent();
     let msg = {
       id: "add-bookmark",
       bookmark: aBookmark,
+      windowID: currWnd.id,
     };
 
     let bkmkID;
@@ -73,9 +75,11 @@ let gCmd = {
 
   async deleteBookmark(aBookmarkID)
   {
+    let currWnd = await browser.windows.getCurrent();
     let msg = {
       id: "remove-bookmark",
       bookmarkID: aBookmarkID,
+      windowID: currWnd.id,
     };
     
     try {
@@ -1160,7 +1164,12 @@ browser.runtime.onMessage.addListener(aMessage => {
   switch (aMessage.id) {
   case "add-bookmark-event":
     addReadingListItem(aMessage.bookmark).then(() => {
-      $("#add-link, #add-link-cta").prop("disabled", true);
+      return browser.windows.getCurrent();
+    }).then(aCurrWnd => {
+      log(`Read Next::sidebar.js: Handling message "${aMessage.id}"\nOriginating window ID of message: ${aMessage.windowID}; Current window ID: ${aCurrWnd.id}`);
+      if (aCurrWnd.id == aMessage.windowID) {
+        $("#add-link, #add-link-cta").prop("disabled", true);
+      }
     });
     break;
 
