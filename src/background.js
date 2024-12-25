@@ -517,11 +517,8 @@ async function togglePageActionIcon(aIsBookmarked, aTab=null)
     [aTab] = await browser.tabs.query({active: true, currentWindow: true});
   }
   
-  let title = {
-    tabId: aTab.id,
-    title: null,
-  };
-  let icon = {tabId: aTab.id};
+  let title = {title: null};
+  let icon = {};
 
   if (aIsBookmarked) {
     icon.path = {
@@ -536,8 +533,13 @@ async function togglePageActionIcon(aIsBookmarked, aTab=null)
       32: "img/bookmark.svg",
     };
   }
-  browser.pageAction.setIcon(icon);
-  browser.pageAction.setTitle(title);
+
+  let duplcTabs = await browser.tabs.query({url: aTab.url});
+  for (let tab of duplcTabs) {
+    icon.tabId = title.tabId = tab.id;
+    browser.pageAction.setIcon(icon);
+    browser.pageAction.setTitle(title);
+  }  
 }
 
 
