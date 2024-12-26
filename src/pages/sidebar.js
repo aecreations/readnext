@@ -1217,7 +1217,6 @@ browser.runtime.onMessage.addListener(aMessage => {
   case "tab-loading-finish-event":
   case "tab-switching-event":
     browser.windows.getCurrent().then(aCurrWnd => {
-      log(`Read Next::sidebar.js: Handling message "${aMessage.id}"\nOriginating window ID of message: ${aMessage.windowID}; Current window ID: ${aCurrWnd.id}`);
       if (aCurrWnd.id == aMessage.windowID) {
         $("#add-link, #add-link-cta").prop("disabled", (aMessage.bkmkExists || !aMessage.isSupportedURL));
       }
