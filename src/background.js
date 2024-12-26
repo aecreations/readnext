@@ -182,10 +182,12 @@ async function init()
   setUICustomizations();
 
   // Initialize integration with browser
-  let [tab] = await browser.tabs.query({active: true, currentWindow: true});
-  let bkmk = await getBookmarkFromTab(tab);
-  showPageAction(tab, !!bkmk);
-  updateMenus(tab);
+  let tabs = await browser.tabs.query({active: true});
+  for (let tab of tabs) {
+    let bkmk = await getBookmarkFromTab(tab);
+    showPageAction(tab, !!bkmk);
+    updateMenus(tab);
+  }
 }
 
 
@@ -771,6 +773,21 @@ browser.runtime.onMessage.addListener(aMessage => {
 
   case "close-tab":
     return closeTab(aMessage.tabID);
+    break;
+
+  case "toggle-page-action":
+    browser.tabs.query({active: true}).then(aTabs => {
+      for (let tab of aTabs) {
+        if (aMessage.showPageAction) {
+          getBookmarkFromTab(tab).then(aBkmk => {
+            showPageAction(tab, !!aBkmk);
+          });
+        }
+        else {
+          browser.pageAction.hide(tab.id);
+        }
+      }
+    });
     break;
 
   case "enable-auto-open-connect-wiz":

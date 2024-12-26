@@ -47,15 +47,20 @@ $(async () => {
     aePrefs.setPrefs({deleteReadLinks: aEvent.target.checked});
   });
 
-  $("#add-awesome-bar").prop("checked", prefs.showPageAction).on("click", aEvent => {
+  $("#add-awesome-bar").prop("checked", prefs.showPageAction).on("click", async (aEvent) => {
     let showPageAction = aEvent.target.checked;
-    aePrefs.setPrefs({showPageAction});
     if (showPageAction) {
       $("#close-tab-after-add-desc").show();
     }
     else {
       $("#close-tab-after-add-desc").hide();
     }
+
+    await aePrefs.setPrefs({showPageAction});
+    browser.runtime.sendMessage({
+      id: "toggle-page-action",
+      showPageAction,
+    });
   });
 
   $("#add-cxt-menu").prop("checked", prefs.showCxtMenu).on("click", aEvent => {
