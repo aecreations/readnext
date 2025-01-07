@@ -56,9 +56,11 @@ let gCmd = {
       throw new Error("Bookmark ID is invalid or undefined");
     }
 
+    let currWnd = await browser.windows.getCurrent();
     let msg = {
       id: "add-bookmark",
       bookmark: aBookmark,
+      windowID: currWnd.id,
     };
 
     let bkmkID;
@@ -73,9 +75,11 @@ let gCmd = {
 
   async deleteBookmark(aBookmarkID)
   {
+    let currWnd = await browser.windows.getCurrent();
     let msg = {
       id: "remove-bookmark",
       bookmarkID: aBookmarkID,
+      windowID: currWnd.id,
     };
     
     try {
@@ -1160,13 +1164,23 @@ browser.runtime.onMessage.addListener(aMessage => {
   switch (aMessage.id) {
   case "add-bookmark-event":
     addReadingListItem(aMessage.bookmark).then(() => {
-      $("#add-link, #add-link-cta").prop("disabled", true);
+      return browser.tabs.query({active: true, currentWindow: true});
+    }).then(aTabs => {
+      let actvTab = aTabs[0];
+      if (aMessage.bookmark.url == actvTab.url) {
+        $("#add-link, #add-link-cta").prop("disabled", true);
+      }
     });
     break;
 
   case "remove-bookmark-event":
-    removeReadingListItem(aMessage.bookmarkID);
-    $("#add-link, #add-link-cta").prop("disabled", false);
+    removeReadingListItem(aMessage.bookmark.id);
+    browser.tabs.query({active: true, currentWindow: true}).then(aTabs => {
+      let actvTab = aTabs[0];
+      if (aMessage.bookmark.url == actvTab.url) {
+        $("#add-link, #add-link-cta").prop("disabled", false);
+      }
+    });
     break;
 
   case "reload-bookmarks-event":
@@ -1202,7 +1216,11 @@ browser.runtime.onMessage.addListener(aMessage => {
 
   case "tab-loading-finish-event":
   case "tab-switching-event":
-    $("#add-link, #add-link-cta").prop("disabled", (aMessage.bkmkExists || !aMessage.isSupportedURL));
+    browser.windows.getCurrent().then(aCurrWnd => {
+      if (aCurrWnd.id == aMessage.windowID) {
+        $("#add-link, #add-link-cta").prop("disabled", (aMessage.bkmkExists || !aMessage.isSupportedURL));
+      }
+    });
     break;
 
   case "sync-setting-changed":

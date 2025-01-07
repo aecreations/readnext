@@ -30,17 +30,7 @@ let aeReadingList = {
     
     // Throws exception if a bookmark with the same ID already exists.
     rv = await db.bookmarks.add(aBookmark, aBookmark.id);
-
     if (rv) {
-      let msg = {
-        id: "add-bookmark-event",
-        bookmark: aBookmark,
-      };
-      try {
-        await browser.runtime.sendMessage(msg);
-      }
-      catch {}
-
       this._updateLocalLastModifiedTime();
     }
 
@@ -113,15 +103,6 @@ let aeReadingList = {
     let db = this._getDB();
     await db.bookmarks.delete(aBookmarkID);
     await db.favicons.delete(aBookmarkID);
-
-    let msg = {
-      id: "remove-bookmark-event",
-      bookmarkID: aBookmarkID,
-    };
-    try {
-      await browser.runtime.sendMessage(msg);
-    }
-    catch {}
 
     this._updateLocalLastModifiedTime();
   },

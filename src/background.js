@@ -182,10 +182,12 @@ async function init()
   setUICustomizations();
 
   // Initialize integration with browser
-  let [tab] = await browser.tabs.query({active: true, currentWindow: true});
-  let bkmk = await getBookmarkFromTab(tab);
-  showPageAction(tab, !!bkmk);
-  updateMenus(tab);
+  let tabs = await browser.tabs.query({active: true});
+  for (let tab of tabs) {
+    let bkmk = await getBookmarkFromTab(tab);
+    showPageAction(tab, !!bkmk);
+    updateMenus(tab);
+  }
 }
 
 
@@ -439,7 +441,30 @@ async function addBookmark(aBookmark)
     return Promise.reject(e);
   }
 
+  try {
+    await browser.runtime.sendMessage({
+      id: "add-bookmark-event",
+      bookmark: aBookmark,
+    });
+  }
+  catch {}
+
   return rv;
+}
+
+
+async function removeBookmark(aBookmarkID)
+{
+  let bookmark = await aeReadingList.get(aBookmarkID);
+  await aeReadingList.remove(aBookmarkID);
+
+  try {
+    await browser.runtime.sendMessage({
+      id: "remove-bookmark-event",
+      bookmark,
+    });
+  }
+  catch {}
 }
 
 
@@ -494,11 +519,8 @@ async function togglePageActionIcon(aIsBookmarked, aTab=null)
     [aTab] = await browser.tabs.query({active: true, currentWindow: true});
   }
   
-  let title = {
-    tabId: aTab.id,
-    title: null,
-  };
-  let icon = {tabId: aTab.id};
+  let title = {title: null};
+  let icon = {};
 
   if (aIsBookmarked) {
     icon.path = {
@@ -513,8 +535,13 @@ async function togglePageActionIcon(aIsBookmarked, aTab=null)
       32: "img/bookmark.svg",
     };
   }
-  browser.pageAction.setIcon(icon);
-  browser.pageAction.setTitle(title);
+
+  let duplcTabs = await browser.tabs.query({url: aTab.url});
+  for (let tab of duplcTabs) {
+    icon.tabId = title.tabId = tab.id;
+    browser.pageAction.setIcon(icon);
+    browser.pageAction.setTitle(title);
+  }  
 }
 
 
@@ -527,7 +554,7 @@ async function addBookmarkFromPageAction(aCloseTab=false)
   let id = getBookmarkIDFromURL(url);
   
   if (bkmkExists) {
-    await aeReadingList.remove(id);
+    await removeBookmark(id);
   }
   else {
     bkmk = new aeBookmark(id, url, sanitizeHTML(actvTab.title));
@@ -660,7 +687,7 @@ browser.runtime.onMessage.addListener(aMessage => {
     break;
 
   case "remove-bookmark":
-    aeReadingList.remove(aMessage.bookmarkID).then(() => {
+    removeBookmark(aMessage.bookmarkID).then(() => {
       togglePageActionIcon(false);
       updateMenus();
       return pushLocalChanges();
@@ -748,6 +775,21 @@ browser.runtime.onMessage.addListener(aMessage => {
     return closeTab(aMessage.tabID);
     break;
 
+  case "toggle-page-action":
+    browser.tabs.query({active: true}).then(aTabs => {
+      for (let tab of aTabs) {
+        if (aMessage.showPageAction) {
+          getBookmarkFromTab(tab).then(aBkmk => {
+            showPageAction(tab, !!aBkmk);
+          });
+        }
+        else {
+          browser.pageAction.hide(tab.id);
+        }
+      }
+    });
+    break;
+
   case "enable-auto-open-connect-wiz":
     gAutoOpenConnectWiz = true;
     return Promise.resolve();
@@ -814,6 +856,12 @@ browser.storage.onChanged.addListener((aChanges, aAreaName) => {
 browser.windows.onFocusChanged.addListener(async (aWndID) => {
   let wnd = await browser.windows.getCurrent();
   if (wnd.id == aWndID) {
+    log(`Read Next: Handling window focus changed event for window ${wnd.id}`);
+
+    // If user opened a new window from a reading list link, the browser context
+    // menu items should be applicable to the window that is now focused.
+    updateMenus();
+
     if (gPrefs.syncEnabled) {
       // Don't trigger sync if syncing is suspended.
       let syncAlarm = await browser.alarms.get("sync-reading-list");
@@ -821,7 +869,7 @@ browser.windows.onFocusChanged.addListener(async (aWndID) => {
         return;
       }
 
-      log(`Read Next: Handling window focus changed event for window ${wnd.id} - syncing reading list.`);
+      log("Read Next: Syncing reading list.")
       try {
         await syncReadingList();
       }
@@ -844,15 +892,26 @@ browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
     let bkmkExists = !!bkmk;
 
     showPageAction(aTab, bkmkExists);
-    updateMenus(aTab);
-    try {
-      await browser.runtime.sendMessage({
-        id: "tab-loading-finish-event",
-        bkmkExists,
-        isSupportedURL: isSupportedURL(aTab.url),
-      });
+
+    // Check if the active tab in the current window is the same as the tab
+    // that this handler is being called for.
+    let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
+    log(`Read Next: browser.tabs.onUpdated(): Handler called for tab ${aTabID}\nTab ${actvTab.id} is the active tab in the current window`);
+
+    if (actvTab.id == aTabID) {
+      updateMenus(aTab);
+
+      try {
+        await browser.runtime.sendMessage({
+          id: "tab-loading-finish-event",
+          bkmkExists,
+          isSupportedURL: isSupportedURL(aTab.url),
+          windowID: aTab.windowId,
+          tabID: aTabID,
+        });
+      }
+      catch {}
     }
-    catch {}
 
     if (! bkmkExists) {
       return;
@@ -861,7 +920,7 @@ browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
     if (gPrefs.deleteReadLinks) {
       // Delete the link regardless of its "read" status.  Need to handle links
       // that were already marked as read before this setting was turned on.
-      await aeReadingList.remove(bkmk.id);
+      await removeBookmark(bkmk.id);
       togglePageActionIcon(false);
       updateMenus();
       try {
@@ -909,6 +968,7 @@ browser.tabs.onActivated.addListener(async (aActiveTab) => {
         id: "tab-switching-event",
         bkmkExists,
         isSupportedURL: isSupportedURL(tab.url),
+        windowID: tab.windowId,
       });
     }
     catch {}
@@ -972,7 +1032,7 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
   else if (aInfo.menuItemId == "ae-readnext-remove-bkmk") {
     let url = processURL(aTab.url);
     let id = getBookmarkIDFromURL(url);
-    await aeReadingList.remove(id);
+    await removeBookmark(id);
     togglePageActionIcon(false, aTab);
   }
   else if (aInfo.menuItemId == "ae-readnext-add-and-close-tab") {
