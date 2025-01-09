@@ -91,7 +91,7 @@ $(async () => {
   usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-conj">${browser.i18n.getMessage("aboutContribConj")}</label>&nbsp;`));
   usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.L10N_URL}" class="hyperlink">${browser.i18n.getMessage("aboutL10n")}</a>`));
 
-  $(".hyperlink").click(aEvent => {
+  $(".hyperlink").on("click", aEvent => {
     aEvent.preventDefault();
     gotoURL(aEvent.target.href);
   });
@@ -203,7 +203,7 @@ function initDialogs()
   gDialogs.disconnectConfirm = new aeDialog("#disconnect-dlg");
   gDialogs.disconnectConfirm.onFirstInit = function ()
   {
-    this.find(".dlg-btns > .dlg-btn-disconn").click(async (aEvent) => {
+    this.find(".dlg-btns > .dlg-btn-disconn").on("click", async (aEvent) => {
       let syncPrefs = {
         syncEnabled: false,
         syncBackend: null,

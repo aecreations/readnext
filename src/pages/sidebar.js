@@ -275,7 +275,7 @@ let gSearchBox = {
         }
       });
 
-    $("#clear-search").click(aEvent => { this.reset() });
+    $("#clear-search").on("click", aEvent => { this.reset() });
 
     this._isInitialized = true;
   },
@@ -1386,12 +1386,12 @@ $("#reading-list").on("blur", aEvent => {
 });
 
 
-$("#filter-all").click(handleFilterSelection)
+$("#filter-all").on("click", handleFilterSelection)
   .on("focus", aEvent => { $('#bookmark-filter > input[type="radio"] ~ label').addClass("focused") })
   .on("blur", aEvent => { $('#bookmark-filter > input[type="radio"] ~ label').removeClass("focused") });
 
 
-$("#filter-unread").click(handleFilterSelection)
+$("#filter-unread").on("click", handleFilterSelection)
   .on("focus", aEvent => { $('#bookmark-filter > input[type="radio"] ~ label').addClass("focused") })
   .on("blur", aEvent => { $('#bookmark-filter > input[type="radio"] ~ label').removeClass("focused") });
 
