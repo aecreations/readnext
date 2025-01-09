@@ -2,14 +2,14 @@
   "manifest_version": 2,
   "name": "__MSG_extName__",
   "description": "__MSG_extDesc__",
-  "version": "1.1.8",
+  "version": "1.5a0+",
   "author": "AE Creations",
   "homepage_url": "https://aecreations.io/readnext/index.php",
 
   "browser_specific_settings": {
     "gecko": {
       "id": "readnext@aecreations.github.io",
-      "strict_min_version": "102.0"
+      "strict_min_version": "128.0"
     }
   },
 
