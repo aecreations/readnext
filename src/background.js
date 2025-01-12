@@ -4,10 +4,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
-let gOS;
-let gHostAppName;
-let gHostAppVer;
-let gPrefs;
 let gIsFirstRun = false;
 let gVerUpdateType = null;
 let gShowUpdateBanner = false;
@@ -30,7 +26,8 @@ let gFileHostReauthorizer = {
 
   async showPrompts()
   {
-    let {fileHostName} = aeFileHostUI(gPrefs.syncBackend);
+    let syncBackend = await aePrefs.getPref("syncBackend");
+    let {fileHostName} = aeFileHostUI(syncBackend);
     let msg = {
       id: "reauthorize-prompt",
       fileHostName,
@@ -61,7 +58,7 @@ let gFileHostReauthorizer = {
       return;
     }
 
-    let backnd = gPrefs.syncBackend;
+    let backnd = await aePrefs.getPref("syncBackend");
     let url = browser.runtime.getURL("pages/reauthorize.html?bknd=" + backnd);
     await browser.tabs.create({url});
   },
@@ -112,59 +109,55 @@ void async function ()
 {
   log("Read Next: WebExtension startup initiated.");
 
-  gPrefs = await aePrefs.getAllPrefs();
+  let prefs = await aePrefs.getAllPrefs();
   log("Read Next: Successfully retrieved user preferences:");
-  log(gPrefs);
+  log(prefs);
 
-  if (! aePrefs.hasUserPrefs(gPrefs)) {
+  if (! aePrefs.hasUserPrefs(prefs)) {
     log("Initializing Read Next user preferences.");
     gIsFirstRun = true;
-    await aePrefs.setUserPrefs(gPrefs);
+    await aePrefs.setUserPrefs(prefs);
   }
 
-  if (! aePrefs.hasPomaikaiPrefs(gPrefs)) {
+  if (! aePrefs.hasPomaikaiPrefs(prefs)) {
     log("Initializing 0.8.3 user preferences.");
-    await aePrefs.setPomaikaiPrefs(gPrefs);
+    await aePrefs.setPomaikaiPrefs(prefs);
   }
 
-  if (! aePrefs.hasMauiPrefs(gPrefs)) {
+  if (! aePrefs.hasMauiPrefs(prefs)) {
     log("Initializing 1.1 user preferences.");
-    await aePrefs.setMauiPrefs(gPrefs);
+    await aePrefs.setMauiPrefs(prefs);
   }
 
-  if (! aePrefs.hasMaunaKeaPrefs(gPrefs)) {
+  if (! aePrefs.hasMaunaKeaPrefs(prefs)) {
     log("Initializing additional 1.1 user preferences.");
-    await aePrefs.setMaunaKeaPrefs(gPrefs);
+    await aePrefs.setMaunaKeaPrefs(prefs);
   }
 
-  init();
+  init(prefs);
 }();
 
 
-async function init()
+async function init(aPrefs)
 {
   let [brws, platform] = await Promise.all([
     browser.runtime.getBrowserInfo(),
     browser.runtime.getPlatformInfo(),
   ]);
   
-  gHostAppName = brws.name;
-  gHostAppVer = brws.version;
-  log(`Read Next: Host app: ${gHostAppName} (version ${gHostAppVer})`);
-
-  gOS = platform.os;
-  log("Read Next: OS: " + gOS);
+  log(`Read Next: Host app: ${brws.name} (version ${brws.version})`);
+  log(`Read Next: OS: ${platform.os}`);
 
   let prefsStrKey = "mnuPrefs";
-  if (gOS == "win") {
+  if (platform.os == "win") {
     prefsStrKey = "mnuPrefsWin";
   }
 
   aeReadingList.init();
   
-  if (gPrefs.syncEnabled) {
+  if (aPrefs.syncEnabled) {
     info("Read Next: Synced reading list is enabled.");
-    initSyncInterval();
+    initSyncInterval(aPrefs);
   }
 
   // Context menus for browser toolbar button and address bar button
@@ -179,7 +172,7 @@ async function init()
     contexts: ["browser_action", "page_action"],
   });
 
-  setUICustomizations();
+  setUICustomizations(aPrefs);
 
   // Initialize integration with browser
   let tabs = await browser.tabs.query({active: true});
@@ -191,12 +184,9 @@ async function init()
 }
 
 
-async function setUICustomizations()
+async function setUICustomizations(aPrefs)
 {
-  if (gPrefs.showCxtMenu) {
-    // TO DO: These WebExtension API calls will throw an exception if the menus
-    // were already created. Fix by enclosing in try...catch block, or checking
-    // if the menus already exists.
+  if (aPrefs.showCxtMenu) {
     browser.menus.create({
       id: "ae-readnext-add-bkmk",
       title: browser.i18n.getMessage("addBkmk"),
@@ -238,8 +228,9 @@ async function setWhatsNewNotificationDelay()
 
 async function firstSyncReadingList()
 {
-  let oauthClient = new aeOAuthClient(gPrefs.accessToken, gPrefs.refreshToken);
-  let syncBacknd = Number(gPrefs.syncBackend);
+  let prefs = await aePrefs.getAllPrefs();
+  let oauthClient = new aeOAuthClient(prefs.accessToken, prefs.refreshToken);
+  let syncBacknd = Number(prefs.syncBackend);
   
   await aeSyncReadingList.init(syncBacknd, oauthClient);
 
@@ -257,7 +248,7 @@ async function firstSyncReadingList()
   }
   catch {}
 
-  initSyncInterval();
+  initSyncInterval(prefs);
 }
 
 
@@ -339,7 +330,8 @@ async function handleAuthorizationError()
 
 async function handleNetworkConnectError()
 {
-  let {fileHostName} = aeFileHostUI(gPrefs.syncBackend);
+  let syncBackend = await aePrefs.getPref("syncBackend");
+  let {fileHostName} = aeFileHostUI(syncBackend);
   try {
     await browser.runtime.sendMessage({
       id: "sync-failed-netwk-error",
@@ -350,9 +342,9 @@ async function handleNetworkConnectError()
 }
 
 
-function initSyncInterval()
+function initSyncInterval(aPrefs)
 {
-  let periodInMinutes = gPrefs.syncInterval;
+  let periodInMinutes = aPrefs.syncInterval;
   browser.alarms.create("sync-reading-list", {periodInMinutes});
   info(`Read Next: Reading list will be synced every ${periodInMinutes} mins.`);
 }
@@ -370,13 +362,15 @@ async function restartSyncInterval()
 {
   log("Read Next: Restarting sync interval...");
   await browser.alarms.clear("sync-reading-list");
-  initSyncInterval();
+  let syncInterval = await aePrefs.getPref("syncInterval");
+  initSyncInterval({syncInterval});
 }
 
 
 async function pushLocalChanges()
 {
-  if (gPrefs.syncEnabled) {
+  let syncEnabled = await aePrefs.getPref("syncEnabled");
+  if (syncEnabled) {
     log("Read Next: Pushing local changes...");
     try {
       await aeSyncReadingList.push();
@@ -491,7 +485,8 @@ async function updateBookmarkFavIcon(aBookmarkID, aTabID)
 
 async function showPageAction(aTab, aBookmarkExists=null)
 {
-  if (gPrefs.showPageAction && isSupportedURL(aTab.url)) {
+  let showPageAction = await aePrefs.getPref("showPageAction");
+  if (showPageAction && isSupportedURL(aTab.url)) {
     browser.pageAction.show(aTab.id);
 
     if (aBookmarkExists === null) {
@@ -590,10 +585,11 @@ async function updateMenus(aTab=null)
 
   let bkmk = await getBookmarkFromTab(aTab);
   let bkmkExists = !!bkmk;
+  let showCxtMenu = await aePrefs.getPref("showCxtMenu");
   
   if (bkmkExists) {
     await browser.menus.update("ae-readnext-add-and-close-tab", {enabled: false});
-    if (gPrefs.showCxtMenu) {
+    if (showCxtMenu) {
       await browser.menus.update("ae-readnext-add-bkmk", {visible: false});
       await browser.menus.update("ae-readnext-submnu", {visible: true});
       await browser.menus.update("ae-readnext-remove-bkmk", {visible: true});
@@ -601,7 +597,7 @@ async function updateMenus(aTab=null)
   }
   else {
     await browser.menus.update("ae-readnext-add-and-close-tab", {enabled: true});
-    if (gPrefs.showCxtMenu) {
+    if (showCxtMenu) {
       await browser.menus.update("ae-readnext-add-bkmk", {visible: true});
       await browser.menus.update("ae-readnext-submnu", {visible: false});
       await browser.menus.update("ae-readnext-remove-bkmk", {visible: false});
@@ -842,14 +838,13 @@ browser.alarms.onAlarm.addListener(async (aAlarm) => {
 });
 
 
-browser.storage.onChanged.addListener((aChanges, aAreaName) => {
+browser.storage.onChanged.addListener(async (aChanges, aAreaName) => {
+  let prefs = await aePrefs.getAllPrefs();
   let changedPrefs = Object.keys(aChanges);
-  
-  for (let pref of changedPrefs) {
-    gPrefs[pref] = aChanges[pref].newValue;
-  }
 
-  setUICustomizations();
+  if (changedPrefs.includes("showCxtMenu")) {
+    setUICustomizations(prefs);
+  }
 });
 
 
@@ -862,7 +857,8 @@ browser.windows.onFocusChanged.addListener(async (aWndID) => {
     // menu items should be applicable to the window that is now focused.
     updateMenus();
 
-    if (gPrefs.syncEnabled) {
+    let syncEnabled = await aePrefs.getPref("syncEnabled");
+    if (syncEnabled) {
       // Don't trigger sync if syncing is suspended.
       let syncAlarm = await browser.alarms.get("sync-reading-list");
       if (! syncAlarm) {
@@ -917,7 +913,8 @@ browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
       return;
     }
 
-    if (gPrefs.deleteReadLinks) {
+    let deleteReadLinks = await aePrefs.getPref("deleteReadLinks");
+    if (deleteReadLinks) {
       // Delete the link regardless of its "read" status.  Need to handle links
       // that were already marked as read before this setting was turned on.
       await removeBookmark(bkmk.id);
@@ -984,12 +981,15 @@ browser.browserAction.onClicked.addListener(aTab => {
 });
 
 
-browser.pageAction.onClicked.addListener(() => {
-  addBookmarkFromPageAction(gPrefs.closeTabAfterAdd);
+browser.pageAction.onClicked.addListener(async () => {
+  let closeTabAfterAdd = await aePrefs.getPref("closeTabAfterAdd");
+  addBookmarkFromPageAction(closeTabAfterAdd);
 });
 
 
 browser.menus.onClicked.addListener(async (aInfo, aTab) => {
+  let prefs = await aePrefs.getAllPrefs();
+
   if (aInfo.menuItemId == "ae-readnext-add-bkmk") {
     // By default, the action applies to the currently active browser tab, but
     // support the selection of more than 1 browser tab from the tab bar.
@@ -1014,7 +1014,7 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
         await addBookmark(bkmk);
         togglePageActionIcon(true, tab);
 
-        if (gPrefs.closeTabAfterAdd) {
+        if (prefs.closeTabAfterAdd) {
           closeTab(tab.id);
         } 
       }
