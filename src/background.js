@@ -4,11 +4,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
-let gIsFirstRun = false;
 let gVerUpdateType = null;
 let gShowUpdateBanner = false;
 let gAutoOpenConnectWiz = false;
-let gOptionsPgOpen = false;
 
 let gFileHostReauthorizer = {
   _notifcnShown: false,
@@ -28,17 +26,24 @@ let gFileHostReauthorizer = {
   {
     let syncBackend = await aePrefs.getPref("syncBackend");
     let {fileHostName} = aeFileHostUI(syncBackend);
-    let msg = {
-      id: "reauthorize-prompt",
-      fileHostName,
-    };
     
     try {
-      await browser.runtime.sendMessage(msg);
+      await browser.runtime.sendMessage({
+        id: "reauthorize-prompt",
+        fileHostName,
+      });
     }
     catch {}
+
+    let isOptionsPgOpen = false;
+    try {
+      isOptionsPgOpen = await browser.runtime.sendMessage({id: "ping-ext-prefs-pg"});
+    }
+    catch {}
+
+    isOptionsPgOpen = !!isOptionsPgOpen;
     
-    if (!this._notifcnShown && !gOptionsPgOpen) {
+    if (!this._notifcnShown && !isOptionsPgOpen) {
       browser.notifications.create("reauthorize", {
         type: "basic",
         title: browser.i18n.getMessage("extName"),
@@ -115,7 +120,6 @@ void async function ()
 
   if (! aePrefs.hasUserPrefs(prefs)) {
     log("Initializing Read Next user preferences.");
-    gIsFirstRun = true;
     await aePrefs.setUserPrefs(prefs);
   }
 
@@ -761,10 +765,6 @@ browser.runtime.onMessage.addListener(aMessage => {
     else {
       gFileHostReauthorizer.reauthorizePg = null;
     }
-    break;
-
-  case "options-pg-status":
-    gOptionsPgOpen = aMessage.isOpen;
     break;
 
   case "close-tab":
