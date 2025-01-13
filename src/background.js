@@ -7,8 +7,6 @@
 // need to be saved to extension storage.
 let gVerUpdateType = null;
 let gShowUpdateBanner = false;
-
-// TO DO: Save value in extension storage rather than in a global variable.
 let gAutoOpenConnectWiz = false;
 
 let gFileHostReauthorizer = {
