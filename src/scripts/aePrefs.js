@@ -5,6 +5,12 @@
  */
 
 let aePrefs = {
+  // Background script state persistence
+  _defaultBkgdState: {
+    _reauthzNotifcnShown: false,
+  },
+  
+  // User preferences and customizations
   _defaultPrefs: {
     syncEnabled: false,
     syncBackend: null,
@@ -32,7 +38,8 @@ let aePrefs = {
   
   getPrefKeys()
   {
-    return Object.keys(this._defaultPrefs);
+    let allPrefs = {...this._defaultBkgdState, ...this._defaultPrefs};
+    return Object.keys(allPrefs);
   },
 
   async getPref(aPrefName)
@@ -52,6 +59,11 @@ let aePrefs = {
   async setPrefs(aPrefMap)
   {
     await browser.storage.local.set(aPrefMap);
+  },
+
+  async setDefaultBkgdState()
+  {
+    await browser.storage.local.set(this._defaultBkgdState);
   },
 
 
@@ -126,6 +138,18 @@ let aePrefs = {
 
       // Disable experimental feature from ver 1.1b1
       allowEditLinks: false,
+    };
+    await this._addPrefs(aPrefs, prefs);
+  },
+
+  hasOahuPrefs(aPrefs) {
+    // Version 1.5
+    return ("_reauthzNotifcnShown" in aPrefs);
+  },
+
+  async setOahuPrefs(aPrefs) {
+    let prefs = {
+      _reauthzNotifcnShown: false,
     };
     await this._addPrefs(aPrefs, prefs);
   },

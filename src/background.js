@@ -3,25 +3,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-
+// These globals are used only briefly or during initialization, so they don't
+// need to be saved to extension storage.
 let gVerUpdateType = null;
 let gShowUpdateBanner = false;
+
+// TO DO: Save value in extension storage rather than in a global variable.
 let gAutoOpenConnectWiz = false;
 
 let gFileHostReauthorizer = {
-  _notifcnShown: false,
-  _reauthzPg: null,
-
-  get reauthorizePg()
-  {
-    return this._reauthzPg;
-  },
-
-  set reauthorizePg(aWndTabInfo)
-  {
-    return this._reauthzPg = aWndTabInfo;
-  },
-
   async showPrompts()
   {
     let syncBackend = await aePrefs.getPref("syncBackend");
@@ -35,6 +25,7 @@ let gFileHostReauthorizer = {
     }
     catch {}
 
+    let notifcnShown = await aePrefs.getPref("_reauthzNotifcnShown");
     let isOptionsPgOpen = false;
     try {
       isOptionsPgOpen = await browser.runtime.sendMessage({id: "ping-ext-prefs-pg"});
@@ -42,24 +33,30 @@ let gFileHostReauthorizer = {
     catch {}
 
     isOptionsPgOpen = !!isOptionsPgOpen;
-    
-    if (!this._notifcnShown && !isOptionsPgOpen) {
+
+    if (!notifcnShown && !isOptionsPgOpen) {
       browser.notifications.create("reauthorize", {
         type: "basic",
         title: browser.i18n.getMessage("extName"),
         message: browser.i18n.getMessage("reauthzNotifcn", fileHostName),
         iconUrl: "img/icon.svg"
       });
-      this._notifcnShown = true;
+      await aePrefs.setPrefs({_reauthzNotifcnShown: true});
     }
   },
 
   async openReauthorizePg()
   {
     // If the reauthorize page is already open, focus its window and tab.
-    if (this._reauthzPg) {
-      await browser.windows.update(this._reauthzPg.wndID, {focused: true});
-      await browser.tabs.update(this._reauthzPg.tabID, {active: true});
+    let reauthzPg;
+    try {
+      reauthzPg = await browser.runtime.sendMessage({id: "ping-reauthz-pg"});
+    }
+    catch {}
+
+    if (reauthzPg) {
+      await browser.windows.update(reauthzPg.wndID, {focused: true});
+      await browser.tabs.update(reauthzPg.tabID, {active: true});
       return;
     }
 
@@ -70,9 +67,15 @@ let gFileHostReauthorizer = {
 
   reset()
   {
-    this._notifcnShown = false;
+    aePrefs.setPrefs({_reauthzNotifcnShown: false});
   }
 };
+
+
+browser.runtime.onStartup.addListener(async () => {
+  log("Read next: Resetting persistent background script data during browser startup");
+  await aePrefs.setDefaultBkgdState();
+});
 
 
 browser.runtime.onInstalled.addListener(async (aInstall) => {
@@ -136,6 +139,11 @@ void async function ()
   if (! aePrefs.hasMaunaKeaPrefs(prefs)) {
     log("Initializing additional 1.1 user preferences.");
     await aePrefs.setMaunaKeaPrefs(prefs);
+  }
+
+  if (! aePrefs.hasOahuPrefs(prefs)) {
+    log("Initializing 1.5 user preferences.");
+    await aePrefs.setOahuPrefs(prefs);
   }
 
   init(prefs);
@@ -753,18 +761,6 @@ browser.runtime.onMessage.addListener(aMessage => {
     
   case "reauthorize":
     gFileHostReauthorizer.openReauthorizePg();
-    break;
-
-  case "reauthz-pg-status":
-    if (aMessage.isOpen) {
-      gFileHostReauthorizer.reauthorizePg = {
-        tabID: aMessage.tabID,
-        wndID: aMessage.wndID,
-      };
-    }
-    else {
-      gFileHostReauthorizer.reauthorizePg = null;
-    }
     break;
 
   case "close-tab":

@@ -4,19 +4,20 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
+let gPgInfo = {
+  tabID: null,
+  wndID: null,
+};
+
+
 // Page initialization
 $(async () => {
   let platform = await browser.runtime.getPlatformInfo();
   document.body.dataset.os = platform.os;
 
-  let msg = {
-    id: "reauthz-pg-status",
-    isOpen: true,
-  };
   let tab = await browser.tabs.getCurrent();
-  msg.tabID = tab.id;
-  msg.wndID = tab.windowId;  
-  browser.runtime.sendMessage(msg);
+  gPgInfo.tabID = tab.id;
+  gPgInfo.wndID = tab.windowId;  
 
   let backnd = getFileHostID();
   reauthorize(backnd);  
@@ -113,6 +114,19 @@ async function closePage()
 // Event handlers
 //
 
+browser.runtime.onMessage.addListener(aMessage => {
+  log(`Read Next::reauthorize.js: Received extension message "${aMessage.id}"`);
+
+  if (aMessage.id == "ping-reauthz-pg") {
+    return Promise.resolve({
+      isOpen: true,
+      tabID: gPgInfo.tabID,
+      wndID: gPgInfo.wndID,
+    });
+  }
+});
+
+
 $("#btn-retry").on("click", aEvent => {
   $("#retry-reauthz").hide();
   $("#reauthz-progress").show();
@@ -144,14 +158,6 @@ $(window).keydown(aEvent => {
 
 $(document).on("contextmenu", aEvent => {
   aEvent.preventDefault();
-});
-
-
-$(window).on("beforeunload", aEvent => {
-  browser.runtime.sendMessage({
-    id: "reauthz-pg-status",
-    isOpen: false,
-  });
 });
 
 
