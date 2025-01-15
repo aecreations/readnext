@@ -1162,7 +1162,7 @@ browser.runtime.onMessage.addListener(aMessage => {
   let resp = null;
 
   switch (aMessage.id) {
-  case "add-bookmark-event":
+  case "bookmark-added":
     addReadingListItem(aMessage.bookmark).then(() => {
       return browser.tabs.query({active: true, currentWindow: true});
     }).then(aTabs => {
@@ -1173,7 +1173,7 @@ browser.runtime.onMessage.addListener(aMessage => {
     });
     break;
 
-  case "remove-bookmark-event":
+  case "bookmark-removed":
     removeReadingListItem(aMessage.bookmark.id);
     browser.tabs.query({active: true, currentWindow: true}).then(aTabs => {
       let actvTab = aTabs[0];
@@ -1201,7 +1201,7 @@ browser.runtime.onMessage.addListener(aMessage => {
     rebuildReadingList(aMessage.bookmarks, unreadOnly);
     break;
 
-  case "set-favicon-event":
+  case "favicon-saved":
     gFavIconMap.set(aMessage.bookmarkID, aMessage.iconData);
     // The favicon map is populated before a new bookmark is added, so check
     // that the bookmark exists.
@@ -1210,7 +1210,7 @@ browser.runtime.onMessage.addListener(aMessage => {
     }
     break;
 
-  case "mark-read-event":
+  case "marked-as-read":
     markAsRead(aMessage.bookmarkID, aMessage.isRead);
     break;
 

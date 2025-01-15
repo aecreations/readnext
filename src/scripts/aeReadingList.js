@@ -31,6 +31,14 @@ let aeReadingList = {
     // Throws exception if a bookmark with the same ID already exists.
     rv = await db.bookmarks.add(aBookmark, aBookmark.id);
     if (rv) {
+      try {
+        await browser.runtime.sendMessage({
+          id: "bookmark-added",
+          bookmark: aBookmark,
+        });
+      }
+      catch {}
+      
       this._updateLocalLastModifiedTime();
     }
 
@@ -74,13 +82,12 @@ let aeReadingList = {
       iconData: aIconData,
     });
 
-    let msg = {
-      id: "set-favicon-event",
-      bookmarkID: aBookmarkID,
-      iconData: aIconData,
-    };
     try {
-      await browser.runtime.sendMessage(msg);
+      await browser.runtime.sendMessage({
+        id: "favicon-saved",
+        bookmarkID: aBookmarkID,
+        iconData: aIconData,
+      });
     }
     catch {}
   },
@@ -100,9 +107,18 @@ let aeReadingList = {
 
   async remove(aBookmarkID)
   {
+    let bookmark = await this.get(aBookmarkID);
     let db = this._getDB();
     await db.bookmarks.delete(aBookmarkID);
     await db.favicons.delete(aBookmarkID);
+
+    try {
+      await browser.runtime.sendMessage({
+        id: "bookmark-removed",
+        bookmark,
+      });
+    }
+    catch {}
 
     this._updateLocalLastModifiedTime();
   },
@@ -162,13 +178,12 @@ let aeReadingList = {
     };
     await db.bookmarks.update(aBookmarkID, changes);
 
-    let msg = {
-      id: "mark-read-event",
-      bookmarkID: aBookmarkID,
-      isRead: aIsRead,
-    };
     try {
-      await browser.runtime.sendMessage(msg);
+      await browser.runtime.sendMessage({
+        id: "marked-as-read",
+        bookmarkID: aBookmarkID,
+        isRead: aIsRead,
+      });
     }
     catch {}
   },

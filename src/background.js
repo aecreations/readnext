@@ -445,14 +445,6 @@ async function addBookmark(aBookmark)
     return Promise.reject(e);
   }
 
-  try {
-    await browser.runtime.sendMessage({
-      id: "add-bookmark-event",
-      bookmark: aBookmark,
-    });
-  }
-  catch {}
-
   return rv;
 }
 
@@ -461,14 +453,6 @@ async function removeBookmark(aBookmarkID)
 {
   let bookmark = await aeReadingList.get(aBookmarkID);
   await aeReadingList.remove(aBookmarkID);
-
-  try {
-    await browser.runtime.sendMessage({
-      id: "remove-bookmark-event",
-      bookmark,
-    });
-  }
-  catch {}
 }
 
 
