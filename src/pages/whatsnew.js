@@ -40,7 +40,7 @@ $(async () => {
   gWndID = currWnd.id;
   gTabID = tabs[0].id;
 
-  browser.runtime.sendMessage({id: "whats-new-pg-open-evt"});
+  browser.runtime.sendMessage({id: "whats-new-pg-opened"});
 });
 
 

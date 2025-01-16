@@ -1183,7 +1183,7 @@ browser.runtime.onMessage.addListener(aMessage => {
     });
     break;
 
-  case "reload-bookmarks-event":
+  case "bookmarks-reloaded":
     if ($("#reauthz-msgbar").is(":visible")) {
       hideMessageBar("#reauthz-msgbar");
     }
@@ -1214,8 +1214,8 @@ browser.runtime.onMessage.addListener(aMessage => {
     markAsRead(aMessage.bookmarkID, aMessage.isRead);
     break;
 
-  case "tab-loading-finish-event":
-  case "tab-switching-event":
+  case "tab-loading-finished":
+  case "tab-activated":
     browser.windows.getCurrent().then(aCurrWnd => {
       if (aCurrWnd.id == aMessage.windowID) {
         $("#add-link, #add-link-cta").prop("disabled", (aMessage.bkmkExists || !aMessage.isSupportedURL));
@@ -1262,7 +1262,7 @@ browser.runtime.onMessage.addListener(aMessage => {
     showMessageBar("#reauthz-msgbar");
     break;
 
-  case "whats-new-pg-open-evt":
+  case "whats-new-pg-opened":
     hideMessageBar("#upgrade-msgbar");
     break;
 

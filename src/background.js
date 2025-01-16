@@ -249,12 +249,11 @@ async function firstSyncReadingList()
   log("Read Next: Finished first sync!");
 
   let bookmarks = await aeReadingList.getAll();
-  let msg = {
-    id: "reload-bookmarks-event",
-    bookmarks,
-  };
   try {
-    await browser.runtime.sendMessage(msg);
+    await browser.runtime.sendMessage({
+      id: "bookmarks-reloaded",
+      bookmarks,
+    });
   }
   catch {}
 
@@ -302,12 +301,11 @@ async function syncReadingList()
   log("Read Next: Finished sync!");
 
   let bookmarks = await aeReadingList.getAll();
-  let msg = {
-    id: "reload-bookmarks-event",
-    bookmarks,
-  };
   try {
-    await browser.runtime.sendMessage(msg);
+    await browser.runtime.sendMessage({
+      id: "bookmarks-reloaded",
+      bookmarks,
+    });
   }
   catch {}
 
@@ -779,7 +777,7 @@ browser.runtime.onMessage.addListener(aMessage => {
     }
     break;
 
-  case "whats-new-pg-open-evt":
+  case "whats-new-pg-opened":
     browser.alarms.clear("show-upgrade-notifcn");
     gShowUpdateBanner = false;
     break;
@@ -877,7 +875,7 @@ browser.tabs.onUpdated.addListener(async (aTabID, aChangeInfo, aTab) => {
 
       try {
         await browser.runtime.sendMessage({
-          id: "tab-loading-finish-event",
+          id: "tab-loading-finished",
           bkmkExists,
           isSupportedURL: isSupportedURL(aTab.url),
           windowID: aTab.windowId,
@@ -940,7 +938,7 @@ browser.tabs.onActivated.addListener(async (aActiveTab) => {
 
     try {
       await browser.runtime.sendMessage({
-        id: "tab-switching-event",
+        id: "tab-activated",
         bkmkExists,
         isSupportedURL: isSupportedURL(tab.url),
         windowID: tab.windowId,
