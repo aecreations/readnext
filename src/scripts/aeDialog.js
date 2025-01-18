@@ -267,6 +267,11 @@ class aeDialog
     
     return (dlgCancelElt.length == 0 && dlgAcceptElt.length > 0);
   }
+
+  isOpen()
+  {
+    return this._dlgElt.hasClass("lightbox-show");    
+  }
   
   static isOpen()
   {
