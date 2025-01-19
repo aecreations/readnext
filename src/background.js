@@ -263,10 +263,34 @@ async function firstSyncReadingList()
 
 async function syncReadingList()
 {
-  // Don't assume that the saved access token is the most up to date.
-  // This function may be called immediately after the user has reauthorized
-  // their file host account and before the changed storage event handler has
-  // finished executing, so always load prefs from storage.
+  // Don't proceed if reading list syncing is paused.
+  let isPaused = await aePrefs.getPref("_syncPaused");
+  if (isPaused) {
+    let renameDlgSrcWndID = await aePrefs.getPref("_renameDlgSrcWndID");
+    if (typeof renameDlgSrcWndID == "number") {
+      // Check if the referenced window still exists.
+      let srcWnd;
+      try {
+        srcWnd = await browser.windows.get(renameDlgSrcWndID);
+      }
+      catch {}
+
+      if (srcWnd) {
+        info("Read Next: syncReadingList(): Syncing is paused.");
+        throw new Error("Syncing is paused");
+      }
+      else {
+        // User closed the browser window without finishing edit.
+        await aePrefs.setPrefs({_renameDlgSrcWndID: null});
+        await pauseSync(false);
+      }
+    }
+    else {
+      // Reached here if saved state is inconsistent - this shouldn't happen.
+      await pauseSync(false);
+    }
+  }
+  
   let {syncBackend, accessToken, refreshToken} = await aePrefs.getAllPrefs();
   let oauthClient = new aeOAuthClient(accessToken, refreshToken);
   await aeSyncReadingList.init(Number(syncBackend), oauthClient);
@@ -355,6 +379,13 @@ function initSyncInterval(aPrefs)
   let periodInMinutes = aPrefs.syncInterval;
   browser.alarms.create("sync-reading-list", {periodInMinutes});
   info(`Read Next: Reading list will be synced every ${periodInMinutes} mins.`);
+}
+
+
+async function pauseSync(aIsPaused=true)
+{
+  await aePrefs.setPrefs({_syncPaused: aIsPaused});
+  log(`Read Next: It is ${aIsPaused} that reading list sync is paused.`);
 }
 
 
@@ -472,6 +503,59 @@ async function updateBookmarkFavIcon(aBookmarkID, aTabID)
   if (tab.favIconUrl) {
     setBookmarkFavIcon(aBookmarkID, tab.favIconUrl);
   }
+}
+
+
+async function startEditBookmark()
+{
+  let syncEnabled = await aePrefs.getPref("syncEnabled");
+  if (syncEnabled) {
+    await pauseSync();
+  }
+  
+  let currWnd = await browser.windows.getCurrent();
+  await aePrefs.setPrefs({_renameDlgSrcWndID: currWnd.id});
+}
+
+
+async function stopEditBookmark()
+{
+  await aePrefs.setPrefs({_renameDlgSrcWndID: null});
+  await pauseSync(false);
+}
+
+
+async function isBookmarkEditingAllowed()
+{
+  let rv;
+  let renameDlgSrcWndID = await aePrefs.getPref("_renameDlgSrcWndID");
+  
+  if (typeof renameDlgSrcWndID == "number") {
+    // Check if the referenced window still exists.
+    let srcWnd;
+    try {
+      srcWnd = await browser.windows.get(renameDlgSrcWndID);
+    }
+    catch {}
+
+    if (srcWnd) {
+      rv = {
+        canEditBkmk: false,
+        renameDlgSrcWndID,
+      };
+    }
+    else {
+      // The user may have closed the browser window without completing the
+      // link renaming from the sidebar.
+      await aePrefs.setPrefs({_renameDlgSrcWndID: null});
+      rv = {canEditBkmk: true};
+    }
+  }
+  else {
+    rv = {canEditBkmk: true};
+  }
+
+  return rv;
 }
 
 
@@ -706,6 +790,9 @@ browser.runtime.onMessage.addListener(aMessage => {
       .catch(aErr => Promise.reject(aErr));
     break;
 
+  case "can-edit-bookmark?":
+    return isBookmarkEditingAllowed();
+
   case "open-link-curr-wnd":
     browser.tabs.update(aMessage.activeTabID, {url: aMessage.url, active: true});
     break;
@@ -715,6 +802,7 @@ browser.runtime.onMessage.addListener(aMessage => {
       return restartSyncInterval();
     }).catch(aErr => {
       // Exceptions already handled, no further action needed.
+      // Also don't need to do anything if sync is paused.
       return Promise.resolve();
     }).then(() => {
       if (aMessage.isReauthorized) {
@@ -733,6 +821,14 @@ browser.runtime.onMessage.addListener(aMessage => {
       warn("Read Next: Sync turned OFF.");
       return stopSync();
     }
+    break;
+
+  case "start-edit-bookmark":
+    startEditBookmark();
+    break;
+
+  case "stop-edit-bookmark":
+    stopEditBookmark();
     break;
 
   case "get-username":

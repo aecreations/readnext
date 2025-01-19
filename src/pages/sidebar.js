@@ -131,8 +131,17 @@ let gCmd = {
     });
   },
 
-  rename(aBookmarkID)
+  async rename(aBookmarkID)
   {
+    // Check if renaming a link is in progress in any other browser window.
+    let resp = await browser.runtime.sendMessage({id: "can-edit-bookmark?"});
+
+    if (!resp.canEditBkmk) {
+      // TO DO: Show warning message in a modal dialog.
+      warn("Read Next: Renaming a reading list link can only be done in one browser window at a time.");
+      return;
+    }
+    
     let bkmk = $(`.reading-list-item[data-id="${aBookmarkID}"]`);
     gRenameDlg.setBookmark(bkmk.attr("data-id"), bkmk.attr("data-title"));
     gRenameDlg.showModal();
@@ -739,6 +748,10 @@ function initDialogs()
     let textarea = this.find("#new-link-name")[0];
     textarea.select();
   };
+  gRenameDlg.onShow = function ()
+  {
+    browser.runtime.sendMessage({id: "start-edit-bookmark"});
+  };
   gRenameDlg.onAccept = async function ()
   {
     let textarea = this.find("#new-link-name")[0];
@@ -769,9 +782,9 @@ function initDialogs()
     this.bkmkID = null;
     this.close();
   };
-  gRenameDlg.isOpen = function ()
+  gRenameDlg.onUnload = function ()
   {
-    return this._dlgElt.hasClass("lightbox-show");
+    browser.runtime.sendMessage({id: "stop-edit-bookmark"});
   };
 
   gCustomizeDlg = new aeDialog("#customize-dlg");

@@ -8,6 +8,8 @@ let aePrefs = {
   // Background script state persistence
   _defaultBkgdState: {
     _reauthzNotifcnShown: false,
+    _syncPaused: false,
+    _renameDlgSrcWndID: null,
   },
   
   // User preferences and customizations
@@ -150,6 +152,12 @@ let aePrefs = {
   async setOahuPrefs(aPrefs) {
     let prefs = {
       _reauthzNotifcnShown: false,
+      _syncPaused: false,
+      _renameDlgSrcWndID: null,
+
+      // Enable renaming of links, which was introduced but disabled
+      // in version 1.1
+      allowEditLinks: true,
     };
     await this._addPrefs(aPrefs, prefs);
   },
