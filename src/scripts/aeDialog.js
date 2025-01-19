@@ -48,6 +48,15 @@ class aeDialog
 
   _init()
   {
+    // Insert dialog backdrop overlay <div> element.
+    let backdrop = $("#lightbox-bkgrd-ovl");
+    if (backdrop.length == 0) {
+      let backdropElt = document.createElement("div");
+      backdropElt.id = "lightbox-bkgrd-ovl";
+      backdropElt.className = "lightbox-bkgrd";
+      $(".lightbox").last().after($(backdropElt));
+    }
+    
     let dlgAcceptElt = $(`${this._dlgEltStor} > .dlg-btns > .dlg-accept`);
     if (dlgAcceptElt.length > 0) {
       dlgAcceptElt.click(aEvent => {
