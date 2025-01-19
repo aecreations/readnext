@@ -263,7 +263,6 @@ async function firstSyncReadingList()
 
 async function syncReadingList()
 {
-  // Don't proceed if reading list syncing is paused.
   let isPaused = await aePrefs.getPref("_syncPaused");
   if (isPaused) {
     let renameDlgSrcWndID = await aePrefs.getPref("_renameDlgSrcWndID");
@@ -275,12 +274,9 @@ async function syncReadingList()
       }
       catch {}
 
-      if (srcWnd) {
-        info("Read Next: syncReadingList(): Syncing is paused.");
-        throw new Error("Syncing is paused");
-      }
-      else {
-        // User closed the browser window without finishing edit.
+      if (!srcWnd) {
+        // The user may have closed the browser window without completing the
+        // link renaming from the sidebar.
         await aePrefs.setPrefs({_renameDlgSrcWndID: null});
         await pauseSync(false);
       }
@@ -290,40 +286,46 @@ async function syncReadingList()
       await pauseSync(false);
     }
   }
-  
-  let {syncBackend, accessToken, refreshToken} = await aePrefs.getAllPrefs();
-  let oauthClient = new aeOAuthClient(accessToken, refreshToken);
-  await aeSyncReadingList.init(Number(syncBackend), oauthClient);
 
-  log("Read Next: Starting reading list sync...");
-  let isLocalDataChanged;
-  try {
-    isLocalDataChanged = await aeSyncReadingList.sync();
+  isPaused = await aePrefs.getPref("_syncPaused");
+  if (isPaused) {
+    info("Read Next: syncReadingList(): Syncing is paused. Loading reading list data from the database.");
   }
-  catch (e) {
-    if (e instanceof aeAuthorizationError) {
-      warn("Read Next: syncReadingList(): Caught aeAuthorizationError exception.  Details:\n" + e);
-      await handleAuthorizationError();
-      throw e;
+  else {
+    let {syncBackend, accessToken, refreshToken} = await aePrefs.getAllPrefs();
+    let oauthClient = new aeOAuthClient(accessToken, refreshToken);
+    await aeSyncReadingList.init(Number(syncBackend), oauthClient);
+
+    log("Read Next: Starting reading list sync...");
+    let isLocalDataChanged;
+    try {
+      isLocalDataChanged = await aeSyncReadingList.sync();
     }
-    else if (e instanceof aeNotFoundError) {
-      warn("Read Next: syncReadingList(): Caught aeNotFoundError exception.  Details:\n" + e);
-      log("Regenerating sync file...");
-      await aeSyncReadingList.push(true);
+    catch (e) {
+      if (e instanceof aeAuthorizationError) {
+        warn("Read Next: syncReadingList(): Caught aeAuthorizationError exception.  Details:\n" + e);
+        await handleAuthorizationError();
+        throw e;
+      }
+      else if (e instanceof aeNotFoundError) {
+        warn("Read Next: syncReadingList(): Caught aeNotFoundError exception.  Details:\n" + e);
+        log("Regenerating sync file...");
+        await aeSyncReadingList.push(true);
+      }
+      else if (e instanceof TypeError) {
+        warn("Read Next: syncReadingList(): Caught TypeError exception.  Unable to connect to the cloud file host.  Details:\n" + e);
+        await handleNetworkConnectError();
+        throw e;
+      }
+      else {
+        console.error("Read Next: syncReadingList(): An unexpected error has occurred.  Details:\n" + e);
+        throw e;
+      }
     }
-    else if (e instanceof TypeError) {
-      warn("Read Next: syncReadingList(): Caught TypeError exception.  Unable to connect to the cloud file host.  Details:\n" + e);
-      await handleNetworkConnectError();
-      throw e;
-    }
-    else {
-      console.error("Read Next: syncReadingList(): An unexpected error has occurred.  Details:\n" + e);
-      throw e;
-    }
+    
+    log("Read Next: Finished sync!");
   }
   
-  log("Read Next: Finished sync!");
-
   let bookmarks = await aeReadingList.getAll();
   try {
     await browser.runtime.sendMessage({
@@ -802,7 +804,6 @@ browser.runtime.onMessage.addListener(aMessage => {
       return restartSyncInterval();
     }).catch(aErr => {
       // Exceptions already handled, no further action needed.
-      // Also don't need to do anything if sync is paused.
       return Promise.resolve();
     }).then(() => {
       if (aMessage.isReauthorized) {
