@@ -477,7 +477,7 @@ body[data-tbar-fix] #bookmark-filter > #filter-unread ~ label[for="filter-unread
 }
 
 /* jQuery contextMenu CSS overrides */
-body[data-os="mac"] .ae-menuitem {
+.ae-menuitem {
     letter-spacing: -0.8px;
 }
 
