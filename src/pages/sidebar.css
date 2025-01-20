@@ -7,6 +7,7 @@
 @import url("../style/laf.css");
 @import url("../style/lightbox.css");
 @import url("../style/searchbox.css");
+@import url("../style/contextMenu.css");
 
 
 :root {
@@ -476,43 +477,8 @@ body[data-tbar-fix] #bookmark-filter > #filter-unread ~ label[for="filter-unread
 }
 
 /* jQuery contextMenu CSS overrides */
-.context-menu-list {
-    border: 1px solid var(--color-cxtmenu-border);
-    background-color: var(--color-cxtmenu-bkgd);
-}
-
-.ae-menuitem {
-    padding-top: 4px;
-    padding-bottom: 4px;
-    font-size: 12px;
-    background-color: var(--color-cxtmenu-bkgd);
-    color: var(--color-cxtmenu-text);
-}
-
 body[data-os="mac"] .ae-menuitem {
-    letter-spacing: -0.3px;
-}
-
-.context-menu-item.context-menu-disabled {
-    background-color: var(--color-cxtmenu-bkgd);
-}
-
-.context-menu-disabled:hover {
-    background-color: transparent;
-}
-
-.ae-menuitem:active {
-    background-color: var(--color-cxtmenu-menuitem-active-bkgd) !important;
-}
-
-.context-menu-item.context-menu-hover {
-    background-color: var(--color-cxtmenu-menuitem-hover-bkgd);
-    color: var(--color-cxtmenu-menuitem-hover-text);
-    cursor: default;
-}
-
-.context-menu-separator {
-    border-bottom: 1px solid var(--color-cxtmenu-separator);
+    letter-spacing: -0.8px;
 }
 
 /* Sidebar dialogs */
