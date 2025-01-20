@@ -927,6 +927,33 @@ function initContextMenu()
           return initContextMenu.showManualSync;
         }
       },
+      filterSep: "---",
+      showAllLinks: {
+        name: "show all links",
+        className: "ae-menuitem",
+        callback(aKey, aOpt) {
+          $("#filter-all").click();
+        },
+        icon(aOpt, aItemElement, aItemKey, aItem) {
+          aItemElement.removeClass("context-menu-icon-checked")
+          if (gReadingListFilter.getSelectedFilter() == gReadingListFilter.ALL) {
+            return "context-menu-icon-checked";
+          }
+        },
+      },
+      showUnreadLinks: {
+        name: "show unread links only",
+        className: "ae-menuitem",
+        callback(aKey, aOpt) {
+          $("#filter-unread").click();
+        },
+        icon(aOpt, aItemElement, aItemKey, aItem) {
+          aItemElement.removeClass("context-menu-icon-checked")
+          if (gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD) {
+            return "context-menu-icon-checked";
+          }
+        },
+      },
       custzSep: "---",
       customize: {
         name: browser.i18n.getMessage("mnuCustz"),
