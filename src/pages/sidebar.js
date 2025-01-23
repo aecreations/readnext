@@ -1134,6 +1134,7 @@ function enableReadingListKeyboardNav()
     }
 
     let numItems = $("#reading-list").children().length;
+    let {contentHeight, contentTop} = getScrollableContentGeometry();
     
     if (aEvent.key == "ArrowDown") {
       if (gKeybSelectedIdx === null) {
@@ -1149,8 +1150,12 @@ function enableReadingListKeyboardNav()
 
       let readingListItem = $("#reading-list").children().get(gKeybSelectedIdx);
       readingListItem.classList.add("focused");
-      readingListItem.scrollIntoView({block: "end", behavior: "smooth"});
 
+      let {top} = readingListItem.getBoundingClientRect();
+      if (top > contentHeight) {
+        readingListItem.scrollIntoView({block: "end", behavior: "smooth"});
+      }
+      
       aEvent.preventDefault();
     }
     else if (aEvent.key == "ArrowUp") {
@@ -1164,7 +1169,11 @@ function enableReadingListKeyboardNav()
 
       let readingListItem = $("#reading-list").children().get(gKeybSelectedIdx);
       readingListItem.classList.add("focused");
-      readingListItem.scrollIntoView({block: "start", behavior: "smooth"});
+
+      let {top} = readingListItem.getBoundingClientRect();
+      if (top < contentTop) {
+        readingListItem.scrollIntoView({block: "start", behavior: "smooth"});
+      }
 
       aEvent.preventDefault();
     }
@@ -1189,6 +1198,20 @@ function disableReadingListKeyboardNav()
 function isReadingListKeyboardNavDisabled()
 {
   return ($("#reading-list").attr("tabindex") === undefined);
+}
+
+
+function getScrollableContentGeometry()
+{
+  let rv = {};
+  let contentElt = $("#scroll-content")[0];
+  let rect = contentElt.getBoundingClientRect();
+  let style = window.getComputedStyle(contentElt);
+
+  rv.contentHeight = parseInt(style.height);
+  rv.contentTop = rect.top;
+
+  return rv;
 }
 
 
@@ -1398,6 +1421,13 @@ $("#reading-list").on("click", aEvent => {
     readingListItem = aEvent.target;
   }
 
+  gKeybSelectedIdx === null && (gKeybSelectedIdx = 0);
+
+  let readingListItems = $("#reading-list").children();
+  let prevSelectedItem = readingListItems.get(gKeybSelectedIdx);
+  prevSelectedItem.classList.remove("focused");
+  gKeybSelectedIdx = $(readingListItem).index();
+
   if (gPrefs.linkClickAction == aeConst.OPEN_LINK_IN_NEW_TAB) {
     gCmd.openInNewTab(readingListItem.dataset.id, readingListItem.dataset.url);
   }
@@ -1413,10 +1443,61 @@ $("#reading-list").on("click", aEvent => {
 
 
 $("#reading-list").on("focus", aEvent => {
+  // Handling keyboard navigation change from scrolling the entire reading list
+  // to selecting one individual item at a time.
   if (whatInput.ask() == "keyboard") {
     gKeybSelectedIdx === null && (gKeybSelectedIdx = 0);
     $("#reading-list").children().removeClass("focused");
-    $("#reading-list").children().get(gKeybSelectedIdx).classList.add("focused");
+
+    let {contentHeight, contentTop} = getScrollableContentGeometry();
+    let readingListItems = $("#reading-list").children();
+    let readingListItem = readingListItems.get(gKeybSelectedIdx);
+    let {top} = readingListItem.getBoundingClientRect();
+    let currTop = top;
+    let nextIdx;
+
+    if (top > contentHeight) {
+      // Make sure that the focused item is also visible.
+      // Select the last item that is visible at the bottom of the
+      // scrollable view.
+      nextIdx = gKeybSelectedIdx;
+      while (currTop > contentHeight) {
+        let prevReadingListItem = readingListItems.get(nextIdx);
+        let rect = prevReadingListItem.getBoundingClientRect();
+        currTop = rect.top - rect.height;
+
+        if (currTop <= contentHeight) {
+          prevReadingListItem.classList.add("focused");
+          prevReadingListItem.scrollIntoView({block: "end", behavior: "smooth"});
+          gKeybSelectedIdx = nextIdx;
+        }
+        else {
+          nextIdx--;
+        }
+      }
+    }
+    else if (top < contentTop) {
+      // Select the first element that is visible at the top of the
+      // scrollable view.
+      nextIdx = gKeybSelectedIdx + 1;
+      while (currTop < contentTop) {
+        let nextReadingListItem = readingListItems.get(nextIdx);
+        currTop = nextReadingListItem.getBoundingClientRect().top;
+
+        if (currTop >= contentTop) {
+          nextReadingListItem.classList.add("focused");
+          nextReadingListItem.scrollIntoView({block: "start", behavior: "smooth"});
+          gKeybSelectedIdx = nextIdx;
+        }
+        else {
+          nextIdx++;
+        }
+      }
+    }
+    else {
+      readingListItem.classList.add("focused");
+      gKeybSelectedIdx = $(readingListItem).index();
+    }
   } 
 });
 
