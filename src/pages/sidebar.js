@@ -270,10 +270,19 @@ let gSearchBox = {
         $("#search-box-ctr").removeClass("focus");
       })
       .keyup(aEvent => {
-        if (["Tab", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(aEvent.key)) {
+        if (aEvent.key == "Tab" && aEvent.shiftKey) {
           return;
         }
-        if (aEvent.key == "Escape") {
+        if (["Tab", "Shift", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
+             "Home", "End", "PageUp", "PageDown", "Insert", "ContextMenu",
+             "Enter", "Alt", "Control", "Fn", "Meta", "Help", "Eject",
+             "CapsLock", "NumLock", "ScrollLock",
+             "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10",
+             "F11", "F12", "F13", "F14", "F15", "F16", "F17", "F18", "F19",
+            ].includes(aEvent.key)) {
+          return;
+        }
+        if (aEvent.key == "Escape" || aEvent.key == "Clear") {
           this.reset();
         }
         else {
