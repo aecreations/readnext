@@ -6,6 +6,7 @@
 
 const TOOLBAR_HEIGHT = 28;
 
+let gOS;
 let gWndID;
 let gPrefs;
 let gCustomizeDlg, gRenameDlg;
@@ -275,8 +276,8 @@ let gSearchBox = {
         }
         if (["Tab", "Shift", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
              "Home", "End", "PageUp", "PageDown", "Insert", "ContextMenu",
-             "Enter", "Alt", "Control", "Fn", "Meta", "Help", "Eject",
-             "CapsLock", "NumLock", "ScrollLock",
+             "Enter", "Alt", "Control", "Meta", "AltGraph", "Fn", "Help",
+             "CapsLock", "NumLock", "ScrollLock", "PrintScreen", "Eject",
              "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10",
              "F11", "F12", "F13", "F14", "F15", "F16", "F17", "F18", "F19",
             ].includes(aEvent.key)) {
@@ -405,7 +406,7 @@ let gSearchBox = {
 // Sidebar initialization
 $(async () => {
   let {os} = await browser.runtime.getPlatformInfo();
-  document.body.dataset.os = os;
+  gOS = document.body.dataset.os = os;
 
   // UI fix for Firefox 132 and newer.
   let {version} = await browser.runtime.getBrowserInfo();
@@ -1131,7 +1132,26 @@ function enableReadingListKeyboardNav()
 {
   $("#reading-list").attr("tabindex", "0");
 
-  $("#reading-list").on("keydown.readingList", aEvent => {
+  $("#reading-list").on("keydown.readingList", aEvent => {   
+    function isHomeKeyPressed(aEvent)
+    {
+      let rv = aEvent.key == "Home" && aEvent.shiftKey;
+      if (gOS == "mac") {
+        rv = aEvent.key == "Home";
+      }
+      return rv;
+    }
+
+    function isEndKeyPressed(aEvent)
+    {
+      let rv = aEvent.key == "End" && aEvent.shiftKey;
+      if (gOS == "mac") {
+        rv = aEvent.key == "End";
+      }
+      return rv;
+    }
+    // END nested functions
+
     if (isReadingListEmpty()) {
       return;
     }
@@ -1145,7 +1165,7 @@ function enableReadingListKeyboardNav()
     let numItems = $("#reading-list").children().length;
     let {contentHeight, contentTop} = getScrollableContentGeometry();
     
-    if (aEvent.key == "ArrowDown") {
+    if (aEvent.key == "ArrowDown" || isEndKeyPressed(aEvent)) {
       if (gKeybSelectedIdx === null) {
         gKeybSelectedIdx = 0;
       }
@@ -1153,8 +1173,14 @@ function enableReadingListKeyboardNav()
         warn("Read Next::sidebar.js: Reached the end of the reading list.");
       }
       else {
-        $("#reading-list").children().get(gKeybSelectedIdx).classList.remove("focused");
-        gKeybSelectedIdx++;
+        let readingListItems = $("#reading-list").children();
+        readingListItems.get(gKeybSelectedIdx).classList.remove("focused");
+        if (isEndKeyPressed(aEvent)) {
+          gKeybSelectedIdx = readingListItems.length - 1;
+        }
+        else {
+          gKeybSelectedIdx++;
+        }
       }
 
       let readingListItem = $("#reading-list").children().get(gKeybSelectedIdx);
@@ -1167,13 +1193,18 @@ function enableReadingListKeyboardNav()
       
       aEvent.preventDefault();
     }
-    else if (aEvent.key == "ArrowUp") {
+    else if (aEvent.key == "ArrowUp" || isHomeKeyPressed(aEvent)) {
       if (! gKeybSelectedIdx) {
         warn("Read Next::sidebar.js: Reached the start of the reading list.");
       }
       else {
         $("#reading-list").children().get(gKeybSelectedIdx).classList.remove("focused");
-        gKeybSelectedIdx--;
+        if (isHomeKeyPressed(aEvent)) {
+          gKeybSelectedIdx = 0;
+        }
+        else {
+          gKeybSelectedIdx--;
+        }
       }
 
       let readingListItem = $("#reading-list").children().get(gKeybSelectedIdx);
