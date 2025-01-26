@@ -1147,7 +1147,7 @@ function enableReadingListKeyboardNav()
     let numItems = readingListItems.length;
     let {contentHeight, contentTop} = getScrollableContentGeometry();
     
-    if (["ArrowDown", "End"].includes(aEvent.key)) {
+    if (aEvent.key == "ArrowDown" || aEvent.key == "End") {
       if (gKeybSelectedIdx === null) {
         gKeybSelectedIdx = 0;
       }
@@ -1174,7 +1174,7 @@ function enableReadingListKeyboardNav()
       
       aEvent.preventDefault();
     }
-    else if (["ArrowUp", "Home"].includes(aEvent.key)) {
+    else if (aEvent.key == "ArrowUp" || aEvent.key == "Home") {
       if (! gKeybSelectedIdx) {
         warn("Read Next::sidebar.js: Reached the start of the reading list.");
       }
@@ -1214,17 +1214,29 @@ function enableReadingListKeyboardNav()
         currReadingListItem.classList.remove("focused");
 
         let nextIdx = gKeybSelectedIdx;
+        let isLastInMiddle = false;
         let readingListItem;
         let currTop;
 
         do {
-          nextIdx++;
-          readingListItem = readingListItems.get(nextIdx);
-          currTop = readingListItem.getBoundingClientRect().top;
+          if (nextIdx++ == numItems - 1) {
+            isLastInMiddle = true;
+          }
 
-          if (currTop >= contentHeight) {
+          if (!isLastInMiddle) {
+            readingListItem = readingListItems.get(nextIdx);
+            currTop = readingListItem.getBoundingClientRect().top;
+          }
+
+          if (isLastInMiddle || currTop >= contentHeight) {
             readingListItem.classList.add("focused");
             readingListItem.scrollIntoView({block: "end", behavior: "instant"});
+          }
+
+          if (isLastInMiddle) {
+            break;
+          }
+          else {
             gKeybSelectedIdx = nextIdx;
           }
         } while (currTop < contentHeight);
@@ -1242,21 +1254,32 @@ function enableReadingListKeyboardNav()
         currReadingListItem.classList.remove("focused");
 
         let prevIdx = gKeybSelectedIdx;
+        let isAtTop = false;
         let readingListItem;
         let currTop;
 
-        do {        
-          prevIdx--;
-          readingListItem = readingListItems.get(prevIdx);
-          currTop = readingListItem.getBoundingClientRect().top;
+        do {
+          if (prevIdx-- == 0) {
+            isAtTop = true;
+          }
 
-          if (currTop <= contentTop) {
+          if (!isAtTop) {
+            readingListItem = readingListItems.get(prevIdx);
+            currTop = readingListItem.getBoundingClientRect().top;
+          }
+
+          if (isAtTop || currTop <= contentTop) {
             readingListItem.classList.add("focused");
             readingListItem.scrollIntoView({block: "start", behavior: "instant"});
+          }
+
+          if (isAtTop) {
+            break;
+          }
+          else {
             gKeybSelectedIdx = prevIdx;
           }
         } while (currTop > contentTop);
-
       }
       aEvent.preventDefault();
     }
