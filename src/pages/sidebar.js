@@ -1133,25 +1133,6 @@ function enableReadingListKeyboardNav()
   $("#reading-list").attr("tabindex", "0");
 
   $("#reading-list").on("keydown.readingList", aEvent => {
-    function isHomeKeyPressed(aEvent)
-    {
-      let rv = aEvent.key == "Home" && aEvent.ctrlKey;
-      if (gOS == "mac") {
-        rv = aEvent.key == "Home";
-      }
-      return rv;
-    }
-
-    function isEndKeyPressed(aEvent)
-    {
-      let rv = aEvent.key == "End" && aEvent.ctrlKey;
-      if (gOS == "mac") {
-        rv = aEvent.key == "End";
-      }
-      return rv;
-    }
-    // END nested functions
-
     if (isReadingListEmpty()) {
       return;
     }
@@ -1166,7 +1147,7 @@ function enableReadingListKeyboardNav()
     let numItems = readingListItems.length;
     let {contentHeight, contentTop} = getScrollableContentGeometry();
     
-    if (aEvent.key == "ArrowDown" || isEndKeyPressed(aEvent)) {
+    if (["ArrowDown", "End"].includes(aEvent.key)) {
       if (gKeybSelectedIdx === null) {
         gKeybSelectedIdx = 0;
       }
@@ -1175,7 +1156,7 @@ function enableReadingListKeyboardNav()
       }
       else {
         readingListItems.get(gKeybSelectedIdx).classList.remove("focused");
-        if (isEndKeyPressed(aEvent)) {
+        if (aEvent.key == "End") {
           gKeybSelectedIdx = readingListItems.length - 1;
         }
         else {
@@ -1193,13 +1174,13 @@ function enableReadingListKeyboardNav()
       
       aEvent.preventDefault();
     }
-    else if (aEvent.key == "ArrowUp" || isHomeKeyPressed(aEvent)) {
+    else if (["ArrowUp", "Home"].includes(aEvent.key)) {
       if (! gKeybSelectedIdx) {
         warn("Read Next::sidebar.js: Reached the start of the reading list.");
       }
       else {
         readingListItems.get(gKeybSelectedIdx).classList.remove("focused");
-        if (isHomeKeyPressed(aEvent)) {
+        if (aEvent.key == "Home") {
           gKeybSelectedIdx = 0;
         }
         else {
