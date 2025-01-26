@@ -1132,10 +1132,10 @@ function enableReadingListKeyboardNav()
 {
   $("#reading-list").attr("tabindex", "0");
 
-  $("#reading-list").on("keydown.readingList", aEvent => {   
+  $("#reading-list").on("keydown.readingList", aEvent => {
     function isHomeKeyPressed(aEvent)
     {
-      let rv = aEvent.key == "Home" && aEvent.shiftKey;
+      let rv = aEvent.key == "Home" && aEvent.ctrlKey;
       if (gOS == "mac") {
         rv = aEvent.key == "Home";
       }
@@ -1144,7 +1144,7 @@ function enableReadingListKeyboardNav()
 
     function isEndKeyPressed(aEvent)
     {
-      let rv = aEvent.key == "End" && aEvent.shiftKey;
+      let rv = aEvent.key == "End" && aEvent.ctrlKey;
       if (gOS == "mac") {
         rv = aEvent.key == "End";
       }
@@ -1162,7 +1162,8 @@ function enableReadingListKeyboardNav()
       return;
     }
 
-    let numItems = $("#reading-list").children().length;
+    let readingListItems = $("#reading-list").children();
+    let numItems = readingListItems.length;
     let {contentHeight, contentTop} = getScrollableContentGeometry();
     
     if (aEvent.key == "ArrowDown" || isEndKeyPressed(aEvent)) {
@@ -1173,7 +1174,6 @@ function enableReadingListKeyboardNav()
         warn("Read Next::sidebar.js: Reached the end of the reading list.");
       }
       else {
-        let readingListItems = $("#reading-list").children();
         readingListItems.get(gKeybSelectedIdx).classList.remove("focused");
         if (isEndKeyPressed(aEvent)) {
           gKeybSelectedIdx = readingListItems.length - 1;
@@ -1198,7 +1198,7 @@ function enableReadingListKeyboardNav()
         warn("Read Next::sidebar.js: Reached the start of the reading list.");
       }
       else {
-        $("#reading-list").children().get(gKeybSelectedIdx).classList.remove("focused");
+        readingListItems.get(gKeybSelectedIdx).classList.remove("focused");
         if (isHomeKeyPressed(aEvent)) {
           gKeybSelectedIdx = 0;
         }
@@ -1217,6 +1217,68 @@ function enableReadingListKeyboardNav()
 
       aEvent.preventDefault();
     }
+    if (aEvent.key == "PageDown") {
+      if (gKeybSelectedIdx === null) {
+        gKeybSelectedIdx = 0;
+        readingListItems.get(0).classList.add("focused");
+      }
+      else if (gKeybSelectedIdx == numItems - 1) {
+        warn("Read Next::sidebar.js: Reached the end of the reading list.");
+      }
+      else {
+        // Scroll the currently-selected item to top before starting calculation
+        // of pagination length from the next set of variable-height items.
+        let currReadingListItem = readingListItems.get(gKeybSelectedIdx);
+        currReadingListItem.scrollIntoView({block: "start", behavior: "instant"});
+        currReadingListItem.classList.remove("focused");
+
+        let nextIdx = gKeybSelectedIdx;
+        let readingListItem;
+        let currTop;
+
+        do {
+          nextIdx++;
+          readingListItem = readingListItems.get(nextIdx);
+          currTop = readingListItem.getBoundingClientRect().top;
+
+          if (currTop >= contentHeight) {
+            readingListItem.classList.add("focused");
+            readingListItem.scrollIntoView({block: "end", behavior: "instant"});
+            gKeybSelectedIdx = nextIdx;
+          }
+        } while (currTop < contentHeight);
+      }
+      aEvent.preventDefault();
+    }
+    else if (aEvent.key == "PageUp") {
+      if (! gKeybSelectedIdx) {
+        warn("Read Next::sidebar.js: Reached the start of the reading list.");
+      }
+      else {
+        // Scroll currently-selected item to bottom first.
+        let currReadingListItem = readingListItems.get(gKeybSelectedIdx);
+        currReadingListItem.scrollIntoView({block: "end", behavior: "instant"});
+        currReadingListItem.classList.remove("focused");
+
+        let prevIdx = gKeybSelectedIdx;
+        let readingListItem;
+        let currTop;
+
+        do {        
+          prevIdx--;
+          readingListItem = readingListItems.get(prevIdx);
+          currTop = readingListItem.getBoundingClientRect().top;
+
+          if (currTop <= contentTop) {
+            readingListItem.classList.add("focused");
+            readingListItem.scrollIntoView({block: "start", behavior: "instant"});
+            gKeybSelectedIdx = prevIdx;
+          }
+        } while (currTop > contentTop);
+
+      }
+      aEvent.preventDefault();
+    }
     else if (aEvent.key == "Enter" || aEvent.key == " ") {
       let readingListItem = $("#reading-list").children().get(gKeybSelectedIdx);
       gCmd.open(readingListItem.dataset.id, readingListItem.dataset.url);
@@ -1229,8 +1291,7 @@ function enableReadingListKeyboardNav()
 
 function disableReadingListKeyboardNav()
 {
-  $("#reading-list").removeAttr("tabindex");
-  $("#reading-list").off("keydown.readingList");
+  $("#reading-list").removeAttr("tabindex").off("keydown.readingList");
   gKeybSelectedIdx = null;
 }
 
