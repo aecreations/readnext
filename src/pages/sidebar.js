@@ -1320,7 +1320,7 @@ function getScrollableContentGeometry()
 }
 
 
-function makeLastItemVisible()
+function makeLastItemVisible(aHighlightBriefly=false)
 {
   let readingListItems = $("#reading-list").children();
   let lastReadingListItem = readingListItems.get(readingListItems.length - 1);
@@ -1329,6 +1329,14 @@ function makeLastItemVisible()
 
   if (top >= contentHeight) {
     lastReadingListItem.scrollIntoView({block: "end", behavior: "smooth"});
+  }
+
+  if (aHighlightBriefly) {
+    lastReadingListItem.classList.add("transient-highlight");
+
+    setTimeout(() => {
+      lastReadingListItem.classList.remove("transient-highlight");
+    }, 6000);
   }
 }
 
@@ -1345,8 +1353,10 @@ browser.runtime.onMessage.addListener(aMessage => {
   switch (aMessage.id) {
   case "bookmark-added":
     addReadingListItem(aMessage.bookmark).then(() => {
+      return aePrefs.getPref("highlightNewLink");
+    }).then(aHighlightNewLink => {
       // New items are always added to the end.
-      makeLastItemVisible();
+      makeLastItemVisible(aHighlightNewLink);
       return browser.tabs.query({active: true, currentWindow: true});
     }).then(aTabs => {
       let actvTab = aTabs[0];

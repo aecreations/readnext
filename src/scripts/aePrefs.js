@@ -31,6 +31,7 @@ let aePrefs = {
     closeSidebarAfterNav: false,
     allowEditLinks: true,
     linkClickAction: aeConst.OPEN_LINK_IN_CURRENT_TAB,
+    highlightNewLink: true,
 
     // Applicable to Google Drive file host.
     syncFileID: null,
@@ -146,7 +147,7 @@ let aePrefs = {
 
   hasOahuPrefs(aPrefs) {
     // Version 1.5
-    return ("_reauthzNotifcnShown" in aPrefs);
+    return ("highlightNewLink" in aPrefs);
   },
 
   async setOahuPrefs(aPrefs) {
@@ -155,6 +156,7 @@ let aePrefs = {
       _syncPaused: false,
       _renameDlgSrcWndID: null,
 
+      highlightNewLink: true,
       // Enable renaming of links, which was introduced but disabled
       // in version 1.1
       allowEditLinks: true,

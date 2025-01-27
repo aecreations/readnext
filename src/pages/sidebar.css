@@ -21,6 +21,7 @@
     --color-bkmk-hover-bkgd: #ddd;
     --color-bkmk-hover-text: #0c0c0d;
     --color-bkmk-active-bkgd: #bbb;
+    --color-new-bkmk-bkgd: #54ffbd;
     --color-cxtmenu-bkgd: #fff;
     --color-cxtmenu-border: #bebebe;
     --color-cxtmenu-text: #2f2f2f;
@@ -46,6 +47,7 @@
 	--color-bkmk-hover-bkgd: #4a4a4f;
 	--color-bkmk-hover-text: #fff;
 	--color-bkmk-active-bkgd: #606060;
+	--color-new-bkmk-bkgd: #008787;
 	--color-cxtmenu-bkgd: #4a4a4f;
 	--color-cxtmenu-border: #38383d;
 	--color-cxtmenu-text: #f9f9fa;
@@ -465,6 +467,26 @@ body[data-tbar-fix] #bookmark-filter > #filter-unread ~ label[for="filter-unread
     padding: 2px 6px 2px 6px;
     border: 2px solid #45a1ff;   
     background-color: var(--color-bkmk-active-bkgd);
+}
+
+.reading-list-item.transient-highlight {
+    background-color: var(--color-new-bkmk-bkgd);
+    animation-name: fadeout;
+    animation-delay: 2s;
+    animation-duration: 5s;
+
+}
+
+@keyframes fadeout {
+    0% {
+	background-color: var(--color-new-bkmk-bkgd);
+    }
+    75% {
+	background-color: transparent;
+    }
+    100% {
+	background-color: transparent;
+    }
 }
 
 .reading-list-item-title {
