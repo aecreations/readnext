@@ -1320,6 +1320,19 @@ function getScrollableContentGeometry()
 }
 
 
+function makeLastItemVisible()
+{
+  let readingListItems = $("#reading-list").children();
+  let lastReadingListItem = readingListItems.get(readingListItems.length - 1);
+  let {contentHeight} = getScrollableContentGeometry();
+  let {top} = lastReadingListItem.getBoundingClientRect();
+
+  if (top >= contentHeight) {
+    lastReadingListItem.scrollIntoView({block: "end", behavior: "smooth"});
+  }
+}
+
+
 //
 // Event handlers
 //
@@ -1332,6 +1345,8 @@ browser.runtime.onMessage.addListener(aMessage => {
   switch (aMessage.id) {
   case "bookmark-added":
     addReadingListItem(aMessage.bookmark).then(() => {
+      // New items are always added to the end.
+      makeLastItemVisible();
       return browser.tabs.query({active: true, currentWindow: true});
     }).then(aTabs => {
       let actvTab = aTabs[0];
