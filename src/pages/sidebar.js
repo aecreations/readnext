@@ -1143,8 +1143,8 @@ function enableReadingListKeyboardNav()
       return;
     }
 
-    let readingListItems = $("#reading-list").children();
-    let numItems = readingListItems.length;
+    let rdgListItems = $("#reading-list").children();
+    let numItems = rdgListItems.length;
     let {contentHeight, contentTop} = getScrollableContentGeometry();
     
     if (aEvent.key == "ArrowDown" || aEvent.key == "End") {
@@ -1155,21 +1155,21 @@ function enableReadingListKeyboardNav()
         warn("Read Next::sidebar.js: Reached the end of the reading list.");
       }
       else {
-        readingListItems.get(gKeybSelectedIdx).classList.remove("focused");
+        rdgListItems.get(gKeybSelectedIdx).classList.remove("focused");
         if (aEvent.key == "End") {
-          gKeybSelectedIdx = readingListItems.length - 1;
+          gKeybSelectedIdx = rdgListItems.length - 1;
         }
         else {
           gKeybSelectedIdx++;
         }
       }
 
-      let readingListItem = $("#reading-list").children().get(gKeybSelectedIdx);
-      readingListItem.classList.add("focused");
+      let item = $("#reading-list").children().get(gKeybSelectedIdx);
+      item.classList.add("focused");
 
-      let {top} = readingListItem.getBoundingClientRect();
+      let {top} = item.getBoundingClientRect();
       if (top > contentHeight) {
-        readingListItem.scrollIntoView({block: "end", behavior: "smooth"});
+        item.scrollIntoView({block: "end", behavior: "smooth"});
       }
       
       aEvent.preventDefault();
@@ -1179,7 +1179,7 @@ function enableReadingListKeyboardNav()
         warn("Read Next::sidebar.js: Reached the start of the reading list.");
       }
       else {
-        readingListItems.get(gKeybSelectedIdx).classList.remove("focused");
+        rdgListItems.get(gKeybSelectedIdx).classList.remove("focused");
         if (aEvent.key == "Home") {
           gKeybSelectedIdx = 0;
         }
@@ -1188,12 +1188,12 @@ function enableReadingListKeyboardNav()
         }
       }
 
-      let readingListItem = $("#reading-list").children().get(gKeybSelectedIdx);
-      readingListItem.classList.add("focused");
+      let item = $("#reading-list").children().get(gKeybSelectedIdx);
+      item.classList.add("focused");
 
-      let {top} = readingListItem.getBoundingClientRect();
+      let {top} = item.getBoundingClientRect();
       if (top < contentTop) {
-        readingListItem.scrollIntoView({block: "start", behavior: "smooth"});
+        item.scrollIntoView({block: "start", behavior: "smooth"});
       }
 
       aEvent.preventDefault();
@@ -1201,7 +1201,7 @@ function enableReadingListKeyboardNav()
     if (aEvent.key == "PageDown") {
       if (gKeybSelectedIdx === null) {
         gKeybSelectedIdx = 0;
-        readingListItems.get(0).classList.add("focused");
+        rdgListItems.get(0).classList.add("focused");
       }
       else if (gKeybSelectedIdx == numItems - 1) {
         warn("Read Next::sidebar.js: Reached the end of the reading list.");
@@ -1209,13 +1209,13 @@ function enableReadingListKeyboardNav()
       else {
         // Scroll the currently-selected item to top before starting calculation
         // of pagination length from the next set of variable-height items.
-        let currReadingListItem = readingListItems.get(gKeybSelectedIdx);
-        currReadingListItem.scrollIntoView({block: "start", behavior: "instant"});
-        currReadingListItem.classList.remove("focused");
+        let currItem = rdgListItems.get(gKeybSelectedIdx);
+        currItem.scrollIntoView({block: "start", behavior: "instant"});
+        currItem.classList.remove("focused");
 
         let nextIdx = gKeybSelectedIdx;
         let isLastInMiddle = false;
-        let readingListItem;
+        let item;
         let currTop;
 
         do {
@@ -1224,22 +1224,16 @@ function enableReadingListKeyboardNav()
           }
 
           if (!isLastInMiddle) {
-            readingListItem = readingListItems.get(nextIdx);
-            currTop = readingListItem.getBoundingClientRect().top;
+            item = rdgListItems.get(nextIdx);
+            currTop = item.getBoundingClientRect().top;
+            gKeybSelectedIdx = nextIdx;
           }
 
           if (isLastInMiddle || currTop >= contentHeight) {
-            readingListItem.classList.add("focused");
-            readingListItem.scrollIntoView({block: "end", behavior: "instant"});
+            item.classList.add("focused");
+            item.scrollIntoView({block: "end", behavior: "instant"});
           }
-
-          if (isLastInMiddle) {
-            break;
-          }
-          else {
-            gKeybSelectedIdx = nextIdx;
-          }
-        } while (currTop < contentHeight);
+        } while (!isLastInMiddle && currTop < contentHeight);
       }
       aEvent.preventDefault();
     }
@@ -1249,13 +1243,13 @@ function enableReadingListKeyboardNav()
       }
       else {
         // Scroll currently-selected item to bottom first.
-        let currReadingListItem = readingListItems.get(gKeybSelectedIdx);
-        currReadingListItem.scrollIntoView({block: "end", behavior: "instant"});
-        currReadingListItem.classList.remove("focused");
+        let currItem = rdgListItems.get(gKeybSelectedIdx);
+        currItem.scrollIntoView({block: "end", behavior: "instant"});
+        currItem.classList.remove("focused");
 
         let prevIdx = gKeybSelectedIdx;
         let isAtTop = false;
-        let readingListItem;
+        let item;
         let currTop;
 
         do {
@@ -1264,28 +1258,22 @@ function enableReadingListKeyboardNav()
           }
 
           if (!isAtTop) {
-            readingListItem = readingListItems.get(prevIdx);
-            currTop = readingListItem.getBoundingClientRect().top;
+            item = rdgListItems.get(prevIdx);
+            currTop = item.getBoundingClientRect().top;
+            gKeybSelectedIdx = prevIdx;
           }
 
           if (isAtTop || currTop <= contentTop) {
-            readingListItem.classList.add("focused");
-            readingListItem.scrollIntoView({block: "start", behavior: "instant"});
+            item.classList.add("focused");
+            item.scrollIntoView({block: "start", behavior: "instant"});
           }
-
-          if (isAtTop) {
-            break;
-          }
-          else {
-            gKeybSelectedIdx = prevIdx;
-          }
-        } while (currTop > contentTop);
+        } while (!isAtTop && currTop > contentTop);
       }
       aEvent.preventDefault();
     }
     else if (aEvent.key == "Enter" || aEvent.key == " ") {
-      let readingListItem = $("#reading-list").children().get(gKeybSelectedIdx);
-      gCmd.open(readingListItem.dataset.id, readingListItem.dataset.url);
+      let item = $("#reading-list").children().get(gKeybSelectedIdx);
+      gCmd.open(item.dataset.id, item.dataset.url);
 
       aEvent.preventDefault();
     }
@@ -1322,20 +1310,20 @@ function getScrollableContentGeometry()
 
 function makeLastItemVisible(aHighlightBriefly=false)
 {
-  let readingListItems = $("#reading-list").children();
-  let lastReadingListItem = readingListItems.get(readingListItems.length - 1);
+  let rdgListItems = $("#reading-list").children();
+  let lastItem = rdgListItems.get(rdgListItems.length - 1);
   let {contentHeight} = getScrollableContentGeometry();
-  let {top} = lastReadingListItem.getBoundingClientRect();
+  let {top} = lastItem.getBoundingClientRect();
 
   if (top >= contentHeight) {
-    lastReadingListItem.scrollIntoView({block: "end", behavior: "smooth"});
+    lastItem.scrollIntoView({block: "end", behavior: "smooth"});
   }
 
   if (aHighlightBriefly) {
-    lastReadingListItem.classList.add("transient-highlight");
+    lastItem.classList.add("transient-highlight");
 
     setTimeout(() => {
-      lastReadingListItem.classList.remove("transient-highlight");
+      lastItem.classList.remove("transient-highlight");
     }, 6000);
   }
 }
@@ -1542,28 +1530,28 @@ $("#setup-sync").on("click", async (aEvent) => {
 
 
 $("#reading-list").on("click", aEvent => {
-  let readingListItem;
+  let item;
   if (aEvent.target.className == "reading-list-item-title"
       || aEvent.target.className == "favicon") {
-    readingListItem = aEvent.target.parentNode;
+    item = aEvent.target.parentNode;
   }
   else if (aEvent.target.classList.contains("reading-list-item")) {
-    readingListItem = aEvent.target;
+    item = aEvent.target;
   }
 
   gKeybSelectedIdx === null && (gKeybSelectedIdx = 0);
 
-  let readingListItems = $("#reading-list").children();
-  let prevSelectedItem = readingListItems.get(gKeybSelectedIdx);
+  let rdgListItems = $("#reading-list").children();
+  let prevSelectedItem = rdgListItems.get(gKeybSelectedIdx);
   prevSelectedItem.classList.remove("focused");
-  gKeybSelectedIdx = $(readingListItem).index();
+  gKeybSelectedIdx = $(item).index();
 
   if (gPrefs.linkClickAction == aeConst.OPEN_LINK_IN_NEW_TAB) {
-    gCmd.openInNewTab(readingListItem.dataset.id, readingListItem.dataset.url);
+    gCmd.openInNewTab(item.dataset.id, item.dataset.url);
   }
   else {
     // Default to opening in current tab.
-    gCmd.open(readingListItem.dataset.id, readingListItem.dataset.url);
+    gCmd.open(item.dataset.id, item.dataset.url);
   }
 
   if (gPrefs.closeSidebarAfterNav) {
@@ -1580,9 +1568,9 @@ $("#reading-list").on("focus", aEvent => {
     $("#reading-list").children().removeClass("focused");
 
     let {contentHeight, contentTop} = getScrollableContentGeometry();
-    let readingListItems = $("#reading-list").children();
-    let readingListItem = readingListItems.get(gKeybSelectedIdx);
-    let {top} = readingListItem.getBoundingClientRect();
+    let rdgListItems = $("#reading-list").children();
+    let item = rdgListItems.get(gKeybSelectedIdx);
+    let {top} = item.getBoundingClientRect();
     let currTop = top;
     let nextIdx;
 
@@ -1592,13 +1580,13 @@ $("#reading-list").on("focus", aEvent => {
       // scrollable view.
       nextIdx = gKeybSelectedIdx;
       while (currTop > contentHeight) {
-        let prevReadingListItem = readingListItems.get(nextIdx);
-        let rect = prevReadingListItem.getBoundingClientRect();
+        let prevItem = rdgListItems.get(nextIdx);
+        let rect = prevItem.getBoundingClientRect();
         currTop = rect.top - rect.height;
 
         if (currTop <= contentHeight) {
-          prevReadingListItem.classList.add("focused");
-          prevReadingListItem.scrollIntoView({block: "end", behavior: "smooth"});
+          prevItem.classList.add("focused");
+          prevItem.scrollIntoView({block: "end", behavior: "smooth"});
           gKeybSelectedIdx = nextIdx;
         }
         else {
@@ -1611,12 +1599,12 @@ $("#reading-list").on("focus", aEvent => {
       // scrollable view.
       nextIdx = gKeybSelectedIdx + 1;
       while (currTop < contentTop) {
-        let nextReadingListItem = readingListItems.get(nextIdx);
-        currTop = nextReadingListItem.getBoundingClientRect().top;
+        let nextItem = rdgListItems.get(nextIdx);
+        currTop = nextItem.getBoundingClientRect().top;
 
         if (currTop >= contentTop) {
-          nextReadingListItem.classList.add("focused");
-          nextReadingListItem.scrollIntoView({block: "start", behavior: "smooth"});
+          nextItem.classList.add("focused");
+          nextItem.scrollIntoView({block: "start", behavior: "smooth"});
           gKeybSelectedIdx = nextIdx;
         }
         else {
@@ -1625,8 +1613,8 @@ $("#reading-list").on("focus", aEvent => {
       }
     }
     else {
-      readingListItem.classList.add("focused");
-      gKeybSelectedIdx = $(readingListItem).index();
+      item.classList.add("focused");
+      gKeybSelectedIdx = $(item).index();
     }
   } 
 });
