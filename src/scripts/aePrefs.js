@@ -32,6 +32,7 @@ let aePrefs = {
     allowEditLinks: true,
     linkClickAction: aeConst.OPEN_LINK_IN_CURRENT_TAB,
     highlightNewLink: true,
+    autoUpdateUnreadFilter: true,
 
     // Applicable to Google Drive file host.
     syncFileID: null,
@@ -157,6 +158,8 @@ let aePrefs = {
       _renameDlgSrcWndID: null,
 
       highlightNewLink: true,
+      autoUpdateUnreadFilter: true,
+      
       // Enable renaming of links, which was introduced but disabled
       // in version 1.1
       allowEditLinks: true,

@@ -712,6 +712,16 @@ function markAsRead(aBookmarkID, aIsRead)
   if (aIsRead) {
     listItem.removeClass(cls);
     listItem.attr("data-unread", false);
+
+    if (gPrefs.autoUpdateUnreadFilter
+        && gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD) {
+      listItem.fadeOut(200, () => {
+        let numUnreadItems = $("#reading-list").children().filter(":visible").length;
+        if (numUnreadItems == 0) {
+          showNoUnreadMsg();
+        }
+      });
+    }
   }
   else {
     listItem.addClass(cls);
