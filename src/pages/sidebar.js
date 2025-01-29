@@ -1169,7 +1169,7 @@ function enableReadingListKeyboardNav()
 
       let {top} = item.getBoundingClientRect();
       if (top > contentHeight) {
-        item.scrollIntoView({block: "end", behavior: "smooth"});
+        item.scrollIntoView({block: "end", behavior: "instant"});
       }
       
       aEvent.preventDefault();
@@ -1193,7 +1193,7 @@ function enableReadingListKeyboardNav()
 
       let {top} = item.getBoundingClientRect();
       if (top < contentTop) {
-        item.scrollIntoView({block: "start", behavior: "smooth"});
+        item.scrollIntoView({block: "start", behavior: "instant"});
       }
 
       aEvent.preventDefault();
@@ -1586,7 +1586,7 @@ $("#reading-list").on("focus", aEvent => {
 
         if (currTop <= contentHeight) {
           prevItem.classList.add("focused");
-          prevItem.scrollIntoView({block: "end", behavior: "smooth"});
+          prevItem.scrollIntoView({block: "end", behavior: "instant"});
           gKeybSelectedIdx = nextIdx;
         }
         else {
@@ -1604,7 +1604,7 @@ $("#reading-list").on("focus", aEvent => {
 
         if (currTop >= contentTop) {
           nextItem.classList.add("focused");
-          nextItem.scrollIntoView({block: "start", behavior: "smooth"});
+          nextItem.scrollIntoView({block: "start", behavior: "instant"});
           gKeybSelectedIdx = nextIdx;
         }
         else {
