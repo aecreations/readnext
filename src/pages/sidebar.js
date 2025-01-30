@@ -663,6 +663,15 @@ function removeReadingListItem(aBookmarkID)
 }
 
 
+function updateReadingListItem(aBookmark)
+{
+  let bkmkElt = $(`.reading-list-item[data-id="${aBookmark.id}"]`);
+  let tooltipText = `${aBookmark.title}\n${aBookmark.url}`;
+  bkmkElt.attr("title", tooltipText).attr("data-title", aBookmark.title);
+  bkmkElt.find(".reading-list-item-title").text(aBookmark.title);
+}
+
+
 async function rebuildReadingList(aBookmarks, aUnreadOnly, aReloadFavIcons=false)
 {
   toggleEmptyMsg(false);
@@ -1368,6 +1377,10 @@ browser.runtime.onMessage.addListener(aMessage => {
         $("#add-link, #add-link-cta").prop("disabled", false);
       }
     });
+    break;
+
+  case "bookmark-renamed":
+    updateReadingListItem(aMessage.bookmark);
     break;
 
   case "bookmarks-reloaded":

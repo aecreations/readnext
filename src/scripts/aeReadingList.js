@@ -55,6 +55,15 @@ let aeReadingList = {
     
     await db.bookmarks.update(aBookmarkID, changes);
     this._updateLocalLastModifiedTime();
+
+    let bookmark = await db.bookmarks.get(aBookmarkID);
+    try {
+      await browser.runtime.sendMessage({
+        id: "bookmark-renamed",
+        bookmark,
+      });
+    }
+    catch {}
   },
 
   async bulkAdd(aBookmarks)
