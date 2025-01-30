@@ -180,12 +180,12 @@ let gReadingListFilter = {
     await rebuildReadingList(bkmks, aFilter == this.UNREAD);
 
     if (bkmks.length == 0) {
-      toggleSearchBarVisibility(false);
-      showEmptyMsg();
+      toggleSearchBar(false);
+      toggleEmptyMsg(true);
     }
     else {
       if (aFilter == this.UNREAD && isReadingListEmpty()) {
-        showNoUnreadMsg();
+        toggleNoUnreadMsg(true);
       }
     }
   },
@@ -332,9 +332,9 @@ let gSearchBox = {
 
     if (srchResults.length == 0) {
       clearReadingList();
-      hideEmptyMsg();
-      hideNoUnreadMsg();
-      showNotFoundMsg();
+      toggleEmptyMsg(false);
+      toggleNoUnreadMsg(false);
+      toggleNotFoundMsg(true)();
       return;
     }
     
@@ -379,13 +379,13 @@ let gSearchBox = {
     $("#clear-search").css({visibility: "hidden"});
     this._isActive = false;
     this._numMatches = null;
-    hideNotFoundMsg();
+    toggleNotFoundMsg(false);
 
     let bkmks = await gCmd.getBookmarks();
     if (bkmks.length == 0) {
-      toggleSearchBarVisibility(false);
+      toggleSearchBar(false);
       clearReadingList();
-      showEmptyMsg();
+      toggleEmptyMsg(true);
       return;
     }
 
@@ -393,7 +393,7 @@ let gSearchBox = {
     if (unreadOnly) {
       let unreadBkmks = bkmks.filter(aBkmk => aBkmk.unread);
       if (unreadBkmks.length == 0) {
-        showNoUnreadMsg();
+        toggleNoUnreadMsg(true);
         return;
       }
     }
@@ -526,12 +526,12 @@ async function initReadingList(aLocalDataOnly=false)
 
     if (bkmks.length == 0) {
       hideLoadingProgress();
-      showEmptyMsg();
-      toggleSearchBarVisibility(false);
+      toggleEmptyMsg(true);
+      toggleSearchBar(false);
     }
     else {
       hideLoadingProgress();
-      hideEmptyMsg();
+      toggleEmptyMsg(false);
       await buildReadingList(bkmks, false);
     }
   }
@@ -544,11 +544,11 @@ async function buildReadingList(aBookmarks, aUnreadOnly)
   log(aBookmarks);
 
   if (aBookmarks.length == 0) {
-    toggleSearchBarVisibility(false);
+    toggleSearchBar(false);
     return;
   }
   else {
-    toggleSearchBarVisibility(true);
+    toggleSearchBar(true);
     enableReadingListKeyboardNav();
   }
 
@@ -565,17 +565,17 @@ async function addReadingListItem(aBookmark)
 {
   if (gSearchBox.isSearchInProgress()) {
     if (await gSearchBox.isInSearchResult(aBookmark.title)) {
-      hideNotFoundMsg();
+      toggleNotFoundMsg(false);
     }
     else {
       return;
     }
   }
 
-  hideEmptyMsg();
-  hideNoUnreadMsg();
+  toggleEmptyMsg(false);
+  toggleNoUnreadMsg(false);
   hideLoadingProgress();
-  toggleSearchBarVisibility(true);
+  toggleSearchBar(true);
   
   let tooltipText = `${aBookmark.title}\n${aBookmark.url}`;
   let listItemDiv = $("<div>").addClass("reading-list-item").attr("title", tooltipText)[0];
@@ -641,7 +641,7 @@ function removeReadingListItem(aBookmarkID)
       else {
         if (! gSearchBox.isSearchInProgress()) {
           gSearchBox.reset();
-          showEmptyMsg();
+          toggleEmptyMsg(true);
         }
       }
       disableReadingListKeyboardNav();        
@@ -665,8 +665,8 @@ function removeReadingListItem(aBookmarkID)
 
 async function rebuildReadingList(aBookmarks, aUnreadOnly, aReloadFavIcons=false)
 {
-  hideEmptyMsg();
-  hideNoUnreadMsg();
+  toggleEmptyMsg(false);
+  toggleNoUnreadMsg(false);
   clearReadingList();
 
   if (aReloadFavIcons) {
@@ -718,7 +718,7 @@ function markAsRead(aBookmarkID, aIsRead)
       listItem.fadeOut(200, () => {
         let numUnreadItems = $("#reading-list").children().filter(":visible").length;
         if (numUnreadItems == 0) {
-          showNoUnreadMsg();
+          toggleNoUnreadMsg(true);
         }
       });
     }
@@ -1029,16 +1029,21 @@ async function handlePrefersColorSchemeChange(aMediaQuery)
 }
 
 
-function showEmptyMsg()
+function toggleEmptyMsg(aIsVisible)
 {
-  if (gPrefs.syncEnabled) {
-    $("#sync-cta").hide();
+  if (aIsVisible) {
+    if (gPrefs.syncEnabled) {
+      $("#sync-cta").hide();
+    }
+    else {
+      $("#sync-cta").show();
+    }
+
+    $("#welcome").show();    
   }
   else {
-    $("#sync-cta").show();
+    $("#welcome").hide();
   }
-
-  $("#welcome").show();
 }
 
 
@@ -1048,40 +1053,31 @@ function isEmptyMsgVisible()
 }
 
 
-function hideEmptyMsg()
+function toggleNoUnreadMsg(aIsVisible)
 {
-  $("#welcome").hide();
+  if (aIsVisible) {
+    $("#no-unread").show();
+  }
+  else {
+    $("#no-unread").hide();
+  }
 }
 
-
-function showNoUnreadMsg()
+function toggleNotFoundMsg(aIsVisible)
 {
-  $("#no-unread").show();
-}
-
-
-function hideNoUnreadMsg()
-{
-  $("#no-unread").hide();
-}
-
-
-function showNotFoundMsg()
-{
-  $("#not-found").show();
-}
-
-
-function hideNotFoundMsg()
-{
-  $("#not-found").hide();
+  if (aIsVisible) {
+    $("#not-found").show();
+  }
+  else {
+    $("#not-found").hide();
+  }
 }
 
 
 function showLoadingProgress()
 {
   if (isEmptyMsgVisible()) {
-    hideEmptyMsg();
+    toggleEmptyMsg(false);
   }
   $("#search-box").attr("disabled", "true");
   $("#loading").show();
@@ -1117,7 +1113,7 @@ function hideMessageBar(aMsgBarStor)
 }
 
 
-function toggleSearchBarVisibility(aIsVisible)
+function toggleSearchBar(aIsVisible)
 {
   let visibility = aIsVisible ? "visible" : "hidden";
   $("#search-bar").css({visibility});
@@ -1318,7 +1314,7 @@ function getScrollableContentGeometry()
 }
 
 
-function makeLastItemVisible(aHighlightBriefly=false)
+function makeLastItemVisible(aHighlightItem=false)
 {
   let rdgListItems = $("#reading-list").children();
   let lastItem = rdgListItems.get(rdgListItems.length - 1);
@@ -1329,7 +1325,7 @@ function makeLastItemVisible(aHighlightBriefly=false)
     lastItem.scrollIntoView({block: "end", behavior: "smooth"});
   }
 
-  if (aHighlightBriefly) {
+  if (aHighlightItem) {
     lastItem.classList.add("transient-highlight");
 
     setTimeout(() => {
@@ -1384,7 +1380,7 @@ browser.runtime.onMessage.addListener(aMessage => {
     hideLoadingProgress();
 
     if (aMessage.bookmarks.length == 0) {
-      showEmptyMsg();
+      toggleEmptyMsg(true);
       return;
     }
 
@@ -1416,9 +1412,9 @@ browser.runtime.onMessage.addListener(aMessage => {
 
   case "sync-setting-changed":
     if (aMessage.syncEnabled) {
-      hideEmptyMsg();
-      hideNoUnreadMsg();
-      hideNotFoundMsg();
+      toggleEmptyMsg(false);
+      toggleNoUnreadMsg(false);
+      toggleNotFoundMsg(false);
       clearReadingList();
       showLoadingProgress();
     }
@@ -1524,8 +1520,8 @@ $("#add-link, #add-link-cta").on("click", async (aEvent) => {
     return;
   }
  
-  hideEmptyMsg();
-  hideNoUnreadMsg();
+  toggleEmptyMsg(false);
+  toggleNoUnreadMsg(false);
 
   if (gPrefs.closeTabAfterAdd) {
     gCmd.closeTab(actvTab.id);
