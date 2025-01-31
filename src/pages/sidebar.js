@@ -252,7 +252,6 @@ let gFavIconMap = {
 // Search box
 let gSearchBox = {
   _isInitialized: false,
-  _isActive: false,
   _numMatches: null,
 
   init()
@@ -263,11 +262,9 @@ let gSearchBox = {
     
     $("#search-box").prop("placeholder", browser.i18n.getMessage("srchBoxHint"))
       .focus(aEvent => {
-        gSearchBox.activate();
         $("#search-box-ctr").addClass("focus");
       })
       .blur(aEvent => {
-        gSearchBox.deactivate();
         $("#search-box-ctr").removeClass("focus");
       })
       .keyup(aEvent => {
@@ -299,11 +296,6 @@ let gSearchBox = {
     this._isInitialized = true;
   },
 
-  isActivated()
-  {
-    return this._isActive;
-  },
-
   isSearchInProgress()
   {
     return ($("#search-box").val() != "");
@@ -316,7 +308,6 @@ let gSearchBox = {
 
   hide()
   {
-    this.deactivate();
     $("#search-bar").hide();
   },
 
@@ -334,7 +325,7 @@ let gSearchBox = {
       clearReadingList();
       toggleEmptyMsg(false);
       toggleNoUnreadMsg(false);
-      toggleNotFoundMsg(true)();
+      toggleNotFoundMsg(true);
       return;
     }
     
@@ -363,21 +354,10 @@ let gSearchBox = {
     return this._numMatches;
   },
 
-  activate()
-  {
-    this._isActive = true;
-  },
-
-  deactivate()
-  {
-    this._isActive = false;
-  },
-
   async reset()
   {
     $("#search-box").val("").focus();
     $("#clear-search").css({visibility: "hidden"});
-    this._isActive = false;
     this._numMatches = null;
     toggleNotFoundMsg(false);
 
@@ -1072,6 +1052,7 @@ function toggleNoUnreadMsg(aIsVisible)
   }
 }
 
+
 function toggleNotFoundMsg(aIsVisible)
 {
   if (aIsVisible) {
@@ -1653,10 +1634,6 @@ $("#filter-unread").on("click", handleFilterSelection)
   .on("focus", aEvent => { $('#bookmark-filter > input[type="radio"] ~ label').addClass("focused") })
   .on("blur", aEvent => { $('#bookmark-filter > input[type="radio"] ~ label').removeClass("focused") });
 
-
-$("#search-box").focus(aEvent => {
-  gSearchBox.activate();
-});
 
 $("#show-whats-new").on("click", aEvent => {
   browser.tabs.create({url: browser.runtime.getURL("pages/whatsnew.html")});
