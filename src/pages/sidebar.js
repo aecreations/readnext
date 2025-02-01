@@ -313,12 +313,15 @@ let gSearchBox = {
 
   async updateSearch()
   {
-    let msg = {
+    let srchResults = await browser.runtime.sendMessage({
       id: "search-bookmarks",
       searchTerms: $("#search-box").val(),
-    };
-    let srchResults = await browser.runtime.sendMessage(msg);
+    });
 
+    let unreadOnly = gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD;
+    if (unreadOnly) {
+      srchResults = srchResults.filter(aItem => aItem.unread);
+    }
     this._numMatches = srchResults.length;
 
     if (srchResults.length == 0) {
@@ -329,7 +332,6 @@ let gSearchBox = {
       return;
     }
     
-    let unreadOnly = gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD;
     await rebuildReadingList(srchResults, unreadOnly);
   },
 
