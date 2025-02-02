@@ -176,6 +176,24 @@ let gReadingListFilter = {
     }
 
     this._filter = aFilter;
+
+    if (this._filter == this.UNREAD && gSearchBox.isSearchInProgress()) {
+      let srchBkmk = await browser.runtime.sendMessage({
+        id: "search-bookmarks",
+        searchTerms: gSearchBox.getSearchText(),
+      });
+
+      for (let item of srchBkmk) {
+        if (!item.unread) {
+          // The link matching the search term is found, but isn't unread.
+          // Show "No items found" message, which is more accurate than
+          // "No unread items"
+          toggleNotFoundMsg(true);
+          break;
+        }
+      }
+    }
+    
     let bkmks = await gCmd.getBookmarks();
     await rebuildReadingList(bkmks, aFilter == this.UNREAD);
 
@@ -184,7 +202,7 @@ let gReadingListFilter = {
       toggleEmptyMsg(true);
     }
     else {
-      if (aFilter == this.UNREAD && isReadingListEmpty()) {
+      if (aFilter == this.UNREAD && isReadingListEmpty() && !isNotFoundMsgVisible()) {
         toggleNoUnreadMsg(true);
       }
     }
@@ -296,9 +314,14 @@ let gSearchBox = {
     this._isInitialized = true;
   },
 
+  getSearchText()
+  {
+    return $("#search-box").val();
+  },
+
   isSearchInProgress()
   {
-    return ($("#search-box").val() != "");
+    return (this.getSearchText() != "");
   },
 
   show()
@@ -706,10 +729,24 @@ function markAsRead(aBookmarkID, aIsRead)
 
     if (gPrefs.autoUpdateUnreadFilter
         && gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD) {
-      listItem.fadeOut(200, () => {
+      listItem.fadeOut(200, async () => {
         let numUnreadItems = $("#reading-list").children().filter(":visible").length;
         if (numUnreadItems == 0) {
-          toggleNoUnreadMsg(true);
+          if (gSearchBox.isSearchInProgress()) {
+            // If none of the unread items match the search terms, show 
+            // "No items found" which is more accurate than "No unread items"
+            let bkmks = await gCmd.getBookmarks();
+            let unreadItems = bkmks.filter(aItem => aItem.unread);
+            if (unreadItems.length == 0) {
+              toggleNoUnreadMsg(true);
+            }
+            else {
+              toggleNotFoundMsg(true);
+            }
+          }
+          else {
+            toggleNoUnreadMsg(true);
+          }
         }
       });
     }
@@ -1063,6 +1100,12 @@ function toggleNotFoundMsg(aIsVisible)
   else {
     $("#not-found").hide();
   }
+}
+
+
+function isNotFoundMsgVisible()
+{
+  return $("#not-found").is(":visible");
 }
 
 
