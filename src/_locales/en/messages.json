@@ -84,12 +84,22 @@
 
   "renameBkmkCxt": {
     "message": "Rename…",
-    "description": "Context menu item for renaming a reading list item; also used for the rename dialog heading (EXPERIMENTAL FEATURE)"
+    "description": "Context menu item for renaming a reading list item"
   },
 
   "renameBkmk": {
     "message": "Rename",
-    "description": "Rename dialog heading (EXPERIMENTAL FEATURE)"
+    "description": "Rename dialog heading"
+  },
+
+  "renameOtherWnd": {
+    "message": "Renaming a link can only be done in one browser window at a time.",
+    "description": "Message box in the reading list sidebar that appears when attempting to rename a link while the same action is in progress in another window"
+  },
+
+  "btnSwitchWnd": {
+    "message": "Switch Window",
+    "description": "Button in the rename link message box that sends user to the browser window where the same action is in progress"
   },
 
   "errAddBkmk": {

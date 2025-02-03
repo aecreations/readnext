@@ -9,7 +9,7 @@ const TOOLBAR_HEIGHT = 28;
 let gOS;
 let gWndID;
 let gPrefs;
-let gCustomizeDlg, gRenameDlg;
+let gCustomizeDlg, gRenameDlg, gRenameOtherWndMsgBox;
 let gKeybSelectedIdx = null;
 let gPrefersColorSchemeMedQry;
 let gMsgBarTimerID = null;
@@ -138,8 +138,8 @@ let gCmd = {
     let resp = await browser.runtime.sendMessage({id: "can-edit-bookmark?"});
 
     if (!resp.canEditBkmk) {
-      // TO DO: Show warning message in a modal dialog.
-      warn("Read Next: Renaming a reading list link can only be done in one browser window at a time.");
+      gRenameOtherWndMsgBox.setOtherWndID(resp.renameDlgSrcWndID);
+      gRenameOtherWndMsgBox.showModal();
       return;
     }
     
@@ -858,6 +858,42 @@ function initDialogs()
   gRenameDlg.onUnload = function ()
   {
     browser.runtime.sendMessage({id: "stop-edit-bookmark"});
+  };
+
+  gRenameOtherWndMsgBox = new aeDialog("#rename-other-wnd-msgbox");
+  gRenameOtherWndMsgBox.setProps({
+    renameDlgSrcWndID: null,
+  });
+  gRenameOtherWndMsgBox.setOtherWndID = function (aWndID)
+  {
+    this.renameDlgSrcWndID = aWndID;
+  };
+  gRenameOtherWndMsgBox.onFirstInit = function ()
+  {
+    this.find("#switch-wnd-btn").on("click", async (aEvent) => {
+      if (!this.renameDlgSrcWndID) {
+        throw new ReferenceError("Read Next::sidebar.js: gRenameOtherWndMsgBox: renameDlgSrcWndID not initialized");
+      }
+
+      let wnd;
+      try {
+        wnd = await browser.windows.get(this.renameDlgSrcWndID);
+      }
+      catch {}
+
+      if (!wnd) {
+        // Browser window was closed before renaming the link was finished.
+        this.close();
+        return;
+      }
+
+      browser.windows.update(this.renameDlgSrcWndID, {focused: true});
+      this.close();
+    });
+  };
+  gRenameOtherWndMsgBox.onUnload = function ()
+  {
+    this.renameDlgSrcWndID = null;
   };
 
   gCustomizeDlg = new aeDialog("#customize-dlg");
