@@ -204,6 +204,12 @@ async function setUICustomizations(aPrefs)
       visible: false,
     });
     browser.menus.create({
+      id: "ae-readnext-add-bkmk-for-link",
+      title: browser.i18n.getMessage("addBkmk"),
+      contexts: ["link"],
+      visible: false,
+    });
+    browser.menus.create({
       id: "ae-readnext-submnu",
       title: browser.i18n.getMessage("extName"),
       contexts: ["page", "tab"],
@@ -219,6 +225,7 @@ async function setUICustomizations(aPrefs)
   else {
     try {
       await browser.menus.remove("ae-readnext-add-bkmk");
+      await browser.menus.remove("ae-readnext-add-bkmk-for-link");
       await browser.menus.remove("ae-readnext-remove-bkmk");
       await browser.menus.remove("ae-readnext-submnu");
     }
@@ -655,6 +662,41 @@ async function addBookmarkFromPageAction(aCloseTab=false)
 }
 
 
+async function prepareNewBookmark(aURL, aTitle, aTab, aCreateFromPage=true)
+{
+  let url = processURL(aURL);
+  let id = getBookmarkIDFromURL(url);
+
+  let bkmkExists = await aeReadingList.get(id);
+  if (bkmkExists) {
+    return false;
+  }
+  
+  let prefs = await aePrefs.getAllPrefs();
+  let bkmk = new aeBookmark(id, url, sanitizeHTML(aTitle));
+
+  if (aCreateFromPage) {
+    await setBookmarkFavIcon(id, aTab.favIconUrl);
+    
+    if (aTab.isInReaderMode) {
+      bkmk.readerMode = true;
+    }
+  }
+
+  await addBookmark(bkmk);
+
+  if (aCreateFromPage) {
+    togglePageActionIcon(true, aTab);
+
+    if (prefs.closeTabAfterAdd) {
+      closeTab(aTab.id);
+    }
+  }
+
+  return true;
+}
+
+
 async function updateMenus(aTab=null)
 {
   if (! aTab) {
@@ -669,6 +711,7 @@ async function updateMenus(aTab=null)
     await browser.menus.update("ae-readnext-add-and-close-tab", {enabled: false});
     if (showCxtMenu) {
       await browser.menus.update("ae-readnext-add-bkmk", {visible: false});
+      await browser.menus.update("ae-readnext-add-bkmk-for-link", {visible: true});
       await browser.menus.update("ae-readnext-submnu", {visible: true});
       await browser.menus.update("ae-readnext-remove-bkmk", {visible: true});
     }
@@ -677,6 +720,7 @@ async function updateMenus(aTab=null)
     await browser.menus.update("ae-readnext-add-and-close-tab", {enabled: true});
     if (showCxtMenu) {
       await browser.menus.update("ae-readnext-add-bkmk", {visible: true});
+      await browser.menus.update("ae-readnext-add-bkmk-for-link", {visible: true});
       await browser.menus.update("ae-readnext-submnu", {visible: false});
       await browser.menus.update("ae-readnext-remove-bkmk", {visible: false});
     }
@@ -1061,8 +1105,6 @@ browser.pageAction.onClicked.addListener(async () => {
 
 
 browser.menus.onClicked.addListener(async (aInfo, aTab) => {
-  let prefs = await aePrefs.getAllPrefs();
-
   if (aInfo.menuItemId == "ae-readnext-add-bkmk") {
     // By default, the action applies to the currently active browser tab, but
     // support the selection of more than 1 browser tab from the tab bar.
@@ -1075,21 +1117,7 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
       let tab = selectedTabs[i];
 
       if (isSupportedURL(tab.url)) {
-        let url = processURL(tab.url);
-        let id = getBookmarkIDFromURL(url);
-        let bkmk = new aeBookmark(id, url, sanitizeHTML(tab.title));
-        await setBookmarkFavIcon(id, tab.favIconUrl);
-
-        if (tab.isInReaderMode) {
-          bkmk.readerMode = true;
-        }
-        
-        await addBookmark(bkmk);
-        togglePageActionIcon(true, tab);
-
-        if (prefs.closeTabAfterAdd) {
-          closeTab(tab.id);
-        } 
+        await prepareNewBookmark(tab.url, tab.title, tab);
       }
       else {
         if (selectedTabs.length == 1) {
@@ -1099,6 +1127,17 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
           // Silently skip over the tab showing the Firefox page.
           warn("Read Next: Unsupported page won't be added to reading list: " + tab.url);
         }
+      }
+    }
+  }
+  else if (aInfo.menuItemId == "ae-readnext-add-bkmk-for-link") {
+    // Handle right-click on a hyperlink on the page.
+    if (aInfo.linkUrl) {
+      if (isSupportedURL(aInfo.linkUrl)) {
+        await prepareNewBookmark(aInfo.linkUrl, aInfo.linkText, aTab, false);
+      }
+      else {
+        showAddBookmarkErrorNotification();
       }
     }
   }
