@@ -334,6 +334,16 @@ let gSearchBox = {
     $("#search-bar").hide();
   },
 
+  enable()
+  {
+    $("#search-box").prop("disabled", false);
+  },
+
+  disable()
+  {
+    $("#search-box").prop("disabled", true);
+  },
+
   async updateSearch()
   {
     let srchResults = await browser.runtime.sendMessage({
@@ -1129,7 +1139,7 @@ function showLoadingProgress()
   if (isEmptyMsgVisible()) {
     toggleEmptyMsg(false);
   }
-  $("#search-box").attr("disabled", "true");
+  gSearchBox.disable();
   $("#loading").show();
 }
 
@@ -1137,7 +1147,7 @@ function showLoadingProgress()
 function hideLoadingProgress()
 {
   $("#loading").hide();
-  $("#search-box").removeAttr("disabled");
+  gSearchBox.enable();
 }
 
 
