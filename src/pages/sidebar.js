@@ -718,7 +718,7 @@ function readingListItemExists(aBookmarkID)
 }
 
 
-function markAsRead(aBookmarkID, aIsRead)
+async function markAsRead(aBookmarkID, aIsRead)
 {
   let listItem = $(`#reading-list > .reading-list-item[data-id="${aBookmarkID}"]`);
   let cls = gPrefs.boldUnreadBkmks ? "unread" : "unread-no-fmt"
@@ -727,8 +727,8 @@ function markAsRead(aBookmarkID, aIsRead)
     listItem.removeClass(cls);
     listItem.attr("data-unread", false);
 
-    if (gPrefs.autoUpdateUnreadFilter
-        && gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD) {
+    if (gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD
+        && gPrefs.autoUpdateUnreadFilter) {
       listItem.fadeOut(200, async () => {
         let numUnreadItems = $("#reading-list").children().filter(":visible").length;
         if (numUnreadItems == 0) {
@@ -752,8 +752,23 @@ function markAsRead(aBookmarkID, aIsRead)
     }
   }
   else {
-    listItem.addClass(cls);
-    listItem.attr("data-unread", true);
+    // Item was marked as unread.
+    let selectedFilter = gReadingListFilter.getSelectedFilter();
+    if (selectedFilter == gReadingListFilter.UNREAD && gPrefs.autoUpdateUnreadFilter) {
+      toggleNoUnreadMsg(false);
+      toggleNotFoundMsg(false);
+
+      let bkmks = await gCmd.getBookmarks();
+      await rebuildReadingList(bkmks, selectedFilter == gReadingListFilter.UNREAD);
+
+      if (gSearchBox.isSearchInProgress()) {
+        gSearchBox.updateSearch();
+      }
+    }
+    else {
+      listItem.addClass(cls);
+      listItem.attr("data-unread", true);
+    }
   }
 }
 
