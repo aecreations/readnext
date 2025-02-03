@@ -66,6 +66,10 @@ $(async () => {
     aePrefs.setPrefs({closeTabAfterAdd: aEvent.target.checked});
   });
 
+  $("#hilite-new-links").prop("checked", prefs.highlightNewLink).on("click", aEvent => {
+    aePrefs.setPrefs({highlightNewLink: aEvent.target.checked});
+  });
+
   $("#auto-close-sidebar").prop("checked", prefs.closeSidebarAfterNav).on("click", aEvent => {
     aePrefs.setPrefs({closeSidebarAfterNav: aEvent.target.checked});
   });

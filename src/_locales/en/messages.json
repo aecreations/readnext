@@ -402,6 +402,11 @@
     "description": "Section heading in extension preferences page"
   },
 
+  "prefHiliteNew": {
+    "message": "Highlight new link in sidebar when added",
+    "description": "Checkbox option in the extension preferences page"
+  },
+
   "prefCloseTabAfterAdd": {
     "message": "Close tab after adding to Read Next",
     "description": "Checkbox option in the extension preferences page"
