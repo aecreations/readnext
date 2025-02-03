@@ -114,12 +114,22 @@
 
   "filterAll": {
     "message": "All",
-    "description": "Reading list filter option"
+    "description": "Reading list filter option in the sidebar toolbar"
   },
 
   "filterUnread": {
     "message": "Unread",
-    "description": "Reading list filter option"
+    "description": "Reading list filter option in the sidebar toolbar"
+  },
+
+  "cxtMnuFltrAll": {
+    "message": "Show All Links",
+    "description": "Reading list filter option in the sidebar context menu"
+  },
+
+  "cxtMnuFltrUnread": {
+    "message": "Show Unread Links Only",
+    "description": "Reading list filter option in the sidebar context menu"
   },
 
   "srchBoxHint": {

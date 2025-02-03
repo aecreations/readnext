@@ -1038,7 +1038,7 @@ function initContextMenu()
       },
       filterSep: "---",
       showAllLinks: {
-        name: "show all links",
+        name: browser.i18n.getMessage("cxtMnuFltrAll"),
         className: "ae-menuitem",
         callback(aKey, aOpt) {
           $("#filter-all").click();
@@ -1051,7 +1051,7 @@ function initContextMenu()
         },
       },
       showUnreadLinks: {
-        name: "show unread links only",
+        name: browser.i18n.getMessage("cxtMnuFltrUnread"),
         className: "ae-menuitem",
         callback(aKey, aOpt) {
           $("#filter-unread").click();
