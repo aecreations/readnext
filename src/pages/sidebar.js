@@ -564,7 +564,7 @@ async function buildReadingList(aBookmarks, aUnreadOnly)
   }
   else {
     toggleSearchBar(true);
-    enableReadingListKeyboardNav();
+    enableReadingListKeyboardNavigation();
   }
 
   for (let bkmk of aBookmarks) {
@@ -638,7 +638,7 @@ async function addReadingListItem(aBookmark)
   $("#reading-list").append(listItem);
 
   if (isReadingListKeyboardNavDisabled()) {
-    enableReadingListKeyboardNav();
+    enableReadingListKeyboardNavigation();
   }
 }
 addReadingListItem.isDarkMode = false;
@@ -1230,8 +1230,59 @@ function handleFilterSelection(aEvent)
 }
 
 
-function enableReadingListKeyboardNav()
+function enableReadingListKeyboardNavigation()
 {
+  function isHomeKeyPressed(aKeybEvent)
+  {
+    let rv = false;
+
+    if (aKeybEvent.key == "Home") {
+      rv = true;
+    }
+    else {
+      if (gOS == "mac") {
+        rv = (aKeybEvent.key == "ArrowUp" && aKeybEvent.metaKey);
+      }
+      else {
+        rv = (aKeybEvent.key == "ArrowUp" && aKeybEvent.ctrlKey);
+      }
+    }
+    return rv;
+  }
+
+  function isEndKeyPressed(aKeybEvent)
+  {
+    let rv = false;
+
+    if (aKeybEvent.key == "End") {
+      rv = true;
+    }
+    else {
+      if (gOS == "mac") {
+        rv = (aKeybEvent.key == "ArrowDown" && aKeybEvent.metaKey);
+      }
+      else {
+        rv = (aKeybEvent.key == "ArrowDown" && aKeybEvent.ctrlKey);
+      }
+    }
+    return rv;
+  }
+ 
+  function isPageUpKeyPressed(aKeybEvent)
+  {
+    let rv = (aKeybEvent.key == "PageUp"
+              || (aKeybEvent.key == " " && aKeybEvent.shiftKey));  // Shift+Spacebar
+    return rv;
+  }
+
+  function isPageDownKeyPressed(aKeybEvent)
+  {
+    let rv = (aKeybEvent.key == "PageDown"
+              || (aKeybEvent.key == " " && !aKeybEvent.shiftKey)); // Spacebar
+    return rv;
+  }
+  // END nested functions
+
   $("#reading-list").attr("tabindex", "0");
 
   $("#reading-list").on("keydown.readingList", aEvent => {
@@ -1249,7 +1300,7 @@ function enableReadingListKeyboardNav()
     let numItems = rdgListItems.length;
     let {contentHeight, contentTop} = getScrollableContentGeometry();
     
-    if (aEvent.key == "ArrowDown" || aEvent.key == "End") {
+    if (aEvent.key == "ArrowDown" || isEndKeyPressed(aEvent)) {
       if (gKeybSelectedIdx === null) {
         gKeybSelectedIdx = 0;
       }
@@ -1258,7 +1309,7 @@ function enableReadingListKeyboardNav()
       }
       else {
         rdgListItems.get(gKeybSelectedIdx).classList.remove("focused");
-        if (aEvent.key == "End") {
+        if (isEndKeyPressed(aEvent)) {
           gKeybSelectedIdx = rdgListItems.length - 1;
         }
         else {
@@ -1276,13 +1327,13 @@ function enableReadingListKeyboardNav()
       
       aEvent.preventDefault();
     }
-    else if (aEvent.key == "ArrowUp" || aEvent.key == "Home") {
+    else if (aEvent.key == "ArrowUp" || isHomeKeyPressed(aEvent)) {
       if (! gKeybSelectedIdx) {
         warn("Read Next::sidebar.js: Reached the start of the reading list.");
       }
       else {
         rdgListItems.get(gKeybSelectedIdx).classList.remove("focused");
-        if (aEvent.key == "Home") {
+        if (isHomeKeyPressed(aEvent)) {
           gKeybSelectedIdx = 0;
         }
         else {
@@ -1300,7 +1351,7 @@ function enableReadingListKeyboardNav()
 
       aEvent.preventDefault();
     }
-    if (aEvent.key == "PageDown") {
+    if (isPageDownKeyPressed(aEvent)) {
       if (gKeybSelectedIdx === null) {
         gKeybSelectedIdx = 0;
         rdgListItems.get(0).classList.add("focused");
@@ -1339,7 +1390,7 @@ function enableReadingListKeyboardNav()
       }
       aEvent.preventDefault();
     }
-    else if (aEvent.key == "PageUp") {
+    else if (isPageUpKeyPressed(aEvent)) {
       if (! gKeybSelectedIdx) {
         warn("Read Next::sidebar.js: Reached the start of the reading list.");
       }
@@ -1373,7 +1424,7 @@ function enableReadingListKeyboardNav()
       }
       aEvent.preventDefault();
     }
-    else if (aEvent.key == "Enter" || aEvent.key == " ") {
+    else if (aEvent.key == "Enter") {
       let item = $("#reading-list").children().get(gKeybSelectedIdx);
       gCmd.open(item.dataset.id, item.dataset.url);
 
