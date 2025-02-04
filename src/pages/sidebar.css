@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-@import url("../lib/contextMenu/jquery.contextMenu.min.css");
 @import url("../style/laf.css");
 @import url("../style/lightbox.css");
 @import url("../style/searchbox.css");
@@ -22,13 +21,6 @@
     --color-bkmk-hover-text: #0c0c0d;
     --color-bkmk-active-bkgd: #bbb;
     --color-new-bkmk-bkgd: #54ffbd;
-    --color-cxtmenu-bkgd: #fff;
-    --color-cxtmenu-border: #bebebe;
-    --color-cxtmenu-text: #2f2f2f;
-    --color-cxtmenu-menuitem-hover-bkgd: rgba(12, 12, 13, 0.2);
-    --color-cxtmenu-menuitem-hover-text: #0c0c0d;
-    --color-cxtmenu-menuitem-active-bkgd: rgba(12, 12, 13, 0.3);
-    --color-cxtmenu-separator: #e6e6e6;
 
     --url-toolbar-btn-add-link: url("../img/add-link.svg");
     --url-toolbar-btn-add-link-hover: url("../img/add-link-hover.svg");
@@ -48,13 +40,6 @@
 	--color-bkmk-hover-text: #fff;
 	--color-bkmk-active-bkgd: #606060;
 	--color-new-bkmk-bkgd: #008787;
-	--color-cxtmenu-bkgd: #4a4a4f;
-	--color-cxtmenu-border: #38383d;
-	--color-cxtmenu-text: #f9f9fa;
-	--color-cxtmenu-menuitem-active-bkgd: #737373;
-	--color-cxtmenu-menuitem-hover-bkgd: #606060;
-	--color-cxtmenu-menuitem-hover-text: #fff;
-	--color-cxtmenu-separator: #737373;
 
 	--url-toolbar-btn-add-link: url("../img/add-link-dk.svg");
 	--url-toolbar-btn-add-link-hover: url("../img/add-link-dk.svg");
@@ -500,7 +485,7 @@ body[data-tbar-fix] #bookmark-filter > #filter-unread ~ label[for="filter-unread
 
 /* jQuery contextMenu CSS overrides */
 .ae-menuitem {
-    letter-spacing: -0.8px;
+    letter-spacing: -0.5px;
 }
 
 /* Sidebar dialogs */
