@@ -920,6 +920,48 @@ function initDialogs()
 
 function initContextMenu()
 {
+  // Empty content area in the sidebar
+  $.contextMenu({
+    selector: "#scroll-content:not(:has(.welcome-banner))",
+    items: {
+      showAllLinks: {
+        name: browser.i18n.getMessage("cxtMnuFltrAll"),
+        className: "ae-menuitem",
+        callback(aKey, aOpt) {
+          $("#filter-all").click();
+        },
+        icon(aOpt, aItemElement, aItemKey, aItem) {
+          aItemElement.removeClass("context-menu-icon-checked")
+          if (gReadingListFilter.getSelectedFilter() == gReadingListFilter.ALL) {
+            return "context-menu-icon-checked";
+          }
+        },
+      },
+      showUnreadLinks: {
+        name: browser.i18n.getMessage("cxtMnuFltrUnread"),
+        className: "ae-menuitem",
+        callback(aKey, aOpt) {
+          $("#filter-unread").click();
+        },
+        icon(aOpt, aItemElement, aItemKey, aItem) {
+          aItemElement.removeClass("context-menu-icon-checked")
+          if (gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD) {
+            return "context-menu-icon-checked";
+          }
+        },
+      },
+      separator: "---",
+      customize: {
+        name: browser.i18n.getMessage("mnuCustz"),
+        className: "ae-menuitem",
+        callback(aKey, aOpt) {
+          gCustomizeDlg.showModal();
+        }
+      }
+    }
+  });
+
+  // Individual reading list item
   $.contextMenu({
     selector: ".reading-list-item",
     items: {
@@ -1128,10 +1170,10 @@ function toggleEmptyMsg(aIsVisible)
       $("#sync-cta").show();
     }
 
-    $("#welcome").show();    
+    $("#welcome").addClass("welcome-banner").show();    
   }
   else {
-    $("#welcome").hide();
+    $("#welcome").removeClass("welcome-banner").hide();
   }
 }
 
