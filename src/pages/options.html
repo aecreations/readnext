@@ -14,8 +14,8 @@
   <body>
     <main>
       <div id="pref-logo">
-        <img id="addon-icon" src="../img/readnext128.svg">
-        <p id="hdr-ext-name" data-i18n="extName"></p>
+        <img id="addon-icon" src="../img/readnext128.svg" role="presentation">
+        <p id="hdr-ext-name" data-i18n="extName" role="heading"></p>
       </div>
       <div id="pref-body">
 	<h2 id="pref-hdg"></h2>
@@ -73,7 +73,7 @@
     </main>
 
     <!-- Dialog boxes -->
-    <div id="connect-dlg" class="lightbox">
+    <div id="connect-dlg" class="lightbox" role="dialog">
       <div class="dlg-content">
 	<div id="authz-prologue" class="wiz-page">
           <div class="wiz-icon"></div>
@@ -119,7 +119,8 @@
       </div>
     </div>
     
-    <div id="disconnect-dlg" class="lightbox">
+    <div id="disconnect-dlg" class="lightbox" role="alertdialog"
+     aria-labelledby="disconnect-confirm">
       <div class="dlg-content">
         <div class="msgbox-icon"></div>
         <div class="msgbox-content">
@@ -133,7 +134,7 @@
       </div>
     </div>
 
-    <div id="about-dlg" class="lightbox">
+    <div id="about-dlg" class="lightbox" role="dialog">
       <div class="dlg-content">
         <div id="ext-icon"></div>
 	<div id="ext-info">
