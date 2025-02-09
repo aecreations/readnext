@@ -148,6 +148,16 @@ let gCmd = {
     gRenameDlg.showModal();
   },
 
+  cancelRename()
+  {
+    if (gRenameDlg.isOpen()) {
+      gRenameDlg.close();
+    }
+    if (gRenameOtherWndMsgBox.isOpen()) {
+      gRenameOtherWndMsgBox.close();
+    }
+  },
+
   async closeTab(aTabID)
   {
     await browser.runtime.sendMessage({
@@ -1563,6 +1573,11 @@ browser.runtime.onMessage.addListener(aMessage => {
     updateReadingListItem(aMessage.bookmark);
     break;
 
+  case "cancel-rename-bookmark":
+    gCmd.cancelRename();
+    resp = true;
+    break;
+
   case "bookmarks-reloaded":
     if ($("#reauthz-msgbar").is(":visible")) {
       hideMessageBar("#reauthz-msgbar");
@@ -1619,12 +1634,7 @@ browser.runtime.onMessage.addListener(aMessage => {
         hideMessageBar("#neterr-msgbar");
       }
 
-      if (gRenameDlg.isOpen()) {
-        gRenameDlg.close();
-      }
-      if (gRenameOtherWndMsgBox.isOpen()) {
-        gRenameOtherWndMsgBox.close();
-      }
+      gCmd.cancelRename();
     }
     initContextMenu.showManualSync = aMessage.syncEnabled;
     // The message listener in the background script for the same message

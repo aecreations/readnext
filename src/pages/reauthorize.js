@@ -75,12 +75,14 @@ async function reauthorize(aBackend)
   };
   await aePrefs.setPrefs(syncPrefs);
 
+  // If reading list sync was paused, force syncing to resume.
+  await browser.runtime.sendMessage({id: "force-resume-sync"});
+
   log("Read Next::reauthorize.js: Retrying reading list sync...");
-  let msg = {
+  await browser.runtime.sendMessage({
     id: "sync-reading-list",
     isReauthorized: true,
-  };
-  await browser.runtime.sendMessage(msg);
+  });
   closePage();
 }
 

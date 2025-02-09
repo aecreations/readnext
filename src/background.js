@@ -406,6 +406,20 @@ async function stopSync()
 }
 
 
+async function forceResumeSync()
+{
+  let syncEnabled = await aePrefs.getPref("syncEnabled");
+  if (syncEnabled) {
+    await pauseSync(false);
+  }
+
+  try {
+    await browser.runtime.sendMessage({id: "cancel-rename-bookmark"});
+  }
+  catch {}
+}
+
+
 async function restartSyncInterval()
 {
   log("Read Next: Restarting sync interval...");
@@ -878,6 +892,10 @@ browser.runtime.onMessage.addListener(aMessage => {
 
   case "stop-edit-bookmark":
     stopEditBookmark();
+    break;
+
+  case "force-resume-sync":
+    return forceResumeSync();
     break;
 
   case "get-username":
