@@ -1618,6 +1618,13 @@ browser.runtime.onMessage.addListener(aMessage => {
       if ($("#neterr-msgbar").is(":visible")) {
         hideMessageBar("#neterr-msgbar");
       }
+
+      if (gRenameDlg.isOpen()) {
+        gRenameDlg.close();
+      }
+      if (gRenameOtherWndMsgBox.isOpen()) {
+        gRenameOtherWndMsgBox.close();
+      }
     }
     initContextMenu.showManualSync = aMessage.syncEnabled;
     // The message listener in the background script for the same message

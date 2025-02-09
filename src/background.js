@@ -864,7 +864,11 @@ browser.runtime.onMessage.addListener(aMessage => {
     }
     else {
       warn("Read Next: Sync turned OFF.");
-      return stopSync();
+      stopSync().then(() => {
+        return pauseSync(false);
+      }).then(() => {
+        return Promise.resolve();
+      });
     }
     break;
 
