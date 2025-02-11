@@ -608,6 +608,7 @@ async function addReadingListItem(aBookmark)
   listItemDiv.dataset.title = aBookmark.title;
   listItemDiv.dataset.url = aBookmark.url;
   listItemDiv.dataset.unread = aBookmark.unread;
+  listItemDiv.setAttribute("role", "listitem");
 
   if (aBookmark.unread) {
     let cls = gPrefs.boldUnreadBkmks ? "unread" : "unread-no-fmt"
@@ -618,6 +619,7 @@ async function addReadingListItem(aBookmark)
   let scale = window.devicePixelRatio;
   favIconCanvas.width = Math.floor(16 * scale);
   favIconCanvas.height = Math.floor(16 * scale);
+  favIconCanvas.setAttribute("role", "presentation");
   
   let canvasCtx = favIconCanvas.getContext("2d");
   canvasCtx.scale(scale, scale);
@@ -642,6 +644,7 @@ async function addReadingListItem(aBookmark)
   }
 
   let listItemTitle = $("<div>").addClass("reading-list-item-title").text(aBookmark.title);
+  listItemTitle.attr("role", "presentation");
   let listItem = $(listItemDiv);
   listItem.append(favIconCanvas);
   listItem.append(listItemTitle);
