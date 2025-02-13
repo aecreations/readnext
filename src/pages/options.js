@@ -123,15 +123,18 @@ function initDialogs()
 
     switch (aPageID) {
     case "authz-prologue":
+      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle1");
       this.find(".dlg-btns > .dlg-accept").addClass("default");
       $("#authz-instr").text(browser.i18n.getMessage("wizAuthzInstr1", fileHostName));
       break;
 
     case "authz-progress":
+      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle2");
       this.find(".dlg-btns > button").attr("disabled", "true");
       break;
 
     case "authz-success":
+      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle3");
       $("#authz-succs-msg").text(browser.i18n.getMessage("wizAuthzSuccs", fileHostName));
       btnAccept.removeAttr("disabled").text(browser.i18n.getMessage("btnClose"));
       btnCancel.hide();
@@ -139,12 +142,14 @@ function initDialogs()
       break;
 
     case "authz-retry":
+      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle1");
       $("#authz-interrupt").text(browser.i18n.getMessage("wizAuthzInterrupt", fileHostName));
       this.find(".dlg-btns > button").removeAttr("disabled");
       btnAccept.text(browser.i18n.getMessage("btnRetry"));
       break;
 
     case "authz-network-error":
+      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitNetErr");
       this.find(".dlg-btns > button").removeAttr("disabled");
       btnAccept.text(browser.i18n.getMessage("btnRetry"));
       break;
