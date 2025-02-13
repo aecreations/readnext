@@ -479,6 +479,9 @@ $(async () => {
   let currWnd = await browser.windows.getCurrent();
   gWndID = currWnd.id;
 
+  $("#toolbar")[0].ariaLabel = browser.i18n.getMessage("lblTbar");
+  $("#search-bar")[0].ariaLabel = browser.i18n.getMessage("lblSrchBar");
+
   // Preload toolbar button icon
   let addLinkIco = new Image();
   addLinkIco.src = "../img/add-link-hover.svg";

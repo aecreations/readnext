@@ -107,6 +107,16 @@
     "description": "Error notification that appears when attempting to add an unsupported URL to the reading list"
   },
 
+  "lblTbar": {
+    "message": "Reading List Toolbar",
+    "description": "ARIA label for the toolbar in the reading list sidebar"
+  },
+
+  "lblSrchBar": {
+    "message": "Search Bar",
+    "description": "ARIA label for the search bar in the reading list sidebar"
+  },
+
   "addLink": {
     "message": "Add Current Tab",
     "description": "Toolbar button label"
