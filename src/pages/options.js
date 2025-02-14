@@ -83,6 +83,9 @@ $(async () => {
   });
 
   initDialogs();
+  if (prefs.defDlgBtnFollowsFocus) {
+    aeInterxn.initDialogButtonFocusHandlers();
+  }
 
   // Initialize static UI strings for user contribution CTA in the about dialog.
   let usrContribCTA = $("#usr-contrib-cta");

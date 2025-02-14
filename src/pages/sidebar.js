@@ -485,6 +485,10 @@ $(async () => {
   // Preload toolbar button icon
   let addLinkIco = new Image();
   addLinkIco.src = "../img/add-link-hover.svg";
+
+  if (gPrefs.defDlgBtnFollowsFocus) {
+    aeInterxn.initDialogButtonFocusHandlers();
+  }
 });
 
 
