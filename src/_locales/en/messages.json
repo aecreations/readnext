@@ -528,12 +528,22 @@
   },
 
   "whatsNew1": {
-    "message": "Now available in Chinese (Simplified)",
+    "message": "Links can now be renamed",
     "description": "Description of an enhancement or fix in the new version of Read Next"
   },
 
   "whatsNew2": {
-    "message": "The “Open In Current Tab” menu item in the reading list context menu has been renamed “Open”",
+    "message": "Improvements to navigation and scrolling of the reading list using the keyboard",
+    "description": "Description of an enhancement or fix in the new version of Read Next"
+  },
+
+  "whatsNew3": {
+    "message": "New links are now highlighted in the sidebar when they’re added",
+    "description": "Description of an enhancement or fix in the new version of Read Next"
+  },
+
+  "whatsNew4": {
+    "message": "When showing only unread links in the reading list, links will now be automatically shown or hidden as their unread status changes",
     "description": "Description of an enhancement or fix in the new version of Read Next"
   },
 
