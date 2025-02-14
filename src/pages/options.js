@@ -13,6 +13,7 @@ let gDialogs = {};
 $(async () => {
   let platform = await browser.runtime.getPlatformInfo();
   document.body.dataset.os = platform.os;
+  aeInterxn.init(platform.os);
 
   if (platform.os == "win") {
     document.title = browser.i18n.getMessage("prefsTitleWin");
