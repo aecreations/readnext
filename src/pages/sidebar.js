@@ -939,6 +939,16 @@ function initContextMenu()
   // Empty content area in the sidebar
   $.contextMenu({
     selector: "#scroll-content:not(:has(.welcome-banner))",
+    className: "default-cxt-menu",
+
+    events: {
+      activated(aOptions)
+      {
+        let mnu = aOptions.$menu;
+        mnu[0].focus();
+      }
+    },
+
     items: {
       showAllLinks: {
         name: browser.i18n.getMessage("cxtMnuFltrAll"),
@@ -980,6 +990,16 @@ function initContextMenu()
   // Individual reading list item
   $.contextMenu({
     selector: ".reading-list-item",
+    className: "reading-list-cxt-menu",
+
+    events: {
+      activated(aOptions)
+      {
+        let mnu = aOptions.$menu;
+        mnu[0].focus();
+      }
+    },
+
     items: {
       openInCurrentTab: {
         name: browser.i18n.getMessage("mnuOpen"),
@@ -1131,6 +1151,9 @@ function initContextMenu()
       }
     }
   });
+
+  aeInterxn.initContextMenuAriaRoles(".default-cxt-menu");
+  aeInterxn.initContextMenuAriaRoles(".reading-list-cxt-menu");
 }
 initContextMenu.showManualSync = false;
 initContextMenu.showOpenInPrivBrws = false;
