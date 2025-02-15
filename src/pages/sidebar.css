@@ -406,17 +406,19 @@ body[data-tbar-fix] #bookmark-filter > #filter-unread ~ label[for="filter-unread
 }
 
 .reading-list-item {
-    min-height: 1em;
-    max-height: 3.15em;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
     overflow: hidden;
-    padding: 4px 8px 4px 8px;
+
+    padding: 3px 8px 3px 8px;
     border: none;
 
     font-size: 12px;
     font-weight: normal;
-    line-height: 1.3em;
-
     color: var(--color-default-text);
+
+    line-height: 1.4em;
 }
 
 .reading-list-item.unread {
@@ -424,32 +426,32 @@ body[data-tbar-fix] #bookmark-filter > #filter-unread ~ label[for="filter-unread
 }
 
 .reading-list-item.focused {
-    padding: 2px 6px 2px 6px;
+    padding: 1px 6px 1px 6px;
     border: 2px solid #45a1ff;
 }
 
 .reading-list-item:hover {
-    padding: 2px 6px 2px 6px;
+    padding: 1px 6px 1px 6px;
     border: 2px solid var(--color-bkmk-hover-bkgd);
     background-color: var(--color-bkmk-hover-bkgd);
     color: var(--color-bkmk-hover-text);
 }
 
 .reading-list-item.focused:hover {
-    padding: 2px 6px 2px 6px;
+    padding: 1px 6px 1px 6px;
     border: 2px solid #45a1ff;   
     background-color: var(--color-bkmk-hover-bkgd);
     color: var(--color-bkmk-hover-text);
 }
 
 .reading-list-item:active {
-    padding: 2px 6px 2px 6px;
+    padding: 1px 6px 1px 6px;
     border: 2px solid var(--color-bkmk-active-bkgd);
     background-color: var(--color-bkmk-active-bkgd);
 }
 
 .reading-list-item.focused:active {    
-    padding: 2px 6px 2px 6px;
+    padding: 1px 6px 1px 6px;
     border: 2px solid #45a1ff;   
     background-color: var(--color-bkmk-active-bkgd);
 }
