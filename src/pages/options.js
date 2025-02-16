@@ -516,7 +516,7 @@ $(window).on("focus", async (aEvent) => {
 });
 
 
-$(window).keydown(aEvent => {
+$(window).on("keydown", aEvent => {
   if (aEvent.key == "Enter") {
     if (aeDialog.isOpen()) {
       if (aEvent.target.tagName == "BUTTON" && !aEvent.target.classList.contains("default")) {
