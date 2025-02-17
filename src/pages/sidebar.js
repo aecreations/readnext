@@ -937,7 +937,10 @@ function initDialogs()
   };
 
   gCmdPalette = new aeDialog("#command-palette");
-  gCmdPalette.setProps({selectedBkmk: null});
+  gCmdPalette.setProps({
+    _focusedIdx: null,
+    selectedBkmk: null,
+  });
   
   gCmdPalette.onFirstInit = function ()
   {
@@ -988,6 +991,33 @@ function initDialogs()
       this.close();
       gCustomizeDlg.showModal();
     });
+
+    this._dlgElt.on("keydown", aEvent => {
+      let focusedBtn = this._dlgElt.find("button:focus");
+      if (!focusedBtn) {
+        warn("Read Next::sidebar.js: Nothing focused in the command palette");
+        return;
+      }
+
+      let btns = this._dlgElt.find("button:visible");
+      
+      if (aEvent.key == "ArrowDown") {
+        if (btns.index(focusedBtn) == btns.length - 1) {
+          warn("At last button in command palette");
+          return;
+        }
+        let nextBtn = btns.get(++this._focusedIdx);
+        nextBtn.focus();
+      }
+      else if (aEvent.key == "ArrowUp") {
+        if (btns.index(focusedBtn) == 0) {
+          warn("At first button in command palette");
+          return;
+        }
+        let prevBtn = btns.get(--this._focusedIdx);
+        prevBtn.focus();
+      }
+    });
   };
 
   gCmdPalette.onInit = function ()
@@ -1031,10 +1061,16 @@ function initDialogs()
     $("#lightbox-bkgrd-ovl").addClass("cmd-palette-ovl").on("click.cmdPal", aEvent => {
       this.close();
     });
+
+    let firstBtn = this._dlgElt.find("button:visible").first();
+    firstBtn[0].focus();
+    this._focusedIdx = 0;
+
   };
   gCmdPalette.onUnload = function ()
   {
     $("#lightbox-bkgrd-ovl").removeClass("cmd-palette-ovl").off("click.cmdPal");
+    this._focusedIdx = null;
   };
 }
 
