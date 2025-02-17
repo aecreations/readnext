@@ -1003,19 +1003,25 @@ function initDialogs()
       
       if (aEvent.key == "ArrowDown") {
         if (btns.index(focusedBtn) == btns.length - 1) {
-          warn("At last button in command palette");
-          return;
+          let firstBtn = btns.get(0);
+          firstBtn.focus();
+          this._focusedIdx = 0;
         }
-        let nextBtn = btns.get(++this._focusedIdx);
-        nextBtn.focus();
+        else {
+          let nextBtn = btns.get(++this._focusedIdx);
+          nextBtn.focus();
+        }
       }
       else if (aEvent.key == "ArrowUp") {
         if (btns.index(focusedBtn) == 0) {
-          warn("At first button in command palette");
-          return;
+          this._focusedIdx = btns.length - 1;
+          let lastBtn = btns.get(this._focusedIdx);
+          lastBtn.focus();
         }
-        let prevBtn = btns.get(--this._focusedIdx);
-        prevBtn.focus();
+        else {
+          let prevBtn = btns.get(--this._focusedIdx);
+          prevBtn.focus();
+        }
       }
     });
   };
