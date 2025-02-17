@@ -9,7 +9,7 @@ const TOOLBAR_HEIGHT = 28;
 let gOS;
 let gWndID;
 let gPrefs;
-let gCustomizeDlg, gRenameDlg, gRenameOtherWndMsgBox;
+let gCustomizeDlg, gRenameDlg, gRenameOtherWndMsgBox, gCmdPalette;
 let gKeybSelectedIdx = null;
 let gPrefersColorSchemeMedQry;
 let gMsgBarTimerID = null;
@@ -935,6 +935,107 @@ function initDialogs()
       aePrefs.setPrefs({searchBar: aEvent.target.checked});
     });
   };
+
+  gCmdPalette = new aeDialog("#command-palette");
+  gCmdPalette.setProps({selectedBkmk: null});
+  
+  gCmdPalette.onFirstInit = function ()
+  {
+    $("#cmd-open").on("click", aEvent => {
+      this.close();
+      gCmd.open(this.selectedBkmk.dataset.id, this.selectedBkmk.dataset.url);
+      gPrefs.closeSidebarAfterNav && browser.sidebarAction.close();
+    });
+    $("#cmd-open-new-tab").on("click", aEvent => {
+      this.close();
+      gCmd.openInNewTab(this.selectedBkmk.dataset.id, this.selectedBkmk.dataset.url);
+      gPrefs.closeSidebarAfterNav && browser.sidebarAction.close();
+    });
+    $("#cmd-open-new-wnd").on("click", aEvent => {
+      this.close();      
+      gCmd.openInNewWnd(this.selectedBkmk.dataset.id, this.selectedBkmk.dataset.url);
+      gPrefs.closeSidebarAfterNav && browser.sidebarAction.close();
+    });
+    $("#cmd-open-new-prv-wnd").on("click", aEvent => {
+      this.close();
+      gCmd.openInNewPrivateWnd(this.selectedBkmk.dataset.id, this.selectedBkmk.dataset.url);
+      gPrefs.closeSidebarAfterNav && browser.sidebarAction.close();
+    });
+    $("#cmd-mark-unread").on("click", async (aEvent) => {
+      this.close();
+      let unread = this.selectedBkmk.dataset.unread == "true";
+      await gCmd.markAsRead(this.selectedBkmk.dataset.id, unread);
+    });
+    $("#cmd-rename").on("click", aEvent => {
+      this.close();
+      gCmd.rename(this.selectedBkmk.dataset.id);
+    });
+    $("#cmd-delete").on("click", async (aEvent) => {
+      let bkmkID = this.selectedBkmk.dataset.id;
+      try {
+        await gCmd.deleteBookmark(bkmkID);
+      }
+      catch (e) {
+        warn("Read Next: Error removing bookmark: " + e);
+      }
+      this.close();
+    });
+    $("#cmd-sync").on("click", aEvent => {
+      this.close();
+      gCmd.syncBookmarks(true);      
+    });
+    $("#cmd-customize").on("click", aEvent => {
+      this.close();
+      gCustomizeDlg.showModal();
+    });
+  };
+
+  gCmdPalette.onInit = function ()
+  {
+    // Show or hide menu items
+    if (gPrefs.linkClickAction == aeConst.OPEN_LINK_IN_NEW_TAB) {
+      $("#cmd-open").show();
+    }
+    else {
+      $("#cmd-open").hide();
+    }
+
+    if (initContextMenu.showOpenInPrivBrws) {
+      $("#cmd-open-new-prv-wnd").show();
+    }
+    else {
+      $("#cmd-open-new-prv-wnd").hide();
+    }
+
+    if (initContextMenu.showManualSync) {
+      $("#cmd-sync, #cmd-sync-sep").show();
+    }
+    else {
+      $("#cmd-sync, #cmd-sync-sep").hide();
+    }
+
+    // Mark as read/unread menu item
+    let unread = this.selectedBkmk.dataset.unread == "true";
+    let unreadLabel;
+    if (unread) {
+      unreadLabel = browser.i18n.getMessage("mnuMrkRead");
+    }
+    else {
+      unreadLabel = browser.i18n.getMessage("mnuMrkUnread");
+    }
+    $("#cmd-mark-unread").text(unreadLabel);
+  };
+
+  gCmdPalette.onShow = function ()
+  {
+    $("#lightbox-bkgrd-ovl").addClass("cmd-palette-ovl").on("click.cmdPal", aEvent => {
+      this.close();
+    });
+  };
+  gCmdPalette.onUnload = function ()
+  {
+    $("#lightbox-bkgrd-ovl").removeClass("cmd-palette-ovl").off("click.cmdPal");
+  };
 }
 
 
@@ -1040,7 +1141,6 @@ function initContextMenu()
         className: "ae-menuitem",
         async callback(aKey, aOpt) {
           let bkmkElt = aOpt.$trigger[0];
-          let url = bkmkElt.dataset.url;
           gCmd.openInNewPrivateWnd(bkmkElt.dataset.id, bkmkElt.dataset.url);
           gPrefs.closeSidebarAfterNav && browser.sidebarAction.close();
         },
@@ -1923,11 +2023,17 @@ $(window).on("keydown", aEvent => {
   }
   else if (aEvent.key == "Escape" && aeDialog.isOpen()) {
     aeDialog.cancelDlgs();
+
+    // The command palette doesn't have OK or Cancel buttons.
+    if (gCmdPalette.isOpen()) {
+      gCmdPalette.close();
+    }
   }
   else if (aEvent.key == "F10" && aEvent.shiftKey) {
     let focusedBkmk = $(".reading-list-item.focused");
     if (focusedBkmk.length == 1) {
-      focusedBkmk.first().trigger("contextmenu");
+      gCmdPalette.selectedBkmk = focusedBkmk[0];
+      gCmdPalette.showModal();
     }
   }
 });

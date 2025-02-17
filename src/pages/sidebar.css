@@ -594,3 +594,17 @@ body[data-locale="uk"] #customize-dlg {
     text-indent: -22px;
     width: 152px;
 }
+
+#command-palette {
+    top: 100px;
+    --width: 200px;
+    --height: auto;
+
+    padding: 2px;
+}
+
+#command-palette button {
+    width: 100%;
+    font-size: 12px;
+    text-align: left;
+}
