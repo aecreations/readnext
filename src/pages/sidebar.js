@@ -939,6 +939,7 @@ function initDialogs()
   gCmdPalette = new aeDialog("#command-palette");
   gCmdPalette.setProps({
     _focusedIdx: null,
+    _lastFocusedBtn: null,
     selectedBkmk: null,
   });
   
@@ -990,6 +991,58 @@ function initDialogs()
     $("#cmd-customize").on("click", aEvent => {
       this.close();
       gCustomizeDlg.showModal();
+    });
+
+    this._dlgElt.on("mouseenter", aEvent => {
+      let focusedBtn = this._dlgElt.find("button:focus");
+      if (!focusedBtn) {
+        warn("Read Next::sidebar.js: Nothing focused in the command palette");
+        return;
+      }
+      
+      focusedBtn.blur();
+      this._lastFocusedBtn = focusedBtn;
+
+    }).on("mouseleave", aEvent => {
+      let mnuRect = this._dlgElt[0].getBoundingClientRect();
+      let btns = this._dlgElt.find("button:visible");
+      let btnRects = [];
+      for (let btn of btns) {
+        btnRects.push(btn.getBoundingClientRect());
+      }
+
+      // Hovered over first item in command palette
+      if (aEvent.clientY >= mnuRect.top - 8 && aEvent.clientY <= mnuRect.top + 32) {
+        let firstBtn = btns.get(0);
+        firstBtn.focus();
+        this._focusedIdx = 0;
+      }
+      // Hovered over last item in command palette
+      else if (aEvent.clientY >= mnuRect.bottom - 32 && aEvent.clientY <= mnuRect.bottom + 8) {
+        let lastBtn = btns.get(btns.length - 1);
+        lastBtn.focus();
+        this._focusedIdx = btns.length - 1;
+      }
+      // Hovered over items in between first and last
+      else {
+        let selected = false;
+        for (let i = 0; i < btnRects.length; i++) {
+          let btnRect = btnRects[i];
+          if (aEvent.clientY >= btnRect.top && aEvent.clientY <= btnRect.bottom) {
+            btns.get(i).focus();
+            this._focusedIdx = i;
+            selected = true;
+            break;
+          }
+        }
+
+        if (!selected) {
+          // Hovered over separator or other whitespace in the command palette.
+          // In this case, don't focus anything.
+          this._focusedIdx = null;
+          this._lastFocusedBtn.blur();
+        }
+      }
     });
 
     this._dlgElt.on("keydown", aEvent => {
