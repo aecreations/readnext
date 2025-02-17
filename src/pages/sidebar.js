@@ -843,8 +843,29 @@ function initDialogs()
   };
   gRenameDlg.onShow = function ()
   {
+    // Vertically position dialog to be as close as possible to the
+    // selected reading list link.
+    let selectedBkmk = $(`.reading-list-item[data-id="${this.bkmkID}"]`)[0];
+    let cntRect = $("#scroll-content")[0].getBoundingClientRect();
+    let bkmkRect = selectedBkmk.getBoundingClientRect();
+    let {height} = this._dlgElt[0].getBoundingClientRect();
+    let cntTopThird = cntRect.top + Math.floor(cntRect.height / 3);
+    let cntBotThird = cntRect.bottom - Math.ceil(cntRect.height / 3);
+    let bkmkTop = Math.ceil(bkmkRect.top);
+
+    if (bkmkTop >= cntTopThird && bkmkTop < cntBotThird) {
+      this._dlgElt.css({top: `${Math.ceil((cntRect.height - height) / 2)}px`});
+    }
+    else if (bkmkTop >= cntBotThird) {
+      this._dlgElt.css({top: `${Math.floor(cntBotThird) - 64}px`});
+    }
+    else {
+      this._dlgElt.css({top: "88px"});
+    }
+
     browser.runtime.sendMessage({id: "start-edit-bookmark"});
   };
+
   gRenameDlg.onAccept = async function ()
   {
     let textarea = this.find("#new-link-name")[0];
