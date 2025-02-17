@@ -1051,6 +1051,15 @@ function initContextMenu()
       {
         let mnu = aOptions.$menu;
         mnu[0].focus();
+      },
+
+      show(aOptions)
+      {
+        // Prevent this context menu from appearing when SHIFT+F10 is pressed.
+        if (whatInput.ask() == "keyboard") {
+          return false;
+        }
+        return true;
       }
     },
 
