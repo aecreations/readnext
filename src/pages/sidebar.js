@@ -1005,9 +1005,6 @@ function initDialogs()
       gCustomizeDlg.showModal();
     });
 
-    // Initial checked item
-    $("#cmd-show-all").addClass("context-menu-icon-checked");
-
     this._dlgElt.on("mouseenter", aEvent => {
       let focusedBtn = this._dlgElt.find("button:focus");
       if (!focusedBtn) {
@@ -1019,7 +1016,7 @@ function initDialogs()
       this._lastFocusedBtn = focusedBtn;
 
     }).on("mouseleave", aEvent => {
-      let mnuRect = this._dlgElt[0].getBoundingClientRect();
+      let {top, bottom} = this._dlgElt[0].getBoundingClientRect();
       let btns = this._dlgElt.find("button:visible");
       let btnRects = [];
       for (let btn of btns) {
@@ -1027,13 +1024,13 @@ function initDialogs()
       }
 
       // Hovered over first item in command palette
-      if (aEvent.clientY >= mnuRect.top - 8 && aEvent.clientY <= mnuRect.top + 32) {
+      if (aEvent.clientY >= top - 8 && aEvent.clientY <= top + 32) {
         let firstBtn = btns.get(0);
         firstBtn.focus();
         this._focusedIdx = 0;
       }
       // Hovered over last item in command palette
-      else if (aEvent.clientY >= mnuRect.bottom - 32 && aEvent.clientY <= mnuRect.bottom + 8) {
+      else if (aEvent.clientY >= bottom - 32 && aEvent.clientY <= bottom + 8) {
         let lastBtn = btns.get(btns.length - 1);
         lastBtn.focus();
         this._focusedIdx = btns.length - 1;
@@ -1055,12 +1052,11 @@ function initDialogs()
           // Hovered over separator or other whitespace in the command palette.
           // In this case, don't focus anything.
           this._focusedIdx = null;
-          this._lastFocusedBtn.blur();
+          this._lastFocusedBtn?.blur();
         }
       }
-    });
 
-    this._dlgElt.on("keydown", aEvent => {
+    }).on("keydown", aEvent => {
       let focusedBtn = this._dlgElt.find("button:focus");
       if (!focusedBtn) {
         warn("Read Next::sidebar.js: Nothing focused in the command palette");
@@ -1128,6 +1124,16 @@ function initDialogs()
       unreadLabel = browser.i18n.getMessage("mnuMrkUnread");
     }
     $("#cmd-mark-unread").text(unreadLabel);
+
+    // Initial checked item
+    if (gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD) {
+      $("#cmd-show-all").removeClass("context-menu-icon-checked");
+      $("#cmd-show-unread").addClass("context-menu-icon-checked");
+    }
+    else {
+      $("#cmd-show-all").addClass("context-menu-icon-checked");
+      $("#cmd-show-unread").removeClass("context-menu-icon-checked");
+    }
   };
 
   gCmdPalette.onShow = function ()
@@ -1140,7 +1146,26 @@ function initDialogs()
     firstBtn[0].focus();
     this._focusedIdx = 0;
 
+    // Vertically position command palette to be as close as possible to
+    // the selected reading list link.
+    let cntRect = $("#scroll-content")[0].getBoundingClientRect();
+    let bkmkRect = this.selectedBkmk.getBoundingClientRect();
+    let {height} = this._dlgElt[0].getBoundingClientRect();
+    let cntTopThird = cntRect.top + Math.floor(cntRect.height / 3);
+    let cntBotThird = cntRect.bottom - Math.ceil(cntRect.height / 3);
+    let bkmkTop = Math.ceil(bkmkRect.top);
+
+    if (bkmkTop >= cntTopThird && bkmkTop < cntBotThird) {
+      this._dlgElt.css({top: `${Math.ceil((cntRect.height - height) / 2)}px`});
+    }
+    else if (bkmkTop >= cntBotThird) {
+      this._dlgElt.css({top: `${Math.floor(cntRect.bottom) - height - 8}px`});
+    }
+    else {
+      this._dlgElt.css({top: "100px"});
+    }
   };
+
   gCmdPalette.onUnload = function ()
   {
     $("#lightbox-bkgrd-ovl").removeClass("cmd-palette-ovl").off("click.cmdPal");
