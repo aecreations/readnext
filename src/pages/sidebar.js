@@ -988,10 +988,25 @@ function initDialogs()
       this.close();
       gCmd.syncBookmarks(true);      
     });
+    $("#cmd-show-all").on("click", aEvent => {
+      this.close();
+      $("#filter-all").click();
+      $("#cmd-show-unread").removeClass("context-menu-icon-checked");
+      $("#cmd-show-all").addClass("context-menu-icon-checked");
+    });
+    $("#cmd-show-unread").on("click", aEvent => {
+      this.close();
+      $("#filter-unread").click();
+      $("#cmd-show-all").removeClass("context-menu-icon-checked");
+      $("#cmd-show-unread").addClass("context-menu-icon-checked");
+    });
     $("#cmd-customize").on("click", aEvent => {
       this.close();
       gCustomizeDlg.showModal();
     });
+
+    // Initial checked item
+    $("#cmd-show-all").addClass("context-menu-icon-checked");
 
     this._dlgElt.on("mouseenter", aEvent => {
       let focusedBtn = this._dlgElt.find("button:focus");
