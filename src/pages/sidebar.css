@@ -559,7 +559,7 @@ body[data-os="mac"] .lightbox .msgbox-icon {
 #rename-dlg {   
     top: 88px;
     --width: 200px;
-    --height: 150px;
+    --height: 164px;
 }
 
 #rename-dlg #new-link-name {
