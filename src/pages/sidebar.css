@@ -258,13 +258,13 @@ body[data-tbar-fix] #bookmark-filter > #filter-unread ~ label[for="filter-unread
 }
 
 .inline-msgbar.msgbar-warning {
-    background-color: #ffe900;
-    color: #3e2800;
+    background-color: #FFEBCD;
+    color: #15141a;
 }
 
 .inline-msgbar.msgbar-success {
-    background-color: #30e60b;
-    color: #003706;
+    background-color: #D8EEDC;
+    color: #15141a;
 }
 
 .inline-msgbar.msgbar-warning .inline-msgbar-icon {
@@ -274,7 +274,7 @@ body[data-tbar-fix] #bookmark-filter > #filter-unread ~ label[for="filter-unread
 }
 
 .inline-msgbar.msgbar-success .inline-msgbar-icon {
-    background-image: url("../img/check.png");
+    background-image: url("../img/check-filled.svg");
     background-size: contain;
     background-repeat: no-repeat;
 }
@@ -537,6 +537,10 @@ body[data-tbar-fix] #bookmark-filter > #filter-unread ~ label[for="filter-unread
     background-size: contain;
 }
 
+body[data-os="win"] .lightbox .msgbox-icon {
+    background-image: url("../img/alert-win.png");
+}
+
 body[data-os="mac"] .lightbox .msgbox-icon {
     background-image: url("../img/warning-64-mac.png");
 }
@@ -597,7 +601,7 @@ body[data-locale="uk"] #customize-dlg {
 
 #command-palette {
     top: 100px;
-    --width: 202px;
+    --width: 201px;
     --height: auto;
 
     margin-top: 1px;
