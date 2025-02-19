@@ -37,10 +37,11 @@ body {
 }
 
 h1 {
+    margin-left: 64px;
+    margin-bottom: 2px;
     font-size: 36px;
-    font-weight: 200;
+    font-weight: 600;
     letter-spacing: -0.25px;
-    margin-bottom: 8px;
 }
 
 h2 {
@@ -51,9 +52,9 @@ h2 {
 main {
     width: 640px;
     margin: 24px auto 24px auto;
-    padding: 24px;
+    padding: 10px 24px 24px 24px;
     border: 1px solid var(--color-main-border);
-    border-radius: 2px;
+    border-radius: 4px;
     box-shadow: 0 0 8px 2px var(--color-main-border-shadow);
     background-color: var(--color-main-bkgd);
 }
@@ -81,17 +82,18 @@ button {
 
 #ext-icon {
     float: left;
-    margin-right: 14px;
-    margin-bottom: 52px;
     width: 48px;
     height: 48px;
+    margin-top: 12px;
+    margin-right: 14px;
 }
 
 #ext-desc {
-    margin-top: 0px;
-    font-size: 17px;
-    font-weight: 400;
-    color: var(--color-secondary-text);
+    margin-top: 0;
+    margin-left: 64px;
+    font-size: 20px;
+    font-weight: 200;
+    letter-spacing: -0.25px;
 }
 
 #dlg-content {
