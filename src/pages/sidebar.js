@@ -432,6 +432,7 @@ let gSearchBox = {
 $(async () => {
   let {os} = await browser.runtime.getPlatformInfo();
   gOS = document.body.dataset.os = os;
+  aeVisual.init(os);
 
   // UI fix for Firefox 132 and newer.
   let {version} = await browser.runtime.getBrowserInfo();
@@ -482,9 +483,13 @@ $(async () => {
   $("#toolbar")[0].ariaLabel = browser.i18n.getMessage("lblTbar");
   $("#search-bar")[0].ariaLabel = browser.i18n.getMessage("lblSrchBar");
 
-  // Preload toolbar button icon
-  let addLinkIco = new Image();
-  addLinkIco.src = "../img/add-link-hover.svg";
+  // Preload toolbar button and message box icons.
+  aeVisual.preloadLafImages();
+  aeVisual.preloadMsgBoxIcons();
+  aeVisual.cacheIcons(
+    "add-link-hover.svg",
+    "add-link-dk.svg"
+  );
 
   if (gPrefs.defDlgBtnFollowsFocus) {
     aeInterxn.initDialogButtonFocusHandlers();

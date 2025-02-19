@@ -11,11 +11,12 @@ let gDialogs = {};
 
 // Page initialization
 $(async () => {
-  let platform = await browser.runtime.getPlatformInfo();
-  document.body.dataset.os = platform.os;
-  aeInterxn.init(platform.os);
+  let {os} = await browser.runtime.getPlatformInfo();
+  document.body.dataset.os = os;
+  aeInterxn.init(os);
+  aeVisual.init(os);
 
-  if (platform.os == "win") {
+  if (os == "win") {
     document.title = browser.i18n.getMessage("prefsTitleWin");
     $("#pref-hdg").text(browser.i18n.getMessage("prefsHdgWin"));
   }
@@ -99,6 +100,11 @@ $(async () => {
     gotoURL(aEvent.target.href);
   });
 
+  aeVisual.preloadMsgBoxIcons();
+  aeVisual.cacheIcons(
+    "dropbox.svg",
+    "success.svg"
+  );
   gIsInitialized = true;
 
   // Check if the cloud file host connection wizard should be opened automatically.
