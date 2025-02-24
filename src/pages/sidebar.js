@@ -2067,8 +2067,20 @@ $("#add-link, #add-link-cta").on("click", async (aEvent) => {
 
 
 $("#setup-sync").on("click", async (aEvent) => {
-  await browser.runtime.sendMessage({id: "enable-auto-open-connect-wiz"});
-  browser.runtime.openOptionsPage();
+  let extPrefsPg;
+  try {
+    extPrefsPg = await browser.runtime.sendMessage({id: "ping-ext-prefs-pg"});
+  }
+  catch {}
+
+  if (extPrefsPg) {
+    browser.tabs.update(extPrefsPg.tabID, {active: true});
+    browser.runtime.sendMessage({id: "open-connection-wiz"});
+  }
+  else {
+    await browser.runtime.sendMessage({id: "enable-auto-open-connect-wiz"});
+    browser.runtime.openOptionsPage();
+  }
 });
 
 

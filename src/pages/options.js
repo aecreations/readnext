@@ -7,6 +7,7 @@
 
 let gIsInitialized = false;
 let gDialogs = {};
+let gTabID;
 
 
 // Page initialization
@@ -27,6 +28,9 @@ $(async () => {
 
   let lang = browser.i18n.getUILanguage();
   document.body.dataset.locale = lang;
+
+  let currTab = await browser.tabs.getCurrent();
+  gTabID = currTab.id;
 
   $("#close-tab-after-add-desc").html(sanitizeHTML(browser.i18n.getMessage("closeTabAfterAddDesc")));
 
@@ -449,7 +453,10 @@ browser.runtime.onMessage.addListener(aMessage => {
   
   switch (aMessage.id) {
   case "ping-ext-prefs-pg":
-    resp = {isExtPrefsPgOpen: true};
+    resp = {
+      isExtPrefsPgOpen: true,
+      tabID: gTabID,
+    };
     break;
     
   case "open-connection-wiz":
