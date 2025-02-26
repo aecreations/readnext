@@ -1138,7 +1138,7 @@ browser.menus.onClicked.addListener(async (aInfo, aTab) => {
     for (let i = 0; i < selectedTabs.length; i++) {
       let tab = selectedTabs[i];
 
-      if (isSupportedURL(tab.url)) {
+      if (isSupportedURL(tab.url) && !isRestrictedURL(tab.url)) {
         await prepareNewBookmark(tab.url, tab.title, tab);
       }
       else {
