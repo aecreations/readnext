@@ -201,6 +201,8 @@ button:-moz-focusring:not(:disabled) {
 }
 
 #sync-icon.nosync {
+    width: 60px;
+    margin-left: -4px;
     background-image: var(--url-no-sync-icon);
 }
 
