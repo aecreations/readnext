@@ -1915,8 +1915,17 @@ browser.runtime.onMessage.addListener(aMessage => {
     hideLoadingProgress();
 
     if (aMessage.bookmarks.length == 0) {
+      toggleSearchBar(false);
+      if (gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD) {
+        gSearchBox.reset();
+      }
+      else {
+        if (!gSearchBox.isSearchInProgress()) {
+          gSearchBox.reset();
+        }
+      }
       toggleEmptyMsg(true);
-      return;
+      break;
     }
 
     let unreadOnly = gReadingListFilter.getSelectedFilter() == gReadingListFilter.UNREAD;
