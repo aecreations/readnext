@@ -16,6 +16,7 @@
     --color-main-toolbar-border: transparent;
     --color-toolbar-btn-hover-bkgd: #ccc;
     --color-toolbar-btn-active-bkgd: #b1b1b3;
+    --color-toolbar-btn-checked-focused: #cbe8f6;
     --color-msgbars-bkgd: white;
     --color-bkmk-hover-bkgd: #ddd;
     --color-bkmk-hover-text: #0c0c0d;
@@ -35,6 +36,7 @@
 	--color-main-toolbar-text: #f9f9fa;
 	--color-toolbar-btn-hover-bkgd: #606060;
 	--color-toolbar-btn-active-bkgd: #737373;
+	--color-toolbar-btn-checked-focused: #0a84ff;
 	--color-msgbars-bkgd: #38383d;
 	--color-bkmk-hover-bkgd: #4a4a4f;
 	--color-bkmk-hover-text: #fff;
@@ -156,6 +158,11 @@ body[data-locale="uk"] #bookmark-filter {
 #bookmark-filter > #filter-all:checked ~ label[for="filter-all"],
 #bookmark-filter > #filter-unread:checked ~ label[for="filter-unread"] {
     background-color: var(--color-btn-bkgd);
+}
+
+#bookmark-filter > #filter-all:checked:-moz-focusring ~ label[for="filter-all"],
+#bookmark-filter > #filter-unread:checked:-moz-focusring ~ label[for="filter-unread"] {
+    background-color: var(--color-toolbar-btn-checked-focused);
 }
 
 #bookmark-filter > #filter-all ~ label[for="filter-all"] {
