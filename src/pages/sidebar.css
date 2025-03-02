@@ -599,7 +599,7 @@ body[data-locale="uk"] #customize-dlg {
     width: 152px;
 }
 
-#command-palette {
+#keybd-cxt-menu {
     top: 100px;
     --width: 201px;
     --height: auto;
@@ -614,7 +614,7 @@ body[data-locale="uk"] #customize-dlg {
     background-color: var(--color-cxtmenu-bkgd);
 }
 
-#command-palette button {
+#keybd-cxt-menu button {
     width: 100%;
     height: 24px;
     padding-left: 24px;
@@ -629,32 +629,32 @@ body[data-locale="uk"] #customize-dlg {
     text-align: left;
 }
 
-#command-palette button:hover {
+#keybd-cxt-menu button:hover {
     background-color: var(--color-cxtmenu-menuitem-hover-bkgd);
     color: var(--color-cxtmenu-menuitem-hover-text);  
 }
 
-#command-palette button:active {
+#keybd-cxt-menu button:active {
     border: none !important;
     background-color: var(--color-cxtmenu-menuitem-active-bkgd);
 }
 
-#command-palette button:focus-visible {
+#keybd-cxt-menu button:focus-visible {
     box-shadow: none;
     background-color: var(--color-cxtmenu-menuitem-hover-bkgd);
     color: var(--color-cxtmenu-menuitem-hover-text);
 }
 
-#command-palette .row {
+#keybd-cxt-menu .row {
     margin-bottom: 0;
 }
 
-#command-palette .cmd-sep {
+#keybd-cxt-menu .cmd-sep {
     margin-top: 6px;
     margin-bottom: 6px;
     border-bottom: 1px solid var(--color-cxtmenu-separator);
 }
 
-.cmd-palette-ovl {
+.keyb-cxt-mnu-ovl {
     background-color: transparent;
 }

@@ -9,7 +9,7 @@ const TOOLBAR_HEIGHT = 28;
 let gOS;
 let gWndID;
 let gPrefs;
-let gCustomizeDlg, gRenameDlg, gRenameOtherWndMsgBox, gCmdPalette;
+let gCustomizeDlg, gRenameDlg, gRenameOtherWndMsgBox, gKeybdCxtMenu;
 let gKeybSelectedIdx = null;
 let gPrefersColorSchemeMedQry;
 let gMsgBarTimerID = null;
@@ -967,14 +967,14 @@ function initDialogs()
     });
   };
 
-  gCmdPalette = new aeDialog("#command-palette");
-  gCmdPalette.setProps({
+  gKeybdCxtMenu = new aeDialog("#keybd-cxt-menu");
+  gKeybdCxtMenu.setProps({
     _focusedIdx: null,
     _lastFocusedBtn: null,
     selectedBkmk: null,
   });
   
-  gCmdPalette.onFirstInit = function ()
+  gKeybdCxtMenu.onFirstInit = function ()
   {
     $("#cmd-open").on("click", aEvent => {
       this.close();
@@ -1039,7 +1039,7 @@ function initDialogs()
     this._dlgElt.on("mouseenter", aEvent => {
       let focusedBtn = this._dlgElt.find("button:focus");
       if (!focusedBtn) {
-        warn("Read Next::sidebar.js: Nothing focused in the command palette");
+        warn("Read Next::sidebar.js: Nothing focused in the keyboard-activated context menu");
         return;
       }
       
@@ -1054,13 +1054,13 @@ function initDialogs()
         btnRects.push(btn.getBoundingClientRect());
       }
 
-      // Hovered over first item in command palette
+      // Hovered over first item in context menu
       if (aEvent.clientY >= top - 8 && aEvent.clientY <= top + 32) {
         let firstBtn = btns.get(0);
         firstBtn.focus();
         this._focusedIdx = 0;
       }
-      // Hovered over last item in command palette
+      // Hovered over last item in context menu
       else if (aEvent.clientY >= bottom - 32 && aEvent.clientY <= bottom + 8) {
         let lastBtn = btns.get(btns.length - 1);
         lastBtn.focus();
@@ -1080,7 +1080,7 @@ function initDialogs()
         }
 
         if (!selected) {
-          // Hovered over separator or other whitespace in the command palette.
+          // Hovered over separator or other whitespace in the context menu.
           // In this case, don't focus anything.
           this._focusedIdx = null;
           this._lastFocusedBtn?.blur();
@@ -1090,7 +1090,7 @@ function initDialogs()
     }).on("keydown", aEvent => {
       let focusedBtn = this._dlgElt.find("button:focus");
       if (!focusedBtn) {
-        warn("Read Next::sidebar.js: Nothing focused in the command palette");
+        warn("Read Next::sidebar.js: Nothing focused in the keyboard-activated context menu");
         return;
       }
 
@@ -1121,7 +1121,7 @@ function initDialogs()
     });
   };
 
-  gCmdPalette.onInit = function ()
+  gKeybdCxtMenu.onInit = function ()
   {
     // Show or hide menu items
     if (gPrefs.linkClickAction == aeConst.OPEN_LINK_IN_NEW_TAB) {
@@ -1167,9 +1167,9 @@ function initDialogs()
     }
   };
 
-  gCmdPalette.onShow = function ()
+  gKeybdCxtMenu.onShow = function ()
   {
-    $("#lightbox-bkgrd-ovl").addClass("cmd-palette-ovl").on("click.cmdPal", aEvent => {
+    $("#lightbox-bkgrd-ovl").addClass("keyb-cxt-mnu-ovl").on("click.keybCxtMnu", aEvent => {
       this.close();
     });
 
@@ -1177,7 +1177,7 @@ function initDialogs()
     firstBtn[0].focus();
     this._focusedIdx = 0;
 
-    // Vertically position command palette to be as close as possible to
+    // Vertically position context menu to be as close as possible to
     // the selected reading list link.
     let cntRect = $("#scroll-content")[0].getBoundingClientRect();
     let bkmkRect = this.selectedBkmk.getBoundingClientRect();
@@ -1197,9 +1197,9 @@ function initDialogs()
     }
   };
 
-  gCmdPalette.onUnload = function ()
+  gKeybdCxtMenu.onUnload = function ()
   {
-    $("#lightbox-bkgrd-ovl").removeClass("cmd-palette-ovl").off("click.cmdPal");
+    $("#lightbox-bkgrd-ovl").removeClass("keyb-cxt-mnu-ovl").off("click.keybCxtMnu");
     this._focusedIdx = null;
   };
 }
@@ -2246,16 +2246,16 @@ $(window).on("keydown", aEvent => {
   else if (aEvent.key == "Escape" && aeDialog.isOpen()) {
     aeDialog.cancelDlgs();
 
-    // The command palette doesn't have OK or Cancel buttons.
-    if (gCmdPalette.isOpen()) {
-      gCmdPalette.close();
+    // The keyboard-activated context menu doesn't have OK or Cancel buttons.
+    if (gKeybdCxtMenu.isOpen()) {
+      gKeybdCxtMenu.close();
     }
   }
   else if (aEvent.key == "F10" && aEvent.shiftKey) {
     let focusedBkmk = $(".reading-list-item.focused");
     if (focusedBkmk.length == 1) {
-      gCmdPalette.selectedBkmk = focusedBkmk[0];
-      gCmdPalette.showModal();
+      gKeybdCxtMenu.selectedBkmk = focusedBkmk[0];
+      gKeybdCxtMenu.showModal();
     }
   }
 });
