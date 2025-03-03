@@ -24,6 +24,7 @@
     --color-about-btn: black;
     --url-bkgd-img: url("../img/bkgd.png");
     --url-no-sync-icon: url("../img/syncReadingList.svg");
+    --url-sync-err-icon: url("../img/syncReadingListErr.svg");
     --url-add-link-icon: url("../img/bookmark.svg");
 }
 
@@ -45,6 +46,7 @@
 	--color-about-btn: #f9f9fa;
 	--url-bkgd-img: none;
 	--url-no-sync-icon: url("../img/syncReadingList-dk.svg");
+	--url-sync-err-icon: url("../img/syncReadingListErr-dk.svg");
 	--url-add-link-icon: url("../img/bookmark-dk.svg");
     }
 }
@@ -200,24 +202,18 @@ button:-moz-focusring:not(:disabled) {
     background-repeat: no-repeat;
 }
 
-#sync-icon.nosync {
+#sync-icon.nosync,
+#sync-icon.conn-error {
     width: 60px;
-    margin-left: -4px;
+    margin-left: -4px;    
+}
+
+#sync-icon.nosync {
     background-image: var(--url-no-sync-icon);
 }
 
 #sync-icon.conn-error {
-    background-image: url("../img/warning-64.png");
-}
-
-body[data-os="win"] #sync-icon.conn-error {
-    width: 48px;
-    height: 48px;
-    background-image: url("../img/alert-win.png");
-}
-
-body[data-os="mac"] #sync-icon.conn-error {
-    background-image: url("../img/warning-64-mac.png");
+    background-image: var(--url-sync-err-icon);
 }
 
 #sync-status {
