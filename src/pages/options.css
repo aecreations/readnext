@@ -202,13 +202,9 @@ button:-moz-focusring:not(:disabled) {
     background-repeat: no-repeat;
 }
 
-#sync-icon.nosync,
-#sync-icon.conn-error {
+#sync-icon.nosync {
     width: 60px;
     margin-left: -4px;    
-}
-
-#sync-icon.nosync {
     background-image: var(--url-no-sync-icon);
 }
 

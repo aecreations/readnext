@@ -311,7 +311,7 @@ async function showSyncStatus(aPrefs)
     catch (e) {
       log("Read Next::options.js: showSyncStatus(): Error returned from inner helper function getFileHostUsr():\n" + e);
       
-      $("#sync-icon").css({backgroundImage: ""}).addClass("conn-error");
+      $("#sync-icon").css({backgroundImage: ""}).removeClass().addClass("conn-error");
       $("#sync-status").addClass("warning");
 
       // Need to check error type this way, because the error object type info
