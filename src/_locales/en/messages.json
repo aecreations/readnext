@@ -84,17 +84,37 @@
 
   "renameBkmkCxt": {
     "message": "Rename…",
-    "description": "Context menu item for renaming a reading list item; also used for the rename dialog heading (EXPERIMENTAL FEATURE)"
+    "description": "Context menu item for renaming a reading list item"
   },
 
   "renameBkmk": {
     "message": "Rename",
-    "description": "Rename dialog heading (EXPERIMENTAL FEATURE)"
+    "description": "Rename dialog heading"
+  },
+
+  "renameOtherWnd": {
+    "message": "Renaming a link can only be done in one browser window at a time.",
+    "description": "Message box in the reading list sidebar that appears when attempting to rename a link while the same action is in progress in another window"
+  },
+
+  "btnSwitchWnd": {
+    "message": "Switch Window",
+    "description": "Button in the rename link message box that sends user to the browser window where the same action is in progress"
   },
 
   "errAddBkmk": {
     "message": "This page can't be added to Read Next.",
     "description": "Error notification that appears when attempting to add an unsupported URL to the reading list"
+  },
+
+  "lblTbar": {
+    "message": "Reading List Toolbar",
+    "description": "ARIA label for the toolbar in the reading list sidebar"
+  },
+
+  "lblSrchBar": {
+    "message": "Search Bar",
+    "description": "ARIA label for the search bar in the reading list sidebar"
   },
 
   "addLink": {
@@ -104,12 +124,22 @@
 
   "filterAll": {
     "message": "All",
-    "description": "Reading list filter option"
+    "description": "Reading list filter option in the sidebar toolbar"
   },
 
   "filterUnread": {
     "message": "Unread",
-    "description": "Reading list filter option"
+    "description": "Reading list filter option in the sidebar toolbar"
+  },
+
+  "cxtMnuFltrAll": {
+    "message": "Show All Links",
+    "description": "Reading list filter option in the sidebar context menu"
+  },
+
+  "cxtMnuFltrUnread": {
+    "message": "Show Unread Links Only",
+    "description": "Reading list filter option in the sidebar context menu"
   },
 
   "srchBoxHint": {
@@ -133,19 +163,23 @@
   },
 
   "noUnread": {
-    "message": "No unread items."
+    "message": "No unread items.",
+    "description": "Message in the reading list sidebar"
   },
 
   "noItems": {
-    "message": "No items found."
+    "message": "No items found.",
+    "description": "Message in the reading list sidebar"
   },
 
   "setupSync": {
-    "message": "Set Up Sync"
+    "message": "Set Up Sync",
+    "description": "Secondary call-to-action button in the sidebar when showing welcome banner"
   },
 
   "mnuOpenNewTab": {
-    "message": "Open In New Tab"
+    "message": "Open In New Tab",
+    "description": "Context menu item in reading list sidebar for opening link in a new browser tab"
   },
 
   "mnuOpenCurrTab": {
@@ -159,23 +193,28 @@
   },
   
   "mnuOpenNewWnd": {
-    "message": "Open In New Window"
+    "message": "Open In New Window",
+    "description": "Context menu item in reading list sidebar"
   },
 
   "mnuOpenNewPrvWnd": {
-    "message": "Open In New Private Window"
+    "message": "Open In New Private Window",
+    "description": "Context menu item in reading list sidebar"
   },
 
   "mnuMrkRead": {
-    "message": "Mark As Read"
+    "message": "Mark As Read",
+    "description": "Context menu item in reading list sidebar"
   },
 
   "mnuMrkUnread": {
-    "message": "Mark As Unread"
+    "message": "Mark As Unread",
+    "description": "Context menu item in reading list sidebar"
   },
 
   "mnuSyncNow": {
-    "message": "Sync Now"
+    "message": "Sync Now",
+    "description": "Context menu item in reading list sidebar - only appears if syncing to cloud file host is turned on"
   },
 
   "reauthzNotifcn": {
@@ -189,7 +228,8 @@
   },
 
   "btnReauthz": {
-    "message": "Reconnect"
+    "message": "Reconnect",
+    "description": "Button label for reconnecting to the cloud file host"
   },
 
   "mnuCustz": {
@@ -238,15 +278,18 @@
   },
 
   "btnConnect": {
-    "message": "Connect…"
+    "message": "Connect…",
+    "description": "Button in extension preferences for connecting to a cloud file host to sync the reading list"
   },
 
   "btnDisconnect": {
-    "message": "Disconnect"
+    "message": "Disconnect",
+    "description": "Button in extension preferences for turning off reading list sync"
   },
 
   "noSync": {
-    "message": "Synchronize your reading list to the cloud using Dropbox."
+    "message": "Synchronize your reading list to the cloud using Dropbox.",
+    "description": "Message in the extension preferences page when reading list sync is turned off"
   },
 
   "connectedTo": {
@@ -270,11 +313,13 @@
   },
 
   "connWizTitNetErr": {
-    "message": "Unable to Connect"
+    "message": "Unable to Connect",
+    "description": "Error message that appears in the cloud file service connection wizard"
   },
 
   "wizAuthzNetErr": {
-    "message": "Read Next needs to connect to the network. Check your network connection, or try again later."
+    "message": "Read Next needs to connect to the network. Check your network connection, or try again later.",
+    "description": "Error message that appears in the cloud file service connection wizard"
   },
 
   "wizAuthzInstr1": {
@@ -283,7 +328,8 @@
   },
 
   "wizAuthzInstr2": {
-    "message": "Make sure to select the option to grant access to your cloud drive.  This will allow Read Next to sync your reading list."
+    "message": "Make sure to select the option to grant access to your cloud drive.  This will allow Read Next to sync your reading list.",
+    "description": "User informational message that appears in the cloud file service connection wizard"
   },
 
   "wizAuthzInterrupt": {
@@ -297,7 +343,8 @@
   },
 
   "wizSetupRem": {
-    "message": "Repeat this setup on your other devices where you want your reading list synced."
+    "message": "Repeat this setup on your other devices where you want your reading list synced.",
+    "description": "User informational message that appears in the cloud file service connection wizard"
   },
 
   "disconnTitle": {
@@ -306,11 +353,13 @@
   },
 
   "disconnConf": {
-    "message": "Your reading list will still be saved to your device, but it will no longer sync to the cloud."
+    "message": "Your reading list will still be saved to your device, but it will no longer sync to the cloud.",
+    "description": "Message box that appears when user turns off reading list sync from extension preferences"
   },
 
   "btnDisconn": {
-    "message": "Disconnect"
+    "message": "Disconnect",
+    "description": "Button label for disconnecting from cloud file service"
   },
 
   "errNoConn": {
@@ -324,11 +373,13 @@
   },
 
   "prefToolbar": {
-    "message": "Show toolbar"
+    "message": "Show toolbar",
+    "description": "Checkbox option in the Customize dialog in the reading list sidebar"
   },
 
   "prefSrchBar": {
-    "message": "Show search bar"
+    "message": "Show search bar",
+    "description": "Checkbox option in the Customize dialog in the reading list sidebar"
   },
 
   "prefsHdgInteg": {
@@ -337,36 +388,43 @@
   },
 
   "prefAddrBarBtn": {
-    "message": "Show address bar button"
+    "message": "Show address bar button",
+    "description": "Checkbox option in the extension preferences page"
   },
 
   "prefCxtMenuBtn": {
-    "message": "Show menu item in the context menu"
-  },
-
-  "prefHdgSidebar": {
-    "message": "Sidebar",
-    "description": "Section heading in extension preferences page"
+    "message": "Show menu item in the context menu",
+    "description": "Checkbox option in the extension preferences page"
   },
 
   "prefAutoDel": {
-    "message": "Delete link when read"
+    "message": "Delete link when read",
+    "description": "Checkbox option in the extension preferences page"
   },
 
   "prefUnreadBold": {
-    "message": "Show unread links in <b>bold</b>"
+    "message": "Show unread links in <b>bold</b>",
+    "description": "Checkbox option in the Customize dialog in the reading list sidebar"
   },
 
   "prefHdgActions": {
-    "message": "Actions"
+    "message": "Actions",
+    "description": "Section heading in extension preferences page"
+  },
+
+  "prefHiliteNew": {
+    "message": "Highlight new link in sidebar when added",
+    "description": "Checkbox option in the extension preferences page"
   },
 
   "prefCloseTabAfterAdd": {
-    "message": "Close tab after adding to Read Next"
+    "message": "Close tab after adding to Read Next",
+    "description": "Checkbox option in the extension preferences page"
   },
 
   "prefCloseSidebar": {
-    "message": "Close sidebar after opening link"
+    "message": "Close sidebar after opening link",
+    "description": "Checkbox option in the extension preferences page"
   },
 
   "prefClickLinkHdg": {
@@ -385,7 +443,8 @@
   },
 
   "closeTabAfterAddDesc": {
-    "message": "You can also do this by right-clicking <span id=\"add-link-icon\" class=\"inline-icon\"></span> in the address bar and then selecting “Add and Close Tab.”"
+    "message": "You can also do this by right-clicking <span id=\"add-link-icon\" class=\"inline-icon\"></span> in the address bar and then selecting “Add and Close Tab.”",
+    "description": "Description of the checkbox option “Close tab after adding to Read Next” in extension preferences"
   },
 
   "mnuCloseTabAfterAdd": {
@@ -399,7 +458,8 @@
   },
 
   "aboutBtn": {
-    "message": "About…"
+    "message": "About…",
+    "description": "Button label for showing the About dialog in extension preferences page"
   },
 
   "aboutExtVer": {
@@ -408,19 +468,23 @@
   },
 
   "aboutAuthor": {
-    "message": "Created by AE Creations."
+    "message": "Created by AE Creations.",
+    "description": "About dialog"
   },
   
   "aboutHomePgLink": {
-    "message": "Visit website"
+    "message": "Visit website",
+    "description": "About dialog"
   },
 
   "aboutLicLink": {
-    "message": "License information"
+    "message": "License information",
+    "description": "About dialog"
   },
 
   "aboutTrans": {
-    "message": "Localizations contributed by Crowdin translators."
+    "message": "Localizations contributed by Crowdin translators.",
+    "description": "About dialog"
   },
 
   "aboutContribHdg": {
@@ -429,7 +493,8 @@
   },
 
   "aboutDonate": {
-    "message": "Make a donation"
+    "message": "Make a donation",
+    "description": "About dialog"
   },
 
   "aboutContribConj": {
@@ -438,7 +503,8 @@
   },
 
   "aboutL10n": {
-    "message": "add a translation."
+    "message": "add a translation.",
+    "description": "About dialog"
   },
 
   "upgradeNotifcn": {
@@ -462,38 +528,52 @@
   },
 
   "whatsNew1": {
-    "message": "Now available in Chinese (Simplified)",
+    "message": "Links can now be renamed",
     "description": "Description of an enhancement or fix in the new version of Read Next"
   },
 
   "whatsNew2": {
-    "message": "The “Open In Current Tab” menu item in the reading list context menu has been renamed “Open”",
+    "message": "Improvements to navigation and scrolling of the reading list using the keyboard",
+    "description": "Description of an enhancement or fix in the new version of Read Next"
+  },
+
+  "whatsNew3": {
+    "message": "New links are now highlighted in the sidebar when they’re added",
+    "description": "Description of an enhancement or fix in the new version of Read Next"
+  },
+
+  "whatsNew4": {
+    "message": "When showing only unread links in the reading list, links will now be automatically shown or hidden as their unread status changes",
     "description": "Description of an enhancement or fix in the new version of Read Next"
   },
 
   "contribHdg": {
-    "message": "Contribute",
+    "message": "Contribute!",
     "description": "Contribution CTA in the What's New page"
   },
 
   "contribCTA": {
     "message": "Support the development of Read Next by <a href=\"$1\">making a donation</a>.",
-    "description": "Call to action message to make donation"
+    "description": "Call to action message in the What's New page, encouraging users to make a donation"
   },
 
   "linkBlog": {
-    "message": "AE Creations Blog"
+    "message": "AE Creations Blog",
+    "description": "Link in bottom of What's New page"
   },
 
   "linkAMO": {
-    "message": "Firefox Add-ons Page"
+    "message": "Firefox Add-ons Page",
+    "description": "Link in bottom of What's New page"
   },
 
   "linkForum": {
-    "message": "Help and Support Forums"
+    "message": "Help and Support Forums",
+    "description": "Link in bottom of What's New page"
   },
 
   "closeWelcomePg": {
-    "message": "Close This Page"
+    "message": "Close This Page",
+    "description": "Link in bottom of What's New page"
   }
 }

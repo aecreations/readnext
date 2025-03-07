@@ -7,14 +7,17 @@
 
 let gIsInitialized = false;
 let gDialogs = {};
+let gTabID;
 
 
 // Page initialization
 $(async () => {
-  let platform = await browser.runtime.getPlatformInfo();
-  document.body.dataset.os = platform.os;
+  let {os} = await browser.runtime.getPlatformInfo();
+  document.body.dataset.os = os;
+  aeInterxn.init(os);
+  aeVisual.init(os);
 
-  if (platform.os == "win") {
+  if (os == "win") {
     document.title = browser.i18n.getMessage("prefsTitleWin");
     $("#pref-hdg").text(browser.i18n.getMessage("prefsHdgWin"));
   }
@@ -25,6 +28,9 @@ $(async () => {
 
   let lang = browser.i18n.getUILanguage();
   document.body.dataset.locale = lang;
+
+  let currTab = await browser.tabs.getCurrent();
+  gTabID = currTab.id;
 
   $("#close-tab-after-add-desc").html(sanitizeHTML(browser.i18n.getMessage("closeTabAfterAddDesc")));
 
@@ -37,11 +43,6 @@ $(async () => {
   if (! prefs.showPageAction) {
     $("#close-tab-after-add-desc").hide();
   }
-
-  browser.runtime.sendMessage({
-    id: "options-pg-status",
-    isOpen: true,
-  });
 
   $("#auto-delete-when-read").prop("checked", prefs.deleteReadLinks).on("click", aEvent => {
     aePrefs.setPrefs({deleteReadLinks: aEvent.target.checked});
@@ -71,6 +72,10 @@ $(async () => {
     aePrefs.setPrefs({closeTabAfterAdd: aEvent.target.checked});
   });
 
+  $("#hilite-new-links").prop("checked", prefs.highlightNewLink).on("click", aEvent => {
+    aePrefs.setPrefs({highlightNewLink: aEvent.target.checked});
+  });
+
   $("#auto-close-sidebar").prop("checked", prefs.closeSidebarAfterNav).on("click", aEvent => {
     aePrefs.setPrefs({closeSidebarAfterNav: aEvent.target.checked});
   });
@@ -83,6 +88,9 @@ $(async () => {
   });
 
   initDialogs();
+  if (prefs.defDlgBtnFollowsFocus) {
+    aeInterxn.initDialogButtonFocusHandlers();
+  }
 
   // Initialize static UI strings for user contribution CTA in the about dialog.
   let usrContribCTA = $("#usr-contrib-cta");
@@ -91,11 +99,16 @@ $(async () => {
   usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-conj">${browser.i18n.getMessage("aboutContribConj")}</label>&nbsp;`));
   usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.L10N_URL}" class="hyperlink">${browser.i18n.getMessage("aboutL10n")}</a>`));
 
-  $(".hyperlink").click(aEvent => {
+  $(".hyperlink").on("click", aEvent => {
     aEvent.preventDefault();
     gotoURL(aEvent.target.href);
   });
 
+  aeVisual.preloadMsgBoxIcons();
+  aeVisual.cacheIcons(
+    "dropbox.svg",
+    "success.svg"
+  );
   gIsInitialized = true;
 
   // Check if the cloud file host connection wizard should be opened automatically.
@@ -124,15 +137,18 @@ function initDialogs()
 
     switch (aPageID) {
     case "authz-prologue":
+      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle1");
       this.find(".dlg-btns > .dlg-accept").addClass("default");
       $("#authz-instr").text(browser.i18n.getMessage("wizAuthzInstr1", fileHostName));
       break;
 
     case "authz-progress":
+      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle2");
       this.find(".dlg-btns > button").attr("disabled", "true");
       break;
 
     case "authz-success":
+      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle3");
       $("#authz-succs-msg").text(browser.i18n.getMessage("wizAuthzSuccs", fileHostName));
       btnAccept.removeAttr("disabled").text(browser.i18n.getMessage("btnClose"));
       btnCancel.hide();
@@ -140,12 +156,14 @@ function initDialogs()
       break;
 
     case "authz-retry":
+      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle1");
       $("#authz-interrupt").text(browser.i18n.getMessage("wizAuthzInterrupt", fileHostName));
       this.find(".dlg-btns > button").removeAttr("disabled");
       btnAccept.text(browser.i18n.getMessage("btnRetry"));
       break;
 
     case "authz-network-error":
+      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitNetErr");
       this.find(".dlg-btns > button").removeAttr("disabled");
       btnAccept.text(browser.i18n.getMessage("btnRetry"));
       break;
@@ -203,7 +221,7 @@ function initDialogs()
   gDialogs.disconnectConfirm = new aeDialog("#disconnect-dlg");
   gDialogs.disconnectConfirm.onFirstInit = function ()
   {
-    this.find(".dlg-btns > .dlg-btn-disconn").click(async (aEvent) => {
+    this.find(".dlg-btns > .dlg-btn-disconn").on("click", async (aEvent) => {
       let syncPrefs = {
         syncEnabled: false,
         syncBackend: null,
@@ -293,7 +311,7 @@ async function showSyncStatus(aPrefs)
     catch (e) {
       log("Read Next::options.js: showSyncStatus(): Error returned from inner helper function getFileHostUsr():\n" + e);
       
-      $("#sync-icon").css({backgroundImage: ""}).addClass("conn-error");
+      $("#sync-icon").css({backgroundImage: ""}).removeClass().addClass("conn-error");
       $("#sync-status").addClass("warning");
 
       // Need to check error type this way, because the error object type info
@@ -431,7 +449,16 @@ async function connectCloudFileSvc(aBackend)
 //
 
 browser.runtime.onMessage.addListener(aMessage => {
+  let resp;
+  
   switch (aMessage.id) {
+  case "ping-ext-prefs-pg":
+    resp = {
+      isExtPrefsPgOpen: true,
+      tabID: gTabID,
+    };
+    break;
+    
   case "open-connection-wiz":
     gDialogs.connectWiz.showModal();
     break;
@@ -447,6 +474,10 @@ browser.runtime.onMessage.addListener(aMessage => {
 
   default:
     break;
+  }
+
+  if (resp) {
+    return Promise.resolve(resp);
   }
 });
 
@@ -498,7 +529,7 @@ $(window).on("focus", async (aEvent) => {
 });
 
 
-$(window).keydown(aEvent => {
+$(window).on("keydown", aEvent => {
   if (aEvent.key == "Enter") {
     if (aeDialog.isOpen()) {
       if (aEvent.target.tagName == "BUTTON" && !aEvent.target.classList.contains("default")) {
@@ -533,14 +564,6 @@ $(document).on("contextmenu", aEvent => {
   if (aEvent.target.tagName != "INPUT" && aEvent.target.getAttribute("type") != "text") {
     aEvent.preventDefault();
   }
-});
-
-
-$(window).on("beforeunload", aEvent => {
-  browser.runtime.sendMessage({
-    id: "options-pg-status",
-    isOpen: false,
-  });
 });
 
 

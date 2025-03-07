@@ -8,7 +8,7 @@
 
 
 :root {
-    --color-bkgd: revert;
+    --color-bkgd: #fff;
     --color-main-border: #ccc;
     --color-main-bkgd: #fff;
     --color-main-border-shadow: #c8c8c8;
@@ -24,6 +24,7 @@
     --color-about-btn: black;
     --url-bkgd-img: url("../img/bkgd.png");
     --url-no-sync-icon: url("../img/syncReadingList.svg");
+    --url-sync-err-icon: url("../img/syncReadingListErr.svg");
     --url-add-link-icon: url("../img/bookmark.svg");
 }
 
@@ -45,6 +46,7 @@
 	--color-about-btn: #f9f9fa;
 	--url-bkgd-img: none;
 	--url-no-sync-icon: url("../img/syncReadingList-dk.svg");
+	--url-sync-err-icon: url("../img/syncReadingListErr-dk.svg");
 	--url-add-link-icon: url("../img/bookmark-dk.svg");
     }
 }
@@ -67,7 +69,7 @@ main {
     margin: 24px auto 0 auto;
     cursor: inherit;
     border: 1px solid var(--color-main-border);
-    border-radius: 2px;
+    border-radius: 4px;
     box-shadow: 0 0 8px 2px var(--color-main-border-shadow);
     background-color: var(--color-main-bkgd);
 }
@@ -88,6 +90,8 @@ body[data-os="mac"] main {
     order: 2;
     flex: 1 1 auto;
     border-left: 1px solid var(--color-about-btn-border);
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
     padding: 16px 16px 16px 16px;
     background-color: var(--color-pref-body);
 }
@@ -199,15 +203,13 @@ button:-moz-focusring:not(:disabled) {
 }
 
 #sync-icon.nosync {
+    width: 60px;
+    margin-left: -4px;    
     background-image: var(--url-no-sync-icon);
 }
 
 #sync-icon.conn-error {
-    background-image: url("../img/warning-64.png");
-}
-
-body[data-os="mac"] #sync-icon.conn-error {
-    background-image: url("../img/warning-64-mac.png");
+    background-image: var(--url-sync-err-icon);
 }
 
 #sync-status {
@@ -233,6 +235,7 @@ body[data-os="mac"] #sync-icon.conn-error {
     text-overflow: ellipsis;
 
     font-size: 13px;
+    background-color: transparent;
 }
 
 #sync-actions {
@@ -307,7 +310,7 @@ body[data-locale="uk"] #open-links-in-label {
     top: 64px;
     padding-left: 22px;
     padding-right: 22px;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 15px;
 }
 
@@ -401,6 +404,12 @@ body[data-os="mac"] #connect-dlg {
     background-image: url("../img/question-64.png");
 }
 
+body[data-os="win"] #connect-dlg #authz-retry > .wiz-icon {
+    width: 48px;
+    height: 48px;
+    background-image: url("../img/confirm-win.png");
+}
+
 body[data-os="mac"] #connect-dlg #authz-retry > .wiz-icon {
     background-image: url("../img/question-64-mac.png");
 }
@@ -410,6 +419,12 @@ body[data-os="mac"] #connect-dlg #authz-retry > .wiz-icon {
     width: 52px;
     height: 52px;
     background-image: url("../img/warning-64.png");
+}
+
+body[data-os="win"] #connect-dlg #authz-network-error > .wiz-icon {
+    width: 48px;
+    height: 48px;
+    background-image: url("../img/alert-win.png");
 }
 
 body[data-os="mac"] #connect-dlg #authz-network-error > .wiz-icon {
@@ -442,6 +457,11 @@ body[data-os="mac"] #connect-dlg #authz-network-error > .wiz-icon {
     background-image: url("../img/question-64.png");
     background-size: 52px 52px;
     background-repeat: no-repeat;
+}
+
+body[data-os="win"] #disconnect-dlg > .dlg-content > .msgbox-icon {
+    background-image: url("../img/confirm-win.png");
+    background-size: 48px 48px;
 }
 
 body[data-os="mac"] #disconnect-dlg > .dlg-content > .msgbox-icon {

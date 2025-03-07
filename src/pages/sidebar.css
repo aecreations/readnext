@@ -3,10 +3,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-@import url("../lib/contextMenu/jquery.contextMenu.min.css");
 @import url("../style/laf.css");
 @import url("../style/lightbox.css");
 @import url("../style/searchbox.css");
+@import url("../style/contextMenu.css");
 
 
 :root {
@@ -16,17 +16,12 @@
     --color-main-toolbar-border: transparent;
     --color-toolbar-btn-hover-bkgd: #ccc;
     --color-toolbar-btn-active-bkgd: #b1b1b3;
+    --color-toolbar-btn-checked-focused: #cbe8f6;
     --color-msgbars-bkgd: white;
     --color-bkmk-hover-bkgd: #ddd;
     --color-bkmk-hover-text: #0c0c0d;
     --color-bkmk-active-bkgd: #bbb;
-    --color-cxtmenu-bkgd: #fff;
-    --color-cxtmenu-border: #bebebe;
-    --color-cxtmenu-text: #2f2f2f;
-    --color-cxtmenu-menuitem-hover-bkgd: rgba(12, 12, 13, 0.2);
-    --color-cxtmenu-menuitem-hover-text: #0c0c0d;
-    --color-cxtmenu-menuitem-active-bkgd: rgba(12, 12, 13, 0.3);
-    --color-cxtmenu-separator: #e6e6e6;
+    --color-new-bkmk-bkgd: #54ffbd;
 
     --url-toolbar-btn-add-link: url("../img/add-link.svg");
     --url-toolbar-btn-add-link-hover: url("../img/add-link-hover.svg");
@@ -41,17 +36,12 @@
 	--color-main-toolbar-text: #f9f9fa;
 	--color-toolbar-btn-hover-bkgd: #606060;
 	--color-toolbar-btn-active-bkgd: #737373;
+	--color-toolbar-btn-checked-focused: #0a84ff;
 	--color-msgbars-bkgd: #38383d;
 	--color-bkmk-hover-bkgd: #4a4a4f;
 	--color-bkmk-hover-text: #fff;
 	--color-bkmk-active-bkgd: #606060;
-	--color-cxtmenu-bkgd: #4a4a4f;
-	--color-cxtmenu-border: #38383d;
-	--color-cxtmenu-text: #f9f9fa;
-	--color-cxtmenu-menuitem-active-bkgd: #737373;
-	--color-cxtmenu-menuitem-hover-bkgd: #606060;
-	--color-cxtmenu-menuitem-hover-text: #fff;
-	--color-cxtmenu-separator: #737373;
+	--color-new-bkmk-bkgd: #008787;
 
 	--url-toolbar-btn-add-link: url("../img/add-link-dk.svg");
 	--url-toolbar-btn-add-link-hover: url("../img/add-link-dk.svg");
@@ -170,6 +160,11 @@ body[data-locale="uk"] #bookmark-filter {
     background-color: var(--color-btn-bkgd);
 }
 
+#bookmark-filter > #filter-all:checked:-moz-focusring ~ label[for="filter-all"],
+#bookmark-filter > #filter-unread:checked:-moz-focusring ~ label[for="filter-unread"] {
+    background-color: var(--color-toolbar-btn-checked-focused);
+}
+
 #bookmark-filter > #filter-all ~ label[for="filter-all"] {
     border-radius: 3.5px 0 0 3.5px;
     margin-right: -2px; /* Not needed in Firefox 132+ */
@@ -270,13 +265,13 @@ body[data-tbar-fix] #bookmark-filter > #filter-unread ~ label[for="filter-unread
 }
 
 .inline-msgbar.msgbar-warning {
-    background-color: #ffe900;
-    color: #3e2800;
+    background-color: #FFEBCD;
+    color: #15141a;
 }
 
 .inline-msgbar.msgbar-success {
-    background-color: #30e60b;
-    color: #003706;
+    background-color: #D8EEDC;
+    color: #15141a;
 }
 
 .inline-msgbar.msgbar-warning .inline-msgbar-icon {
@@ -286,7 +281,7 @@ body[data-tbar-fix] #bookmark-filter > #filter-unread ~ label[for="filter-unread
 }
 
 .inline-msgbar.msgbar-success .inline-msgbar-icon {
-    background-image: url("../img/check.png");
+    background-image: url("../img/check-filled.svg");
     background-size: contain;
     background-repeat: no-repeat;
 }
@@ -418,17 +413,19 @@ body[data-tbar-fix] #bookmark-filter > #filter-unread ~ label[for="filter-unread
 }
 
 .reading-list-item {
-    min-height: 1em;
-    max-height: 3.15em;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
     overflow: hidden;
-    padding: 4px 8px 4px 8px;
+
+    padding: 3px 8px 3px 8px;
     border: none;
 
     font-size: 12px;
     font-weight: normal;
-    line-height: 1.3em;
-
     color: var(--color-default-text);
+
+    line-height: 1.4em;
 }
 
 .reading-list-item.unread {
@@ -436,34 +433,54 @@ body[data-tbar-fix] #bookmark-filter > #filter-unread ~ label[for="filter-unread
 }
 
 .reading-list-item.focused {
-    padding: 2px 6px 2px 6px;
+    padding: 1px 6px 1px 6px;
     border: 2px solid #45a1ff;
 }
 
 .reading-list-item:hover {
-    padding: 2px 6px 2px 6px;
+    padding: 1px 6px 1px 6px;
     border: 2px solid var(--color-bkmk-hover-bkgd);
     background-color: var(--color-bkmk-hover-bkgd);
     color: var(--color-bkmk-hover-text);
 }
 
 .reading-list-item.focused:hover {
-    padding: 2px 6px 2px 6px;
+    padding: 1px 6px 1px 6px;
     border: 2px solid #45a1ff;   
     background-color: var(--color-bkmk-hover-bkgd);
     color: var(--color-bkmk-hover-text);
 }
 
 .reading-list-item:active {
-    padding: 2px 6px 2px 6px;
+    padding: 1px 6px 1px 6px;
     border: 2px solid var(--color-bkmk-active-bkgd);
     background-color: var(--color-bkmk-active-bkgd);
 }
 
 .reading-list-item.focused:active {    
-    padding: 2px 6px 2px 6px;
+    padding: 1px 6px 1px 6px;
     border: 2px solid #45a1ff;   
     background-color: var(--color-bkmk-active-bkgd);
+}
+
+.reading-list-item.transient-highlight {
+    background-color: var(--color-new-bkmk-bkgd);
+    animation-name: fadeout;
+    animation-delay: 2s;
+    animation-duration: 5s;
+
+}
+
+@keyframes fadeout {
+    0% {
+	background-color: var(--color-new-bkmk-bkgd);
+    }
+    75% {
+	background-color: transparent;
+    }
+    100% {
+	background-color: transparent;
+    }
 }
 
 .reading-list-item-title {
@@ -476,43 +493,8 @@ body[data-tbar-fix] #bookmark-filter > #filter-unread ~ label[for="filter-unread
 }
 
 /* jQuery contextMenu CSS overrides */
-.context-menu-list {
-    border: 1px solid var(--color-cxtmenu-border);
-    background-color: var(--color-cxtmenu-bkgd);
-}
-
 .ae-menuitem {
-    padding-top: 4px;
-    padding-bottom: 4px;
-    font-size: 12px;
-    background-color: var(--color-cxtmenu-bkgd);
-    color: var(--color-cxtmenu-text);
-}
-
-body[data-os="mac"] .ae-menuitem {
-    letter-spacing: -0.3px;
-}
-
-.context-menu-item.context-menu-disabled {
-    background-color: var(--color-cxtmenu-bkgd);
-}
-
-.context-menu-disabled:hover {
-    background-color: transparent;
-}
-
-.ae-menuitem:active {
-    background-color: var(--color-cxtmenu-menuitem-active-bkgd) !important;
-}
-
-.context-menu-item.context-menu-hover {
-    background-color: var(--color-cxtmenu-menuitem-hover-bkgd);
-    color: var(--color-cxtmenu-menuitem-hover-text);
-    cursor: default;
-}
-
-.context-menu-separator {
-    border-bottom: 1px solid var(--color-cxtmenu-separator);
+    letter-spacing: -0.5px;
 }
 
 /* Sidebar dialogs */
@@ -546,10 +528,49 @@ body[data-os="mac"] .ae-menuitem {
     border-radius: 0;
 }
 
+.lightbox > .msgbox-content {
+    display: flex;
+    justify-content: flex-start;
+    flex-flow: column nowrap;
+}
+
+.lightbox .msgbox-icon {
+    width: 100%;
+    height: 50px;
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url("../img/warning-64.png");
+    background-size: contain;
+}
+
+body[data-os="win"] .lightbox .msgbox-icon {
+    background-image: url("../img/alert-win.png");
+}
+
+body[data-os="mac"] .lightbox .msgbox-icon {
+    background-image: url("../img/warning-64-mac.png");
+}
+
+.lightbox > .msgbox-content > p {
+    margin-bottom: 18px;
+}
+
+.lightbox.msgbox > .dlg-btns {
+    position: unset;
+    text-align: center;
+}
+
+.lightbox.msgbox > .dlg-btns > button {
+    width: 128px;
+    height: 28px;
+    margin-right: 0;
+}
+
 #rename-dlg {   
     top: 88px;
     --width: 200px;
-    --height: 150px;
+    --height: 164px;
 }
 
 #rename-dlg #new-link-name {
@@ -557,6 +578,16 @@ body[data-os="mac"] .ae-menuitem {
     padding: 2px;
     resize: none;
     font-size: 12px;
+}
+
+#rename-other-wnd-msgbox {
+    top: 88px;
+    --width: 200px;
+    --height: 216px;
+}
+
+#rename-other-wnd-msgbox #switch-wnd-btn {
+    margin-bottom: 8px;
 }
 
 #customize-dlg {
@@ -573,4 +604,64 @@ body[data-locale="uk"] #customize-dlg {
     margin-left: 22px;
     text-indent: -22px;
     width: 152px;
+}
+
+#keybd-cxt-menu {
+    top: 100px;
+    --width: 201px;
+    --height: auto;
+
+    margin-top: 1px;
+    margin-bottom: 1px;
+    padding: 6px 0 6px 0;
+    border: 1px solid var(--color-cxtmenu-border);
+    border-radius: 4px;
+    box-shadow: 0 2px 5px var(--color-cxtmenu-shadow);
+
+    background-color: var(--color-cxtmenu-bkgd);
+}
+
+#keybd-cxt-menu button {
+    width: 100%;
+    height: 24px;
+    padding-left: 24px;
+    padding-right: 24px;
+    
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+
+    font-size: 12px;
+    letter-spacing: -0.5px;
+    text-align: left;
+}
+
+#keybd-cxt-menu button:hover {
+    background-color: var(--color-cxtmenu-menuitem-hover-bkgd);
+    color: var(--color-cxtmenu-menuitem-hover-text);  
+}
+
+#keybd-cxt-menu button:active {
+    border: none !important;
+    background-color: var(--color-cxtmenu-menuitem-active-bkgd);
+}
+
+#keybd-cxt-menu button:focus-visible {
+    box-shadow: none;
+    background-color: var(--color-cxtmenu-menuitem-hover-bkgd);
+    color: var(--color-cxtmenu-menuitem-hover-text);
+}
+
+#keybd-cxt-menu .row {
+    margin-bottom: 0;
+}
+
+#keybd-cxt-menu .cmd-sep {
+    margin-top: 6px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid var(--color-cxtmenu-separator);
+}
+
+.keyb-cxt-mnu-ovl {
+    background-color: transparent;
 }

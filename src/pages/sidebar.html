@@ -17,7 +17,7 @@
             <div class="inline-msgbar-icon"></div>
             <div class="inline-msgbar-body">
 	      <div class="inline-msgbar-content">
-		<label id="update-msgbar-content" data-i18n="verMinorUpd"></label>
+		<label id="update-msgbar-content" data-i18n="verMinorUpd" role="alert"></label>
 	      </div>
             </div>
 	    <div class="inline-msgbar-dismiss"></div>
@@ -26,7 +26,7 @@
             <div class="inline-msgbar-icon"></div>
             <div class="inline-msgbar-body">
 	      <div class="inline-msgbar-content">
-		<label id="update-msgbar-content" data-i18n="verUpgr"></label>
+		<label id="update-msgbar-content" data-i18n="verUpgr" role="alert"></label>
 	      </div>
 	      <div class="inline-msgbar-actions" class="row">
 		<button id="show-whats-new" data-i18n="btnWhatsNew"></button>
@@ -38,7 +38,7 @@
             <div class="inline-msgbar-icon"></div>
             <div class="inline-msgbar-body">
 	      <div class="inline-msgbar-content">
-		<label id="reauthz-msgbar-content"></label>
+		<label id="reauthz-msgbar-content" role="alert"></label>
 	      </div>
 	      <div class="inline-msgbar-actions" class="row">
 		<button id="reauthorize" data-i18n="btnReauthz"></button>
@@ -50,7 +50,7 @@
             <div class="inline-msgbar-icon"></div>
             <div class="inline-msgbar-body">
 	      <div class="inline-msgbar-content">
-		<label id="neterr-msgbar-content"></label>
+		<label id="neterr-msgbar-content" role="alert"></label>
 	      </div>
 	      <div class="inline-msgbar-actions" class="row">
 		<button id="retry-sync" data-i18n="btnRetry"></button>
@@ -60,14 +60,14 @@
           </div>
 	</div>
 	<div id="toolbars">
-	  <div id="toolbar">
+	  <div id="toolbar" role="toolbar">
 	    <button id="add-link" data-i18n="addLink"></button>
 	    <span id="bookmark-filter">
 	      <input type="radio" id="filter-all" name="bookmark-filter" value="0" checked/><label for="filter-all" data-i18n="filterAll"></label>
 	      <input type="radio" id="filter-unread" name="bookmark-filter" value="1"/><label for="filter-unread" data-i18n="filterUnread"></label>
 	    </span>
 	  </div>
-	  <div id="search-bar">
+	  <div id="search-bar" role="toolbar">
 	    <div id="search-box-ctr">
 	      <input type="search" id="search-box"/>
 	      <div id="clear-search"></div>
@@ -78,7 +78,7 @@
 
       <div id="scroll-content">
 	<div id="welcome">
-	  <span id="empty-icon"></span>
+	  <span id="empty-icon" role="presentation"></span>
 	  <p data-i18n="emptyTitle"></p>
 	  <p id="empty-instr"></p>
 	  <button id="add-link-cta" class="default" data-i18n="addLink"></button>
@@ -97,26 +97,38 @@
         <div id="loading">
           <progress></progress>
         </div>
-	<div id="reading-list"></div>
+	<div id="reading-list" role="listbox" aria-activedescendant=""></div>
       </div>  <!-- /scroll-content -->
     </main>
 
     <!-- Dialog boxes -->
-    <div id="rename-dlg" class="lightbox">
+    <div id="rename-dlg" class="lightbox" role="dialog" aria-labelledby="rename-dlg-hdg">
       <div class="dlg-content">
-        <p class="dlg-hdg" data-i18n="renameBkmk"></p>
+        <p id="rename-dlg-hdg" class="dlg-hdg" data-i18n="renameBkmk"></p>
         <div class="row browser-style">
-          <textarea id="new-link-name"></textarea>
+          <textarea id="new-link-name" rows="4"></textarea>
         </div>       
       </div>
       <div class="dlg-btns">
 	<button class="dlg-accept default" data-i18n="btnOK"></button>
-        <button class="dlg-cancel" data-i18n="btnCancel"></button>
+        <button class="dlg-btn dlg-cancel" data-i18n="btnCancel"></button>
       </div>
     </div>
-    <div id="customize-dlg" class="lightbox">
+    <div id="rename-other-wnd-msgbox" class="lightbox msgbox" role="alertdialog"
+     aria-label="Alert"
+     aria-describedby="rename-other-wnd-msg">
+      <div class="msgbox-content">
+	<div class="msgbox-icon"></div>
+	<p id="rename-other-wnd-msg" data-i18n="renameOtherWnd"></p>
+      </div>
+      <div class="dlg-btns">
+	<button id="switch-wnd-btn" class="dlg-btn" data-i18n="btnSwitchWnd"></button>
+	<button class="dlg-accept default" data-i18n="btnOK"></button>
+      </div>
+    </div>
+    <div id="customize-dlg" class="lightbox" role="dialog" aria-labelledby="customize-dlg-hdg">
       <div class="dlg-content">
-        <p class="dlg-hdg" data-i18n="custzHdg"></p>
+        <p id="customize-dlg-hdg" class="dlg-hdg" data-i18n="custzHdg"></p>
 	<div class="row browser-style">
 	  <input type="checkbox" id="show-toolbar" class="checkbox-xs"><label for="show-toolbar" data-i18n="prefToolbar"></label>
 	</div>
@@ -131,8 +143,48 @@
 	<button class="dlg-accept default" data-i18n="btnDone"></button>
       </div>
     </div>
-    <div id="lightbox-bkgrd-ovl" class="lightbox-bkgrd"></div>
-      
+
+    <!-- Keyboard-activated context menu -->
+    <div id="keybd-cxt-menu" class="lightbox" role="menu">
+      <div class="row">
+        <button id="cmd-open" role="menuitem" data-i18n="mnuOpen"></button>
+      </div>
+      <div class="row">
+        <button id="cmd-open-new-tab" role="menuitem" data-i18n="mnuOpenNewTab"></button>
+      </div>
+      <div class="row">
+        <button id="cmd-open-new-wnd" role="menuitem" data-i18n="mnuOpenNewWnd"></button>
+      </div>
+      <div class="row">
+        <button id="cmd-open-new-prv-wnd" role="menuitem" data-i18n="mnuOpenNewPrvWnd"></button>
+      </div>
+      <div class="cmd-sep" role="presentation"></div>
+      <div class="row">
+	<button id="cmd-mark-unread" role="menuitem" data-i18n="mnuMrkRead"></button>
+      </div>
+      <div class="row">
+	<button id="cmd-rename" role="menuitem" data-i18n="renameBkmkCxt"></button>
+      </div>
+      <div class="row">
+	<button id="cmd-delete" role="menuitem" data-i18n="deleteBkmkCxt"></button>
+      </div>
+      <div id="cmd-sync-sep" class="cmd-sep" role="presentation"></div>
+      <div class="row">
+        <button id="cmd-sync" role="menuitem" data-i18n="mnuSyncNow"></button>
+      </div>
+      <div class="cmd-sep"  role="presentation"></div>
+      <div class="row">
+        <button id="cmd-show-all" role="menuitem" data-i18n="cxtMnuFltrAll"></button>
+      </div>
+      <div class="row">
+        <button id="cmd-show-unread" role="menuitem" data-i18n="cxtMnuFltrUnread"></button>
+      </div>     
+      <div class="cmd-sep" role="presentation"></div>
+      <div class="row">
+	<button id="cmd-customize" role="menuitem" data-i18n="mnuCustz"></button>
+      </div>
+    </div>      
+
     <script src="../lib/md5.min.js"></script>
     <script src="../lib/jquery.js"></script>
     <script src="../lib/contextMenu/jquery.contextMenu.min.js"></script>
@@ -145,6 +197,8 @@
     <script src="../scripts/aeI18n.js"></script>
     <script src="../scripts/aeDialog.js"></script>
     <script src="../scripts/aeBookmark.js"></script>
+    <script src="../scripts/aeInterxn.js"></script>
+    <script src="../scripts/aeVisual.js"></script>
     <script src="sidebar.js"></script>
   </body>
 </html>

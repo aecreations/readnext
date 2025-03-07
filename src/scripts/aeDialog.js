@@ -22,6 +22,8 @@ class aeDialog
     this._popupTimerID = null;
     this._lastFocusedElt = null;
     this._focusedElt = null;
+    this._firstTabStop = null;
+    this._lastTabStop = null;
 
     this._fnDlgAccept = function (aEvent) {
       if (this.isPopup()) {
@@ -46,6 +48,15 @@ class aeDialog
 
   _init()
   {
+    // Insert dialog backdrop overlay <div> element.
+    let backdrop = $("#lightbox-bkgrd-ovl");
+    if (backdrop.length == 0) {
+      let backdropElt = document.createElement("div");
+      backdropElt.id = "lightbox-bkgrd-ovl";
+      backdropElt.className = "lightbox-bkgrd";
+      $(".lightbox").last().after($(backdropElt));
+    }
+    
     let dlgAcceptElt = $(`${this._dlgEltStor} > .dlg-btns > .dlg-accept`);
     if (dlgAcceptElt.length > 0) {
       dlgAcceptElt.click(aEvent => {
@@ -156,31 +167,35 @@ class aeDialog
       focusableElts = $(`${this.FOCUSABLE_ELTS_STOR}`, this._dlgElt).toArray();
     }
     
-    let firstTabStop = focusableElts[0];
-    let lastTabStop = focusableElts[focusableElts.length - 1];
-
+    this._firstTabStop = focusableElts[0];
+    this._lastTabStop = focusableElts[focusableElts.length - 1];
     this._dlgElt.on("keydown.aeDialog", aEvent => {
-      if (aEvent.key == "Tab") {
-        if (aEvent.shiftKey) {
-          if (document.activeElement == firstTabStop) {
-            aEvent.preventDefault();
-            lastTabStop.focus();
-          }
-        }
-        else {
-          if (document.activeElement == lastTabStop) {
-            aEvent.preventDefault();
-            firstTabStop.focus();
-          }
-        }
-      }
+      this.handleKeyDownEvent(aEvent);
     });
 
     if (this._focusedElt) {
       this._focusedElt.focus();
     }
     else {
-      firstTabStop.focus();
+      this._firstTabStop.focus();
+    }
+  }
+
+  handleKeyDownEvent(aEvent)
+  {
+    if (aEvent.key == "Tab") {
+      if (aEvent.shiftKey) {
+        if (document.activeElement == this._firstTabStop) {
+          aEvent.preventDefault();
+          this._lastTabStop.focus();
+        }
+      }
+      else {
+        if (document.activeElement == this._lastTabStop) {
+          aEvent.preventDefault();
+          this._firstTabStop.focus();
+        }
+      }
     }
   }
 
@@ -260,6 +275,11 @@ class aeDialog
     let dlgCancelElt = $(`${this._dlgEltStor} > .dlg-btns > .dlg-cancel`);
     
     return (dlgCancelElt.length == 0 && dlgAcceptElt.length > 0);
+  }
+
+  isOpen()
+  {
+    return this._dlgElt.hasClass("lightbox-show");    
   }
   
   static isOpen()

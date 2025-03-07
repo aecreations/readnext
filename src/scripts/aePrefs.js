@@ -5,6 +5,14 @@
  */
 
 let aePrefs = {
+  // Background script state persistence
+  _defaultBkgdState: {
+    _reauthzNotifcnShown: false,
+    _syncPaused: false,
+    _renameDlgSrcWndID: null,
+  },
+  
+  // User preferences and customizations
   _defaultPrefs: {
     syncEnabled: false,
     syncBackend: null,
@@ -23,6 +31,9 @@ let aePrefs = {
     closeSidebarAfterNav: false,
     allowEditLinks: true,
     linkClickAction: aeConst.OPEN_LINK_IN_CURRENT_TAB,
+    highlightNewLink: true,
+    autoUpdateUnreadFilter: true,
+    defDlgBtnFollowsFocus: false,
 
     // Applicable to Google Drive file host.
     syncFileID: null,
@@ -32,7 +43,8 @@ let aePrefs = {
   
   getPrefKeys()
   {
-    return Object.keys(this._defaultPrefs);
+    let allPrefs = {...this._defaultBkgdState, ...this._defaultPrefs};
+    return Object.keys(allPrefs);
   },
 
   async getPref(aPrefName)
@@ -52,6 +64,11 @@ let aePrefs = {
   async setPrefs(aPrefMap)
   {
     await browser.storage.local.set(aPrefMap);
+  },
+
+  async setDefaultBkgdState()
+  {
+    await browser.storage.local.set(this._defaultBkgdState);
   },
 
 
@@ -126,6 +143,28 @@ let aePrefs = {
 
       // Disable experimental feature from ver 1.1b1
       allowEditLinks: false,
+    };
+    await this._addPrefs(aPrefs, prefs);
+  },
+
+  hasOahuPrefs(aPrefs) {
+    // Version 1.5
+    return ("highlightNewLink" in aPrefs);
+  },
+
+  async setOahuPrefs(aPrefs) {
+    let prefs = {
+      _reauthzNotifcnShown: false,
+      _syncPaused: false,
+      _renameDlgSrcWndID: null,
+
+      highlightNewLink: true,
+      autoUpdateUnreadFilter: true,
+      defDlgBtnFollowsFocus: false,
+      
+      // Enable renaming of links, which was introduced but disabled
+      // in version 1.1
+      allowEditLinks: true,
     };
     await this._addPrefs(aPrefs, prefs);
   },

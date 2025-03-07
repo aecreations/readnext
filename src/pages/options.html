@@ -14,8 +14,8 @@
   <body>
     <main>
       <div id="pref-logo">
-        <img id="addon-icon" src="../img/readnext128.svg">
-        <p id="hdr-ext-name" data-i18n="extName"></p>
+        <img id="addon-icon" src="../img/readnext128.svg" role="presentation">
+        <p id="hdr-ext-name" data-i18n="extName" role="banner"></p>
       </div>
       <div id="pref-body">
 	<h2 id="pref-hdg"></h2>
@@ -54,6 +54,9 @@
 	    <input type="checkbox" id="close-tab-after-add"><label for="close-tab-after-add" data-i18n="prefCloseTabAfterAdd"></label>
 	  </div>
 	  <p id="close-tab-after-add-desc" class="description"></p>
+          <div class="row browser-style">
+            <input type="checkbox" id="hilite-new-links"><label for="hilite-new-links" data-i18n="prefHiliteNew"></label>
+          </div>
 	  <div class="row browser-style">
 	    <input type="checkbox" id="auto-delete-when-read"><label for="auto-delete-when-read" data-i18n="prefAutoDel"></label>
 	  </div>
@@ -70,7 +73,7 @@
     </main>
 
     <!-- Dialog boxes -->
-    <div id="connect-dlg" class="lightbox">
+    <div id="connect-dlg" class="lightbox" role="dialog">
       <div class="dlg-content">
 	<div id="authz-prologue" class="wiz-page">
           <div class="wiz-icon"></div>
@@ -112,11 +115,12 @@
       </div>
       <div class="dlg-btns">
 	<button class="dlg-accept default" data-i18n="btnNext"></button>
-	<button class="dlg-cancel" data-i18n="btnCancel"></button>
+	<button class="dlg-btn dlg-cancel" data-i18n="btnCancel"></button>
       </div>
     </div>
     
-    <div id="disconnect-dlg" class="lightbox">
+    <div id="disconnect-dlg" class="lightbox" role="alertdialog"
+     aria-labelledby="disconnect-confirm">
       <div class="dlg-content">
         <div class="msgbox-icon"></div>
         <div class="msgbox-content">
@@ -125,12 +129,12 @@
         </div>
       </div>
       <div class="dlg-btns">
-	<button class="dlg-btn-disconn" data-i18n="btnDisconn"></button>
+	<button class="dlg-btn dlg-btn-disconn" data-i18n="btnDisconn"></button>
 	<button class="dlg-accept default" data-i18n="btnCancel"></button>
       </div>
     </div>
 
-    <div id="about-dlg" class="lightbox">
+    <div id="about-dlg" class="lightbox" role="dialog">
       <div class="dlg-content">
         <div id="ext-icon"></div>
 	<div id="ext-info">
@@ -157,8 +161,6 @@
       </div>
     </div>
 
-    <div id="lightbox-bkgrd-ovl" class="lightbox-bkgrd"></div>
-
     <script src="../lib/jquery.js"></script>
     <script src="../lib/purify.min.js"></script>
     <script src="../scripts/aeConst.js"></script>
@@ -168,6 +170,7 @@
     <script src="../scripts/aeDialog.js"></script>
     <script src="../scripts/aeOAuth.js"></script>
     <script src="../scripts/aeFileHostUI.js"></script>
+    <script src="../scripts/aeVisual.js"></script>
     <script src="options.js"></script>
   </body>
 </html>

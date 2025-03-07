@@ -12,6 +12,9 @@
     --color-main-bkgd: #fefefe;
     --color-main-border-shadow: #c8c8c8;
     --color-secondary-text: #737373;
+    --color-contrib-cta-bkgd: #DEEAFC;
+    --color-contrib-cta-border: #CBD6E7;
+    --url-contrib-cta-img: url("../img/donate.svg");
     --url-amo-img: url("../img/amo.png");
 }
 
@@ -23,6 +26,9 @@
 	--color-main-bkgd: #2a2a2e;
 	--color-main-border-shadow: #0c0c0d;
 	--color-secondary-text: #f9f9fa;
+	--color-contrib-cta-bkgd: #003070;
+	--color-contrib-cta-border: #17437D;
+	--url-contrib-cta-img: url("../img/donate-dk.svg");
 	--url-amo-img: url("../img/addons-logo-blue.svg");
     }
 }
@@ -37,10 +43,11 @@ body {
 }
 
 h1 {
+    margin-left: 64px;
+    margin-bottom: 2px;
     font-size: 36px;
-    font-weight: 200;
+    font-weight: 600;
     letter-spacing: -0.25px;
-    margin-bottom: 8px;
 }
 
 h2 {
@@ -51,9 +58,9 @@ h2 {
 main {
     width: 640px;
     margin: 24px auto 24px auto;
-    padding: 24px;
+    padding: 10px 24px 24px 24px;
     border: 1px solid var(--color-main-border);
-    border-radius: 2px;
+    border-radius: 4px;
     box-shadow: 0 0 8px 2px var(--color-main-border-shadow);
     background-color: var(--color-main-bkgd);
 }
@@ -81,17 +88,18 @@ button {
 
 #ext-icon {
     float: left;
-    margin-right: 14px;
-    margin-bottom: 52px;
     width: 48px;
     height: 48px;
+    margin-top: 12px;
+    margin-right: 14px;
 }
 
 #ext-desc {
-    margin-top: 0px;
-    font-size: 17px;
-    font-weight: 400;
-    color: var(--color-secondary-text);
+    margin-top: 0;
+    margin-left: 64px;
+    font-size: 20px;
+    font-weight: 200;
+    letter-spacing: -0.25px;
 }
 
 #dlg-content {
@@ -107,6 +115,20 @@ button {
     font-size: 13px;
     font-weight: bold;
     color: var(--color-secondary-text);
+}
+
+#contribute {
+    margin-top: 20px;
+    padding-right: 16px;
+    padding-left: 64px;
+    border: 1px solid var(--color-contrib-cta-border);
+    border-radius: 4px;
+
+    background-color: var(--color-contrib-cta-bkgd);
+    background-image: var(--url-contrib-cta-img);
+    background-repeat: no-repeat;
+    background-position: 16px 16px;
+    background-size: 32px;
 }
 
 #aecreations-links > ul {

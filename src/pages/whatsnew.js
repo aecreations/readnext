@@ -28,7 +28,7 @@ $(async () => {
 
   $("#btn-close").on("click", async (aEvent) => { closePage() });
 
-  $("a").click(aEvent => {
+  $("a").on("click", aEvent => {
     aEvent.preventDefault();
     gotoURL(aEvent.target.href);
   });
@@ -40,7 +40,7 @@ $(async () => {
   gWndID = currWnd.id;
   gTabID = tabs[0].id;
 
-  browser.runtime.sendMessage({id: "whats-new-pg-open-evt"});
+  browser.runtime.sendMessage({id: "whats-new-pg-opened"});
 });
 
 
