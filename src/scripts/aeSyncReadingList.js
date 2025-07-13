@@ -35,6 +35,8 @@ let aeSyncReadingList = {
       rv = new aeDropbox(aOAuthClient);
       break;
 
+    case aeConst.FILEHOST_ONEDRIVE:
+      rv = new aeOneDrive(aOAuthClient);
     default:
       break;
     }

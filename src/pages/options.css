@@ -384,11 +384,18 @@ body[data-os="mac"] #connect-dlg {
     background-repeat: no-repeat;
 }
 
-#connect-dlg #authz-prologue > .wiz-icon,
-#connect-dlg #authz-progress > .wiz-icon {
+#connect-dlg #authz-prologue > .wiz-icon.dropbox,
+#connect-dlg #authz-progress > .wiz-icon.dropbox {
     width: 48px;
     height: 48px;
     background-image: url("../img/dropbox.svg");
+}
+
+#connect-dlg #authz-prologue > .wiz-icon.onedrive,
+#connect-dlg #authz-progress > .wiz-icon.onedrive {
+    width: 48px;
+    height: 48px;
+    background-image: url("../img/onedrive.svg");
 }
 
 #connect-dlg #authz-success > .wiz-icon {

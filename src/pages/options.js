@@ -133,17 +133,22 @@ function initDialogs()
 
     let btnAccept = this.find(".dlg-btns > .dlg-accept");
     let btnCancel = this.find(".dlg-btns > .dlg-cancel");
-    let {fileHostName} = aeFileHostUI(this.backnd);
+    let {fileHostKey, fileHostName} = aeFileHostUI(this.backnd);
+    log("Read Next::options.js: File host info:");
+    log(aeFileHostUI(this.backnd));
 
     switch (aPageID) {
     case "authz-prologue":
-      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle1");
+      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle1", fileHostName);
+      this._dlgElt.find("#authz-prologue > .wiz-icon").addClass(fileHostKey);
+      this._dlgElt.find("#authz-prologue .title").text(browser.i18n.getMessage("connWizTitle1", fileHostName));
       this.find(".dlg-btns > .dlg-accept").addClass("default");
       $("#authz-instr").text(browser.i18n.getMessage("wizAuthzInstr1", fileHostName));
       break;
 
     case "authz-progress":
       this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle2");
+      this._dlgElt.find("#authz-progress > .wiz-icon").addClass(fileHostKey);
       this.find(".dlg-btns > button").attr("disabled", "true");
       break;
 
@@ -489,7 +494,13 @@ $("#toggle-sync").on("click", async (aEvent) => {
     gDialogs.disconnectConfirm.showModal();
   }
   else {
-    gDialogs.connectWiz.showModal();
+    // TEMPORARY: prompt for which online file host to use.
+    let fileHost = prompt("Which file host (1=Dropbox, 3=OneDrive):", "1");
+    if (fileHost && [1, 3].includes(Number(fileHost))) {
+      gDialogs.connectWiz.backnd = fileHost;
+      gDialogs.connectWiz.showModal();
+    }
+    // END TEMPORARY
   }
 });
 

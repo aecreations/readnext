@@ -45,6 +45,7 @@
       "scripts/aeOAuthClient.js",
       "scripts/aeAbstractFileHost.js",
       "scripts/aeDropbox.js",
+      "scripts/aeOneDrive.js",
       "scripts/aeAuthorizationError.js",
       "scripts/aeNotFoundError.js",
       "scripts/aeFileHostUI.js",

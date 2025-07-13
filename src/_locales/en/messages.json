@@ -67,6 +67,11 @@
     "description": "Cloud file host"
   },
 
+  "fhOneDrive": {
+    "message": "OneDrive",
+    "description": "Cloud file host"
+  },
+
   "addBkmk": {
     "message": "Add to Read Next",
     "description": "Address bar button caption for adding web page to the reading list"
@@ -298,7 +303,7 @@
   },
 
   "connWizTitle1": {
-    "message": "Connect to Dropbox",
+    "message": "Connect to $1",
     "description": "Cloud file service connection wizard in extension preferences page"
   },
 
