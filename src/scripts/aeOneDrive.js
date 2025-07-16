@@ -68,7 +68,7 @@ class aeOneDrive extends aeAbstractFileHost
       method: "GET",
       headers,
     };
-    let resp = await this._fetch(`https://graph.microsoft.com/v1.0/me/drive/root:/${this.SYNC_FILENAME}:/content`, reqOpts);
+    let resp = await this._fetch(`https://graph.microsoft.com/v1.0/me/drive/special/approot:/${this.SYNC_FILENAME}:/content`, reqOpts);
 
     if (resp.status >= 400) {
       throw new Error(`OneDrive::downloadFile: status: ${resp.status} - ${resp.statusText}`);
@@ -122,7 +122,7 @@ class aeOneDrive extends aeAbstractFileHost
       headers,
     };   
 
-    rv = await this._fetch(`https://graph.microsoft.com/v1.0/me/drive/root:/${this.SYNC_FILENAME}`, reqOpts);
+    rv = await this._fetch(`https://graph.microsoft.com/v1.0/me/drive/special/approot:/${this.SYNC_FILENAME}`, reqOpts);
 
     return rv;
   }
@@ -138,7 +138,7 @@ class aeOneDrive extends aeAbstractFileHost
       headers,
       body: JSON.stringify(aLocalData),
     };
-    let resp = await this._fetch(`https://graph.microsoft.com/v1.0/me/drive/root:/${this.SYNC_FILENAME}:/content`, reqOpts);
+    let resp = await this._fetch(`https://graph.microsoft.com/v1.0/me/drive/special/approot:/${this.SYNC_FILENAME}:/content`, reqOpts);
 
     if (! resp.ok) {
       throw new Error(`OneDrive::upload: status: ${resp.status} - ${resp.statusText}`);
