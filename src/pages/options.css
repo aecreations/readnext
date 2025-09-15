@@ -546,7 +546,7 @@ body[data-locale="uk"] #about-dlg #ext-desc {
 }
 
 #about-dlg #credits label {
-    line-height: 18px;
+    line-height: 16px;
 }
 
 #about-dlg #translations-ack[data-locale="de"] {
