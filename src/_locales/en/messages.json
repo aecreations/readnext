@@ -487,6 +487,11 @@
     "description": "About dialog"
   },
 
+  "aboutCreditsLink": {
+    "message": "Credits",
+    "description": "Link to acknowledgements page"
+  },
+
   "aboutContribHdg": {
     "message": "Want to help?",
     "description": "About dialog text for encouraging users to donate or help with translation"
