@@ -153,7 +153,10 @@ button:-moz-focusring:not(:disabled) {
 .row {
     margin-top: 4px;
     margin-bottom: 2px;
-    margin-left: 4px;
+
+    /* Hanging indent for styling long checkbox labels */
+    margin-left: 30px;
+    text-indent: -26px;
 }
 
 .description {
@@ -240,6 +243,7 @@ button:-moz-focusring:not(:disabled) {
 
 #sync-actions {
     margin-left: 72px;
+    text-indent: unset;
 }
 
 #retry-conn, #reauthorize, #toggle-sync {
@@ -549,15 +553,11 @@ body[data-locale="uk"] #about-dlg #ext-desc {
     line-height: 16px;
 }
 
-#about-dlg #translations-ack[data-locale="de"] {
-    letter-spacing: -0.01px;
-}
-
 #about-dlg #usr-contrib-cta {
     margin-top: 8px;
 }
 
-#about-dlg #usr-contrib-cta[data-locale="de"] {
+body[data-locale="de"] #about-dlg #usr-contrib-cta {
     letter-spacing: -0.45px;
 }
 
