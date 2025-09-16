@@ -104,6 +104,10 @@ body[data-locale="uk"] #toolbar {
     letter-spacing: -0.1px;
 }
 
+#add-link[title] {
+    padding-right: 0;
+}
+
 body[data-tbar-fix] #add-link {
     margin-right: 8px;
 }
@@ -594,6 +598,10 @@ body[data-os="mac"] .lightbox .msgbox-icon {
     top: 88px;
     --width: 200px;
     --height: 154px;
+}
+
+body[data-locale="de"] #customize-dlg {
+    --height: 168px;
 }
 
 body[data-locale="uk"] #customize-dlg {

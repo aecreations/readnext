@@ -829,6 +829,17 @@ function updateFavIcon(aBookmarkID, aFavIconData)
 
 async function initAddLinkBtn()
 {
+  let lang = browser.i18n.getUILanguage();
+  let btnLabel = browser.i18n.getMessage("addLink");
+
+  if (["de"].includes(lang)) {
+    // For locales where the button label is too long, show tooltip instead.
+    $("#add-link").attr("title", btnLabel)
+  }
+  else {
+    $("#add-link").text(btnLabel);
+  }
+  
   let [actvTab] = await browser.tabs.query({active: true, currentWindow: true});
   let id = getBookmarkIDFromURL(actvTab.url);
   let bkmkExists = await gCmd.getBookmark(id);
