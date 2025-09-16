@@ -5,7 +5,7 @@ READ NEXT 1.5
 Many thanks to the Crowdin contributors who provided localizations for this
 version of Read Next:
 
-German  . . . . . . . . . . . . .  TBA
+German  . . . . . . . . . . . . .  private-lock
 
 
 If you're fluent in English and another world language and would like to help

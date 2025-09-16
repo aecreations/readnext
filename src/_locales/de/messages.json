@@ -1,0 +1,467 @@
+{
+  "extName": {
+    "message": "Read Next",
+    "description": "Extension name"
+  },
+  "extDesc": {
+    "message": "Die Leseliste, die mit der Cloud synchronisiert wird.",
+    "description": "Extension description"
+  },
+  "btnOK": {
+    "message": "OK"
+  },
+  "btnCancel": {
+    "message": "Abbrechen"
+  },
+  "btnClose": {
+    "message": "Schließen"
+  },
+  "btnDone": {
+    "message": "Fertig"
+  },
+  "btnNext": {
+    "message": "Nächster"
+  },
+  "btnFinish": {
+    "message": "Beenden"
+  },
+  "btnRetry": {
+    "message": "Erneut versuchen",
+    "description": "Button label"
+  },
+  "btnNotNow": {
+    "message": "Nicht jetzt",
+    "description": "Button label"
+  },
+  "msgUnavail": {
+    "message": "Die gewählte Aktion kann gerade nicht angewendet werden."
+  },
+  "verMinorUpd": {
+    "message": "Update eingespielt!",
+    "description": "Minor version update message bar in the reading list sidebar"
+  },
+  "verUpgr": {
+    "message": "Großes Upgrade durchgeführt!",
+    "description": "Major version upgrade message bar in the reading list sidebar"
+  },
+  "btnWhatsNew": {
+    "message": "Was ist neu",
+    "description": "Button in the major version upgrade message bar"
+  },
+  "fhDropbox": {
+    "message": "Dropbox",
+    "description": "Cloud file host"
+  },
+  "addBkmk": {
+    "message": "Zur Leseliste hinzufügen",
+    "description": "Address bar button caption for adding web page to the reading list"
+  },
+  "deleteBkmk": {
+    "message": "Aus Leseliste löschen",
+    "description": "Address bar button caption for deleting reading list item"
+  },
+  "deleteBkmkCxt": {
+    "message": "Löschen",
+    "description": "Context menu item for deleting reading list item"
+  },
+  "renameBkmkCxt": {
+    "message": "Umbenennen…",
+    "description": "Context menu item for renaming a reading list item"
+  },
+  "renameBkmk": {
+    "message": "Umbenennen",
+    "description": "Rename dialog heading"
+  },
+  "renameOtherWnd": {
+    "message": "Ein Link kann nur in einem Browser zur Zeit umbenannt werden.",
+    "description": "Message box in the reading list sidebar that appears when attempting to rename a link while the same action is in progress in another window"
+  },
+  "btnSwitchWnd": {
+    "message": "Fenster wechseln",
+    "description": "Button in the rename link message box that sends user to the browser window where the same action is in progress"
+  },
+  "errAddBkmk": {
+    "message": "Diese Seite kann nicht zur Leseliste hinzugefügt werden.",
+    "description": "Error notification that appears when attempting to add an unsupported URL to the reading list"
+  },
+  "lblTbar": {
+    "message": "Leselisten-Werkzeugleiste",
+    "description": "ARIA label for the toolbar in the reading list sidebar"
+  },
+  "lblSrchBar": {
+    "message": "Suchleiste",
+    "description": "ARIA label for the search bar in the reading list sidebar"
+  },
+  "addLink": {
+    "message": "Aktiven Tab hinzufügen",
+    "description": "Toolbar button label"
+  },
+  "filterAll": {
+    "message": "Alle",
+    "description": "Reading list filter option in the sidebar toolbar"
+  },
+  "filterUnread": {
+    "message": "Ungelesene",
+    "description": "Reading list filter option in the sidebar toolbar"
+  },
+  "cxtMnuFltrAll": {
+    "message": "Zeige alle Links",
+    "description": "Reading list filter option in the sidebar context menu"
+  },
+  "cxtMnuFltrUnread": {
+    "message": "Zeige nur ungelesene Links",
+    "description": "Reading list filter option in the sidebar context menu"
+  },
+  "srchBoxHint": {
+    "message": "Suche",
+    "description": "Hint text appearing on empty search box in reading list sidebar"
+  },
+  "emptyTitle": {
+    "message": "Zur Leseliste hinzufügen",
+    "description": "Sidebar empty state title"
+  },
+  "emptyInstr": {
+    "message": "Klicke »Aktiven Tab hinzufügen«, um ihn der Leseliste hinzuzufügen.",
+    "description": "Sidebar empty state instructions"
+  },
+  "emptyInstrEx": {
+    "message": "Klicke »Aktiven Tab hinzufügen« oder <span id=\"add-link-icon\" class=\"inline-icon\"></span> in der Adressleiste.",
+    "description": "Sidebar empty state instructions (alternate text)"
+  },
+  "noUnread": {
+    "message": "Keine ungelesenen Einträge.",
+    "description": "Message in the reading list sidebar"
+  },
+  "noItems": {
+    "message": "Keine Einträge gefunden.",
+    "description": "Message in the reading list sidebar"
+  },
+  "setupSync": {
+    "message": "Sync einrichten",
+    "description": "Secondary call-to-action button in the sidebar when showing welcome banner"
+  },
+  "mnuOpenNewTab": {
+    "message": "In neuem Tab öffnen",
+    "description": "Context menu item in reading list sidebar for opening link in a new browser tab"
+  },
+  "mnuOpenCurrTab": {
+    "message": "Im aktiven Tab öffnen",
+    "description": "Context menu item in reading list sidebar for opening link in current browser tab (alternate title)"
+  },
+  "mnuOpen": {
+    "message": "Öffnen",
+    "description": "Context menu item in reading list sidebar for opening link in current browser tab"
+  },
+  "mnuOpenNewWnd": {
+    "message": "In neuem Fenster öffnen",
+    "description": "Context menu item in reading list sidebar"
+  },
+  "mnuOpenNewPrvWnd": {
+    "message": "In neuem privatem Fenster öffnen",
+    "description": "Context menu item in reading list sidebar"
+  },
+  "mnuMrkRead": {
+    "message": "Als gelesen markieren",
+    "description": "Context menu item in reading list sidebar"
+  },
+  "mnuMrkUnread": {
+    "message": "Als ungelesen markieren",
+    "description": "Context menu item in reading list sidebar"
+  },
+  "mnuSyncNow": {
+    "message": "Jetzt synchronisieren",
+    "description": "Context menu item in reading list sidebar - only appears if syncing to cloud file host is turned on"
+  },
+  "reauthzNotifcn": {
+    "message": "Read Next muss sich erneut mit $1 verbinden. Klicke hier zum Verbinden.",
+    "description": "Reconnection notification - appears when user needs to reconnect their cloud file host account"
+  },
+  "reauthzMsgBar": {
+    "message": "Read Next muss sich erneut mit $1 verbinden.",
+    "description": "Reconnection message bar - appears in the reading list sidebar when user needs to reconnect their cloud file host account"
+  },
+  "btnReauthz": {
+    "message": "Neu verbinden",
+    "description": "Button label for reconnecting to the cloud file host"
+  },
+  "mnuCustz": {
+    "message": "Anpassen…",
+    "description": "Sidebar context menu item"
+  },
+  "custzHdg": {
+    "message": "Anpassen",
+    "description": "Customize dialog heading"
+  },
+  "mnuPrefs": {
+    "message": "Read Next Einstellungen…",
+    "description": "Browser toolbar context menu item for opening extension preferences page"
+  },
+  "mnuPrefsWin": {
+    "message": "Read Next Optionen…",
+    "description": "Browser toolbar context menu item for opening extension preferences page (Windows only)"
+  },
+  "prefsTitle": {
+    "message": "Read Next Einstellungen",
+    "description": "Extension preferences page title (appears on tab and window title bar)"
+  },
+  "prefsTitleWin": {
+    "message": "Read Next Optionen",
+    "description": "Extension preferences page title on Windows (appears on tab and window title bar)"
+  },
+  "prefsHdg": {
+    "message": "Einstellungen",
+    "description": "Extension preferences page heading"
+  },
+  "prefsHdgWin": {
+    "message": "Optionen",
+    "description": "Extension preferences page heading on Windows"
+  },
+  "prefsHdgSync": {
+    "message": "Leseliste synchronisieren",
+    "description": "Section heading in extension preferences page"
+  },
+  "btnConnect": {
+    "message": "Verbinde…",
+    "description": "Button in extension preferences for connecting to a cloud file host to sync the reading list"
+  },
+  "btnDisconnect": {
+    "message": "Trenne",
+    "description": "Button in extension preferences for turning off reading list sync"
+  },
+  "noSync": {
+    "message": "Synchronisiere die Leseliste via Dropbox in die Cloud.",
+    "description": "Message in the extension preferences page when reading list sync is turned off"
+  },
+  "connectedTo": {
+    "message": "Verbinde mit $1",
+    "description": "Connected to <name of cloud file service, e.g. Dropbox>"
+  },
+  "connWizTitle1": {
+    "message": "Verbinde mit Dropbox",
+    "description": "Cloud file service connection wizard in extension preferences page"
+  },
+  "connWizTitle2": {
+    "message": "Verbinden",
+    "description": "Cloud file service connection wizard in extension preferences page"
+  },
+  "connWizTitle3": {
+    "message": "Sie sind verbunden!",
+    "description": "Cloud file service connection wizard in extension preferences page"
+  },
+  "connWizTitNetErr": {
+    "message": "Verbindung fehlgeschlagen",
+    "description": "Error message that appears in the cloud file service connection wizard"
+  },
+  "wizAuthzNetErr": {
+    "message": "Read Next benötigt eine Internetverbindung. Prüfen Sie bitte Ihre Netzwerkeinstellungen oder versuchen Sie es später erneut.",
+    "description": "Error message that appears in the cloud file service connection wizard"
+  },
+  "wizAuthzInstr1": {
+    "message": "Bitte loggen Sie sich auf $1 ein und erlauben den Zugriff für Read Next.",
+    "description": "You'll be taken to <name of cloud file service, e.g. Dropbox> where you can log in and confirm permissions for Read Next."
+  },
+  "wizAuthzInstr2": {
+    "message": "Erlauben Sie bitte den Zugriff auf Ihren Cloudspeicher, damit Read Next sich darüber synchronisieren kann.",
+    "description": "User informational message that appears in the cloud file service connection wizard"
+  },
+  "wizAuthzInterrupt": {
+    "message": "Die Verbindung zu $1 wurde abgebrochen. Möchten Sie es erneut probieren?",
+    "description": "Read Next didn't finish connecting to <name of cloud file service, e.g. Dropbox>.  Do you want to try again?"
+  },
+  "wizAuthzSuccs": {
+    "message": "Read Next synchronisiert Ihre Leseliste mit $1. Bitte warten Sie einen Moment.",
+    "description": "Read Next has started syncing your reading list to <name of cloud file service, e.g. Dropbox>.  It may take a moment to finish."
+  },
+  "wizSetupRem": {
+    "message": "Wiederholen Sie diese Einrichtung auf weiteren Geräten, mit denen synchronisiert werden soll.",
+    "description": "User informational message that appears in the cloud file service connection wizard"
+  },
+  "disconnTitle": {
+    "message": "Sind Sie sicher, dass die Read Next von $1 trennen wollen?",
+    "description": "Are you sure you want to disconnect Read Next from <name of cloud file service, e.g. Dropbox>?"
+  },
+  "disconnConf": {
+    "message": "Ihre Leseliste bleibt lokal auf diesem Gerät, ohne Synchronisation mit der Cloud.",
+    "description": "Message box that appears when user turns off reading list sync from extension preferences"
+  },
+  "btnDisconn": {
+    "message": "Trenne",
+    "description": "Button label for disconnecting from cloud file service"
+  },
+  "errNoConn": {
+    "message": "Read Next konnte sich nicht mit $1 verbinden",
+    "description": "Read Next couldn't connect to <name of cloud file service, e.g. Dropbox>"
+  },
+  "errNoConnEx": {
+    "message": "Read Next konnte sich nicht mit $1 verbinden. Prüfen Sie bitte Ihre Netzwerkeinstellungen oder versuchen Sie es später erneut.",
+    "description": "Read Next couldn't connect to <name of cloud file service, e.g. Dropbox>"
+  },
+  "prefToolbar": {
+    "message": "Werkzeugleiste anzeigen",
+    "description": "Checkbox option in the Customize dialog in the reading list sidebar"
+  },
+  "prefSrchBar": {
+    "message": "Suchleiste anzeigen",
+    "description": "Checkbox option in the Customize dialog in the reading list sidebar"
+  },
+  "prefsHdgInteg": {
+    "message": "Integration",
+    "description": "Section heading in extension preferences page"
+  },
+  "prefAddrBarBtn": {
+    "message": "Zeige Knopf in Adresszeile",
+    "description": "Checkbox option in the extension preferences page"
+  },
+  "prefCxtMenuBtn": {
+    "message": "Zeige Eintrag im Kontextmenü",
+    "description": "Checkbox option in the extension preferences page"
+  },
+  "prefAutoDel": {
+    "message": "Lösche gelesene Links",
+    "description": "Checkbox option in the extension preferences page"
+  },
+  "prefUnreadBold": {
+    "message": "Formatiere ungelesene Links in <b>fett</b>",
+    "description": "Checkbox option in the Customize dialog in the reading list sidebar"
+  },
+  "prefHdgActions": {
+    "message": "Aktionen",
+    "description": "Section heading in extension preferences page"
+  },
+  "prefHiliteNew": {
+    "message": "Neue Links beim Hinzufügen in der Seitenleiste hervorheben",
+    "description": "Checkbox option in the extension preferences page"
+  },
+  "prefCloseTabAfterAdd": {
+    "message": "Hinzugefügten Tab schließen",
+    "description": "Checkbox option in the extension preferences page"
+  },
+  "prefCloseSidebar": {
+    "message": "Seitenleiste verbergen, wenn Link geöffnet wird",
+    "description": "Checkbox option in the extension preferences page"
+  },
+  "prefClickLinkHdg": {
+    "message": "Klicke Link zum Öffnen in:",
+    "description": "Radio group heading for default action when clicking on a reading list link"
+  },
+  "clickLnkCurrTab": {
+    "message": "Aktiver Tab",
+    "description": "Radio button option for default action when clicking on a reading list link"
+  },
+  "clickLnkNewTab": {
+    "message": "Neuer Tab",
+    "description": "Radio button option for default action when clicking on a reading list link"
+  },
+  "closeTabAfterAddDesc": {
+    "message": "Alternativ klicken Sie <span id=\"add-link-icon\" class=\"inline-icon\"></span> in der Adressleiste und wählen »Hinzufügen und Tab schließen«.",
+    "description": "Description of the checkbox option “Close tab after adding to Read Next” in extension preferences"
+  },
+  "mnuCloseTabAfterAdd": {
+    "message": "Hinzufügen und Tab schließen",
+    "description": "Address bar button context menu"
+  },
+  "reauthzRetry": {
+    "message": "Read Next konnte sich nicht mit $1 verbinden. Möchten Sie es erneut versuchen?",
+    "description": "Read Next didn't finish reconnecting to <name of cloud file service, e.g. Dropbox>.  Do you want to try again?"
+  },
+  "aboutBtn": {
+    "message": "Über…",
+    "description": "Button label for showing the About dialog in extension preferences page"
+  },
+  "aboutExtVer": {
+    "message": "Version $1",
+    "description": "Extension version number"
+  },
+  "aboutAuthor": {
+    "message": "Entwickelt von AE Creations.",
+    "description": "About dialog"
+  },
+  "aboutHomePgLink": {
+    "message": "Webseite besuchen",
+    "description": "About dialog"
+  },
+  "aboutLicLink": {
+    "message": "Lizenz-Informationen",
+    "description": "About dialog"
+  },
+  "aboutTrans": {
+    "message": "Übersetzung durch Crowdin Mitglieder.",
+    "description": "About dialog"
+  },
+  "aboutCreditsLink": {
+    "message": "Danksagungen",
+    "description": "Link to acknowledgements page"
+  },
+  "aboutContribHdg": {
+    "message": "Wollen Sie helfen?",
+    "description": "About dialog text for encouraging users to donate or help with translation"
+  },
+  "aboutDonate": {
+    "message": "Geld Spenden",
+    "description": "About dialog"
+  },
+  "aboutContribConj": {
+    "message": "oder",
+    "description": "Conjunction connecting the CTA hyperlinks for donating or supplying a translation"
+  },
+  "aboutL10n": {
+    "message": "Übersetzung beitragen.",
+    "description": "About dialog"
+  },
+  "upgradeNotifcn": {
+    "message": "Read Next wurde kürzlich aktualisiert! Klicken Sie hier für Neuigkeiten.",
+    "description": "Post-upgrade notification text"
+  },
+  "newVerHdg": {
+    "message": "Neue Version installiert!",
+    "description": "Header for the What's New page (appears after upgrading Read Next)"
+  },
+  "upgrade": {
+    "message": "Read Next wurde auf die neuste Version aktualisiert.",
+    "description": "What's New page (appears after upgrading Read Next)"
+  },
+  "whatsNew": {
+    "message": "Was gibt's neues",
+    "description": "What's New page (appears after upgrading Read Next)"
+  },
+  "whatsNew1": {
+    "message": "Links können jetzt umbenannt werden",
+    "description": "Description of an enhancement or fix in the new version of Read Next"
+  },
+  "whatsNew2": {
+    "message": "Verbesserte Tastatur-Navigation der Leseliste",
+    "description": "Description of an enhancement or fix in the new version of Read Next"
+  },
+  "whatsNew3": {
+    "message": "Neue Links werden beim Hinzufügen in der Seitenleiste hervorgehoben",
+    "description": "Description of an enhancement or fix in the new version of Read Next"
+  },
+  "whatsNew4": {
+    "message": "Wenn nach ungelesen gefiltert, aktualisiert sich die Leseliste automatisch bei Statusänderungen",
+    "description": "Description of an enhancement or fix in the new version of Read Next"
+  },
+  "contribHdg": {
+    "message": "Helfen Sie mit!",
+    "description": "Contribution CTA in the What's New page"
+  },
+  "contribCTA": {
+    "message": "Unterstützen Sie die Entwicklung von Read Next mit <a href=\"$1\">einer Spende</a>.",
+    "description": "Call to action message in the What's New page, encouraging users to make a donation"
+  },
+  "linkBlog": {
+    "message": "AE Creations Blog",
+    "description": "Link in bottom of What's New page"
+  },
+  "linkAMO": {
+    "message": "Firefox-Add-ons-Seite",
+    "description": "Link in bottom of What's New page"
+  },
+  "linkForum": {
+    "message": "Hilfe und Unterstützungs-Forum",
+    "description": "Link in bottom of What's New page"
+  },
+  "closeWelcomePg": {
+    "message": "Diese Seite schließen",
+    "description": "Link in bottom of What's New page"
+  }
+}
