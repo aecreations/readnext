@@ -153,7 +153,10 @@ button:-moz-focusring:not(:disabled) {
 .row {
     margin-top: 4px;
     margin-bottom: 2px;
+    margin-left: 4px;
+}
 
+.pref-row {
     /* Hanging indent for styling long checkbox labels */
     margin-left: 30px;
     text-indent: -26px;
@@ -243,7 +246,6 @@ button:-moz-focusring:not(:disabled) {
 
 #sync-actions {
     margin-left: 72px;
-    text-indent: unset;
 }
 
 #retry-conn, #reauthorize, #toggle-sync {
