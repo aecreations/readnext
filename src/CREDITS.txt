@@ -5,6 +5,7 @@ READ NEXT 1.5
 Many thanks to the Crowdin contributors who provided localizations for this
 version of Read Next:
 
+Chinese (Simpified) . . . . . . .  heretic43
 German  . . . . . . . . . . . . .  private-lock
 
 

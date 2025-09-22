@@ -388,6 +388,10 @@
     "message": "本地化由 Crowdin 译者贡献。",
     "description": "About dialog"
   },
+  "aboutCreditsLink": {
+    "message": "鸣谢",
+    "description": "Link to acknowledgements page"
+  },
   "aboutContribHdg": {
     "message": "想要帮助吗？",
     "description": "About dialog text for encouraging users to donate or help with translation"
