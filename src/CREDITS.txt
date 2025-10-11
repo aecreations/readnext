@@ -7,6 +7,7 @@ version of Read Next:
 
 Chinese (Simpified) . . . . . . .  heretic43
 German  . . . . . . . . . . . . .  private-lock
+Ukrainian . . . . . . . . . . . .  karinkakrushel
 
 
 If you're fluent in English and another world language and would like to help
