@@ -87,10 +87,6 @@ button, label {
     overflow: hidden;
 }
 
-body[data-locale="uk"] #toolbar {
-    height: 52px;
-}
-
 #add-link {
     height: 24px;
     margin-right: 4px;
@@ -110,10 +106,6 @@ body[data-locale="uk"] #toolbar {
 
 body[data-tbar-fix] #add-link {
     margin-right: 8px;
-}
-
-body[data-locale="uk"] #add-link {
-    display: block;
 }
 
 #add-link:hover {
@@ -137,11 +129,6 @@ body[data-locale="uk"] #add-link {
 body[data-os="mac"] #add-link,
 body[data-os="mac"] #bookmark-filter > input[type="radio"] ~ label {
     letter-spacing: -0.4px;
-}
-
-body[data-locale="uk"] #bookmark-filter {
-    display: block;
-    margin-top: 5px;
 }
 
 #add-link:hover,
@@ -571,6 +558,10 @@ body[data-os="mac"] .lightbox .msgbox-icon {
     margin-right: 0;
 }
 
+body[data-locale="uk"] .lightbox.msgbox > .dlg-btns > button {
+    width: 140px;
+}
+
 #rename-dlg {   
     top: 88px;
     --width: 200px;
@@ -605,7 +596,7 @@ body[data-locale="de"] #customize-dlg {
 }
 
 body[data-locale="uk"] #customize-dlg {
-    --height: 180px;
+    --height: 184px;
 }
 
 #customize-dlg > .dlg-content > .row {

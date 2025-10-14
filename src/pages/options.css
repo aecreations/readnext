@@ -447,27 +447,19 @@ body[data-os="mac"] #connect-dlg #authz-network-error > .wiz-icon {
     --height: 200px;
 }
 
-#disconnect-dlg > .dlg-content {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: flex-start;
-}
-
 #disconnect-dlg > .dlg-content > .msgbox-icon {
-    order: 1;
-    flex: 0 1 auto;
-
-    width: 72px;
-    margin-top: 4px;
-    margin-right: 12px;
+    float: left;
     background-image: url("../img/question-64.png");
-    background-size: 52px 52px;
+    background-size: contain;
     background-repeat: no-repeat;
+    width: 52px;
+    height: 52px;
 }
 
 body[data-os="win"] #disconnect-dlg > .dlg-content > .msgbox-icon {
     background-image: url("../img/confirm-win.png");
-    background-size: 48px 48px;
+    width: 48px;
+    height: 48px;
 }
 
 body[data-os="mac"] #disconnect-dlg > .dlg-content > .msgbox-icon {
@@ -475,8 +467,7 @@ body[data-os="mac"] #disconnect-dlg > .dlg-content > .msgbox-icon {
 }
 
 #disconnect-dlg > .dlg-content > .msgbox-content {
-    order: 2;
-    flex: 1 1 auto;
+    margin-left: 64px;
 }
 
 #disconnect-dlg > .dlg-content > .msgbox-content > .title {
