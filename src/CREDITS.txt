@@ -6,6 +6,7 @@ Many thanks to the Crowdin contributors who provided localizations for this
 version of Read Next:
 
 Chinese (Simpified) . . . . . . .  heretic43
+French  . . . . . . . . . . . . .  DenB10
 German  . . . . . . . . . . . . .  private-lock
 Ukrainian . . . . . . . . . . . .  karinkakrushel
 
