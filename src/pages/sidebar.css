@@ -581,6 +581,10 @@ body[data-locale="uk"] .lightbox.msgbox > .dlg-btns > button {
     --height: 216px;
 }
 
+body[data-locale="fr"] #rename-other-wnd-msgbox {
+    --height: 228px;
+}
+
 #rename-other-wnd-msgbox #switch-wnd-btn {
     margin-bottom: 8px;
 }
@@ -595,6 +599,7 @@ body[data-locale="de"] #customize-dlg {
     --height: 168px;
 }
 
+body[data-locale="fr"] #customize-dlg,
 body[data-locale="uk"] #customize-dlg {
     --height: 184px;
 }

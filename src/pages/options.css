@@ -299,8 +299,10 @@ body[data-locale="uk"] #auto-close-sidebar + label {
     vertical-align: bottom;
 }
 
+body[data-locale="fr"] #open-links-in-label,
 body[data-locale="uk"] #open-links-in-label {
     display: block;
+    margin-bottom: 2px;
 }
 
 #open-in-curr-tab + label {
@@ -550,6 +552,9 @@ body[data-locale="uk"] #about-dlg #ext-desc {
     margin-top: 8px;
 }
 
+body[data-locale="fr"] #about-dlg #usr-contrib-cta {
+    letter-spacing: -0.15px;
+}
 body[data-locale="de"] #about-dlg #usr-contrib-cta {
     letter-spacing: -0.45px;
 }

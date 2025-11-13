@@ -832,7 +832,7 @@ async function initAddLinkBtn()
   let lang = browser.i18n.getUILanguage();
   let btnLabel = browser.i18n.getMessage("addLink");
 
-  if (["de", "uk"].includes(lang)) {
+  if (["fr", "de", "uk"].includes(lang)) {
     // For locales where the button label is too long, show tooltip instead.
     $("#add-link").attr("title", btnLabel)
   }
