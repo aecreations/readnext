@@ -156,6 +156,12 @@ button:-moz-focusring:not(:disabled) {
     margin-left: 4px;
 }
 
+.pref-row {
+    /* Hanging indent for styling long checkbox labels */
+    margin-left: 30px;
+    text-indent: -26px;
+}
+
 .description {
     margin: 2px 0 10px 31px;
     font-size: 13px;
@@ -293,8 +299,10 @@ body[data-locale="uk"] #auto-close-sidebar + label {
     vertical-align: bottom;
 }
 
+body[data-locale="fr"] #open-links-in-label,
 body[data-locale="uk"] #open-links-in-label {
     display: block;
+    margin-bottom: 2px;
 }
 
 #open-in-curr-tab + label {
@@ -448,27 +456,19 @@ body[data-os="mac"] #connect-dlg #authz-network-error > .wiz-icon {
     --height: 200px;
 }
 
-#disconnect-dlg > .dlg-content {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: flex-start;
-}
-
 #disconnect-dlg > .dlg-content > .msgbox-icon {
-    order: 1;
-    flex: 0 1 auto;
-
-    width: 72px;
-    margin-top: 4px;
-    margin-right: 12px;
+    float: left;
     background-image: url("../img/question-64.png");
-    background-size: 52px 52px;
+    background-size: contain;
     background-repeat: no-repeat;
+    width: 52px;
+    height: 52px;
 }
 
 body[data-os="win"] #disconnect-dlg > .dlg-content > .msgbox-icon {
     background-image: url("../img/confirm-win.png");
-    background-size: 48px 48px;
+    width: 48px;
+    height: 48px;
 }
 
 body[data-os="mac"] #disconnect-dlg > .dlg-content > .msgbox-icon {
@@ -476,8 +476,7 @@ body[data-os="mac"] #disconnect-dlg > .dlg-content > .msgbox-icon {
 }
 
 #disconnect-dlg > .dlg-content > .msgbox-content {
-    order: 2;
-    flex: 1 1 auto;
+    margin-left: 64px;
 }
 
 #disconnect-dlg > .dlg-content > .msgbox-content > .title {
@@ -553,18 +552,17 @@ body[data-locale="uk"] #about-dlg #ext-desc {
 }
 
 #about-dlg #credits label {
-    line-height: 18px;
-}
-
-#about-dlg #translations-ack[data-locale="de"] {
-    letter-spacing: -0.01px;
+    line-height: 16px;
 }
 
 #about-dlg #usr-contrib-cta {
     margin-top: 8px;
 }
 
-#about-dlg #usr-contrib-cta[data-locale="de"] {
+body[data-locale="fr"] #about-dlg #usr-contrib-cta {
+    letter-spacing: -0.15px;
+}
+body[data-locale="de"] #about-dlg #usr-contrib-cta {
     letter-spacing: -0.45px;
 }
 
