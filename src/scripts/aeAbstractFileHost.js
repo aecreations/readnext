@@ -9,8 +9,6 @@ class aeAbstractFileHost
   SYNC_FILENAME = "readnext.json";
   SYNC_FILE_MIME_TYPE = "application/json";
   
-  _oauthClient = null;
-  
 
   constructor(aOAuthClient)
   {
