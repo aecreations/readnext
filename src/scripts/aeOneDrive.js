@@ -120,7 +120,7 @@ class aeOneDrive extends aeAbstractFileHost
     let reqOpts = {
       method: "GET",
       headers,
-    };   
+    };
 
     rv = await this._fetch(`https://graph.microsoft.com/v1.0/me/drive/special/approot:/${this.SYNC_FILENAME}`, reqOpts);
 
@@ -148,16 +148,6 @@ class aeOneDrive extends aeAbstractFileHost
     rv = new Date(respBody.lastModifiedDateTime);
 
     return rv;  
-  }
-
-  _getReqHdrs()
-  {
-    let rv;
-    let headers = new Headers();
-    headers.append("Authorization", `Bearer ${this._oauthClient.accessToken}`);
-    rv = headers;
-
-    return rv;
   }
 
   async _fetch(aResource, aInit, aIsRetry)
@@ -255,18 +245,6 @@ class aeOneDrive extends aeAbstractFileHost
     rv = newAccessToken;
 
     this._log("aeOneDrive._refreshAccessToken(): " + newAccessToken);
-
-    return rv;
-  }
-
-  _updateFetchArgs(aInit, aAccessToken)
-  {
-    let rv = aInit;
-    let headers = new Headers(aInit.headers);
-    if (headers.has("Authorization")) {
-      headers.set("Authorization", `Bearer ${aAccessToken}`);
-      rv.headers = headers;
-    }
 
     return rv;
   }
