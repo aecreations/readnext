@@ -17,6 +17,7 @@ class aeOneDrive extends aeAbstractFileHost
     super(aOAuthClient);
   }
 
+
   async getUsername()
   {
     let rv;
@@ -32,6 +33,7 @@ class aeOneDrive extends aeAbstractFileHost
 
     return rv;
   }
+
 
   async syncFileExists()
   {
@@ -53,12 +55,14 @@ class aeOneDrive extends aeAbstractFileHost
     return rv;
   }
 
+
   async createSyncFile(aLocalData)
   {
-    let rv = await this._setSyncData(aLocalData);
+    let rv = await this.setSyncData(aLocalData);
 
     return rv;
   }
+
 
   async getSyncData()
   {
@@ -79,12 +83,30 @@ class aeOneDrive extends aeAbstractFileHost
     return rv;
   }
 
+
   async setSyncData(aLocalData)
   {
-    let rv = await this._setSyncData(aLocalData);
+    let rv;
+    let headers = this._getReqHdrs();
+    headers.append("Content-Type", this.SYNC_FILE_MIME_TYPE);
 
-    return rv;
+    let reqOpts = {
+      method: "PUT",
+      headers,
+      body: JSON.stringify(aLocalData),
+    };
+    let resp = await this._fetch(`https://graph.microsoft.com/v1.0/me/drive/special/approot:/${this.SYNC_FILENAME}:/content`, reqOpts);
+
+    if (!resp.ok) {
+      throw new Error(`OneDrive::upload: status: ${resp.status} - ${resp.statusText}`);
+    }
+
+    let respBody = await resp.json();
+    rv = new Date(respBody.lastModifiedDateTime);
+
+    return rv;  
   }
+
 
   async getLastModifiedTime()
   {
@@ -127,28 +149,6 @@ class aeOneDrive extends aeAbstractFileHost
     return rv;
   }
 
-  async _setSyncData(aLocalData)
-  {
-    let rv;
-    let headers = this._getReqHdrs();
-    headers.append("Content-Type", this.SYNC_FILE_MIME_TYPE);
-
-    let reqOpts = {
-      method: "PUT",
-      headers,
-      body: JSON.stringify(aLocalData),
-    };
-    let resp = await this._fetch(`https://graph.microsoft.com/v1.0/me/drive/special/approot:/${this.SYNC_FILENAME}:/content`, reqOpts);
-
-    if (! resp.ok) {
-      throw new Error(`OneDrive::upload: status: ${resp.status} - ${resp.statusText}`);
-    }
-
-    let respBody = await resp.json();
-    rv = new Date(respBody.lastModifiedDateTime);
-
-    return rv;  
-  }
 
   async _fetch(aResource, aInit, aIsRetry)
   {
@@ -194,11 +194,12 @@ class aeOneDrive extends aeAbstractFileHost
     return rv;
   }
 
+
   async _refreshAccessToken()
   {
     let rv;
     let params = new URLSearchParams({
-      stgsvc: this.AUTHZ_SRV_KEY,
+      svc: this.AUTHZ_SRV_KEY,
       grant_type: "refresh_token",
       refresh_token: this._oauthClient.refreshToken,
     });
