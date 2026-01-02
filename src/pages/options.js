@@ -233,6 +233,7 @@ function initDialogs()
         accessToken: null,
         refreshToken: null,
         fileHostUsr: null,
+        syncFileID: null,  // Google Drive
       };
 
       try {
@@ -495,8 +496,8 @@ $("#toggle-sync").on("click", async (aEvent) => {
   }
   else {
     // TEMPORARY: prompt for which online file host to use.
-    let fileHost = prompt("Which file host (1=Dropbox, 3=OneDrive):", "1");
-    if (fileHost && [1, 3].includes(Number(fileHost))) {
+    let fileHost = prompt("sync reading list using (1=Dropbox, 2=Google Drive, 3=OneDrive):", "1");
+    if (fileHost && [1, 2, 3].includes(Number(fileHost))) {
       gDialogs.connectWiz.backnd = fileHost;
       gDialogs.connectWiz.showModal();
     }

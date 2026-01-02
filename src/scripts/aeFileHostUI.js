@@ -26,6 +26,14 @@ function aeFileHostUI(aFileHostID)
     };
     break;
 
+  case aeConst.FILEHOST_GOOGLE_DRIVE:
+    rv = {
+      fileHostKey: "googledrive",
+      fileHostName: browser.i18n.getMessage("fhGoogDrv"),
+      iconPath: "../img/googledrive.svg",
+    };
+    break;
+
   default:
     break;
   }

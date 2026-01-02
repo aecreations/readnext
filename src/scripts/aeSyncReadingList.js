@@ -37,6 +37,12 @@ let aeSyncReadingList = {
 
     case aeConst.FILEHOST_ONEDRIVE:
       rv = new aeOneDrive(aOAuthClient);
+      break;
+
+    case aeConst.FILEHOST_GOOGLE_DRIVE:
+      rv = new aeGoogleDrive(aOAuthClient);
+      break;
+      
     default:
       break;
     }
