@@ -48,7 +48,7 @@ class aeGoogleDrive extends aeAbstractFileHost
       method: "GET",
       headers,
     };
-    let q = "spaces=appDataFolder&fields=files(id,name,mimeType,size,modifiedTime)";
+    let q = "fields=files(id,name,mimeType,size,modifiedTime)";
     let resp = await this._fetch(`https://www.googleapis.com/drive/v3/files?${q}`, reqOpts);
     
     if (resp.ok) {
@@ -82,7 +82,6 @@ class aeGoogleDrive extends aeAbstractFileHost
 
     let body = JSON.stringify({
       name: this.SYNC_FILENAME,
-      parents: ["appDataFolder"],
     });
     let reqOpts = {
       method: "POST",
