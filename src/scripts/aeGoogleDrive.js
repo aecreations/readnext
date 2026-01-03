@@ -48,8 +48,9 @@ class aeGoogleDrive extends aeAbstractFileHost
       method: "GET",
       headers,
     };
-    let q = "fields=files(id,name,mimeType,size,modifiedTime)";
-    let resp = await this._fetch(`https://www.googleapis.com/drive/v3/files?${q}`, reqOpts);
+    let query = "q: name = 'readnext.json'&fields=files(id,name,mimeType,size,modifiedTime)&orderBy=modifiedTime desc";
+    let listFilesURL = encodeURI(`https://www.googleapis.com/drive/v3/files?${query}`);
+    let resp = await this._fetch(listFilesURL, reqOpts);
     
     if (resp.ok) {
       let respBody = await resp.json();
