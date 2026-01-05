@@ -431,8 +431,11 @@ async function restartSyncInterval()
 
 async function pushLocalChanges()
 {
-  let syncEnabled = await aePrefs.getPref("syncEnabled");
+  let {syncEnabled, syncBackend, accessToken, refreshToken} = await aePrefs.getAllPrefs();
   if (syncEnabled) {
+    let oauthClient = new aeOAuthClient(accessToken, refreshToken);
+    await aeSyncReadingList.init(Number(syncBackend), oauthClient);
+
     log("Read Next: Pushing local changes...");
     try {
       await aeSyncReadingList.push();
