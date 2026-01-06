@@ -352,6 +352,11 @@
     "description": "Error that appears in the cloud file service connection wizard if the user didn't grant sufficent permissions to Google Drive"
   },
 
+  "wizGoogDrvRevokErr": {
+    "message": "Please go to your Google Account Settings to remove access given to Read Next.",
+    "description": "Fallback error message that appears when revocation of access token using Google API fails"
+  },
+
   "wizAuthzSuccs": {
     "message": "Read Next has started syncing your reading list to $1.  It may take a moment to finish.",
     "description": "Read Next has started syncing your reading list to <name of cloud file service, e.g. Dropbox>.  It may take a moment to finish."

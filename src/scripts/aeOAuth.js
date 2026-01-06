@@ -169,6 +169,8 @@ let aeOAuth = function () {
       if (_authzSrvKey == "googledrive") {
         let scope = respBody["scope"];
         if (!scope.includes(GOOGDRV_SCOPES)) {
+          // Save access token so that it can be used in revoke API call.
+          _accessToken = respBody["access_token"];
           throw new aeAuthorizationError("Insufficient permissions granted for Google Drive");
         }
       }
@@ -181,6 +183,39 @@ let aeOAuth = function () {
       };
 
       return rv;
-    }
+    },
+
+
+    // Google Drive only
+    async revokeAccessToken()
+    {
+      if (!_authzSrvKey) {
+        throw new ReferenceError("Authorization service not defined");
+      }
+      if (_authzSrvKey != "googledrive") {
+        throw new Error("Access token revocation not supported");
+      }
+
+      let headers = new Headers({"Content-Type": "application/x-www-form-urlencoded"});
+      let reqOpts = {
+        method: "POST",
+        headers,
+      };
+
+      let resp;
+      try {
+        resp = await fetch(`https://oauth2.googleapis.com/revoke?token=${_accessToken}`, reqOpts);
+      }
+      catch (e) {
+        console.error("aeOAuth.revokeAccessToken(): " + e);
+        throw e;
+      }
+
+      if (!resp.ok) {
+        throw new Error(`Failed to revoke access token from ${_authzSrvKey}\n\nstatus: ${resp.status} - ${resp.statusText}`);
+      }
+
+      _accessToken = null;
+    },
   };
 }();

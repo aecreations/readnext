@@ -178,6 +178,7 @@ function initDialogs()
       this.find(".dlg-btns > button").removeAttr("disabled");
       btnAccept.text(browser.i18n.getMessage("btnClose"));
       btnCancel.hide();
+      revokeGoogleDriveAccess();
       break;
 
     default:
@@ -464,6 +465,18 @@ async function connectCloudFileSvc(aBackend)
   catch {}
 
   showSyncStatus(syncPrefs);
+}
+
+
+async function revokeGoogleDriveAccess()
+{
+  try {
+    await aeOAuth.revokeAccessToken();
+  }
+  catch (e) {
+    console.error(e);
+    alert(browser.i18n.getMessage("wizGoogDrvRevokErr"));
+  }
 }
 
 
