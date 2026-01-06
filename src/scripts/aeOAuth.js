@@ -4,7 +4,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-let aeOAuth = function () {
+let aeOAuth = function ()
+{
   const GOOGDRV_SCOPES = "https://www.googleapis.com/auth/drive.file";
   
   let _redirectURL;
@@ -67,7 +68,7 @@ let aeOAuth = function () {
         console.error(`Read Next::aeOAuth.js: aeOAuth.getAPIKey(): HTTP error response returned from aeOAPS\nStatus: ${resp.status} - ${resp.statusText}\nDetails:`);
         console.error(respBody);
 
-        throw Error(`Failed to get client ID from aeOAPS\nStatus: ${resp.status} - ${resp.statusText}`);
+        throw new Error(`Failed to get client ID from aeOAPS\nStatus: ${resp.status} - ${resp.statusText}`);
       }
 
       rv = respBody["api_key"];
@@ -82,7 +83,7 @@ let aeOAuth = function () {
       let csrfTok;
 
       if (! _authzSrvKey) {
-        throw Error("Authorization service not defined");
+        throw new ReferenceError("Authorization service not defined");
       }
 
       let apiKey;
@@ -136,7 +137,7 @@ let aeOAuth = function () {
       let rv;
 
       if (! _authzCode) {
-        throw Error("Authorization code not defined");
+        throw new ReferenceError("Authorization code not defined");
       }
 
       let requestParams = new URLSearchParams({
@@ -160,7 +161,7 @@ let aeOAuth = function () {
       }
   
       if (! resp.ok) {
-        throw Error(`failed to get access token from ${_authzSrvKey}\n\nstatus: ${resp.status} - ${resp.statusText}`);
+        throw new Error(`failed to get access token from ${_authzSrvKey}\n\nstatus: ${resp.status} - ${resp.statusText}`);
       }
   
       let respBody = await resp.json();
@@ -211,11 +212,11 @@ let aeOAuth = function () {
         throw e;
       }
 
+      _accessToken = null;
+
       if (!resp.ok) {
         throw new Error(`Failed to revoke access token from ${_authzSrvKey}\n\nstatus: ${resp.status} - ${resp.statusText}`);
       }
-
-      _accessToken = null;
     },
   };
 }();
