@@ -5,6 +5,8 @@
  */
 
 let aeOAuth = function () {
+  const GOOGDRV_SCOPES = "https://www.googleapis.com/auth/drive.file";
+  
   let _redirectURL;
   let _redirectURLFromOAuth;
   let _authzCode;
@@ -19,7 +21,7 @@ let aeOAuth = function () {
       authzURL: `https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=%k&redirect_uri=%r&response_type=code&scope=User.Read+Files.ReadWrite.AppFolder+offline_access&response_mode=query`,
     },
     googledrive: {
-      authzURL: `https://accounts.google.com/o/oauth2/v2/auth?client_id=%k&redirect_uri=%r&response_type=code&scope=https%3A//www.googleapis.com/auth/drive.file%20https%3A//www.googleapis.com/auth/userinfo.email&include_granted_scopes=true&access_type=offline&prompt=consent&state=%t`,
+      authzURL: `https://accounts.google.com/o/oauth2/v2/auth?client_id=%k&redirect_uri=%r&response_type=code&scope=${encodeURIComponent(GOOGDRV_SCOPES)}%20https%3A//www.googleapis.com/auth/userinfo.email&include_granted_scopes=true&access_type=offline&prompt=consent&state=%t`,
     },
   };
 
@@ -162,6 +164,15 @@ let aeOAuth = function () {
       }
   
       let respBody = await resp.json();
+
+      // Google Drive: Check that all required permissions were granted.
+      if (_authzSrvKey == "googledrive") {
+        let scope = respBody["scope"];
+        if (!scope.includes(GOOGDRV_SCOPES)) {
+          throw new aeAuthorizationError("Insufficient permissions granted for Google Drive");
+        }
+      }
+
       _accessToken = respBody["access_token"];
       _refreshToken = respBody["refresh_token"];
       rv = {

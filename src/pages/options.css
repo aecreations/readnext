@@ -436,20 +436,23 @@ body[data-os="mac"] #connect-dlg #authz-retry > .wiz-icon {
     background-image: url("../img/question-64-mac.png");
 }
 
-#connect-dlg #authz-network-error > .wiz-icon {
+#connect-dlg #authz-network-error > .wiz-icon,
+#connect-dlg #authz-googdrv-perm-error > .wiz-icon {
     margin-top: -2px;    
     width: 52px;
     height: 52px;
     background-image: url("../img/warning-64.png");
 }
 
-body[data-os="win"] #connect-dlg #authz-network-error > .wiz-icon {
+body[data-os="win"] #connect-dlg #authz-network-error > .wiz-icon,
+body[data-os="win"] #connect-dlg #authz-googdrv-perm-error > .wiz-icon {
     width: 48px;
     height: 48px;
     background-image: url("../img/alert-win.png");
 }
 
-body[data-os="mac"] #connect-dlg #authz-network-error > .wiz-icon {
+body[data-os="mac"] #connect-dlg #authz-network-error > .wiz-icon,
+body[data-os="mac"] #connect-dlg #authz-googdrv-perm-error > .wiz-icon {
     background-image: url("../img/warning-64-mac.png");
 }
 

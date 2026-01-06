@@ -173,6 +173,13 @@ function initDialogs()
       btnAccept.text(browser.i18n.getMessage("btnRetry"));
       break;
 
+    case "authz-googdrv-perm-error":
+      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitNetErr");
+      this.find(".dlg-btns > button").removeAttr("disabled");
+      btnAccept.text(browser.i18n.getMessage("btnClose"));
+      btnCancel.hide();
+      break;
+
     default:
       break;
     }
@@ -207,6 +214,7 @@ function initDialogs()
       connectCloudFileSvc(this.backnd);
       break;
 
+    case "authz-googdrv-perm-error":
     case "authz-success":
       this.close();
       break;
@@ -420,6 +428,10 @@ async function connectCloudFileSvc(aBackend)
     if (e instanceof TypeError) {
       // TypeError: NetworkError when attempting to fetch resource.
       gDialogs.connectWiz.goToPage("authz-network-error");
+    }
+    else if (e instanceof aeAuthorizationError) {
+      // aeAuthorizationError: Insufficient permissions granted for Google Drive.
+      gDialogs.connectWiz.goToPage("authz-googdrv-perm-error");
     }
     else {
       gDialogs.connectWiz.goToPage("authz-retry");

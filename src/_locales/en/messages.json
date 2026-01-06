@@ -347,6 +347,11 @@
     "description": "Read Next didn't finish connecting to <name of cloud file service, e.g. Dropbox>.  Do you want to try again?"
   },
 
+  "wizGoogDrvAuthzErr": {
+    "message": "Read Next can't sync your reading list because it wasn't given enough permission to access Google Drive.",
+    "description": "Error that appears in the cloud file service connection wizard if the user didn't grant sufficent permissions to Google Drive"
+  },
+
   "wizAuthzSuccs": {
     "message": "Read Next has started syncing your reading list to $1.  It may take a moment to finish.",
     "description": "Read Next has started syncing your reading list to <name of cloud file service, e.g. Dropbox>.  It may take a moment to finish."
