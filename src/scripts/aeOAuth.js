@@ -19,7 +19,7 @@ let aeOAuth = function () {
       authzURL: `https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=%k&redirect_uri=%r&response_type=code&scope=User.Read+Files.ReadWrite.AppFolder+offline_access&response_mode=query`,
     },
     googledrive: {
-      authzURL: `https://accounts.google.com/o/oauth2/v2/auth?client_id=%k&redirect_uri=%r&response_type=code&scope=https%3A//www.googleapis.com/auth/drive.file%20https%3A//www.googleapis.com/auth/userinfo.email&include_granted_scopes=true&access_type=offline&prompt=consent`,
+      authzURL: `https://accounts.google.com/o/oauth2/v2/auth?client_id=%k&redirect_uri=%r&response_type=code&scope=https%3A//www.googleapis.com/auth/drive.file%20https%3A//www.googleapis.com/auth/userinfo.email&include_granted_scopes=true&access_type=offline&prompt=consent&state=%t`,
     },
   };
 
@@ -77,6 +77,7 @@ let aeOAuth = function () {
     async getAuthorizationCode()
     {
       let rv;
+      let csrfTok;
 
       if (! _authzSrvKey) {
         throw Error("Authorization service not defined");
@@ -94,6 +95,14 @@ let aeOAuth = function () {
       let authzURL = _authzSrv[_authzSrvKey].authzURL;
       authzURL = authzURL.replace("%k", apiKey);
       authzURL = authzURL.replace("%r", _redirectURL);
+      if (_authzSrvKey == "googledrive") {
+        // Add state parameter to guard against CSRF attacks.
+        let uia = new Uint32Array(1);
+        crypto.getRandomValues(uia);
+        csrfTok = md5(uia[0]);
+        authzURL = authzURL.replace("%t", csrfTok);
+      }
+
       let webAuthPpty = {
         url: authzURL,
         interactive: true
@@ -107,7 +116,15 @@ let aeOAuth = function () {
         throw e;
       }
 
-      rv = _authzCode = new URL(_redirectURLFromOAuth).searchParams.get("code");
+      let redirURL = new URL(_redirectURLFromOAuth);
+      if (_authzSrvKey == "googledrive") {
+      let stateParam = redirURL.searchParams.get("state");
+        if (stateParam != csrfTok) {
+          throw new RangeError("aeOAuth.getAuthorizationCode(): CSRF token mismatch!");
+        }
+      }
+      
+      rv = _authzCode = redirURL.searchParams.get("code");
       return rv;
     },
 

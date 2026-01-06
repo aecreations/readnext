@@ -399,6 +399,11 @@ async function connectCloudFileSvc(aBackend)
       // TypeError: NetworkError when attempting to fetch resource.
       gDialogs.connectWiz.goToPage("authz-network-error");
     }
+    else if (e instanceof RangeError) {
+      // CSRF token mismatch.
+      alert("A CSRF token mismatch was detected during authorization. Aborting.");
+      gDialogs.connectWiz.close();
+    }
     else {
       gDialogs.connectWiz.goToPage("authz-retry");
     }
