@@ -10,7 +10,10 @@
     "gecko": {
       "id": "readnext@aecreations.github.io",
       "strict_min_version": "128.0",
-      "update_url": "https://aecreations.github.io/updates/update-test.json"
+      "update_url": "https://aecreations.github.io/updates/update-test.json",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
   },
 
