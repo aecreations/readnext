@@ -298,13 +298,18 @@
   },
 
   "noSync": {
-    "message": "Synchronize your reading list to the cloud using Dropbox.",
+    "message": "Synchronize your reading list to the cloud.",
     "description": "Message in the extension preferences page when reading list sync is turned off"
   },
 
   "connectedTo": {
     "message": "Connected to $1",
     "description": "Connected to <name of cloud file service, e.g. Dropbox>"
+  },
+
+  "connWizSelct": {
+    "message": "Sync your reading list using:",
+    "description": "Label for the cloud file host chooser in the cloud file service connection wizard in extension preferences page"
   },
 
   "connWizTitle1": {

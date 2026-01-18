@@ -392,6 +392,81 @@ body[data-os="mac"] #connect-dlg {
     background-repeat: no-repeat;
 }
 
+#connect-dlg #connect-to > .wiz-icon {
+    width: 48px;
+    height: 48px;
+    background-image: url("../img/readnext64.svg")
+}
+
+#connect-dlg #connect-to #fh-picker-label {
+    font-size: 15px;
+}
+
+#connect-dlg #connect-to #fh-picker {
+    display: inline-block;
+    margin-top: 10px;
+    border: 1px solid var(--color-tb-border);
+    padding: 4px;
+}
+
+#connect-dlg #connect-to #fh-picker input[type="radio"] {
+    appearance: none;
+
+    width: 92px;
+    height: 80px;
+    margin: 0;
+
+    background-size: 64px 64px;
+    background-position: 14px 8px;
+    background-repeat: no-repeat;
+}
+
+#connect-dlg #connect-to #fh-picker .fh-btn {
+    display: inline-block;
+    width: 92px;
+}
+
+#connect-dlg #connect-to #fh-picker .fh-btn label {
+    display: block;
+    text-align: center;
+}
+
+#connect-dlg #connect-to #fh-picker input[type="radio"]:hover,
+#connect-dlg #connect-to #fh-picker input[type="radio"]:checked {
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 6px;
+    background-position: 12px 6px;
+}
+
+#connect-dlg #connect-to #fh-picker input[type="radio"]:hover {
+    border-color: #70c0e7;
+    background-color: #eff9fe;
+}
+
+#connect-dlg #connect-to #fh-picker input[type="radio"]:checked,
+#connect-dlg #connect-to #fh-picker input[type="radio"]:hover:checked {
+    border-color: #26a0da;
+    background-color: #cbe8f6;
+}
+
+#connect-dlg #connect-to #fh-picker input[type="radio"]:active {
+    border-color: #70c0e7;
+    background-color: #cbe8f6;
+}
+
+#connect-dlg #connect-to #fh-picker #fh-dropbox {
+    background-image: url("../img/dropbox.svg");
+}
+
+#connect-dlg #connect-to #fh-picker #fh-googdrv {
+    background-image: url("../img/googledrive.svg");
+}
+
+#connect-dlg #connect-to #fh-picker #fh-onedrive {
+    background-image: url("../img/onedrive.svg");
+}
+
 #connect-dlg #authz-prologue > .wiz-icon.dropbox,
 #connect-dlg #authz-progress > .wiz-icon.dropbox {
     width: 48px;

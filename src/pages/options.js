@@ -123,7 +123,8 @@ function initDialogs()
 {
   gDialogs.connectWiz = new aeDialog("#connect-dlg");
   gDialogs.connectWiz.setProps({
-    backnd: aeConst.FILEHOST_DROPBOX,
+    backnd: null,
+    fhUI: {},
   });
   
   gDialogs.connectWiz.goToPage = function (aPageID)
@@ -133,28 +134,31 @@ function initDialogs()
 
     let btnAccept = this.find(".dlg-btns > .dlg-accept");
     let btnCancel = this.find(".dlg-btns > .dlg-cancel");
-    let {fileHostKey, fileHostName} = aeFileHostUI(this.backnd);
-    log("Read Next::options.js: File host info:");
-    log(aeFileHostUI(this.backnd));
 
     switch (aPageID) {
     case "authz-prologue":
-      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle1", fileHostName);
-      this._dlgElt.find("#authz-prologue > .wiz-icon").addClass(fileHostKey);
-      this._dlgElt.find("#authz-prologue .title").text(browser.i18n.getMessage("connWizTitle1", fileHostName));
+      let fhBtns = Array.from(this.find(`#connect-to #fh-picker input[type="radio"]`));
+      let [selctFileHost] = fhBtns.filter(aBtn => aBtn.checked);
+      this.backnd = selctFileHost.value;
+      this.fhUI = aeFileHostUI(this.backnd);
+      log("Read Next::options.js: File host info:");
+      log(aeFileHostUI(this.backnd));
+      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle1", this.fhUI.fileHostName);
+      this.find("#authz-prologue > .wiz-icon").addClass(this.fhUI.fileHostKey);
+      this.find("#authz-prologue .title").text(browser.i18n.getMessage("connWizTitle1", this.fhUI.fileHostName));
       this.find(".dlg-btns > .dlg-accept").addClass("default");
-      $("#authz-instr").text(browser.i18n.getMessage("wizAuthzInstr1", fileHostName));
+      $("#authz-instr").text(browser.i18n.getMessage("wizAuthzInstr1", this.fhUI.fileHostName));
       break;
 
     case "authz-progress":
       this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle2");
-      this._dlgElt.find("#authz-progress > .wiz-icon").addClass(fileHostKey);
+      this.find("#authz-progress > .wiz-icon").addClass(this.fhUI.fileHostKey);
       this.find(".dlg-btns > button").attr("disabled", "true");
       break;
 
     case "authz-success":
       this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle3");
-      $("#authz-succs-msg").text(browser.i18n.getMessage("wizAuthzSuccs", fileHostName));
+      $("#authz-succs-msg").text(browser.i18n.getMessage("wizAuthzSuccs", this.fhUI.fileHostName));
       btnAccept.removeAttr("disabled").text(browser.i18n.getMessage("btnClose"));
       btnCancel.hide();
       this.changeKeyboardNavigableElts([btnAccept.get(0)]);
@@ -162,7 +166,7 @@ function initDialogs()
 
     case "authz-retry":
       this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle1");
-      $("#authz-interrupt").text(browser.i18n.getMessage("wizAuthzInterrupt", fileHostName));
+      $("#authz-interrupt").text(browser.i18n.getMessage("wizAuthzInterrupt", this.fhUI.fileHostName));
       this.find(".dlg-btns > button").removeAttr("disabled");
       btnAccept.text(browser.i18n.getMessage("btnRetry"));
       break;
@@ -200,7 +204,15 @@ function initDialogs()
 
   gDialogs.connectWiz.onInit = function ()
   {
-    this.goToPage("authz-prologue");
+    this.find(".dlg-btns > .dlg-accept").attr("disabled", true);
+    this.goToPage("connect-to");
+  };
+
+  gDialogs.connectWiz.onFirstInit = function ()
+  {
+    this.find(`#connect-to #fh-picker input[type="radio"]`).on("click", aEvent => {
+      this.find(".dlg-btns > .dlg-accept").removeAttr("disabled");
+    }); 
   };
 
   gDialogs.connectWiz.onAccept = async function ()
@@ -208,6 +220,10 @@ function initDialogs()
     let currPg = this.getPageID();
 
     switch (currPg) {
+    case "connect-to":
+      this.goToPage("authz-prologue");
+      break;
+
     case "authz-prologue":
     case "authz-retry":
     case "authz-network-error":
@@ -227,9 +243,12 @@ function initDialogs()
 
   gDialogs.connectWiz.onUnload = function ()
   {
-    this.goToPage("authz-prologue");
+    this.find(`#connect-to #fh-picker input[type="radio"]`).prop("checked", false);
+    this.find("#authz-prologue > .wiz-icon").removeClass("dropbox onedrive googledrive");
+    this.find("#authz-progress > .wiz-icon").removeClass("dropbox onedrive googledrive");
     this.find(".dlg-btns > .dlg-accept").addClass("default").text(browser.i18n.getMessage("btnNext"));
     this.find(".dlg-btns > .dlg-cancel").removeAttr("disabled").show();
+    this.goToPage("connect-to");
   };
 
   gDialogs.disconnectConfirm = new aeDialog("#disconnect-dlg");
@@ -525,13 +544,7 @@ $("#toggle-sync").on("click", async (aEvent) => {
     gDialogs.disconnectConfirm.showModal();
   }
   else {
-    // TEMPORARY: prompt for which online file host to use.
-    let fileHost = prompt("sync reading list using (1=Dropbox, 2=Google Drive, 3=OneDrive):", "1");
-    if (fileHost && [1, 2, 3].includes(Number(fileHost))) {
-      gDialogs.connectWiz.backnd = fileHost;
-      gDialogs.connectWiz.showModal();
-    }
-    // END TEMPORARY
+    gDialogs.connectWiz.showModal();
   }
 });
 

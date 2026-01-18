@@ -75,6 +75,24 @@
     <!-- Dialog boxes -->
     <div id="connect-dlg" class="lightbox" role="dialog">
       <div class="dlg-content">
+        <div id="connect-to" class="wiz-page">
+          <div class="wiz-icon"></div>
+          <div class="wiz-body">
+	    <p class="title" data-i18n="setupSync"></p>
+	    <label id="fh-picker-label" data-i18n="connWizSelct"></label>
+            <div id="fh-picker" role="radiogroup" aria-labelledby="fh-picker-label">
+              <div class="fh-btn">
+                <input type="radio" name="cloud-file-host" id="fh-dropbox" value="1"><label for="fh-dropbox" data-i18n="fhDropbox"></label>
+              </div>
+              <div class="fh-btn">
+                <input type="radio" name="cloud-file-host" id="fh-googdrv" value="2"><label for="fh-googdrv" data-i18n="fhGoogDrv"></label>
+              </div>
+              <div class="fh-btn">
+                <input type="radio" name="cloud-file-host" id="fh-onedrive" value="3"><label for="fh-onedrive" data-i18n="fhOneDrive"></label>
+              </div>
+            </div>
+          </div>
+        </div>
 	<div id="authz-prologue" class="wiz-page">
           <div class="wiz-icon"></div>
           <div class="wiz-body">
