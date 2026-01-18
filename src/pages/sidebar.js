@@ -289,13 +289,13 @@ let gSearchBox = {
     }
     
     $("#search-box").prop("placeholder", browser.i18n.getMessage("srchBoxHint"))
-      .focus(aEvent => {
+      .on("focus", aEvent => {
         $("#search-box-ctr").addClass("focus");
       })
-      .blur(aEvent => {
+      .on("blur", aEvent => {
         $("#search-box-ctr").removeClass("focus");
       })
-      .keyup(aEvent => {
+      .on("keyup", aEvent => {
         if (aEvent.key == "Tab" && aEvent.shiftKey) {
           return;
         }
@@ -1054,7 +1054,7 @@ function initDialogs()
         return;
       }
       
-      focusedBtn.blur();
+      focusedBtn.trigger("blur");
       this._lastFocusedBtn = focusedBtn;
 
     }).on("mouseleave", aEvent => {
@@ -1094,7 +1094,7 @@ function initDialogs()
           // Hovered over separator or other whitespace in the context menu.
           // In this case, don't focus anything.
           this._focusedIdx = null;
-          this._lastFocusedBtn?.blur();
+          this._lastFocusedBtn?.trigger("blur");
         }
       }
 
