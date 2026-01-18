@@ -141,17 +141,17 @@ $("#btn-retry").on("click", aEvent => {
 $("#btn-cancel").on("click", async (aEvent) => { await closePage() });
 
 
-$(window).keydown(aEvent => {
+$(window).on("keydown", aEvent => {
   if (aEvent.key == "Enter") {
     if (aEvent.target.tagName == "BUTTON" && !aEvent.target.classList.contains("default")) {
       aEvent.target.click();
     }
     else {
-      $("#btn-retry").click();
+      $("#btn-retry").trigger("click");
     }
   }
   else if (aEvent.key == "Escape") {
-    $("#btn-cancel").click();
+    $("#btn-cancel").trigger("click");
   }
   else {
     aeInterxn.suppressBrowserShortcuts(aEvent);

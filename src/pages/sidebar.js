@@ -401,7 +401,7 @@ let gSearchBox = {
 
   async reset()
   {
-    $("#search-box").val("").focus();
+    $("#search-box").val('').trigger("focus");
     $("#clear-search").css({visibility: "hidden"});
     this._numMatches = null;
     toggleNotFoundMsg(false);
@@ -1032,13 +1032,13 @@ function initDialogs()
     });
     $("#cmd-show-all").on("click", aEvent => {
       this.close();
-      $("#filter-all").click();
+      $("#filter-all").trigger("click");
       $("#cmd-show-unread").removeClass("context-menu-icon-checked");
       $("#cmd-show-all").addClass("context-menu-icon-checked");
     });
     $("#cmd-show-unread").on("click", aEvent => {
       this.close();
-      $("#filter-unread").click();
+      $("#filter-unread").trigger("click");
       $("#cmd-show-all").removeClass("context-menu-icon-checked");
       $("#cmd-show-unread").addClass("context-menu-icon-checked");
     });
@@ -1245,7 +1245,7 @@ function initContextMenu()
         name: browser.i18n.getMessage("cxtMnuFltrAll"),
         className: "ae-menuitem",
         callback(aKey, aOpt) {
-          $("#filter-all").click();
+          $("#filter-all").trigger("click");
         },
         icon(aOpt, aItemElement, aItemKey, aItem) {
           aItemElement.removeClass("context-menu-icon-checked")
@@ -1258,7 +1258,7 @@ function initContextMenu()
         name: browser.i18n.getMessage("cxtMnuFltrUnread"),
         className: "ae-menuitem",
         callback(aKey, aOpt) {
-          $("#filter-unread").click();
+          $("#filter-unread").trigger("click");
         },
         icon(aOpt, aItemElement, aItemKey, aItem) {
           aItemElement.removeClass("context-menu-icon-checked")
@@ -1409,7 +1409,7 @@ function initContextMenu()
         name: browser.i18n.getMessage("cxtMnuFltrAll"),
         className: "ae-menuitem",
         callback(aKey, aOpt) {
-          $("#filter-all").click();
+          $("#filter-all").trigger("click");
         },
         icon(aOpt, aItemElement, aItemKey, aItem) {
           aItemElement.removeClass("context-menu-icon-checked")
@@ -1422,7 +1422,7 @@ function initContextMenu()
         name: browser.i18n.getMessage("cxtMnuFltrUnread"),
         className: "ae-menuitem",
         callback(aKey, aOpt) {
-          $("#filter-unread").click();
+          $("#filter-unread").trigger("click");
         },
         icon(aOpt, aItemElement, aItemKey, aItem) {
           aItemElement.removeClass("context-menu-icon-checked")
