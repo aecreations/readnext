@@ -1,8 +1,8 @@
 # Makefile for Read Next
 
-EXT_VER=`./getver.pl`
+EXT_VER=`./getver.py`
 DIST_FILE=readnext-$(EXT_VER).zip
-EXCLUDE=*~ *\.pl Makefile
+EXCLUDE=*~ *\.py Makefile
 
 
 $(DIST_FILE):
