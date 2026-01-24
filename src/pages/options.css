@@ -431,6 +431,12 @@ body[data-os="mac"] #connect-dlg {
     text-align: center;
 }
 
+#connect-dlg #connect-to #fh-picker input[type="radio"]:-moz-focusring {
+    outline-style: none;
+    border-color: #70c0e7;
+}
+
+#connect-dlg #connect-to #fh-picker input[type="radio"]:-moz-focusring,
 #connect-dlg #connect-to #fh-picker input[type="radio"]:hover,
 #connect-dlg #connect-to #fh-picker input[type="radio"]:checked {
     border-width: 2px;
@@ -451,8 +457,17 @@ body[data-os="mac"] #connect-dlg {
 }
 
 #connect-dlg #connect-to #fh-picker input[type="radio"]:active {
+    border-width: 4px;
     border-color: #70c0e7;
     background-color: #cbe8f6;
+    background-position: 10px 4px;
+}
+
+#connect-dlg #connect-to #fh-picker input[type="radio"].deselect {
+    border-width: 1px;
+    border-color: #70c0e7;
+    background-color: #eff9fe;
+    background-position: 13px 7px;
 }
 
 #connect-dlg #connect-to #fh-picker #fh-dropbox {
