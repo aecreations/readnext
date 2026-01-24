@@ -537,6 +537,11 @@
     "description": "About dialog"
   },
 
+  "tmDisclm": {
+    "message": "All trademarks mentioned in this product are the property of their respective owners.",
+    "description": "Trademark disclaimer in the About dialog"
+  },
+
   "upgradeNotifcn": {
     "message": "Read Next was recently upgraded! Click here to see what's new.",
     "description": "Post-upgrade notification text"
