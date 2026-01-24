@@ -288,8 +288,8 @@
   },
 
   "btnConnect": {
-    "message": "Connect…",
-    "description": "Button in extension preferences for connecting to a cloud file host to sync the reading list"
+    "message": "Set Up Sync…",
+    "description": "Button in extension preferences for setting up connection to a cloud file host to sync the reading list"
   },
 
   "btnDisconnect": {
