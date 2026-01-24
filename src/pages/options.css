@@ -467,25 +467,11 @@ body[data-os="mac"] #connect-dlg {
     background-image: url("../img/onedrive.svg");
 }
 
-#connect-dlg #authz-prologue > .wiz-icon.dropbox,
-#connect-dlg #authz-progress > .wiz-icon.dropbox {
+#connect-dlg #authz-prologue > .wiz-icon,
+#connect-dlg #authz-progress > .wiz-icon {
     width: 48px;
     height: 48px;
-    background-image: url("../img/dropbox.svg");
-}
-
-#connect-dlg #authz-prologue > .wiz-icon.onedrive,
-#connect-dlg #authz-progress > .wiz-icon.onedrive {
-    width: 48px;
-    height: 48px;
-    background-image: url("../img/onedrive.svg");
-}
-
-#connect-dlg #authz-prologue > .wiz-icon.googledrive,
-#connect-dlg #authz-progress > .wiz-icon.googledrive {
-    width: 48px;
-    height: 48px;
-    background-image: url("../img/googledrive.svg");
+    background-image: url("../img/readnext64.svg");
 }
 
 #connect-dlg #authz-success > .wiz-icon {
