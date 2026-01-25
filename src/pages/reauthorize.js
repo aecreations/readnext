@@ -12,9 +12,9 @@ let gPgInfo = {
 
 // Page initialization
 $(async () => {
-  let platform = await browser.runtime.getPlatformInfo();
-  document.body.dataset.os = platform.os;
-  aeInterxn.init(platform.os);
+  let {os} = await browser.runtime.getPlatformInfo();
+  aeExtensionPage.init(os);
+  aeInterxn.init(os);
 
   let tab = await browser.tabs.getCurrent();
   gPgInfo.tabID = tab.id;
@@ -27,11 +27,9 @@ $(async () => {
 
 function getFileHostID()
 {
-  let rv;
-  let url = new URL(window.location.href);
-  rv = url.searchParams.get("bknd");
-  if (! rv) {
-    throw new Error("URL parameter 'bknd' is invalid or undefined");
+  let rv = aeExtensionPage.getSearchParam("bknd");
+  if (!rv) {
+    throw new ReferenceError("URL parameter 'bknd' is invalid or undefined");
   }
 
   return rv;

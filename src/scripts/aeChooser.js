@@ -65,22 +65,6 @@ class aeChooser
       this._clickedElt = null;
     });
 
-    // Also handle the "mouseup" event in the document in case the user
-    // releases the mouse button while dragging outside the chooser UI.
-    document.addEventListener("mouseup", aEvent => {
-      if (aEvent.button != 0) {
-        return;
-      }
-
-      if (this._clickedElt) {
-        let deselectedElt = this._chooserElt.querySelector(`input[type="radio"].deselect`);
-
-        deselectedElt?.classList.remove("deselect");
-        this._clickedElt.classList.remove("select");
-        this._clickedElt = null;
-      }
-    });
-
     // Click event handler for each item in the chooser.
     let radioBtns = this._chooserElt.querySelectorAll(`input[type="radio"]`);
     for (let btn of radioBtns) {

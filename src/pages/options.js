@@ -13,7 +13,7 @@ let gTabID;
 // Page initialization
 $(async () => {
   let {os} = await browser.runtime.getPlatformInfo();
-  document.body.dataset.os = os;
+  aeExtensionPage.init(os);
   aeInterxn.init(os);
   aeVisual.init(os);
 
@@ -25,9 +25,6 @@ $(async () => {
     document.title = browser.i18n.getMessage("prefsTitle");
     $("#pref-hdg").text(browser.i18n.getMessage("prefsHdg"));
   }
-
-  let lang = browser.i18n.getUILanguage();
-  document.body.dataset.locale = lang;
 
   let currTab = await browser.tabs.getCurrent();
   gTabID = currTab.id;
@@ -92,11 +89,7 @@ $(async () => {
     aeInterxn.initDialogButtonFocusHandlers();
   }
 
-  $(".hyperlink").on("click", aEvent => {
-    aEvent.preventDefault();
-    gotoURL(aEvent.target.href);
-  });
-
+  aeExtensionPage.initLinkHandlers(".hyperlink");
   aeVisual.preloadMsgBoxIcons();
   aeVisual.cacheIcons(
     "dropbox.svg",
@@ -114,11 +107,27 @@ $(async () => {
 
 function initDialogs()
 {
+  // Initialize UI strings for user contribution CTA in the About dialog.
+  // This needs to be done first so that the links can be properly initialized
+  // by aeExtensionPage.
+  let usrContribCTA = $("#usr-contrib-cta");
+  usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-hdg">${browser.i18n.getMessage("aboutContribHdg")}</label>&nbsp;&nbsp;`));
+  usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.DONATE_URL}" class="hyperlink">${browser.i18n.getMessage("aboutDonate")}</a>&nbsp;`));
+  usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-conj">${browser.i18n.getMessage("aboutContribConj")}</label>&nbsp;`));
+  usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.L10N_URL}" class="hyperlink">${browser.i18n.getMessage("aboutL10n")}</a>`));
+
+  let fhChooser = new aeChooser("#connect-dlg #connect-to #fh-picker");
+  fhChooser.onClick = aEvent => {
+    $("#connect-dlg .dlg-btns > .dlg-accept").removeAttr("disabled");
+  };
+
+  aeExtensionPage.addChooser(fhChooser)
+  aeExtensionPage.initChooserHandlers();
+
   gDialogs.connectWiz = new aeDialog("#connect-dlg");
   gDialogs.connectWiz.setProps({
     backnd: null,
     fhUI: null,
-    fhChooser: null,
   });
   
   gDialogs.connectWiz.goToPage = function (aPageID)
@@ -200,14 +209,6 @@ function initDialogs()
   {
     this.find(".dlg-btns > .dlg-accept").attr("disabled", true);
     this.goToPage("connect-to");
-  };
-
-  gDialogs.connectWiz.onFirstInit = function ()
-  {
-    this.fhChooser = new aeChooser("#connect-to #fh-picker");
-    this.fhChooser.onClick = aEvent => {
-      this.find(".dlg-btns > .dlg-accept").removeAttr("disabled");
-    };
   };
 
   gDialogs.connectWiz.onAccept = async function ()
@@ -313,13 +314,6 @@ function initDialogs()
     $("#ext-ver").text(browser.i18n.getMessage("aboutExtVer", this.extInfo.version));
     $("#ext-desc").text(this.extInfo.description);
     $("#ext-home-pg-link").attr("href", this.extInfo.homePgURL);
-
-    // Initialize static UI strings for user contribution CTA in the about dialog.
-    let usrContribCTA = $("#usr-contrib-cta");
-    usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-hdg">${browser.i18n.getMessage("aboutContribHdg")}</label>&nbsp;&nbsp;`));
-    usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.DONATE_URL}" class="hyperlink">${browser.i18n.getMessage("aboutDonate")}</a>&nbsp;`));
-    usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-conj">${browser.i18n.getMessage("aboutContribConj")}</label>&nbsp;`));
-    usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.L10N_URL}" class="hyperlink">${browser.i18n.getMessage("aboutL10n")}</a>`));
   };  
 }
 
@@ -617,13 +611,6 @@ $(window).on("keydown", aEvent => {
 });
 
 
-$(document).on("contextmenu", aEvent => {
-  if (aEvent.target.tagName != "INPUT" && aEvent.target.getAttribute("type") != "text") {
-    aEvent.preventDefault();
-  }
-});
-
-
 //
 // Utilities
 //
@@ -632,13 +619,6 @@ function sanitizeHTML(aHTMLStr)
 {
   return DOMPurify.sanitize(aHTMLStr, { SAFE_FOR_JQUERY: true });
 }
-
-
-function gotoURL(aURL)
-{
-  browser.tabs.create({url: aURL});
-}
-
 
 function log(aMessage)
 {
