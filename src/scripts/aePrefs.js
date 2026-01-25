@@ -34,6 +34,7 @@ let aePrefs = {
     highlightNewLink: true,
     autoUpdateUnreadFilter: true,
     defDlgBtnFollowsFocus: false,
+    isKauaiVerUp: true,
 
     // Applicable to Google Drive file host.
     syncFileID: null,
@@ -169,6 +170,19 @@ let aePrefs = {
     await this._addPrefs(aPrefs, prefs);
   },
 
+  hasKauaiPrefs(aPrefs) {
+    // Version 1.6
+    return ("isKauaiVerUp" in aPrefs);
+  },
+
+  async setKauaiPrefs(aPrefs) {
+    let prefs = {isKauaiVerUp: true};
+    await this._addPrefs(aPrefs, prefs);
+
+    // Remove deprecated prefs
+    await this._removePrefs(aPrefs, ["readingListSliceLength"]);
+  },
+
 
   //
   // Helper methods
@@ -181,5 +195,14 @@ let aePrefs = {
     }
 
     await this.setPrefs(aNewPrefs);
+  },
+
+  async _removePrefs(aCurrPrefs, aOldPrefs)
+  {
+    for (let pref in aOldPrefs) {
+      delete aCurrPrefs[pref];
+    }
+
+    await browser.storage.local.remove(aOldPrefs);
   },
 };

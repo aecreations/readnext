@@ -6,7 +6,7 @@
 
 const aeConst = Object.freeze({
   DEBUG: true,
-  CURR_MAJOR_VER: "1.5",
+  CURR_MAJOR_VER: "1.6",
 
   FILEHOST_DROPBOX: 1,
   FILEHOST_GOOGLE_DRIVE: 2,
