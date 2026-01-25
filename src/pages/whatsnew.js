@@ -7,12 +7,6 @@
 let gWndID, gTabID;
 
 
-function sanitizeHTML(aHTMLStr)
-{
-  return DOMPurify.sanitize(aHTMLStr, {SAFE_FOR_JQUERY: true});
-}
-
-
 // Page initialization
 $(async () => {
   let extInfo = browser.runtime.getManifest();
@@ -40,6 +34,7 @@ $(async () => {
   gWndID = currWnd.id;
   gTabID = tabs[0].id;
 
+  aeInterxn.suppressBrowserContextMenu();
   browser.runtime.sendMessage({id: "whats-new-pg-opened"});
 });
 
@@ -57,6 +52,12 @@ async function closePage()
 }
 
 
+function sanitizeHTML(aHTMLStr)
+{
+  return DOMPurify.sanitize(aHTMLStr, {SAFE_FOR_JQUERY: true});
+}
+
+
 //
 // Event handlers
 //
@@ -68,12 +69,5 @@ browser.runtime.onMessage.addListener(aMessage => {
       tabID: gTabID,
     };
     return Promise.resolve(resp);
-  }
-});
-
-
-$(window).on("contextmenu", aEvent => {
-  if (aEvent.target.tagName != "INPUT" && aEvent.target.getAttribute("type") != "text") {
-    aEvent.preventDefault();
   }
 });
