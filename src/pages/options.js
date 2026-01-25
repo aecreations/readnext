@@ -124,7 +124,8 @@ function initDialogs()
   gDialogs.connectWiz = new aeDialog("#connect-dlg");
   gDialogs.connectWiz.setProps({
     backnd: null,
-    fhUI: {},
+    fhUI: null,
+    fhChooser: null,
   });
   
   gDialogs.connectWiz.goToPage = function (aPageID)
@@ -210,57 +211,10 @@ function initDialogs()
 
   gDialogs.connectWiz.onFirstInit = function ()
   {
-    this.find(`#connect-to #fh-picker input[type="radio"]`).on("click", aEvent => {
+    this.fhChooser = new aeChooser("#connect-to #fh-picker");
+    this.fhChooser.onClick = aEvent => {
       this.find(".dlg-btns > .dlg-accept").removeAttr("disabled");
-    });
-
-    // Initialize cloud file host picker.
-    let chooser = this.find("#connect-to #fh-picker")[0];
-    chooser.addEventListener("mousedown", aEvent => {
-      if (aEvent.button != 0) {
-        return;
-      }
-
-      let inputElt;
-      if (aEvent.target.tagName == "INPUT") {
-        inputElt = aEvent.target;
-      }
-      else if (aEvent.target.tagName == "LABEL") {
-        inputElt = aEvent.target.previousElementSibling;
-      }
-      else {
-        return;
-      }
-
-      let selectedElt = chooser.querySelector(`input[type="radio"]:checked`);
-      // Don't apply the deselect state if clicking on an icon that is
-      // already selected.
-      if (selectedElt && selectedElt.id != inputElt.id) {
-        selectedElt.classList.add("deselect");
-      }
-      inputElt.classList.add("select");
-    });
-
-    chooser.addEventListener("mouseup", aEvent => {
-      if (aEvent.button != 0) {
-        return;
-      }
-
-      let inputElt;
-      if (aEvent.target.tagName == "INPUT") {
-        inputElt = aEvent.target;
-      }
-      else if (aEvent.target.tagName == "LABEL") {
-        inputElt = aEvent.target.previousElementSibling;
-      }
-      else {
-        return;
-      }
-
-      let deselectedElt = chooser.querySelector(`input[type="radio"].deselect`);
-      inputElt.classList.remove("select");
-      deselectedElt?.classList.remove("deselect");
-    });
+    };
   };
 
   gDialogs.connectWiz.onAccept = async function ()

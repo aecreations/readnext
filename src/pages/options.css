@@ -5,6 +5,7 @@
 
 @import url("../style/laf.css");
 @import url("../style/lightbox.css");
+@import url("../style/chooser.css");
 
 
 :root {
@@ -400,74 +401,6 @@ body[data-os="mac"] #connect-dlg {
 
 #connect-dlg #connect-to #fh-picker-label {
     font-size: 15px;
-}
-
-#connect-dlg #connect-to #fh-picker {
-    display: inline-block;
-    margin-top: 10px;
-    border: 1px solid var(--color-tb-border);
-    padding: 4px;
-}
-
-#connect-dlg #connect-to #fh-picker input[type="radio"] {
-    appearance: none;
-
-    width: 92px;
-    height: 80px;
-    margin: 0;
-
-    background-size: 64px 64px;
-    background-position: 14px 8px;
-    background-repeat: no-repeat;
-}
-
-#connect-dlg #connect-to #fh-picker .fh-btn {
-    display: inline-block;
-    width: 92px;
-}
-
-#connect-dlg #connect-to #fh-picker .fh-btn label {
-    display: block;
-    text-align: center;
-}
-
-#connect-dlg #connect-to #fh-picker input[type="radio"]:-moz-focusring {
-    outline-style: none;
-    border-color: #70c0e7;
-}
-
-#connect-dlg #connect-to #fh-picker input[type="radio"]:-moz-focusring,
-#connect-dlg #connect-to #fh-picker input[type="radio"]:hover,
-#connect-dlg #connect-to #fh-picker input[type="radio"]:checked {
-    border-width: 2px;
-    border-style: solid;
-    border-radius: 6px;
-    background-position: 12px 6px;
-}
-
-#connect-dlg #connect-to #fh-picker input[type="radio"]:hover {
-    border-color: #70c0e7;
-    background-color: #eff9fe;
-}
-
-#connect-dlg #connect-to #fh-picker input[type="radio"]:checked,
-#connect-dlg #connect-to #fh-picker input[type="radio"]:hover:checked {
-    border-color: #26a0da;
-    background-color: #cbe8f6;
-}
-
-#connect-dlg #connect-to #fh-picker input[type="radio"]:active {
-    border-width: 4px;
-    border-color: #70c0e7;
-    background-color: #cbe8f6;
-    background-position: 10px 4px;
-}
-
-#connect-dlg #connect-to #fh-picker input[type="radio"].deselect {
-    border-width: 1px;
-    border-color: #70c0e7;
-    background-color: #eff9fe;
-    background-position: 13px 7px;
 }
 
 #connect-dlg #connect-to #fh-picker #fh-dropbox {
