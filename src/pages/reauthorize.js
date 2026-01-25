@@ -15,6 +15,7 @@ $(async () => {
   let {os} = await browser.runtime.getPlatformInfo();
   aeExtensionPage.init(os);
   aeInterxn.init(os);
+  aeInterxn.suppressBrowserContextMenu();
 
   let tab = await browser.tabs.getCurrent();
   gPgInfo.tabID = tab.id;
@@ -154,11 +155,6 @@ $(window).on("keydown", aEvent => {
   else {
     aeInterxn.suppressBrowserShortcuts(aEvent);
   }
-});
-
-
-$(document).on("contextmenu", aEvent => {
-  aEvent.preventDefault();
 });
 
 

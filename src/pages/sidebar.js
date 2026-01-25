@@ -491,6 +491,7 @@ $(async () => {
     "add-link-dk.svg"
   );
 
+  aeInterxn.suppressBrowserContextMenu();
   if (gPrefs.defDlgBtnFollowsFocus) {
     aeInterxn.initDialogButtonFocusHandlers();
   }
@@ -2274,11 +2275,6 @@ $(window).on("keydown", aEvent => {
       gKeybdCxtMenu.showModal();
     }
   }
-});
-
-
-$(document).on("contextmenu", aEvent => {
-  aEvent.preventDefault();
 });
 
 

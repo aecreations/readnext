@@ -90,6 +90,7 @@ $(async () => {
   }
 
   aeExtensionPage.initLinkHandlers(".hyperlink");
+  aeInterxn.suppressBrowserContextMenu();
   aeVisual.preloadMsgBoxIcons();
   aeVisual.cacheIcons(
     "dropbox.svg",

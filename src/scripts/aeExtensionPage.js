@@ -29,13 +29,6 @@ let aeExtensionPage = function ()
 
       let lang = browser.i18n.getUILanguage();
       document.body.dataset.locale = lang;
-
-      // Suppress context menu.
-      document.addEventListener("contextmenu", aEvent => {
-	if (aEvent.target.tagName != "INPUT" && aEvent.target.getAttribute("type") != "text") {
-	  aEvent.preventDefault();
-	}
-      });
     },
 
 

@@ -12,7 +12,7 @@ let aeInterxn = {
   {
     this._isMacOS = aOSName == "mac";
   },
-  
+
   initDialogButtonFocusHandlers()
   {
     let btns = document.querySelectorAll(".btn");
@@ -103,6 +103,17 @@ let aeInterxn = {
     }
   },
 
+
+  suppressBrowserContextMenu()
+  {
+    // Suppress context menu.
+    document.addEventListener("contextmenu", aEvent => {
+      if (!this._isTextboxFocused(aEvent)) {
+	aEvent.preventDefault();
+      }
+    });
+  },
+  
 
   initContextMenuAriaRoles(aStor)
   {
