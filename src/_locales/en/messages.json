@@ -563,22 +563,7 @@
   },
 
   "whatsNew1": {
-    "message": "Links can now be renamed",
-    "description": "Description of an enhancement or fix in the new version of Read Next"
-  },
-
-  "whatsNew2": {
-    "message": "Improvements to navigation and scrolling of the reading list using the keyboard",
-    "description": "Description of an enhancement or fix in the new version of Read Next"
-  },
-
-  "whatsNew3": {
-    "message": "New links are now highlighted in the sidebar when they’re added",
-    "description": "Description of an enhancement or fix in the new version of Read Next"
-  },
-
-  "whatsNew4": {
-    "message": "When showing only unread links in the reading list, links will now be automatically shown or hidden as their unread status changes",
+    "message": "You can now sync your reading list using Google Drive or Microsoft OneDrive.  Dropbox continues to be available as an option for syncing",
     "description": "Description of an enhancement or fix in the new version of Read Next"
   },
 
