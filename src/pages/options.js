@@ -92,13 +92,6 @@ $(async () => {
     aeInterxn.initDialogButtonFocusHandlers();
   }
 
-  // Initialize static UI strings for user contribution CTA in the about dialog.
-  let usrContribCTA = $("#usr-contrib-cta");
-  usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-hdg">${browser.i18n.getMessage("aboutContribHdg")}</label>&nbsp;&nbsp;`));
-  usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.DONATE_URL}" class="hyperlink">${browser.i18n.getMessage("aboutDonate")}</a>&nbsp;`));
-  usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-conj">${browser.i18n.getMessage("aboutContribConj")}</label>&nbsp;`));
-  usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.L10N_URL}" class="hyperlink">${browser.i18n.getMessage("aboutL10n")}</a>`));
-
   $(".hyperlink").on("click", aEvent => {
     aEvent.preventDefault();
     gotoURL(aEvent.target.href);
@@ -320,6 +313,13 @@ function initDialogs()
     $("#ext-ver").text(browser.i18n.getMessage("aboutExtVer", this.extInfo.version));
     $("#ext-desc").text(this.extInfo.description);
     $("#ext-home-pg-link").attr("href", this.extInfo.homePgURL);
+
+    // Initialize static UI strings for user contribution CTA in the about dialog.
+    let usrContribCTA = $("#usr-contrib-cta");
+    usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-hdg">${browser.i18n.getMessage("aboutContribHdg")}</label>&nbsp;&nbsp;`));
+    usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.DONATE_URL}" class="hyperlink">${browser.i18n.getMessage("aboutDonate")}</a>&nbsp;`));
+    usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-conj">${browser.i18n.getMessage("aboutContribConj")}</label>&nbsp;`));
+    usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.L10N_URL}" class="hyperlink">${browser.i18n.getMessage("aboutL10n")}</a>`));
   };  
 }
 
