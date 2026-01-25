@@ -38,7 +38,7 @@ let aePrefs = {
 
     // Applicable to Google Drive file host.
     syncFileID: null,
-    readingListSliceLength: aeConst.DCS_READING_LIST_SLICE_LENGTH,
+    readingListSliceLength: null,
   },
 
   
@@ -98,7 +98,7 @@ let aePrefs = {
       toolbar: true,
       searchBar: true,
       syncFileID: null,
-      readingListSliceLength: aeConst.DCS_READING_LIST_SLICE_LENGTH,      
+      readingListSliceLength: null,      
     };
     
     await this._addPrefs(aPrefs, prefs);
