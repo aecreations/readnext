@@ -144,9 +144,9 @@ void async function ()
     await aePrefs.setOahuPrefs(prefs);
   }
 
-  if (! hasKauaiPrefs(prefs)) {
+  if (! aePrefs.hasKauaiPrefs(prefs)) {
     log("Initializing 1.6 user preferences.");
-    await setKauaiPrefs(prefs);
+    await aePrefs.setKauaiPrefs(prefs);
   }
 
   init(prefs);
