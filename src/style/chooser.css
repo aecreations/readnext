@@ -4,13 +4,17 @@
  */
 
 /*
- * Styling for the icon chooser UI
+ * Styling for the icon chooser UI. Default icon size 64 x 64 pixels.
  */
 .ae-chooser {
     display: inline-block;
     margin-top: 10px;
     border: 1px solid var(--color-tb-border);
     padding: 4px;
+}
+
+.ae-chooser.noborder {
+    border: none;
 }
 
 .ae-chooser input[type="radio"] {
@@ -35,7 +39,7 @@
     text-align: center;
 }
 
-.ae-chooser input[type="radio"] {
+.ae-chooser.rounded input[type="radio"] {
     border-radius: 6px;
 }
 
