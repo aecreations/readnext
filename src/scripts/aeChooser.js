@@ -14,7 +14,7 @@ class aeChooser
     this._fnClick = function (aEvent) {};
 
     if (!this._chooserElt) {
-      throw new ReferenceError(`aeChooser: Selector "${aChooserEltSelector}" doesn't refer to a valid DOM element`);
+      throw new ReferenceError(`aeChooser: Selector "${aChooserEltSelector}" doesn't refer to a DOM element`);
     }
 
     this._chooserElt.addEventListener("mousedown", aEvent => {
@@ -66,7 +66,7 @@ class aeChooser
     });
 
     // Click event handler for each item in the chooser.
-    let radioBtns = this._chooserElt.querySelectorAll(`input[type="radio"]`);
+    let radioBtns = this.options;
     for (let btn of radioBtns) {
       btn.addEventListener("click", aEvent => {
 	this._fnClick(aEvent);
@@ -75,6 +75,120 @@ class aeChooser
   }
 
 
+  //
+  // Properties and methods
+  //
+  
+  get options() //-> NodeList
+  {
+    let rv = this._chooserElt.querySelectorAll(`input[type="radio"]`);
+    return rv;
+  }
+
+
+  get selectedIndex() //-> HTMLInputElement?
+  {
+    let rv;
+    let inputElts = this.options;
+    if (!inputElts) {
+      return rv;
+    }
+
+    let radioBtns = Array.from(inputElts);
+    rv = radioBtns.findIndex(aBtn => aBtn.checked);
+
+    return rv;
+  }
+
+  set selectedIndex(aIndex)
+  {
+    aIndex = parseInt(aIndex);
+    if (isNaN(aIndex)) {
+      throw new TypeError("aeChooser.selectedIndex: index is not a number");
+    }
+
+    let inputElts = this.options;
+    if (!inputElts) {
+      return;
+    }
+    if (aIndex > inputElts.length - 1) {
+      throw new RangeError("aeChooser.selectedIndex: index out of range");
+    }
+
+    // Deselect first. Clear selection if index is -1 or any negative number.
+    inputElts.forEach(aRadioBtn => { aRadioBtn.checked = false });
+    if (aIndex >= 0) {
+      inputElts[aIndex].checked = true;
+    }
+  }
+
+
+  get value() //-> String?
+  {
+    let rv;
+    let inputElts = this.options;
+    if (!inputElts) {
+      return rv;
+    }
+
+    let radioBtns = Array.from(inputElts);
+    let [selected] = radioBtns.filter(aBtn => aBtn.checked);
+
+    if (selected) {
+      rv = selected.value;
+    }
+
+    return rv;
+  }
+
+  set value(aValue) //-> Boolean
+  {
+    let rv = false;
+    let inputElts = this.options;
+    
+    for (let radioBtn of inputElts) {
+      if (radioBtn.value == aValue) {
+        radioBtn.checked = true;
+        rv = true;
+      }
+      else {
+        radioBtn.checked = false;
+      }
+    }
+
+    return rv;
+  }
+
+
+  item(aIndex) //-> HTMLInputElement?
+  {
+    aIndex = parseInt(aIndex);
+    if (isNaN(aIndex)) {
+      throw new TypeError("aeChooser.item(): index is not a number");
+    }
+    if (aIndex < 0) {
+      throw new RangeError("aeChooser.item(): index out of range");
+    }
+
+    let rv;
+    let inputElts = this.options;
+    if (!inputElts) {
+      return;
+    }
+    if (aIndex > inputElts.length - 1) {
+      throw new RangeError("aeChooser.item(): index out of range");
+    }
+
+    rv = inputElts[aIndex];
+
+    return rv;
+  }
+
+
+  //
+  // Event handlers
+  //
+  
   set onClick(aFnClick)
   {
     this._fnClick = aFnClick;

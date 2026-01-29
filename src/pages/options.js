@@ -109,26 +109,19 @@ $(async () => {
 function initDialogs()
 {
   // Initialize UI strings for user contribution CTA in the About dialog.
-  // This needs to be done first so that the links can be properly initialized
-  // by aeExtensionPage.
+  // This needs to be done first so that link handling can be properly
+  // initialized by aeExtensionPage.
   let usrContribCTA = $("#usr-contrib-cta");
   usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-hdg">${browser.i18n.getMessage("aboutContribHdg")}</label>&nbsp;&nbsp;`));
   usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.DONATE_URL}" class="hyperlink">${browser.i18n.getMessage("aboutDonate")}</a>&nbsp;`));
   usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-conj">${browser.i18n.getMessage("aboutContribConj")}</label>&nbsp;`));
   usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.L10N_URL}" class="hyperlink">${browser.i18n.getMessage("aboutL10n")}</a>`));
 
-  let fhChooser = new aeChooser("#connect-dlg #connect-to #fh-picker");
-  fhChooser.onClick = aEvent => {
-    $("#connect-dlg .dlg-btns > .dlg-accept").removeAttr("disabled");
-  };
-
-  aeExtensionPage.addChooser(fhChooser)
-  aeExtensionPage.initChooserHandlers();
-
   gDialogs.connectWiz = new aeDialog("#connect-dlg");
   gDialogs.connectWiz.setProps({
     backnd: null,
     fhUI: null,
+    fhChooser: null,
   });
   
   gDialogs.connectWiz.goToPage = function (aPageID)
@@ -141,12 +134,8 @@ function initDialogs()
 
     switch (aPageID) {
     case "authz-prologue":
-      let fhBtns = Array.from(this.find(`#connect-to #fh-picker input[type="radio"]`));
-      let [selctFileHost] = fhBtns.filter(aBtn => aBtn.checked);
-      this.backnd = selctFileHost.value;
+      this.backnd = this.fhChooser.value;
       this.fhUI = aeFileHostUI(this.backnd);
-      log("Read Next::options.js: File host info:");
-      log(aeFileHostUI(this.backnd));
       this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle1", this.fhUI.fileHostName);
       this.find("#authz-prologue > .wiz-icon").addClass(this.fhUI.fileHostKey);
       this.find("#authz-prologue .title").text(browser.i18n.getMessage("connWizTitle1", this.fhUI.fileHostName));
@@ -315,7 +304,16 @@ function initDialogs()
     $("#ext-ver").text(browser.i18n.getMessage("aboutExtVer", this.extInfo.version));
     $("#ext-desc").text(this.extInfo.description);
     $("#ext-home-pg-link").attr("href", this.extInfo.homePgURL);
-  };  
+  };
+
+  let fileHostChooser = new aeChooser("#connect-dlg #connect-to #fh-picker");
+  fileHostChooser.onClick = aEvent => {
+    $("#connect-dlg .dlg-btns > .dlg-accept").removeAttr("disabled");
+  };
+  aeExtensionPage.addChooser(fileHostChooser)
+  aeExtensionPage.initChooserHandlers();
+
+  gDialogs.connectWiz.fhChooser = fileHostChooser;
 }
 
 
