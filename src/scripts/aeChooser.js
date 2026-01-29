@@ -69,7 +69,7 @@ class aeChooser
     let radioBtns = this.options;
     for (let btn of radioBtns) {
       btn.addEventListener("click", aEvent => {
-	this._fnClick(aEvent);
+        this._fnClick(aEvent);
       });
     }
   }
@@ -78,7 +78,7 @@ class aeChooser
   //
   // Properties and methods
   //
-  
+
   get options() //-> NodeList
   {
     let rv = this._chooserElt.querySelectorAll(`input[type="radio"]`);
@@ -145,7 +145,7 @@ class aeChooser
   {
     let rv = false;
     let inputElts = this.options;
-    
+
     for (let radioBtn of inputElts) {
       if (radioBtn.value == aValue) {
         radioBtn.checked = true;
@@ -188,7 +188,7 @@ class aeChooser
   //
   // Event handlers
   //
-  
+
   set onClick(aFnClick)
   {
     this._fnClick = aFnClick;

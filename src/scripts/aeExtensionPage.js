@@ -16,7 +16,7 @@ let aeExtensionPage = function ()
   {
     browser.tabs.create({url: aURL});
   }
-  
+
 
   //
   // Public methods
@@ -40,16 +40,16 @@ let aeExtensionPage = function ()
 
       return rv;
     },
-    
+
 
     initLinkHandlers(aLinkSelector="a")
     {
       let linkElts = document.querySelectorAll(aLinkSelector);
       for (let link of linkElts) {
-	link.addEventListener("click", aEvent => {
-	  aEvent.preventDefault();
-	  _gotoURL(aEvent.target.href);
-	});
+        link.addEventListener("click", aEvent => {
+          aEvent.preventDefault();
+          _gotoURL(aEvent.target.href);
+        });
       }
     },
 
@@ -57,7 +57,7 @@ let aeExtensionPage = function ()
     addChooser(aChooserElt)
     {
       if (!(aChooserElt instanceof aeChooser)) {
-	throw new TypeError("Argument passed to aeExtensionPage.addChooser() not an instance of aeChooser");
+        throw new TypeError("Argument passed to aeExtensionPage.addChooser() not an instance of aeChooser");
       }
 
       _chooserElts.push(aChooserElt);
@@ -67,26 +67,26 @@ let aeExtensionPage = function ()
     initChooserHandlers()
     {
       if (_chooserElts.length == 0) {
-	return;
+        return;
       }
 
       // For aeChooser elements, handle the "mouseup" event in the document
       // in case the user releases the mouse button while dragging outside the
       // chooser UI. Only one chooser on the page can be active at a time.
       document.addEventListener("mouseup", aEvent => {
-	if (aEvent.button != 0) {
+        if (aEvent.button != 0) {
           return;
-	}
+        }
 
-	for (let chooser of _chooserElts) {
-	  if (chooser._clickedElt) {
+        for (let chooser of _chooserElts) {
+          if (chooser._clickedElt) {
             let deselectedElt = chooser._chooserElt.querySelector(`input[type="radio"].deselect`);
             deselectedElt?.classList.remove("deselect");
             chooser._clickedElt.classList.remove("select");
             chooser._clickedElt = null;
-	  }
-	}
-      });      
+          }
+        }
+      });
     },
   };
 }();
