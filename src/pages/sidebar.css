@@ -256,7 +256,8 @@ body[data-tbar-fix] #bookmark-filter > #filter-unread ~ label[for="filter-unread
 }
 
 .inline-msgbar.msgbar-warning {
-    background-color: #FFEBCD;
+    border: 1px solid rgba(164, 127, 0, 0.27);
+    background-color: #fffbd6;
     color: #15141a;
 }
 

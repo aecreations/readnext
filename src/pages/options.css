@@ -182,11 +182,12 @@ button:-moz-focusring:not(:disabled) {
 }
 
 .warning {
-    background-color: #fbfb77;
-    color: black;
     margin-left: 70px;
     padding: 12px;
+    border: 1px solid rgba(164, 127, 0, 0.27);
     border-radius: 4px;
+    background-color: #fffbd6;
+    color: black;
 }
 
 #sync-options {
