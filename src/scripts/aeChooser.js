@@ -65,6 +65,15 @@ class aeChooser
       this._clickedElt = null;
     });
 
+    // If navigating the chooser with the arrow keys, select the first icon at
+    // the beginning of navigation.
+    this._chooserElt.addEventListener("keydown", aEvent => {
+      if (this.selectedIndex == -1 && ["ArrowRight", "ArrowDown"].includes(aEvent.key)) {
+        this.selectedIndex = 0;
+        aEvent.preventDefault();
+      }
+    });
+
     // Click event handler for each item in the chooser.
     let radioBtns = this.options;
     for (let btn of radioBtns) {
@@ -86,7 +95,7 @@ class aeChooser
   }
 
 
-  get selectedIndex() //-> HTMLInputElement?
+  get selectedIndex() //-> Number?
   {
     let rv;
     let inputElts = this.options;
