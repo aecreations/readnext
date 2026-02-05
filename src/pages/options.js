@@ -136,7 +136,7 @@ function initDialogs()
     case "authz-prologue":
       this.backnd = this.fhChooser.value;
       this.fhUI = aeFileHostUI(this.backnd);
-      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle1", this.fhUI.fileHostName);
+      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("setupSync");
       this.find("#authz-prologue > .wiz-icon").addClass(this.fhUI.fileHostKey);
       this.find("#authz-prologue .title").text(browser.i18n.getMessage("connWizTitle1", this.fhUI.fileHostName));
       this.find(".dlg-btns > .dlg-accept").addClass("default");
