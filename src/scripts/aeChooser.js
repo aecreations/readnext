@@ -69,7 +69,7 @@ class aeChooser
     // the beginning of navigation.
     this._chooserElt.addEventListener("keydown", aEvent => {
       if (this.selectedIndex == -1 && ["ArrowRight", "ArrowDown"].includes(aEvent.key)) {
-        this.selectedIndex = 0;
+        this.item(0).click();
         aEvent.preventDefault();
       }
     });
