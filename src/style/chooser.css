@@ -44,6 +44,15 @@
     border: none;
 }
 
+.ae-chooser.focus {
+    border-color: #0a84ff;
+    box-shadow: 0 0 0 2px #61b5ffbf;
+}
+
+.ae-chooser.noborder.focus {
+    border-color: transparent;
+}
+
 .ae-chooser input[type="radio"] {
     appearance: none;
 

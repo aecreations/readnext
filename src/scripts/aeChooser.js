@@ -74,11 +74,19 @@ class aeChooser
       }
     });
 
-    // Click event handler for each item in the chooser.
+    // Add event handlers for each item in the chooser.
     let radioBtns = this.options;
     for (let btn of radioBtns) {
       btn.addEventListener("click", aEvent => {
         this._fnClick(aEvent);
+      });
+      btn.addEventListener("focus", aEvent => {
+        if (aEvent.target.matches(":-moz-focusring")) {
+          this._chooserElt.classList.add("focus");
+        }
+      });
+      btn.addEventListener("blur", aEvent => {
+        this._chooserElt.classList.remove("focus");
       });
     }
   }
