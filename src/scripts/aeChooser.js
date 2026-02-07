@@ -120,7 +120,7 @@ class aeChooser
 
   get selectedIndex() //-> Number?
   {
-    let rv;
+    let rv = null;
     let inputElts = this.options;
     if (inputElts.length == 0) {
       return rv;
@@ -156,7 +156,7 @@ class aeChooser
 
   get value() //-> String?
   {
-    let rv;
+    let rv = null;
     if (this.options.length == 0) {
       return rv;
     }
@@ -198,7 +198,7 @@ class aeChooser
       throw new RangeError("aeChooser.item(): index out of range");
     }
 
-    let rv;
+    let rv = null;
     let inputElts = this.options;
     if (inputElts.length == 0) {
       return rv;
