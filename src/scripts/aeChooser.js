@@ -65,27 +65,42 @@ class aeChooser
       this._clickedElt = null;
     });
 
-    // If navigating the chooser with the arrow keys, select the first icon at
-    // the beginning of navigation.
     this._chooserElt.addEventListener("keydown", aEvent => {
+      // Select the first icon at the beginning of navigation.
       if (this.selectedIndex == -1 && ["ArrowRight", "ArrowDown"].includes(aEvent.key)) {
         this.item(0).click();
         aEvent.preventDefault();
       }
     });
 
+    this._chooserElt.addEventListener("keyup", aEvent => {
+      if (this.selectedIndex != -1
+          && ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(aEvent.key)) {
+        // Focus the correct radio button.
+        aEvent.target.blur();
+        this.item(this.selectedIndex).focus();
+      }
+    });
+
     // Add event handlers for each item in the chooser.
-    let radioBtns = this.options;
-    for (let btn of radioBtns) {
-      btn.addEventListener("click", aEvent => {
+    let inputElts = this.options;
+    for (let elt of inputElts) {
+      elt.addEventListener("click", aEvent => {
         this._fnClick(aEvent);
       });
-      btn.addEventListener("focus", aEvent => {
+      elt.addEventListener("focus", aEvent => {
+        // Element is focused via keyboard.
         if (aEvent.target.matches(":-moz-focusring")) {
           this._chooserElt.classList.add("focus");
+
+          if (!aEvent.target.checked && this.selectedIndex != -1) {
+            let selected = this._chooserElt.querySelector(":checked");
+            aEvent.target.blur();
+            selected.focus();
+          }
         }
       });
-      btn.addEventListener("blur", aEvent => {
+      elt.addEventListener("blur", aEvent => {
         this._chooserElt.classList.remove("focus");
       });
     }
@@ -149,7 +164,7 @@ class aeChooser
     }
 
     let radioBtns = Array.from(inputElts);
-    let [selected] = radioBtns.filter(aBtn => aBtn.checked);
+    let selected = radioBtns.find(aBtn => aBtn.checked);
 
     if (selected) {
       rv = selected.value;
