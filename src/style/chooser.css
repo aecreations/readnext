@@ -107,7 +107,7 @@
 }
 
 .ae-chooser input[type="radio"].deselect {
-    border: 1px solid var(--color-chooser-deselected-icon-border);
-    background-color: var(--color-chooser-icon);
-    background-position: 13px 7px;
+    border: 2px solid var(--color-chooser-deselected-icon-border);
+    background-color: transparent;
 }
+

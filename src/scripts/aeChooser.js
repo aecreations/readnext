@@ -122,12 +122,11 @@ class aeChooser
   {
     let rv;
     let inputElts = this.options;
-    if (!inputElts) {
+    if (inputElts.length == 0) {
       return rv;
     }
 
-    let radioBtns = Array.from(inputElts);
-    rv = radioBtns.findIndex(aBtn => aBtn.checked);
+    rv = Array.from(inputElts).findIndex(aBtn => aBtn.checked);
 
     return rv;
   }
@@ -140,7 +139,7 @@ class aeChooser
     }
 
     let inputElts = this.options;
-    if (!inputElts) {
+    if (inputElts.length == 0) {
       return;
     }
     if (aIndex > inputElts.length - 1) {
@@ -158,14 +157,11 @@ class aeChooser
   get value() //-> String?
   {
     let rv;
-    let inputElts = this.options;
-    if (!inputElts) {
+    if (this.options.length == 0) {
       return rv;
     }
 
-    let radioBtns = Array.from(inputElts);
-    let selected = radioBtns.find(aBtn => aBtn.checked);
-
+    let selected = this._chooserElt.querySelector(":checked");
     if (selected) {
       rv = selected.value;
     }
@@ -204,8 +200,8 @@ class aeChooser
 
     let rv;
     let inputElts = this.options;
-    if (!inputElts) {
-      return;
+    if (inputElts.length == 0) {
+      return rv;
     }
     if (aIndex > inputElts.length - 1) {
       throw new RangeError("aeChooser.item(): index out of range");
