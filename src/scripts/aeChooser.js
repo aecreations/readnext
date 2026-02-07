@@ -74,8 +74,9 @@ class aeChooser
       if (this.selectedIndex != -1
           && ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(aEvent.key)) {
         // Focus the correct radio button.
+        let selectedElt = this._chooserElt.querySelector(`input[type="radio"]:checked`);
         aEvent.target.blur();
-        this.item(this.selectedIndex).focus();
+        selectedElt.focus();
       }
     });
 
