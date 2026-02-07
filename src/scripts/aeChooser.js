@@ -10,7 +10,6 @@ class aeChooser
   {
     this._chooserElt = document.querySelector(`${aChooserEltSelector}`);
     this._chooserEltStor = aChooserEltSelector;
-    this._clickedElt = null;
     this._fnClick = function (aEvent) {};
 
     if (!this._chooserElt) {
@@ -40,7 +39,6 @@ class aeChooser
         selectedElt.classList.add("deselect");
       }
       inputElt.classList.add("select");
-      this._clickedElt = inputElt;
     });
 
     this._chooserElt.addEventListener("mouseup", aEvent => {
@@ -62,7 +60,6 @@ class aeChooser
       let deselectedElt = this._chooserElt.querySelector(`input[type="radio"].deselect`);
       inputElt.classList.remove("select");
       deselectedElt?.classList.remove("deselect");
-      this._clickedElt = null;
     });
 
     this._chooserElt.addEventListener("keydown", aEvent => {
