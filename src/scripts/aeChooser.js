@@ -91,9 +91,9 @@ class aeChooser
           this._chooserElt.classList.add("focus");
 
           if (!aEvent.target.checked && this.selectedIndex != -1) {
-            let selected = this._chooserElt.querySelector(":checked");
+            let selectedElt = this._chooserElt.querySelector(`input[type="radio"]:checked`);
             aEvent.target.blur();
-            selected.focus();
+            selectedElt.focus();
           }
         }
       });
@@ -158,9 +158,9 @@ class aeChooser
       return rv;
     }
 
-    let selected = this._chooserElt.querySelector(":checked");
-    if (selected) {
-      rv = selected.value;
+    let selectedElt = this._chooserElt.querySelector(`input[type="radio"]:checked`);
+    if (selectedElt) {
+      rv = selectedElt.value;
     }
 
     return rv;
