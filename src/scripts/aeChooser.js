@@ -12,6 +12,10 @@ class aeChooser
     this._chooserEltStor = aChooserEltSelector;
     this._fnClick = function (aEvent) {};
 
+    // For deselecting radio button if user releases mouse button outside of
+    // the chooser. Handled by aeExtensionPage.
+    this._clickedElt = null;
+
     if (!this._chooserElt) {
       throw new ReferenceError(`aeChooser: Selector "${aChooserEltSelector}" doesn't refer to a DOM element`);
     }
@@ -39,6 +43,7 @@ class aeChooser
         selectedElt.classList.add("deselect");
       }
       inputElt.classList.add("select");
+      this._clickedElt = inputElt;
     });
 
     this._chooserElt.addEventListener("mouseup", aEvent => {
@@ -60,6 +65,7 @@ class aeChooser
       let deselectedElt = this._chooserElt.querySelector(`input[type="radio"].deselect`);
       inputElt.classList.remove("select");
       deselectedElt?.classList.remove("deselect");
+      this._clickedElt = null;
     });
 
     this._chooserElt.addEventListener("keydown", aEvent => {
