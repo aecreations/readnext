@@ -99,7 +99,13 @@ class aeChooser
         }
       });
       elt.addEventListener("blur", aEvent => {
-        this._chooserElt.classList.remove("focus");
+        let focusTargElt = aEvent.relatedTarget;
+        if (focusTargElt && focusTargElt.tagName != "INPUT" && focusTargElt.type != "radio"
+            // Handle transitioning of focus between different choosers in the
+            // same page or dialog.
+            && focusTargElt.name != aEvent.target.name) {
+          this._chooserElt.classList.remove("focus");
+        }
       });
     }
   }
