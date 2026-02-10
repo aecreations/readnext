@@ -63,7 +63,8 @@ class aeChooser
       }
 
       let deselectedElt = this._chooserElt.querySelector(`input[type="radio"].deselect`);
-      inputElt.classList.remove("select");
+      // Make sure selection state is removed on all radio buttons.
+      this._chooserElt.querySelectorAll(`input[type="radio"]`).classList.remove("select");
       deselectedElt?.classList.remove("deselect");
       this._clickedElt = null;
     });
