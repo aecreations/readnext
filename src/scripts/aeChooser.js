@@ -77,7 +77,7 @@ class aeChooser
       this._clickedElt = null;
 
       if (this._hostDlg) {
-        this._updateDlgFirstTabStop(aEvent.target);
+        this._updateDlgFirstTabStop(inputElt);
       }
     });
 
