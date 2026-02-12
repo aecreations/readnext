@@ -6,19 +6,24 @@
 
 class aeChooser
 {
-  constructor(aChooserEltSelector)
+  constructor(aChooserEltSelector, aDialog=null)
   {
     this._chooserElt = document.querySelector(`${aChooserEltSelector}`);
+    if (!this._chooserElt) {
+      throw new ReferenceError(`aeChooser: Selector "${aChooserEltSelector}" doesn't refer to a DOM element`);
+    }
+
+    if (aDialog !== null && !(aDialog instanceof aeDialog)) {
+      throw new TypeError("aeChooser: Optional argument aDialog not an instance of aeDialog");
+    }
+
     this._chooserEltStor = aChooserEltSelector;
+    this._hostDlg = aDialog;
     this._fnClick = function (aEvent) {};
 
     // For deselecting radio button if user releases mouse button outside of
     // the chooser. Handled by aeExtensionPage.
     this._clickedElt = null;
-
-    if (!this._chooserElt) {
-      throw new ReferenceError(`aeChooser: Selector "${aChooserEltSelector}" doesn't refer to a DOM element`);
-    }
 
     this._chooserElt.addEventListener("mousedown", aEvent => {
       if (aEvent.button != 0) {
@@ -64,9 +69,16 @@ class aeChooser
 
       let deselectedElt = this._chooserElt.querySelector(`input[type="radio"].deselect`);
       // Make sure selection state is removed on all radio buttons.
-      this._chooserElt.querySelectorAll(`input[type="radio"]`).classList.remove("select");
+      let inputElts = this._chooserElt.querySelectorAll(`input[type="radio"]`);
+      for (let elt of inputElts) {
+        elt.classList.remove("select");
+      }
       deselectedElt?.classList.remove("deselect");
       this._clickedElt = null;
+
+      if (this._hostDlg) {
+        this._updateDlgFirstTabStop(aEvent.target);
+      }
     });
 
     this._chooserElt.addEventListener("keydown", aEvent => {
@@ -84,12 +96,18 @@ class aeChooser
         let selectedElt = this._chooserElt.querySelector(`input[type="radio"]:checked`);
         aEvent.target.blur();
         selectedElt.focus();
+
+        if (this._hostDlg) {
+          this._updateDlgFirstTabStop(selectedElt);
+        }
       }
     });
 
-    // Add event handlers for each item in the chooser.
     let inputElts = this.options;
     for (let elt of inputElts) {
+      elt.dataset.chooserId = this._chooserElt.id;
+
+      // Add event handlers for each item in the chooser.
       elt.addEventListener("click", aEvent => {
         this._fnClick(aEvent);
       });
@@ -225,11 +243,26 @@ class aeChooser
 
 
   //
-  // Event handlers
+  // Event handler
   //
 
   set onClick(aFnClick)
   {
     this._fnClick = aFnClick;
+  }
+
+
+  //
+  // Private helper method
+  //
+
+  _updateDlgFirstTabStop(aFirstElt)
+  {
+    // Update first keyboard-focusable element in aeDialog.
+    if (this._hostDlg._firstTabStop instanceof HTMLInputElement
+        && this._hostDlg._firstTabStop.type == "radio"
+        && this._hostDlg._firstTabStop.dataset.chooserId == this._chooserElt.id) {
+      this._hostDlg._firstTabStop = aFirstElt;
+    }
   }
 }

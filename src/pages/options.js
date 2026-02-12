@@ -310,7 +310,7 @@ function initDialogs()
     $("#ext-home-pg-link").attr("href", this.extInfo.homePgURL);
   };
 
-  let fileHostChooser = new aeChooser("#connect-dlg #connect-to #fh-picker");
+  let fileHostChooser = new aeChooser("#connect-dlg #connect-to #fh-picker", gDialogs.connectWiz);
   fileHostChooser.onClick = aEvent => {
     $("#connect-dlg .dlg-btns > .dlg-accept").removeAttr("disabled");
   };
