@@ -596,7 +596,7 @@ body[data-locale="de"] #about-dlg #usr-contrib-cta {
 }
 
 body[data-os="mac"] #about-dlg #tm-disclm > label {
-    letter-spacing: -0.15px;
+    letter-spacing: -0.1px;
 }
 
 body[data-os="mac"][data-locale="de"] #about-dlg #tm-disclm > label,
