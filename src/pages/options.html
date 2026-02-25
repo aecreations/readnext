@@ -75,11 +75,30 @@
     <!-- Dialog boxes -->
     <div id="connect-dlg" class="lightbox" role="dialog">
       <div class="dlg-content">
+        <div id="connect-to" class="wiz-page">
+          <div class="wiz-icon"></div>
+          <div class="wiz-body">
+	    <p class="title" data-i18n="setupSync"></p>
+	    <label id="fh-picker-label" data-i18n="connWizSelct"></label>
+            <div id="fh-picker" class="ae-chooser rounded" role="radiogroup"
+             aria-labelledby="fh-picker-label">
+              <div class="ae-chooser-icon">
+                <input type="radio" name="cloud-file-host" id="fh-dropbox" value="1"><label for="fh-dropbox" data-i18n="fhDropbox"></label>
+              </div>
+              <div class="ae-chooser-icon">
+                <input type="radio" name="cloud-file-host" id="fh-googdrv" value="2"><label for="fh-googdrv" data-i18n="fhGoogDrv"></label>
+              </div>
+              <div class="ae-chooser-icon">
+                <input type="radio" name="cloud-file-host" id="fh-onedrive" value="3"><label for="fh-onedrive" data-i18n="fhOneDrive"></label>
+              </div>
+            </div>
+          </div>
+        </div>
 	<div id="authz-prologue" class="wiz-page">
           <div class="wiz-icon"></div>
           <div class="wiz-body">
-	    <p class="title" data-i18n="connWizTitle1"></p>
-	    <p id="authz-instr" data-i18n="wizAuthzInstr1"></p>
+	    <p class="title"></p>
+	    <p id="authz-instr"></p>
 	    <p data-i18n="wizAuthzInstr2"></p>
           </div>
 	</div>
@@ -110,6 +129,13 @@
           <div class="wiz-body">
 	    <p class="title" data-i18n="connWizTitNetErr"></p>
 	    <p data-i18n="wizAuthzNetErr"></p>
+          </div>
+        </div>
+        <div id="authz-googdrv-perm-error" class="wiz-page">
+          <div class="wiz-icon"></div>
+          <div class="wiz-body">
+	    <p class="title" data-i18n="connWizTitNetErr"></p>
+	    <p data-i18n="wizGoogDrvAuthzErr"></p>
           </div>
         </div>
       </div>
@@ -158,6 +184,9 @@
           <div id="usr-contrib-cta" class="about-content-row">
           </div>
 	</div>
+	<div id="tm-disclm" class="about-content-row">
+	  <label data-i18n="tmDisclm"></label>
+	</div>
       </div>
       <div class="dlg-btns">
 	<button class="dlg-accept default" data-i18n="btnOK"></button>
@@ -166,14 +195,18 @@
 
     <script src="../lib/jquery.js"></script>
     <script src="../lib/purify.min.js"></script>
+    <script src="../lib/md5.min.js"></script>
     <script src="../scripts/aeConst.js"></script>
     <script src="../scripts/aePrefs.js"></script>
     <script src="../scripts/aeI18n.js"></script>
     <script src="../scripts/aeInterxn.js"></script>
+    <script src="../scripts/aeExtensionPage.js"></script>
     <script src="../scripts/aeDialog.js"></script>
+    <script src="../scripts/aeChooser.js"></script>
     <script src="../scripts/aeOAuth.js"></script>
     <script src="../scripts/aeFileHostUI.js"></script>
     <script src="../scripts/aeVisual.js"></script>
+    <script src="../scripts/aeAuthorizationError.js"></script>
     <script src="options.js"></script>
   </body>
 </html>

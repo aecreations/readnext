@@ -6,12 +6,13 @@
 
 let aeInterxn = {
   _isMacOS: null,
+  _isNoisyDebug: false,
 
   init(aOSName)
   {
     this._isMacOS = aOSName == "mac";
   },
-  
+
   initDialogButtonFocusHandlers()
   {
     let btns = document.querySelectorAll(".btn");
@@ -61,7 +62,8 @@ let aeInterxn = {
 
   suppressBrowserShortcuts(aEvent, aIsDebugging)
   {
-    if (aIsDebugging && aEvent.key != "Alt" && aEvent.key != "Control"
+    if (aIsDebugging && this._isNoisyDebug
+        && aEvent.key != "Alt" && aEvent.key != "Control"
 	&& aEvent.key != "Meta" && aEvent.key != "Shift") {
       console.log(`Clippings/wx::aeInterxn.suppressBrowserShortcuts():\nkey = ${aEvent.key}\ncode = ${aEvent.code}\naltKey = ${aEvent.altKey}\nctrlKey = ${aEvent.ctrlKey}\nmetaKey = ${aEvent.metaKey}\nshiftKey = ${aEvent.shiftKey}`);
     }
@@ -101,6 +103,17 @@ let aeInterxn = {
     }
   },
 
+
+  suppressBrowserContextMenu()
+  {
+    // Suppress context menu.
+    document.addEventListener("contextmenu", aEvent => {
+      if (!this._isTextboxFocused(aEvent)) {
+	aEvent.preventDefault();
+      }
+    });
+  },
+  
 
   initContextMenuAriaRoles(aStor)
   {

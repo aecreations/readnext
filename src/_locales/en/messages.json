@@ -67,6 +67,16 @@
     "description": "Cloud file host"
   },
 
+  "fhOneDrive": {
+    "message": "OneDrive",
+    "description": "Cloud file host"
+  },
+
+  "fhGoogDrv": {
+    "message": "Google Drive",
+    "description": "Cloud file host"
+  },
+
   "addBkmk": {
     "message": "Add to Read Next",
     "description": "Address bar button caption for adding web page to the reading list"
@@ -278,8 +288,8 @@
   },
 
   "btnConnect": {
-    "message": "Connect…",
-    "description": "Button in extension preferences for connecting to a cloud file host to sync the reading list"
+    "message": "Set Up Sync…",
+    "description": "Button in extension preferences for setting up connection to a cloud file host to sync the reading list"
   },
 
   "btnDisconnect": {
@@ -288,7 +298,7 @@
   },
 
   "noSync": {
-    "message": "Synchronize your reading list to the cloud using Dropbox.",
+    "message": "Synchronize your reading list to the cloud.",
     "description": "Message in the extension preferences page when reading list sync is turned off"
   },
 
@@ -297,8 +307,13 @@
     "description": "Connected to <name of cloud file service, e.g. Dropbox>"
   },
 
+  "connWizSelct": {
+    "message": "Sync your reading list using:",
+    "description": "Label for the cloud file host chooser in the cloud file service connection wizard in extension preferences page"
+  },
+
   "connWizTitle1": {
-    "message": "Connect to Dropbox",
+    "message": "Connect to $1",
     "description": "Cloud file service connection wizard in extension preferences page"
   },
 
@@ -335,6 +350,16 @@
   "wizAuthzInterrupt": {
     "message": "Read Next didn't finish connecting to $1.  Do you want to try again?",
     "description": "Read Next didn't finish connecting to <name of cloud file service, e.g. Dropbox>.  Do you want to try again?"
+  },
+
+  "wizGoogDrvAuthzErr": {
+    "message": "Read Next can't sync your reading list because it wasn't given enough permission to access Google Drive.",
+    "description": "Error that appears in the cloud file service connection wizard if the user didn't grant sufficent permissions to Google Drive"
+  },
+
+  "wizGoogDrvRevokErr": {
+    "message": "Please go to your Google Account Settings to remove access given to Read Next.",
+    "description": "Fallback error message that appears when revocation of access token using Google API fails"
   },
 
   "wizAuthzSuccs": {
@@ -512,6 +537,11 @@
     "description": "About dialog"
   },
 
+  "tmDisclm": {
+    "message": "All trademarks mentioned in this product are the property of their respective owners.",
+    "description": "Trademark disclaimer in the About dialog"
+  },
+
   "upgradeNotifcn": {
     "message": "Read Next was recently upgraded! Click here to see what's new.",
     "description": "Post-upgrade notification text"
@@ -533,22 +563,7 @@
   },
 
   "whatsNew1": {
-    "message": "Links can now be renamed",
-    "description": "Description of an enhancement or fix in the new version of Read Next"
-  },
-
-  "whatsNew2": {
-    "message": "Improvements to navigation and scrolling of the reading list using the keyboard",
-    "description": "Description of an enhancement or fix in the new version of Read Next"
-  },
-
-  "whatsNew3": {
-    "message": "New links are now highlighted in the sidebar when they’re added",
-    "description": "Description of an enhancement or fix in the new version of Read Next"
-  },
-
-  "whatsNew4": {
-    "message": "When showing only unread links in the reading list, links will now be automatically shown or hidden as their unread status changes",
+    "message": "You can now sync your reading list using Google Drive or Microsoft OneDrive.  Dropbox continues to be available as an option for syncing",
     "description": "Description of an enhancement or fix in the new version of Read Next"
   },
 

@@ -12,9 +12,10 @@ let gPgInfo = {
 
 // Page initialization
 $(async () => {
-  let platform = await browser.runtime.getPlatformInfo();
-  document.body.dataset.os = platform.os;
-  aeInterxn.init(platform.os);
+  let {os} = await browser.runtime.getPlatformInfo();
+  aeExtensionPage.init(os);
+  aeInterxn.init(os);
+  aeInterxn.suppressBrowserContextMenu();
 
   let tab = await browser.tabs.getCurrent();
   gPgInfo.tabID = tab.id;
@@ -27,11 +28,9 @@ $(async () => {
 
 function getFileHostID()
 {
-  let rv;
-  let url = new URL(window.location.href);
-  rv = url.searchParams.get("bknd");
-  if (! rv) {
-    throw new Error("URL parameter 'bknd' is invalid or undefined");
+  let rv = aeExtensionPage.getSearchParam("bknd");
+  if (!rv) {
+    throw new ReferenceError("URL parameter 'bknd' is invalid or undefined");
   }
 
   return rv;
@@ -141,26 +140,21 @@ $("#btn-retry").on("click", aEvent => {
 $("#btn-cancel").on("click", async (aEvent) => { await closePage() });
 
 
-$(window).keydown(aEvent => {
+$(window).on("keydown", aEvent => {
   if (aEvent.key == "Enter") {
     if (aEvent.target.tagName == "BUTTON" && !aEvent.target.classList.contains("default")) {
       aEvent.target.click();
     }
     else {
-      $("#btn-retry").click();
+      $("#btn-retry").trigger("click");
     }
   }
   else if (aEvent.key == "Escape") {
-    $("#btn-cancel").click();
+    $("#btn-cancel").trigger("click");
   }
   else {
     aeInterxn.suppressBrowserShortcuts(aEvent);
   }
-});
-
-
-$(document).on("contextmenu", aEvent => {
-  aEvent.preventDefault();
 });
 
 

@@ -289,13 +289,13 @@ let gSearchBox = {
     }
     
     $("#search-box").prop("placeholder", browser.i18n.getMessage("srchBoxHint"))
-      .focus(aEvent => {
+      .on("focus", aEvent => {
         $("#search-box-ctr").addClass("focus");
       })
-      .blur(aEvent => {
+      .on("blur", aEvent => {
         $("#search-box-ctr").removeClass("focus");
       })
-      .keyup(aEvent => {
+      .on("keyup", aEvent => {
         if (aEvent.key == "Tab" && aEvent.shiftKey) {
           return;
         }
@@ -401,7 +401,7 @@ let gSearchBox = {
 
   async reset()
   {
-    $("#search-box").val("").focus();
+    $("#search-box").val('').trigger("focus");
     $("#clear-search").css({visibility: "hidden"});
     this._numMatches = null;
     toggleNotFoundMsg(false);
@@ -491,6 +491,7 @@ $(async () => {
     "add-link-dk.svg"
   );
 
+  aeInterxn.suppressBrowserContextMenu();
   if (gPrefs.defDlgBtnFollowsFocus) {
     aeInterxn.initDialogButtonFocusHandlers();
   }
@@ -1032,13 +1033,13 @@ function initDialogs()
     });
     $("#cmd-show-all").on("click", aEvent => {
       this.close();
-      $("#filter-all").click();
+      $("#filter-all").trigger("click");
       $("#cmd-show-unread").removeClass("context-menu-icon-checked");
       $("#cmd-show-all").addClass("context-menu-icon-checked");
     });
     $("#cmd-show-unread").on("click", aEvent => {
       this.close();
-      $("#filter-unread").click();
+      $("#filter-unread").trigger("click");
       $("#cmd-show-all").removeClass("context-menu-icon-checked");
       $("#cmd-show-unread").addClass("context-menu-icon-checked");
     });
@@ -1054,7 +1055,7 @@ function initDialogs()
         return;
       }
       
-      focusedBtn.blur();
+      focusedBtn.trigger("blur");
       this._lastFocusedBtn = focusedBtn;
 
     }).on("mouseleave", aEvent => {
@@ -1094,7 +1095,7 @@ function initDialogs()
           // Hovered over separator or other whitespace in the context menu.
           // In this case, don't focus anything.
           this._focusedIdx = null;
-          this._lastFocusedBtn?.blur();
+          this._lastFocusedBtn?.trigger("blur");
         }
       }
 
@@ -1245,7 +1246,7 @@ function initContextMenu()
         name: browser.i18n.getMessage("cxtMnuFltrAll"),
         className: "ae-menuitem",
         callback(aKey, aOpt) {
-          $("#filter-all").click();
+          $("#filter-all").trigger("click");
         },
         icon(aOpt, aItemElement, aItemKey, aItem) {
           aItemElement.removeClass("context-menu-icon-checked")
@@ -1258,7 +1259,7 @@ function initContextMenu()
         name: browser.i18n.getMessage("cxtMnuFltrUnread"),
         className: "ae-menuitem",
         callback(aKey, aOpt) {
-          $("#filter-unread").click();
+          $("#filter-unread").trigger("click");
         },
         icon(aOpt, aItemElement, aItemKey, aItem) {
           aItemElement.removeClass("context-menu-icon-checked")
@@ -1409,7 +1410,7 @@ function initContextMenu()
         name: browser.i18n.getMessage("cxtMnuFltrAll"),
         className: "ae-menuitem",
         callback(aKey, aOpt) {
-          $("#filter-all").click();
+          $("#filter-all").trigger("click");
         },
         icon(aOpt, aItemElement, aItemKey, aItem) {
           aItemElement.removeClass("context-menu-icon-checked")
@@ -1422,7 +1423,7 @@ function initContextMenu()
         name: browser.i18n.getMessage("cxtMnuFltrUnread"),
         className: "ae-menuitem",
         callback(aKey, aOpt) {
-          $("#filter-unread").click();
+          $("#filter-unread").trigger("click");
         },
         icon(aOpt, aItemElement, aItemKey, aItem) {
           aItemElement.removeClass("context-menu-icon-checked")
@@ -2274,11 +2275,6 @@ $(window).on("keydown", aEvent => {
       gKeybdCxtMenu.showModal();
     }
   }
-});
-
-
-$(document).on("contextmenu", aEvent => {
-  aEvent.preventDefault();
 });
 
 

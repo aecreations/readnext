@@ -13,7 +13,7 @@ let gTabID;
 // Page initialization
 $(async () => {
   let {os} = await browser.runtime.getPlatformInfo();
-  document.body.dataset.os = os;
+  aeExtensionPage.init(os);
   aeInterxn.init(os);
   aeVisual.init(os);
 
@@ -25,9 +25,6 @@ $(async () => {
     document.title = browser.i18n.getMessage("prefsTitle");
     $("#pref-hdg").text(browser.i18n.getMessage("prefsHdg"));
   }
-
-  let lang = browser.i18n.getUILanguage();
-  document.body.dataset.locale = lang;
 
   let currTab = await browser.tabs.getCurrent();
   gTabID = currTab.id;
@@ -92,18 +89,8 @@ $(async () => {
     aeInterxn.initDialogButtonFocusHandlers();
   }
 
-  // Initialize static UI strings for user contribution CTA in the about dialog.
-  let usrContribCTA = $("#usr-contrib-cta");
-  usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-hdg">${browser.i18n.getMessage("aboutContribHdg")}</label>&nbsp;&nbsp;`));
-  usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.DONATE_URL}" class="hyperlink">${browser.i18n.getMessage("aboutDonate")}</a>&nbsp;`));
-  usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-conj">${browser.i18n.getMessage("aboutContribConj")}</label>&nbsp;`));
-  usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.L10N_URL}" class="hyperlink">${browser.i18n.getMessage("aboutL10n")}</a>`));
-
-  $(".hyperlink").on("click", aEvent => {
-    aEvent.preventDefault();
-    gotoURL(aEvent.target.href);
-  });
-
+  aeExtensionPage.initLinkHandlers(".hyperlink");
+  aeInterxn.suppressBrowserContextMenu();
   aeVisual.preloadMsgBoxIcons();
   aeVisual.cacheIcons(
     "dropbox.svg",
@@ -121,9 +108,20 @@ $(async () => {
 
 function initDialogs()
 {
+  // Initialize UI strings for user contribution CTA in the About dialog.
+  // This needs to be done first so that link handling can be properly
+  // initialized by aeExtensionPage.
+  let usrContribCTA = $("#usr-contrib-cta");
+  usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-hdg">${browser.i18n.getMessage("aboutContribHdg")}</label>&nbsp;&nbsp;`));
+  usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.DONATE_URL}" class="hyperlink">${browser.i18n.getMessage("aboutDonate")}</a>&nbsp;`));
+  usrContribCTA.append(sanitizeHTML(`<label id="usr-contrib-cta-conj">${browser.i18n.getMessage("aboutContribConj")}</label>&nbsp;`));
+  usrContribCTA.append(sanitizeHTML(`<a href="${aeConst.L10N_URL}" class="hyperlink">${browser.i18n.getMessage("aboutL10n")}</a>`));
+
   gDialogs.connectWiz = new aeDialog("#connect-dlg");
   gDialogs.connectWiz.setProps({
-    backnd: aeConst.FILEHOST_DROPBOX,
+    backnd: null,
+    fhUI: null,
+    fhChooser: null,
   });
   
   gDialogs.connectWiz.goToPage = function (aPageID)
@@ -133,23 +131,31 @@ function initDialogs()
 
     let btnAccept = this.find(".dlg-btns > .dlg-accept");
     let btnCancel = this.find(".dlg-btns > .dlg-cancel");
-    let {fileHostName} = aeFileHostUI(this.backnd);
 
     switch (aPageID) {
+    case "connect-to":
+      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("setupSync");
+      break;
+
     case "authz-prologue":
-      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle1");
+      this.backnd = this.fhChooser.value;
+      this.fhUI = aeFileHostUI(this.backnd);
+      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle1", this.fhUI.fileHostName);
+      this.find("#authz-prologue > .wiz-icon").addClass(this.fhUI.fileHostKey);
+      this.find("#authz-prologue .title").text(browser.i18n.getMessage("connWizTitle1", this.fhUI.fileHostName));
       this.find(".dlg-btns > .dlg-accept").addClass("default");
-      $("#authz-instr").text(browser.i18n.getMessage("wizAuthzInstr1", fileHostName));
+      $("#authz-instr").text(browser.i18n.getMessage("wizAuthzInstr1", this.fhUI.fileHostName));
       break;
 
     case "authz-progress":
       this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle2");
+      this.find("#authz-progress > .wiz-icon").addClass(this.fhUI.fileHostKey);
       this.find(".dlg-btns > button").attr("disabled", "true");
       break;
 
     case "authz-success":
       this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle3");
-      $("#authz-succs-msg").text(browser.i18n.getMessage("wizAuthzSuccs", fileHostName));
+      $("#authz-succs-msg").text(browser.i18n.getMessage("wizAuthzSuccs", this.fhUI.fileHostName));
       btnAccept.removeAttr("disabled").text(browser.i18n.getMessage("btnClose"));
       btnCancel.hide();
       this.changeKeyboardNavigableElts([btnAccept.get(0)]);
@@ -157,7 +163,7 @@ function initDialogs()
 
     case "authz-retry":
       this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitle1");
-      $("#authz-interrupt").text(browser.i18n.getMessage("wizAuthzInterrupt", fileHostName));
+      $("#authz-interrupt").text(browser.i18n.getMessage("wizAuthzInterrupt", this.fhUI.fileHostName));
       this.find(".dlg-btns > button").removeAttr("disabled");
       btnAccept.text(browser.i18n.getMessage("btnRetry"));
       break;
@@ -166,6 +172,14 @@ function initDialogs()
       this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitNetErr");
       this.find(".dlg-btns > button").removeAttr("disabled");
       btnAccept.text(browser.i18n.getMessage("btnRetry"));
+      break;
+
+    case "authz-googdrv-perm-error":
+      this._dlgElt[0].ariaLabel = browser.i18n.getMessage("connWizTitNetErr");
+      this.find(".dlg-btns > button").removeAttr("disabled");
+      btnAccept.text(browser.i18n.getMessage("btnClose"));
+      btnCancel.hide();
+      revokeGoogleDriveAccess();
       break;
 
     default:
@@ -187,7 +201,8 @@ function initDialogs()
 
   gDialogs.connectWiz.onInit = function ()
   {
-    this.goToPage("authz-prologue");
+    this.find(".dlg-btns > .dlg-accept").attr("disabled", true);
+    this.goToPage("connect-to");
   };
 
   gDialogs.connectWiz.onAccept = async function ()
@@ -195,6 +210,10 @@ function initDialogs()
     let currPg = this.getPageID();
 
     switch (currPg) {
+    case "connect-to":
+      this.goToPage("authz-prologue");
+      break;
+
     case "authz-prologue":
     case "authz-retry":
     case "authz-network-error":
@@ -202,6 +221,7 @@ function initDialogs()
       connectCloudFileSvc(this.backnd);
       break;
 
+    case "authz-googdrv-perm-error":
     case "authz-success":
       this.close();
       break;
@@ -213,9 +233,12 @@ function initDialogs()
 
   gDialogs.connectWiz.onUnload = function ()
   {
-    this.goToPage("authz-prologue");
+    this.find(`#connect-to #fh-picker input[type="radio"]`).prop("checked", false);
+    this.find("#authz-prologue > .wiz-icon").removeClass("dropbox onedrive googledrive");
+    this.find("#authz-progress > .wiz-icon").removeClass("dropbox onedrive googledrive");
     this.find(".dlg-btns > .dlg-accept").addClass("default").text(browser.i18n.getMessage("btnNext"));
     this.find(".dlg-btns > .dlg-cancel").removeAttr("disabled").show();
+    this.goToPage("connect-to");
   };
 
   gDialogs.disconnectConfirm = new aeDialog("#disconnect-dlg");
@@ -228,6 +251,7 @@ function initDialogs()
         accessToken: null,
         refreshToken: null,
         fileHostUsr: null,
+        syncFileID: null,  // Google Drive
       };
 
       try {
@@ -284,7 +308,16 @@ function initDialogs()
     $("#ext-ver").text(browser.i18n.getMessage("aboutExtVer", this.extInfo.version));
     $("#ext-desc").text(this.extInfo.description);
     $("#ext-home-pg-link").attr("href", this.extInfo.homePgURL);
-  };  
+  };
+
+  let fileHostChooser = new aeChooser("#connect-dlg #connect-to #fh-picker", gDialogs.connectWiz);
+  fileHostChooser.onClick = aEvent => {
+    $("#connect-dlg .dlg-btns > .dlg-accept").removeAttr("disabled");
+  };
+  aeExtensionPage.addChooser(fileHostChooser)
+  aeExtensionPage.initChooserHandlers();
+
+  gDialogs.connectWiz.fhChooser = fileHostChooser;
 }
 
 
@@ -393,6 +426,11 @@ async function connectCloudFileSvc(aBackend)
       // TypeError: NetworkError when attempting to fetch resource.
       gDialogs.connectWiz.goToPage("authz-network-error");
     }
+    else if (e instanceof RangeError) {
+      // CSRF token mismatch.
+      alert("A CSRF token mismatch was detected during authorization. Aborting.");
+      gDialogs.connectWiz.close();
+    }
     else {
       gDialogs.connectWiz.goToPage("authz-retry");
     }
@@ -409,6 +447,10 @@ async function connectCloudFileSvc(aBackend)
     if (e instanceof TypeError) {
       // TypeError: NetworkError when attempting to fetch resource.
       gDialogs.connectWiz.goToPage("authz-network-error");
+    }
+    else if (e instanceof aeAuthorizationError) {
+      // aeAuthorizationError: Insufficient permissions granted for Google Drive.
+      gDialogs.connectWiz.goToPage("authz-googdrv-perm-error");
     }
     else {
       gDialogs.connectWiz.goToPage("authz-retry");
@@ -441,6 +483,18 @@ async function connectCloudFileSvc(aBackend)
   catch {}
 
   showSyncStatus(syncPrefs);
+}
+
+
+async function revokeGoogleDriveAccess()
+{
+  try {
+    await aeOAuth.revokeAccessToken();
+  }
+  catch (e) {
+    console.error(e);
+    alert(browser.i18n.getMessage("wizGoogDrvRevokErr"));
+  }
 }
 
 
@@ -560,13 +614,6 @@ $(window).on("keydown", aEvent => {
 });
 
 
-$(document).on("contextmenu", aEvent => {
-  if (aEvent.target.tagName != "INPUT" && aEvent.target.getAttribute("type") != "text") {
-    aEvent.preventDefault();
-  }
-});
-
-
 //
 // Utilities
 //
@@ -575,13 +622,6 @@ function sanitizeHTML(aHTMLStr)
 {
   return DOMPurify.sanitize(aHTMLStr, { SAFE_FOR_JQUERY: true });
 }
-
-
-function gotoURL(aURL)
-{
-  browser.tabs.create({url: aURL});
-}
-
 
 function log(aMessage)
 {

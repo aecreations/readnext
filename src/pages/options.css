@@ -5,6 +5,7 @@
 
 @import url("../style/laf.css");
 @import url("../style/lightbox.css");
+@import url("../style/chooser.css");
 
 
 :root {
@@ -181,11 +182,12 @@ button:-moz-focusring:not(:disabled) {
 }
 
 .warning {
-    background-color: #fbfb77;
-    color: black;
     margin-left: 70px;
     padding: 12px;
+    border: 1px solid rgba(164, 127, 0, 0.27);
     border-radius: 4px;
+    background-color: #fffbd6;
+    color: black;
 }
 
 #sync-options {
@@ -392,11 +394,33 @@ body[data-os="mac"] #connect-dlg {
     background-repeat: no-repeat;
 }
 
+#connect-dlg #connect-to > .wiz-icon {
+    width: 48px;
+    height: 48px;
+    background-image: url("../img/readnext64.svg")
+}
+
+#connect-dlg #connect-to #fh-picker-label {
+    font-size: 15px;
+}
+
+#connect-dlg #connect-to #fh-picker #fh-dropbox {
+    background-image: url("../img/dropbox.svg");
+}
+
+#connect-dlg #connect-to #fh-picker #fh-googdrv {
+    background-image: url("../img/googledrive.svg");
+}
+
+#connect-dlg #connect-to #fh-picker #fh-onedrive {
+    background-image: url("../img/onedrive.svg");
+}
+
 #connect-dlg #authz-prologue > .wiz-icon,
 #connect-dlg #authz-progress > .wiz-icon {
     width: 48px;
     height: 48px;
-    background-image: url("../img/dropbox.svg");
+    background-image: url("../img/readnext64.svg");
 }
 
 #connect-dlg #authz-success > .wiz-icon {
@@ -422,20 +446,23 @@ body[data-os="mac"] #connect-dlg #authz-retry > .wiz-icon {
     background-image: url("../img/question-64-mac.png");
 }
 
-#connect-dlg #authz-network-error > .wiz-icon {
+#connect-dlg #authz-network-error > .wiz-icon,
+#connect-dlg #authz-googdrv-perm-error > .wiz-icon {
     margin-top: -2px;    
     width: 52px;
     height: 52px;
     background-image: url("../img/warning-64.png");
 }
 
-body[data-os="win"] #connect-dlg #authz-network-error > .wiz-icon {
+body[data-os="win"] #connect-dlg #authz-network-error > .wiz-icon,
+body[data-os="win"] #connect-dlg #authz-googdrv-perm-error > .wiz-icon {
     width: 48px;
     height: 48px;
     background-image: url("../img/alert-win.png");
 }
 
-body[data-os="mac"] #connect-dlg #authz-network-error > .wiz-icon {
+body[data-os="mac"] #connect-dlg #authz-network-error > .wiz-icon,
+body[data-os="mac"] #connect-dlg #authz-googdrv-perm-error > .wiz-icon {
     background-image: url("../img/warning-64-mac.png");
 }
 
@@ -486,7 +513,7 @@ body[data-os="mac"] #disconnect-dlg > .dlg-content > .msgbox-icon {
 #about-dlg {
     top: 72px;
     --width: 410px;
-    --height: 284px;
+    --height: 308px;
 }
 
 #about-dlg #ext-icon {
@@ -549,7 +576,8 @@ body[data-locale="uk"] #about-dlg #ext-desc {
 }
 
 #about-dlg #usr-contrib-cta {
-    margin-top: 8px;
+    margin-top: 6px;
+    margin-bottom: 8px;
 }
 
 body[data-locale="fr"] #about-dlg #usr-contrib-cta {
@@ -561,4 +589,17 @@ body[data-locale="de"] #about-dlg #usr-contrib-cta {
 
 #about-dlg #usr-contrib-cta-hdg {
     font-weight: 600;
+}
+
+#about-dlg #tm-disclm > label {
+    font-size: 9px;
+}
+
+body[data-os="mac"] #about-dlg #tm-disclm > label {
+    letter-spacing: -0.1px;
+}
+
+body[data-os="mac"][data-locale="de"] #about-dlg #tm-disclm > label,
+body[data-os="linux"][data-locale="de"] #about-dlg #tm-disclm > label {
+    letter-spacing: -0.4px;
 }

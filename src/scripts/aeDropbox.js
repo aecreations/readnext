@@ -176,16 +176,6 @@ class aeDropbox extends aeAbstractFileHost
 
     return rv;
   }
-  
-  _getReqHdrs()
-  {
-    let rv;
-    let headers = new Headers();
-    headers.append("Authorization", `Bearer ${this._oauthClient.accessToken}`);
-    rv = headers;
-
-    return rv;
-  }
 
   _encodeJSON(aJSONStr)
   {
@@ -280,18 +270,6 @@ class aeDropbox extends aeAbstractFileHost
     this._oauthClient.accessToken = newAccessToken;
     await aePrefs.setPrefs({accessToken: newAccessToken});
     rv = newAccessToken;
-
-    return rv;
-  }
-
-  _updateFetchArgs(aInit, aAccessToken)
-  {
-    let rv = aInit;
-    let headers = new Headers(aInit.headers);
-    if (headers.has("Authorization")) {
-      headers.set("Authorization", `Bearer ${aAccessToken}`);
-      rv.headers = headers;
-    }
 
     return rv;
   }

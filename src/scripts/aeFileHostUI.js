@@ -12,8 +12,25 @@ function aeFileHostUI(aFileHostID)
   switch (backnd) {
   case aeConst.FILEHOST_DROPBOX:
     rv = {
+      fileHostKey: "dropbox",
       fileHostName: browser.i18n.getMessage("fhDropbox"),
       iconPath: "../img/dropbox.svg",
+    };
+    break;
+
+  case aeConst.FILEHOST_ONEDRIVE:
+    rv = {
+      fileHostKey: "onedrive",
+      fileHostName: browser.i18n.getMessage("fhOneDrive"),
+      iconPath: "../img/onedrive.svg",
+    };
+    break;
+
+  case aeConst.FILEHOST_GOOGLE_DRIVE:
+    rv = {
+      fileHostKey: "googledrive",
+      fileHostName: browser.i18n.getMessage("fhGoogDrv"),
+      iconPath: "../img/googledrive.svg",
     };
     break;
 

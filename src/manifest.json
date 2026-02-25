@@ -2,14 +2,17 @@
   "manifest_version": 2,
   "name": "__MSG_extName__",
   "description": "__MSG_extDesc__",
-  "version": "1.5.5",
+  "version": "1.6",
   "author": "AE Creations",
   "homepage_url": "https://aecreations.io/readnext/index.php",
 
   "browser_specific_settings": {
     "gecko": {
       "id": "readnext@aecreations.github.io",
-      "strict_min_version": "128.0"
+      "strict_min_version": "128.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
   },
 
@@ -45,6 +48,8 @@
       "scripts/aeOAuthClient.js",
       "scripts/aeAbstractFileHost.js",
       "scripts/aeDropbox.js",
+      "scripts/aeOneDrive.js",
+      "scripts/aeGoogleDrive.js",
       "scripts/aeAuthorizationError.js",
       "scripts/aeNotFoundError.js",
       "scripts/aeFileHostUI.js",

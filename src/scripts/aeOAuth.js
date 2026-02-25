@@ -4,7 +4,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-let aeOAuth = function () {
+let aeOAuth = function ()
+{
+  const GOOGDRV_SCOPES = "https://www.googleapis.com/auth/drive.file";
+  
   let _redirectURL;
   let _redirectURLFromOAuth;
   let _authzCode;
@@ -13,7 +16,13 @@ let aeOAuth = function () {
   let _authzSrvKey;
   let _authzSrv = {
     dropbox: {
-      authzURL: `https://www.dropbox.com/oauth2/authorize?client_id=%k&redirect_uri=%r&response_type=code&token_access_type=offline`,
+      authzURL: `https://www.dropbox.com/oauth2/authorize?client_id=%k&redirect_uri=%r&response_type=code&token_access_type=offline&state=%s`,
+    },
+    onedrive: {
+      authzURL: `https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=%k&redirect_uri=%r&response_type=code&scope=User.Read+Files.ReadWrite.AppFolder+offline_access&response_mode=query&state=%s`,
+    },
+    googledrive: {
+      authzURL: `https://accounts.google.com/o/oauth2/v2/auth?client_id=%k&redirect_uri=%r&response_type=code&scope=${encodeURIComponent(GOOGDRV_SCOPES)}%20https%3A//www.googleapis.com/auth/userinfo.email&include_granted_scopes=true&access_type=offline&prompt=consent&state=%s`,
     },
   };
 
@@ -27,6 +36,12 @@ let aeOAuth = function () {
     {
       if (aAuthzSrv == aeConst.FILEHOST_DROPBOX) {
         _authzSrvKey = "dropbox";
+      }
+      else if (aAuthzSrv == aeConst.FILEHOST_ONEDRIVE) {
+        _authzSrvKey = "onedrive";
+      }
+      else if (aAuthzSrv == aeConst.FILEHOST_GOOGLE_DRIVE) {
+        _authzSrvKey = "googledrive";
       }
 
       let redirURL = browser.identity.getRedirectURL(); 
@@ -53,7 +68,7 @@ let aeOAuth = function () {
         console.error(`Read Next::aeOAuth.js: aeOAuth.getAPIKey(): HTTP error response returned from aeOAPS\nStatus: ${resp.status} - ${resp.statusText}\nDetails:`);
         console.error(respBody);
 
-        throw Error(`Failed to get client ID from aeOAPS\nStatus: ${resp.status} - ${resp.statusText}`);
+        throw new Error(`Failed to get client ID from aeOAPS\nStatus: ${resp.status} - ${resp.statusText}`);
       }
 
       rv = respBody["api_key"];
@@ -65,9 +80,10 @@ let aeOAuth = function () {
     async getAuthorizationCode()
     {
       let rv;
+      let csrfTok;
 
       if (! _authzSrvKey) {
-        throw Error("Authorization service not defined");
+        throw new ReferenceError("Authorization service not defined");
       }
 
       let apiKey;
@@ -82,6 +98,13 @@ let aeOAuth = function () {
       let authzURL = _authzSrv[_authzSrvKey].authzURL;
       authzURL = authzURL.replace("%k", apiKey);
       authzURL = authzURL.replace("%r", _redirectURL);
+
+      // Add state parameter to guard against CSRF attacks.
+      let uia = new Uint32Array(1);
+      crypto.getRandomValues(uia);
+      csrfTok = md5(uia[0]);
+      authzURL = authzURL.replace("%s", csrfTok);
+
       let webAuthPpty = {
         url: authzURL,
         interactive: true
@@ -95,7 +118,13 @@ let aeOAuth = function () {
         throw e;
       }
 
-      rv = _authzCode = new URL(_redirectURLFromOAuth).searchParams.get("code");
+      let redirURL = new URL(_redirectURLFromOAuth);
+      let stateParam = redirURL.searchParams.get("state");
+      if (stateParam != csrfTok) {
+        throw new RangeError("aeOAuth.getAuthorizationCode(): CSRF token mismatch!");
+      }
+      
+      rv = _authzCode = redirURL.searchParams.get("code");
       return rv;
     },
 
@@ -105,7 +134,7 @@ let aeOAuth = function () {
       let rv;
 
       if (! _authzCode) {
-        throw Error("Authorization code not defined");
+        throw new ReferenceError("Authorization code not defined");
       }
 
       let requestParams = new URLSearchParams({
@@ -129,10 +158,21 @@ let aeOAuth = function () {
       }
   
       if (! resp.ok) {
-        throw Error(`failed to get access token from ${_authzSrvKey}\n\nstatus: ${resp.status} - ${resp.statusText}`);
+        throw new Error(`failed to get access token from ${_authzSrvKey}\n\nstatus: ${resp.status} - ${resp.statusText}`);
       }
   
       let respBody = await resp.json();
+
+      // Google Drive: Check that all required permissions were granted.
+      if (_authzSrvKey == "googledrive") {
+        let scope = respBody["scope"];
+        if (!scope.includes(GOOGDRV_SCOPES)) {
+          // Save access token so that it can be used in revoke API call.
+          _accessToken = respBody["access_token"];
+          throw new aeAuthorizationError("Insufficient permissions granted for Google Drive");
+        }
+      }
+
       _accessToken = respBody["access_token"];
       _refreshToken = respBody["refresh_token"];
       rv = {
@@ -141,6 +181,39 @@ let aeOAuth = function () {
       };
 
       return rv;
-    }
+    },
+
+
+    // Google Drive only
+    async revokeAccessToken()
+    {
+      if (!_authzSrvKey) {
+        throw new ReferenceError("Authorization service not defined");
+      }
+      if (_authzSrvKey != "googledrive") {
+        throw new Error("Access token revocation not supported");
+      }
+
+      let headers = new Headers({"Content-Type": "application/x-www-form-urlencoded"});
+      let reqOpts = {
+        method: "POST",
+        headers,
+      };
+
+      let resp;
+      try {
+        resp = await fetch(`https://oauth2.googleapis.com/revoke?token=${_accessToken}`, reqOpts);
+      }
+      catch (e) {
+        console.error("aeOAuth.revokeAccessToken(): " + e);
+        throw e;
+      }
+
+      _accessToken = null;
+
+      if (!resp.ok) {
+        throw new Error(`Failed to revoke access token from ${_authzSrvKey}\n\nstatus: ${resp.status} - ${resp.statusText}`);
+      }
+    },
   };
 }();

@@ -107,8 +107,8 @@
 }
 
 .msgbar-warn {
-    border: 1px solid #E9D7BD;
-    background-color: #FFEBCD;
+    background-color: #fffbd6;
+    border: 1px solid rgba(164, 127, 0, 0.27);
 }
 
 @keyframes fadeout {
