@@ -34,7 +34,7 @@
     "description": "Button label"
   },
   "msgUnavail": {
-    "message": "L’action sélectionnée n'est pas disponible pour le moment."
+    "message": "L’action sélectionnée n’est pas disponible pour le moment."
   },
   "verMinorUpd": {
     "message": "Read Next a été mis à jour !",
@@ -50,6 +50,14 @@
   },
   "fhDropbox": {
     "message": "Dropbox",
+    "description": "Cloud file host"
+  },
+  "fhOneDrive": {
+    "message": "OneDrive",
+    "description": "Cloud file host"
+  },
+  "fhGoogDrv": {
+    "message": "Google Drive",
     "description": "Cloud file host"
   },
   "addBkmk": {
@@ -221,23 +229,27 @@
     "description": "Section heading in extension preferences page"
   },
   "btnConnect": {
-    "message": "Se connecter…",
-    "description": "Button in extension preferences for connecting to a cloud file host to sync the reading list"
+    "message": "Configurer la synchronisation…",
+    "description": "Button in extension preferences for setting up connection to a cloud file host to sync the reading list"
   },
   "btnDisconnect": {
     "message": "Se déconnecter",
     "description": "Button in extension preferences for turning off reading list sync"
   },
   "noSync": {
-    "message": "Synchronisez votre liste de lecture dans le cloud par l’intermédiaire de Dropbox.",
+    "message": "Synchronisez votre liste de lecture dans le cloud.",
     "description": "Message in the extension preferences page when reading list sync is turned off"
   },
   "connectedTo": {
     "message": "Connecté à $1",
     "description": "Connected to <name of cloud file service, e.g. Dropbox>"
   },
+  "connWizSelct": {
+    "message": "Synchroniser la liste de lecture avec :",
+    "description": "Label for the cloud file host chooser in the cloud file service connection wizard in extension preferences page"
+  },
   "connWizTitle1": {
-    "message": "Connexion à Dropbox",
+    "message": "Connexion à $1",
     "description": "Cloud file service connection wizard in extension preferences page"
   },
   "connWizTitle2": {
@@ -267,6 +279,14 @@
   "wizAuthzInterrupt": {
     "message": "Read Next n’a pas réussi à se connecter à $1. Voulez-vous réessayer ?",
     "description": "Read Next didn't finish connecting to <name of cloud file service, e.g. Dropbox>.  Do you want to try again?"
+  },
+  "wizGoogDrvAuthzErr": {
+    "message": "Read Next ne peut pas synchroniser votre liste de lecture car il ne dispose pas des autorisations suffisantes pour accéder à Google Drive.",
+    "description": "Error that appears in the cloud file service connection wizard if the user didn't grant sufficent permissions to Google Drive"
+  },
+  "wizGoogDrvRevokErr": {
+    "message": "Veuillez vous rendre dans les paramètres de votre compte Google pour supprimer l’accès accordé à Read Next.",
+    "description": "Fallback error message that appears when revocation of access token using Google API fails"
   },
   "wizAuthzSuccs": {
     "message": "Read Next a commencé à synchroniser votre liste de lecture avec $1. Cela peut prendre un certain temps.",
@@ -408,6 +428,10 @@
     "message": "ajoutez une traduction.",
     "description": "About dialog"
   },
+  "tmDisclm": {
+    "message": "Toutes les marques commerciales mentionnées dans ce produit sont la propriété de leurs propriétaires respectifs.",
+    "description": "Trademark disclaimer in the About dialog"
+  },
   "upgradeNotifcn": {
     "message": "Read Next a été récemment mis à niveau ! Cliquez ici pour voir les nouveautés.",
     "description": "Post-upgrade notification text"
@@ -425,19 +449,7 @@
     "description": "What's New page (appears after upgrading Read Next)"
   },
   "whatsNew1": {
-    "message": "Les liens peuvent désormais être renommés.",
-    "description": "Description of an enhancement or fix in the new version of Read Next"
-  },
-  "whatsNew2": {
-    "message": "Améliorations apportées à la navigation et au défilement de la liste de lecture à l’aide du clavier.",
-    "description": "Description of an enhancement or fix in the new version of Read Next"
-  },
-  "whatsNew3": {
-    "message": "Les nouveaux liens sont désormais surlignés dans le panneau latéral lorsqu’ils sont ajoutés.",
-    "description": "Description of an enhancement or fix in the new version of Read Next"
-  },
-  "whatsNew4": {
-    "message": "Lorsque seuls les liens non lus sont affichés dans la liste de lecture, les liens sont désormais automatiquement affichés ou masqués à chaque changement de statut « non lu ».",
+    "message": "Vous pouvez désormais synchroniser votre liste de lecture à l’aide de Google Drive ou de Microsoft OneDrive. Dropbox reste disponible comme option de synchronisation.",
     "description": "Description of an enhancement or fix in the new version of Read Next"
   },
   "contribHdg": {
