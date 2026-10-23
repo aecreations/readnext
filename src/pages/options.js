@@ -357,10 +357,18 @@ async function showSyncStatus(aPrefs)
         $("#sync-status").text(browser.i18n.getMessage("reauthzMsgBar", fileHostName));
         $("#reauthorize").css({display: "inline"});
       }
+      else {
+        // Generic connection error
+        $("#sync-status").text(browser.i18n.getMessage("errNoConn", fileHostName));
+        $("#retry-conn").css({display: "inline"});
+      }
       
       toggleSyncBtn.text(browser.i18n.getMessage("btnDisconnect"));
       if (! toggleSyncBtn.is(":visible")) {
         toggleSyncBtn.css({display: "inline"});
+      }
+      if ($("#sync-status-spinner").is(":visible")) {
+        $("#sync-status-spinner").hide();
       }
       return;
     }
