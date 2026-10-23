@@ -609,12 +609,6 @@ async function showPageAction(aTab, aBookmarkExists=null)
 }
 
 
-function isSupportedURL(aURL)
-{
-  return (aURL.startsWith("http") || aURL.startsWith("about:reader"));
-}
-
-
 async function togglePageActionIcon(aIsBookmarked, aTab=null)
 {
   if (! aTab) {
@@ -904,19 +898,16 @@ browser.runtime.onMessage.addListener(aMessage => {
 
   case "force-resume-sync":
     return forceResumeSync();
-    break;
 
   case "get-username":
     return getFileHostUserInfo();
-    break;
-    
+
   case "reauthorize":
     gFileHostReauthorizer.openReauthorizePg();
     break;
 
   case "close-tab":
     return closeTab(aMessage.tabID);
-    break;
 
   case "toggle-page-action":
     browser.tabs.query({active: true}).then(aTabs => {
@@ -936,7 +927,6 @@ browser.runtime.onMessage.addListener(aMessage => {
   case "enable-auto-open-connect-wiz":
     gAutoOpenConnectWiz = true;
     return Promise.resolve();
-    break;
 
   case "should-open-connect-wiz":
     if (gAutoOpenConnectWiz) {
@@ -946,7 +936,6 @@ browser.runtime.onMessage.addListener(aMessage => {
     else {
       return Promise.resolve(false);
     }
-    break;
 
   case "whats-new-pg-opened":
     browser.alarms.clear("show-upgrade-notifcn");
@@ -964,7 +953,6 @@ browser.runtime.onMessage.addListener(aMessage => {
       verUpdateType: gVerUpdateType,
       showBanner,
     });
-    break;
 
   default:
     break;
